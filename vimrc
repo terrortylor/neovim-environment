@@ -1,7 +1,11 @@
 " Always show the tab line
 set showtabline=2
-" Show line numbers
-set number
+
+" See: https://vim.fandom.com/wiki/Display_line_numbers
+" show current line number and relative line numbers
+set number relativenumber!
+" toggle relative number
+nnoremap <leader>rln :set relativenumber!<CR>
 
 " Format the status line
 set laststatus=2
@@ -21,6 +25,11 @@ set statusline+=\ %P    "percent through file
 " See: https://shapeshed.com/vim-netrw/
 let g:netrw_liststyle = 1
 
+" See: https://vim.fandom.com/wiki/Resize_splits_more_quickly
+" Increase/Decrease vertical windows
+nnoremap <leader>+ :vertical resize +10<CR>
+nnoremap <leader>- :vertical resize -10<CR>
+
 " Enable mouse support
 ":set mouse=a
 
@@ -32,7 +41,7 @@ set incsearch
 set showmatch
 set hlsearch
 " turns of highlighting
-nnoremap <leader><space> :noh<cr>
+nnoremap <leader><space> :noh<CR>
 
 " enable syntax highlighting
 syntax enable
