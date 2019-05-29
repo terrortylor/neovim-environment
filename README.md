@@ -13,6 +13,9 @@ so when checking out ensure you use `--recursive`
 git clone --recursive https://github.com/terrortylor/vim-environment.git
 ```
 
+* [vim sneak](https://github.com/justinmk/vim-sneak)
+* [tabline](https://github.com/mkitt/tabline.vim)
+
 # Key Mappings
 Checkout the `vimrc` file, most of is is commented.
 

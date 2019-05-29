@@ -1,3 +1,6 @@
 [submodule "vim/pack/plugins/start/tabline"]
 	path = vim/pack/plugins/start/tabline
 	url = https://github.com/mkitt/tabline.vim.git
+[submodule "vim/pack/plugins/start/sneak"]
+	path = vim/pack/plugins/start/sneak
+	url = https://github.com/justinmk/vim-sneak.git
