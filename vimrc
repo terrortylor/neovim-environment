@@ -30,6 +30,9 @@ let g:netrw_liststyle = 1
 nnoremap <leader>+ :vertical resize +10<CR>
 nnoremap <leader>- :vertical resize -10<CR>
 
+" autosave buffers when switching between then
+set autowrite
+
 " Enable mouse support
 ":set mouse=a
 
@@ -74,3 +77,14 @@ inoremap <up> <nop>
 inoremap <down> <nop>
 inoremap <left> <nop>
 inoremap <right> <nop>
+
+" Plugin specific
+" CtrlP
+" set a larger than defalt maximum file limit
+let g:ctrlp_max_files=200000
+let g:ctrlp_max_depth=40
+" Ignore some folders and files for CtrlP indexing
+let g:ctrlp_custom_ignore = {
+\ 'dir':  '\.git$\|\.yardoc\|public$|log\|tmp$|\.vagrant$|\.kitchen$',
+\ 'file': '\.so$\|\.dat$|\.DS_Store$'
+\}

@@ -4,3 +4,6 @@
 [submodule "vim/pack/plugins/start/sneak"]
 	path = vim/pack/plugins/start/sneak
 	url = https://github.com/justinmk/vim-sneak.git
+[submodule "vim/pack/plugins/start/ctrlp"]
+	path = vim/pack/plugins/start/ctrlp
+	url = https://github.com/ctrlpvim/ctrlp.vim.git

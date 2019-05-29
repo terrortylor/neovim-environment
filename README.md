@@ -15,6 +15,7 @@ git clone --recursive https://github.com/terrortylor/vim-environment.git
 
 * [vim sneak](https://github.com/justinmk/vim-sneak)
 * [tabline](https://github.com/mkitt/tabline.vim)
+* [ctrlp](https://github.com/ctrlpvim/ctrlp.vim) Note that `:CtrlPClearAllCaches` is very useful to know
 
 # Key Mappings
 Checkout the `vimrc` file, most of is is commented.
