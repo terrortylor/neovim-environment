@@ -1,0 +1,3 @@
+[submodule "vim/pack/plugins/start/tabline"]
+	path = vim/pack/plugins/start/tabline
+	url = https://github.com/mkitt/tabline.vim.git

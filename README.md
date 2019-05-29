@@ -4,6 +4,14 @@ FYI, I've checked in my spelling file! And I can't spell very well at all!
 
 # Plugins
 Using the vim native package manager as of vim 8... so you need vim >=8
+Submodules are used, to add a new plugin:
+```
+git submodule add <URL TO PLUGIN> vim/pack/plugins/start/<NAME>
+```
+so when checking out ensure you use `--recursive`
+```
+git clone --recursive https://github.com/terrortylor/vim-environment.git
+```
 
 # Key Mappings
 Checkout the `vimrc` file, most of is is commented.
