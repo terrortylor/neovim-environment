@@ -13,6 +13,10 @@ so when checking out ensure you use `--recursive`
 git clone --recursive https://github.com/terrortylor/vim-environment.git
 ```
 
+If pulling from another machine run the following to ensure all submodules are initialised:
+```
+git submodule update --recursive --init
+```
 * [vim sneak](https://github.com/justinmk/vim-sneak)
 * [tabline](https://github.com/mkitt/tabline.vim)
 * [ctrlp](https://github.com/ctrlpvim/ctrlp.vim) Note that `:CtrlPClearAllCaches` is very useful to know
