@@ -29,8 +29,16 @@ Checkout the `vimrc` file, most of is is commented.
 * `<leader>+` Increase windows width vertically
 * `<leader>-` Decrease windows width vertically
 * `jj` has been mapped in `insert` mode to `<ESC` to save some hand movements
+* Window resizing
+  * `<leader>+` increase vertically by 10 columns
+  * `<leader>-` decrease vertically by 10 columns
 
 ## Noteworthy
 Most of these are fairly standard when coming across other peoples `.vimrc` files on the line; but worth taking a minute to take a look just in case...
 * Arrow keys have been disabled to try to prevent bad habits...
 * The `<leader>` key is mapped to `\`
+* I prefer spaces to tabs, with an indentation of 2
+* On saving a buffer trailing whitespace is removed
+* Hybrid line numbering is used, current line shows current line number; lines above and below show movements from current. `<leader>rln` toggles this to normal line numbering
+* Buffers are autosaved, when switched between them
+* Use of the mouse is disabled

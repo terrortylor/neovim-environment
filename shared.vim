@@ -10,10 +10,12 @@ set tabstop=4 softtabstop=0 expandtab shiftwidth=2 smarttab
 set autoindent
 
 " Scroll before reaching the start/end of file
-set scrolloff=10
+set scrolloff=5
 
-" Show `▸▸` for tabs: 	, `·` for tailing whitespace: 
+" Show `▸▸` for tabs: 	, `·` for tailing whitespace:
 set list listchars=tab:▸▸,trail:·
+" Auto remove trailing whitespace on :w
+autocmd BufWritePre * %s/\s\+$//e
 
 " Show file options above the command line
 set wildmenu
@@ -78,6 +80,12 @@ syntax enable
 set spell spelllang=en_gb
 
 " Create some shortcuts
+
+" Easier navigation with file buffer
+" list open buffers
+nnoremap <leader>l :ls<CR>
+" Search and replace word under cursor
+nnoremap <leader>r :%s/\<<c-r><c-w>\>/
 " NOTE: leader is default '\'
 " Toggle spell checking
 nnoremap <leader>s :set spell!<CR>
@@ -102,10 +110,10 @@ nnoremap <up> <nop>
 nnoremap <down> <nop>
 nnoremap <left> <nop>
 nnoremap <right> <nop>
-inoremap <up> <nop>
-inoremap <down> <nop>
-inoremap <left> <nop>
-inoremap <right> <nop>
+"inoremap <up> <nop>
+"inoremap <down> <nop>
+"inoremap <left> <nop>
+"inoremap <right> <nop>
 
 " Plugin specific
 " CtrlP
