@@ -5,6 +5,27 @@ set showtabline=2
 " https://stackoverflow.com/questions/1878974/redefine-tab-as-4-spaces
 set tabstop=4 softtabstop=0 expandtab shiftwidth=2 smarttab
 
+" Autoindent from previous line
+" Note that this seems to be on in neovim
+set autoindent
+
+" Scroll before reaching the start/end of file
+set scrolloff=10
+
+" Show `▸▸` for tabs: 	, `·` for tailing whitespace: 
+set list listchars=tab:▸▸,trail:·
+
+" Show file options above the command line
+set wildmenu
+" Fine tune to ignore file types
+set wildignore+=*.bmp,*.gif,*.ico,*.jpg,*.png,*.ico
+set wildignore+=*.pdf,*.psd
+set wildignore+=node_modules/*,bower_components/*
+
+" `gf` opens file under cursor in a new vertical split
+" See this page on notes on autochdir: https://gist.github.com/csswizardry/9a33342dace4786a9fee35c73fa5deeb
+nnoremap gf :vertical wincmd f<CR>
+
 " See: https://vim.fandom.com/wiki/Display_line_numbers
 " show current line number and relative line numbers
 set number relativenumber!
@@ -38,7 +59,7 @@ nnoremap <leader>- :vertical resize -10<CR>
 set autowrite
 
 " Enable mouse support
-":set mouse=a
+:set mouse=a
 
 " Set searching to only use case when an uppercase is used
 set ignorecase
@@ -63,6 +84,15 @@ nnoremap <leader>s :set spell!<CR>
 
 " Open new tab in explorer
 nnoremap <leader>E :Texplore<CR>
+
+" NERDTree
+" Toggle file explorer
+map <C-n> :NERDTreeToggle<CR>
+" Autoclose if only nerdtree left open
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+" Make it prittier
+let NERDTreeMinimalUI = 1
+let NERDTreeDirArrows = 1
 
 " Map 'jj' in insert more to escape back to normal
 inoremap jj <ESC>
