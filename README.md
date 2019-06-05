@@ -1,8 +1,16 @@
-# Vim Environment
-I repository for my ~/.vim directory and ~/.vimrc file.
+# Vim and NeoVim
+This repository is for both my vim and neovim config files.
+
+Most of the configuration is in the `shared.vim` file that is sources by both vim and neovim. Key mappings are detailed below.
+
+As neovim follows the [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) and I've had some compatability issues when loading the same plugins in vim and neovim; I maintain two plugin directories. Although using git submodules so it's not to cumbersome.
+
+# Vim
+See the directory vim and the file .vimrc.
+NOTE: that shared.vim is sourced in .vimrc to load Configuration shared with neovim.
 FYI, I've checked in my spelling file! And I can't spell very well at all!
 
-# Plugins
+## Plugins
 Using the vim native package manager as of vim 8... so you need vim >=8
 Submodules are used, to add a new plugin:
 ```
@@ -21,8 +29,30 @@ git submodule update --recursive --init
 * [tabline](https://github.com/mkitt/tabline.vim)
 * [ctrlp](https://github.com/ctrlpvim/ctrlp.vim) Note that `:CtrlPClearAllCaches` is very useful to know
 
+# Vim
+See the directory vim and the file .vimrc.
+NOTE: that shared.vim is sourced in .vimrc to load Configuration shared with neovim.
+FYI, I've checked in my spelling file! And I can't spell very well at all!
+
+## Plugins
+Using the vim native package manager as of vim 8... so you need vim >=8
+Submodules are used, to add a new plugin:
+```
+git submodule add <URL TO PLUGIN> nvim/plugins/start/<NAME>
+```
+so when checking out ensure you use `--recursive`
+```
+git clone --recursive https://github.com/terrortylor/vim-environment.git
+```
+
+If pulling from another machine run the following to ensure all submodules are initialised:
+```
+git submodule update --recursive --init
+```
+* [vim sneak](https://github.com/justinmk/vim-sneak)
+
 # Key Mappings
-Checkout the `vimrc` file, most of is is commented.
+Checkout the `shared.vim` file, most of is is commented.
 
 * `<leader><space>` Turn off search highlights
 * `<leader>rln` Toggle relative line numbering on and off, leaving normal line numbering on

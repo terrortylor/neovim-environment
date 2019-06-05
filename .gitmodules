@@ -7,3 +7,6 @@
 [submodule "vim/pack/plugins/start/ctrlp"]
 	path = vim/pack/plugins/start/ctrlp
 	url = https://github.com/ctrlpvim/ctrlp.vim.git
+[submodule "nvim/plugins/start/sneak"]
+	path = nvim/plugins/start/sneak
+	url = https://github.com/justinmk/vim-sneak.git
