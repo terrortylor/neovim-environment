@@ -10,3 +10,9 @@
 [submodule "nvim/plugins/start/sneak"]
 	path = nvim/plugins/start/sneak
 	url = https://github.com/justinmk/vim-sneak.git
+[submodule "nvim/plugins/start/nerdcommenter"]
+	path = nvim/plugins/start/nerdcommenter
+	url = https://github.com/scrooloose/nerdcommenter.git
+[submodule "vim/pack/plugins/start/nerdcommenter"]
+	path = vim/pack/plugins/start/nerdcommenter
+	url = https://github.com/scrooloose/nerdcommenter.git

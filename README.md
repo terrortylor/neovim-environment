@@ -28,6 +28,7 @@ git submodule update --recursive --init
 * [vim sneak](https://github.com/justinmk/vim-sneak)
 * [tabline](https://github.com/mkitt/tabline.vim)
 * [ctrlp](https://github.com/ctrlpvim/ctrlp.vim) Note that `:CtrlPClearAllCaches` is very useful to know
+* [nerdcommenter](https://github.com/scrooloose/nerdcommenter.git) - used to support toggling of comments on and off
 
 # Vim
 See the directory vim and the file .vimrc.
@@ -50,6 +51,7 @@ If pulling from another machine run the following to ensure all submodules are i
 git submodule update --recursive --init
 ```
 * [vim sneak](https://github.com/justinmk/vim-sneak)
+* [nerdcommenter](https://github.com/scrooloose/nerdcommenter.git) - used to support toggling of comments on and off
 
 # Key Mappings
 Checkout the `shared.vim` file, most of is is commented.
