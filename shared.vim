@@ -61,7 +61,7 @@ nnoremap <leader>- :vertical resize -10<CR>
 set autowrite
 
 " Enable mouse support
-:set mouse=a
+":set mouse=a
 
 " Set searching to only use case when an uppercase is used
 set ignorecase
