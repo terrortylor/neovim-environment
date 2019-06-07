@@ -115,6 +115,12 @@ nnoremap <right> <nop>
 "inoremap <left> <nop>
 "inoremap <right> <nop>
 
+" Open shared vim in vertical split
+" Note this is set in the vimrc and neovim init files
+nnoremap <leader>ev :vsplit $SHARED_CONF<cr>
+" Source shared vim config
+nnoremap <leader>sv :source $SHARED_CONF<cr>
+
 " Plugin specific
 " CtrlP
 " set a larger than defalt maximum file limit

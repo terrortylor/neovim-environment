@@ -1,5 +1,6 @@
 " Import shared vim/neovim settings
-source ~/workspace-personnal/vim-environment/shared.vim
+let $SHARED_CONF="~/workspace-personnal/vim-environment/shared.vim"
+source $SHARED_CONF
 
 " set the theme
 set background=dark
