@@ -121,6 +121,9 @@ nnoremap <leader>ev :vsplit $SHARED_CONF<cr>
 " Source shared vim config
 nnoremap <leader>sv :source $SHARED_CONF<cr>
 
+" Source my abbreviations
+source ~/workspace-personnal/vim-environment/abbreviations.vim
+
 " Plugin specific
 " CtrlP
 " set a larger than defalt maximum file limit
