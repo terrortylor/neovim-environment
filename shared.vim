@@ -90,6 +90,11 @@ nnoremap <leader>r :%s/\<<c-r><c-w>\>/
 " Toggle spell checking
 nnoremap <leader>s :set spell!<CR>
 
+" Wrap visual selection in double quotes
+vnoremap <leader>" :<esc>`<i"<esc>`>la"<esc>
+" Wrap visual selection in single quotes
+vnoremap <leader>' :<esc>`<i'<esc>`>la'<esc>
+
 " Open new tab in explorer
 nnoremap <leader>E :Texplore<CR>
 
