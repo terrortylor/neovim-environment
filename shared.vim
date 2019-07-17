@@ -57,6 +57,13 @@ let g:netrw_liststyle = 1
 nnoremap <leader>+ :vertical resize +10<CR>
 nnoremap <leader>- :vertical resize -10<CR>
 
+" See here for good tips: https://thoughtbot.com/blog/vim-splits-move-faster-and-more-naturally
+" Easier split navigation
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+
 " autosave buffers when switching between then
 set autowrite
 
