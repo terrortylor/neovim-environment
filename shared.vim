@@ -19,6 +19,7 @@ autocmd BufWritePre * %s/\s\+$//e
 
 " Show file options above the command line
 set wildmenu
+set wildignorecase
 " Fine tune to ignore file types
 set wildignore+=*.bmp,*.gif,*.ico,*.jpg,*.png,*.ico
 set wildignore+=*.pdf,*.psd
@@ -82,6 +83,10 @@ nnoremap <leader><space> :noh<CR>
 
 " enable syntax highlighting
 syntax enable
+" Force syntax high lighting to sync from start of file
+" as syntax highlighting gets messed up when scrolling larger files
+syn sync fromstart
+syn sync minlines=20
 
 " enable spell checking
 set spell spelllang=en_gb
@@ -105,17 +110,10 @@ vnoremap <leader>' :<esc>`<i'<esc>`>la'<esc>
 " Open new tab in explorer
 nnoremap <leader>E :Texplore<CR>
 
-" NERDTree
-" Toggle file explorer
-map <C-n> :NERDTreeToggle<CR>
-" Autoclose if only nerdtree left open
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-" Make it prittier
-let NERDTreeMinimalUI = 1
-let NERDTreeDirArrows = 1
-
 " Map 'jj' in insert more to escape back to normal
 inoremap jj <ESC>
+" Save buffer
+nnoremap ff :w<CR>
 
 " Disable arrow keys
 nnoremap <up> <nop>
@@ -127,6 +125,18 @@ nnoremap <right> <nop>
 "inoremap <left> <nop>
 "inoremap <right> <nop>
 
+" Basic bracket closing
+"inoremap " ""<left>
+"inoremap ' ''<left>
+"inoremap ` ``<left>
+"inoremap ``` ```<CR>```<ESC>O
+"inoremap < <><left>
+"inoremap ( ()<left>
+"inoremap [ []<left>
+"inoremap { {}<left>
+"inoremap {<CR> {<CR>}<ESC>O
+"inoremap {;<CR> {<CR>};<ESC>O
+
 " Open shared vim in vertical split
 " Note this is set in the vimrc and neovim init files
 nnoremap <leader>ev :vsplit $SHARED_CONF<cr>
@@ -135,14 +145,3 @@ nnoremap <leader>sv :source $SHARED_CONF<cr>
 
 " Source my abbreviations
 source ~/workspace-personnal/vim-environment/abbreviations.vim
-
-" Plugin specific
-" CtrlP
-" set a larger than defalt maximum file limit
-let g:ctrlp_max_files=200000
-let g:ctrlp_max_depth=40
-" Ignore some folders and files for CtrlP indexing
-let g:ctrlp_custom_ignore = {
-\ 'dir':  '\.git$\|\.yardoc\|public$|log\|tmp$|\.vagrant$|\.kitchen$',
-\ 'file': '\.so$\|\.dat$|\.DS_Store$'
-\}
