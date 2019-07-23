@@ -3,7 +3,7 @@ set showtabline=2
 
 " Configure indentation to spaces of width 2
 " https://stackoverflow.com/questions/1878974/redefine-tab-as-4-spaces
-set tabstop=4 softtabstop=0 expandtab shiftwidth=2 smarttab
+set tabstop=2 softtabstop=0 expandtab shiftwidth=2 smarttab
 
 " Autoindent from previous line
 " Note that this seems to be on in neovim
@@ -13,7 +13,8 @@ set autoindent
 set scrolloff=5
 
 " Show `▸▸` for tabs: 	, `·` for tailing whitespace:
-set list listchars=tab:▸▸,trail:·
+" NOTE this is disabled mostly becuase go loves tabs
+"set list listchars=tab:▸▸,trail:·
 " Auto remove trailing whitespace on :w
 autocmd BufWritePre * %s/\s\+$//e
 
