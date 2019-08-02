@@ -130,6 +130,8 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 " Configure netrw plugin to show file ls details
 " See: https://shapeshed.com/vim-netrw/
 let g:netrw_liststyle = 1
+" Hide noisey banner
+let g:netrw_banner = 0
 " }}} netrw
 " }}} Plugin Settings
 " {{{ Custom Mappings

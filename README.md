@@ -29,10 +29,9 @@ If pulling from another machine run the following to ensure all submodules are i
 git submodule update --recursive --init
 ```
 * [vim sneak](https://github.com/justinmk/vim-sneak) - This is a fantastic tool for navigating around a file in three key strokes
-* [tabline](https://github.com/mkitt/tabline.vim) - This is used only in vim
 * [ctrlp](https://github.com/ctrlpvim/ctrlp.vim) Note that `:CtrlPClearAllCaches` is very useful to know
-* [nerdcommenter](https://github.com/scrooloose/nerdcommenter.git) - used to support toggling of comments on and off
 * [nerdtree](https://github.com/scrooloose/nerdtree.git) - used as repacement to netrw
+* [vim-commentary](https://github.com/tpope/vim-commentary) - used for comment toggeling
 
 # Vim
 See the directory vim and the file .vimrc.
