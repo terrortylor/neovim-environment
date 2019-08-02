@@ -15,7 +15,10 @@ Using the vim native package manager as of vim 8... so you need vim >=8
 Submodules are used, to add a new plugin:
 ```
 git submodule add <URL TO PLUGIN> vim/pack/plugins/start/<NAME>
+git submodule add <URL TO PLUGIN> nvim/plugins/start/<NAME>
 ```
+NOTE: That I maintain two plugins directories, one for vim 8+ and one for NeoVim, as mentioned above.
+
 so when checking out ensure you use `--recursive`
 ```
 git clone --recursive https://github.com/terrortylor/vim-environment.git
@@ -25,10 +28,11 @@ If pulling from another machine run the following to ensure all submodules are i
 ```
 git submodule update --recursive --init
 ```
-* [vim sneak](https://github.com/justinmk/vim-sneak)
-* [tabline](https://github.com/mkitt/tabline.vim)
+* [vim sneak](https://github.com/justinmk/vim-sneak) - This is a fantastic tool for navigating around a file in three key strokes
+* [tabline](https://github.com/mkitt/tabline.vim) - This is used only in vim
 * [ctrlp](https://github.com/ctrlpvim/ctrlp.vim) Note that `:CtrlPClearAllCaches` is very useful to know
 * [nerdcommenter](https://github.com/scrooloose/nerdcommenter.git) - used to support toggling of comments on and off
+* [nerdtree](https://github.com/scrooloose/nerdtree.git) - used as repacement to netrw
 
 # Vim
 See the directory vim and the file .vimrc.
@@ -52,6 +56,8 @@ git submodule update --recursive --init
 ```
 * [vim sneak](https://github.com/justinmk/vim-sneak)
 * [nerdcommenter](https://github.com/scrooloose/nerdcommenter.git) - used to support toggling of comments on and off
+
+NOTE: [This stackoverflow](https://stackoverflow.com/questions/20929336/git-submodule-add-a-git-directory-is-found-locally-issue) was useful when I got submodule issues adding and removing plugins this way.
 
 # Key Mappings
 Checkout the `shared.vim` file, most of is is commented.

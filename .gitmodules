@@ -1,18 +1,27 @@
 [submodule "vim/pack/plugins/start/tabline"]
 	path = vim/pack/plugins/start/tabline
 	url = https://github.com/mkitt/tabline.vim.git
-[submodule "vim/pack/plugins/start/sneak"]
-	path = vim/pack/plugins/start/sneak
-	url = https://github.com/justinmk/vim-sneak.git
-[submodule "vim/pack/plugins/start/ctrlp"]
-	path = vim/pack/plugins/start/ctrlp
-	url = https://github.com/ctrlpvim/ctrlp.vim.git
 [submodule "nvim/plugins/start/sneak"]
 	path = nvim/plugins/start/sneak
 	url = https://github.com/justinmk/vim-sneak.git
+[submodule "vim/pack/plugins/start/sneak"]
+	path = vim/pack/plugins/start/sneak
+	url = https://github.com/justinmk/vim-sneak.git
+[submodule "nvim/plugins/start/ctrlp"]
+	path = nvim/plugins/start/ctrlp
+	url = https://github.com/ctrlpvim/ctrlp.vim.git
+[submodule "vim/pack/plugins/start/ctrlp"]
+	path = vim/pack/plugins/start/ctrlp
+	url = https://github.com/ctrlpvim/ctrlp.vim.git
 [submodule "nvim/plugins/start/nerdcommenter"]
 	path = nvim/plugins/start/nerdcommenter
 	url = https://github.com/scrooloose/nerdcommenter.git
 [submodule "vim/pack/plugins/start/nerdcommenter"]
 	path = vim/pack/plugins/start/nerdcommenter
 	url = https://github.com/scrooloose/nerdcommenter.git
+[submodule "nvim/plugins/start/nerdtree"]
+	path = nvim/plugins/start/nerdtree
+	url = https://github.com/scrooloose/nerdtree.git
+[submodule "vim/pack/plugins/start/nerdtree"]
+	path = vim/pack/plugins/start/nerdtree
+	url = https://github.com/scrooloose/nerdtree.git
