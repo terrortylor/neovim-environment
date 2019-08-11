@@ -14,9 +14,13 @@ au FileType vim setl foldmethod=marker foldenable
 " don't bother about trying to support older versions
 set nocompatible
 
-" enable spell checking
-set spell spelllang=en_gb
 " }}} General Settings
+" {{{ Spelling
+" Toggle spell checking
+nnoremap <leader>s :set spell!<CR>
+" disable spell checking on start but set language
+set nospell spelllang=en_gb
+" }}} Spelling
 " {{{ Indentation
 " Configure indentation to spaces of width 2
 " https://stackoverflow.com/questions/1878974/redefine-tab-as-4-spaces
@@ -36,10 +40,12 @@ set scrolloff=5
 set wildmenu
 set wildignorecase
 
+set path+=**
 " Fine tune to ignore file types
 set wildignore+=*.bmp,*.gif,*.ico,*.jpg,*.png,*.ico
 set wildignore+=*.pdf,*.psd
 set wildignore+=node_modules/*,bower_components/*
+set wildignore+=bin/*,tags,*.session
 
 " `gf` opens file under cursor in a new vertical split
 " See this page on notes on autochdir: https://gist.github.com/csswizardry/9a33342dace4786a9fee35c73fa5deeb
@@ -58,8 +64,9 @@ set number relativenumber!
 " toggle relative number
 nnoremap <leader>rln :set relativenumber!<CR>
 
-" Format the status line
+" Always showstatus bar
 set laststatus=2
+" Format the status line
 set statusline=%f       "Path of the file
 set statusline+=%=      "left/right separator
 set statusline+=[%{strlen(&fenc)?&fenc:'none'}, "file encoding
@@ -71,6 +78,12 @@ set statusline+=%y      "filetype
 set statusline+=%3c,     "cursor column
 set statusline+=%4l/%L   "cursor line/total lines
 set statusline+=\ %P    "percent through file
+
+" Highlight current cursor line
+set cursorline
+" Toggle on and off as entering/leaving windows
+au WinEnter * setlocal cursorline
+au WinLeave * setlocal nocursorline
 
 " }}} Visual Settings
 " {{{ Buffer auto load / save
@@ -94,12 +107,20 @@ set incsearch
 set showmatch
 set hlsearch
 
+" Set global flag on for search are replace
+" :help gdefault
+set gdefault
+
+" Search and replace word under cursor
+nnoremap <leader>r :%s/<c-r><c-w>/
+
 " turns of highlighting
 nnoremap <leader><space> :noh<CR>
 " }}} Searching within a buffer behaviour
 " {{{ Syntax Highlighting
 " enable syntax highlighting
 syntax enable
+
 filetype plugin on
 
 " Force syntax high lighting to sync from start of file
@@ -107,6 +128,14 @@ filetype plugin on
 syn sync fromstart
 syn sync minlines=20
 " }}} Syntax Highlighting
+" {{{ Registers
+"Map primary (*) clipboard
+noremap <Leader>y "*y
+noremap <Leader>p "*p
+" Map clipboard (+)
+noremap <Leader>Y "+y
+noremap <Leader>P "+p
+" }}} Registers
 " }}} VIM Settings
 " {{{ Plugin Settings
 " {{{ NERDTree
@@ -125,13 +154,20 @@ endfunction
 
 " Autoclose vim if only NERDTree open
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+" Jump to open buffer if open:
+let g:ctrlp_switch_buffer = 'Et'
 " }}} NERDTree
 " {{{ netrw
 " Configure netrw plugin to show file ls details
 " See: https://shapeshed.com/vim-netrw/
 let g:netrw_liststyle = 1
+"
 " Hide noisey banner
 let g:netrw_banner = 0
+
+" Open new tab in explorer
+nnoremap <leader>E :Texplore<CR>
 " }}} netrw
 " }}} Plugin Settings
 " {{{ Custom Mappings
@@ -150,46 +186,61 @@ nnoremap <leader>- :vertical resize -10<CR>
 
 " }}} Splits
 " {{{ TABs
-" Also easier tab navigation
+" easier tab navigation
 nnoremap th  :tabfirst<CR>    " moves to first tab
 nnoremap tk  :tabnext<CR>     " moves to next tab
 nnoremap tj  :tabprev<CR>     " moves to previous tab
 nnoremap tl  :tablast<CR>     " moves to last tab
+nnoremap <leader>1 1gt        " moves to tab 1
+nnoremap <leader>2 2gt        " moves to tab 2
+nnoremap <leader>3 3gt        " moves to tab 3
+nnoremap <leader>4 4gt        " moves to tab 4
+nnoremap <leader>5 5gt        " moves to tab 5
+nnoremap <leader>6 6gt        " moves to tab 6
+nnoremap <leader>7 7gt        " moves to tab 7
+nnoremap <leader>8 8gt        " moves to tab 8
+nnoremap <leader>9 9gt        " moves to tab 9
 
-" move to X tab
-nnoremap tn  :tabnext<Space>
-
-" moves current tab to X position
-nnoremap tm  :tabm<Space>
+" opens new tab
+nnoremap tn  :tabnew<Space>
 
 " closes tab
-nnoremap td  :tabclose<CR>
+nnoremap tc  :tabclose<CR>
 " }}} TABs
-
+" {{{ Quicklist
+nnoremap <leader>cl :copen<CR>   " Open Quicklist
+nnoremap <leader>cc :cclose<CR>  " Close quicklist
+"
+" To quickly go through the Quicklist
+nnoremap c] :cn<CR>
+nnoremap c[ :cp<CR>
+" }}} Quicklist End
+" {{{ File Buffers
 " Easier navigation with file buffer
 " list open buffers
-nnoremap <leader>l :ls<CR>
-
-" Search and replace word under cursor
-nnoremap <leader>r :%s/<c-r><c-w>/
-
-" NOTE: leader is default '\'
-" Toggle spell checking
-nnoremap <leader>s :set spell!<CR>
-
+nnoremap <leader>b :ls<CR>:b<Space>
+" }}} File Buffers
 " Wrap visual selection in double quotes
 vnoremap <leader>" :<esc>`<i"<esc>`>la"<esc>
 
 " Wrap visual selection in single quotes
 vnoremap <leader>' :<esc>`<i'<esc>`>la'<esc>
 
-" Open new tab in explorer
-nnoremap <leader>E :Texplore<CR>
-
 " Map 'jj' in insert more to escape back to normal
 inoremap jj <ESC>
 " Save buffer
 nnoremap ff :w<CR>
+" exit insert mode and save buffer
+inoremap jf <ESC>:w<cr>
+
+" insert a line above or below, and exit back to normal
+nnoremap <leader>o o<ESC>k
+nnoremap <leader>O O<ESC>j
+
+" Reselect previous selection (gv) in visual mode
+" after indenting left or right
+vnoremap < <gv
+vnoremap > >gv
 
 " Disable arrow keys
 nnoremap <up> <nop>
@@ -218,7 +269,6 @@ nnoremap <right> <nop>
 nnoremap <leader>ev :vsplit $SHARED_CONF<cr>
 " Source shared vim config
 nnoremap <leader>sv :source $SHARED_CONF<cr>
-
 " }}} Custom Mappings
 " {{{ Abbreviations
 " Source my abbreviations

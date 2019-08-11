@@ -22,3 +22,9 @@
 [submodule "vim/pack/plugins/start/vim-commentary"]
 	path = vim/pack/plugins/start/vim-commentary
 	url = https://github.com/tpope/vim-commentary.git
+[submodule "nvim/plugins/start/tender"]
+	path = nvim/plugins/start/tender
+	url = https://github.com/jacoborus/tender.vim.git
+[submodule "nvim/plugins/start/lightline"]
+	path = nvim/plugins/start/lightline
+	url = https://github.com/itchyny/lightline.vim.git

@@ -4,4 +4,5 @@ source $SHARED_CONF
 " set the theme
 set background=dark
 set termguicolors
-colorscheme NeoSolarized
+colorscheme tender
+let g:lightline = { 'colorscheme': 'tender' }
