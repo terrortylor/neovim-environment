@@ -182,7 +182,10 @@ let g:UltiSnipsListSnippets  = '<c-tab>'
 let g:UltiSnipsJumpForwardTrigger = '<c-j>'
 let g:UltiSnipsJumpBackwardTrigger = '<c-k>'
 
-" Loaded from runtimepath, so dir 'ultisnips' is loaded from
+" This just sets the path of where we edit/create personnal snippets
+let g:UltiSnipsSnippetsDir=$HOME . "/.config/nvim/ultisnips"
+" But the engine that loads the snippets for runtime
+" load from neovim's runtimepath, so dir 'ultisnips' is loaded from
 " ~/.config/nvim/ultisnips hence why using property:
 " g:UltiSnipsSnippetDirectories not g:UltiSnipsSnippetsDir
 let g:UltiSnipsSnippetDirectories=["UltiSnips", "ultisnips"]
