@@ -6,8 +6,13 @@ filetype plugin indent on
 set background=dark
 set termguicolors
 colorscheme tender
-let g:lightline = { 'colorscheme': 'tender' }
+" Note lightline status bar colour scheme is defined in plugin config bellow
 " }}} Theme Leave
+" {{{ Swap, Backup and Undo File Location
+set backupdir=~/.config/nvim/backup//
+set directory=~/.config/nvim/swap//
+set undodir=~/.config/nvim/undo//
+" }}} Swap, Backup and Undo File Location
 " {{{ Setup folding rules
 " Global to indent, and not close them by default
 set foldmethod=indent
@@ -106,8 +111,8 @@ autocmd BufWritePre * %s/\s\+$//e
 " {{{ Searching within a buffer behaviour
 
 " Set searching to only use case when an uppercase is used
-set ignorecase
-set smartcase
+" set ignorecase
+" set smartcase
 
 " Highlight search
 set incsearch
@@ -177,6 +182,7 @@ let g:netrw_banner = 0
 nnoremap <leader>E :Texplore<CR>
 " }}} netrw
 " {{{ ultisnips
+" Ultisnips is used as it's fiarly light weight and is jsut the engine.
 let g:UltiSnipsExpandTrigger = '<tab>'
 let g:UltiSnipsListSnippets  = '<c-tab>'
 let g:UltiSnipsJumpForwardTrigger = '<c-j>'
@@ -190,6 +196,22 @@ let g:UltiSnipsSnippetsDir=$HOME . "/.config/nvim/ultisnips"
 " g:UltiSnipsSnippetDirectories not g:UltiSnipsSnippetsDir
 let g:UltiSnipsSnippetDirectories=["UltiSnips", "ultisnips"]
 " }}} ultisnips
+" {{{ lightline
+" Update status bar to include search case insensitivity state
+let g:lightline = {
+      \ 'colorscheme': 'tender',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'readonly', 'filename', 'modified' ] ],
+      \   'right': [ [ 'lineinfo' ],
+      \              [ 'percent' ],
+      \              [ 'search_case_sensativity_state', 'fileformat', 'fileencoding', 'filetype' ] ]
+      \ },
+      \ 'component_function': {
+      \   'search_case_sensativity_state': 'ToggleSearchCaseStatePretty'
+      \ },
+      \ }
+" }}} lightline
 " }}} Plugin Settings
 " {{{ Custom Mappings
 " {{{ Splits
@@ -296,3 +318,37 @@ nnoremap <leader>sv :source $MYVIMRC<cr>
 :iabbrev teh the
 :iabbrev adn and
 " }}} Abbreviations
+" {{{ Functions
+" {{{ ToggleSearchCase
+" Toggles smart/case search, and exposed function
+" used by lightline to show state
+if !exists('ToggleSearchCaseState')
+  let ToggleSearchCaseState=0
+endif
+
+function! ToggleSearchCase()
+  if !g:ToggleSearchCaseState
+    set ignorecase
+    set smartcase
+    let g:ToggleSearchCaseState=1
+  else
+    set noignorecase
+    set nosmartcase
+    let g:ToggleSearchCaseState=0
+  endif
+endfunction
+
+function! ToggleSearchCaseStatePretty()
+  if g:ToggleSearchCaseState
+    return "*aA*"
+  else
+    return "Aa"
+  endif
+endfunction
+
+" If not smart case when sourced, then set it
+if !g:ToggleSearchCaseState
+  call ToggleSearchCase()
+endif
+" }}} ToggleSearchCase
+" }}} Functions
