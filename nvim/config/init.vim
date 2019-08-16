@@ -198,6 +198,8 @@ let g:UltiSnipsSnippetDirectories=["UltiSnips", "ultisnips"]
 " }}} ultisnips
 " {{{ lightline
 " Update status bar to include search case insensitivity state
+" call ToggleSmartsearch#toggle()
+
 let g:lightline = {
       \ 'colorscheme': 'tender',
       \ 'active': {
@@ -208,9 +210,11 @@ let g:lightline = {
       \              [ 'search_case_sensativity_state', 'fileformat', 'fileencoding', 'filetype' ] ]
       \ },
       \ 'component_function': {
-      \   'search_case_sensativity_state': 'ToggleSearchCaseStatePretty'
+      \   'search_case_sensativity_state': 'ToggleSmartSearch#StatePretty'
       \ },
       \ }
+
+let g:toggle_smartsearch_state = 1
 " }}} lightline
 " }}} Plugin Settings
 " {{{ Custom Mappings
@@ -320,35 +324,5 @@ nnoremap <leader>sv :source $MYVIMRC<cr>
 " }}} Abbreviations
 " {{{ Functions
 " {{{ ToggleSearchCase
-" Toggles smart/case search, and exposed function
-" used by lightline to show state
-if !exists('ToggleSearchCaseState')
-  let ToggleSearchCaseState=0
-endif
-
-function! ToggleSearchCase()
-  if !g:ToggleSearchCaseState
-    set ignorecase
-    set smartcase
-    let g:ToggleSearchCaseState=1
-  else
-    set noignorecase
-    set nosmartcase
-    let g:ToggleSearchCaseState=0
-  endif
-endfunction
-
-function! ToggleSearchCaseStatePretty()
-  if g:ToggleSearchCaseState
-    return "*aA*"
-  else
-    return "Aa"
-  endif
-endfunction
-
-" If not smart case when sourced, then set it
-if !g:ToggleSearchCaseState
-  call ToggleSearchCase()
-endif
 " }}} ToggleSearchCase
 " }}} Functions

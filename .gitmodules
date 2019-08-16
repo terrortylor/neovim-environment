@@ -19,3 +19,6 @@
 [submodule "nvim/plugins/start/ultisnips"]
 	path = nvim/plugins/start/ultisnips
 	url = https://github.com/SirVer/ultisnips.git
+[submodule "nvim/plugins/start/vim-togglesmartsearch"]
+	path = nvim/plugins/start/vim-togglesmartsearch
+	url = git@github.com:terrortylor/vim-togglesmartsearch.git
