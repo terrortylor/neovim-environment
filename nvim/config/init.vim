@@ -210,7 +210,7 @@ let g:lightline = {
       \              [ 'search_case_sensativity_state', 'fileformat', 'fileencoding', 'filetype' ] ]
       \ },
       \ 'component_function': {
-      \   'search_case_sensativity_state': 'ToggleSmartSearch#StatePretty'
+      \   'search_case_sensativity_state': 'togglesmartsearch#statepretty'
       \ },
       \ }
 
