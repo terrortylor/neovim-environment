@@ -21,7 +21,7 @@
 	url = https://github.com/SirVer/ultisnips.git
 [submodule "nvim/plugins/start/vim-togglesmartsearch"]
 	path = nvim/plugins/start/vim-togglesmartsearch
-	url = git@github.com:terrortylor/vim-togglesmartsearch.git
+	url = https://github.com/terrortylor/vim-togglesmartsearch.git
 [submodule "nvim/plugins/start/vim-tmux-navigator"]
 	path = nvim/plugins/start/vim-tmux-navigator
-	url = git@github.com:christoomey/vim-tmux-navigator.git
+	url = https://github.com/christoomey/vim-tmux-navigator.git
