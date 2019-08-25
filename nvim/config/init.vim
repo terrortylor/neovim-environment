@@ -128,6 +128,9 @@ nnoremap <leader>r :%s/<c-r><c-w>/
 
 " turns of highlighting
 nnoremap <leader><space> :noh<CR>
+
+" Create command for global search in projct
+command! -nargs=1 GGrep vimgrep "<args>" **/*
 " }}} Searching within a buffer behaviour
 " {{{ Syntax Highlighting
 " enable syntax highlighting
@@ -182,19 +185,28 @@ let g:netrw_banner = 0
 nnoremap <leader>E :Texplore<CR>
 " }}} netrw
 " {{{ ultisnips
-" Ultisnips is used as it's fiarly light weight and is jsut the engine.
-let g:UltiSnipsExpandTrigger = '<tab>'
-let g:UltiSnipsListSnippets  = '<c-tab>'
-let g:UltiSnipsJumpForwardTrigger = '<c-j>'
-let g:UltiSnipsJumpBackwardTrigger = '<c-k>'
+if has("python3")
+  " Ultisnips is used as it's fiarly light weight and is jsut the engine.
+  " Note that if COC is running then these keybinigs are disabled
+  let g:UltiSnipsExpandTrigger = '<tab>'
+  let g:UltiSnipsListSnippets  = '<c-tab>'
 
-" This just sets the path of where we edit/create personnal snippets
-let g:UltiSnipsSnippetsDir=$HOME . "/.config/nvim/ultisnips"
-" But the engine that loads the snippets for runtime
-" load from neovim's runtimepath, so dir 'ultisnips' is loaded from
-" ~/.config/nvim/ultisnips hence why using property:
-" g:UltiSnipsSnippetDirectories not g:UltiSnipsSnippetsDir
-let g:UltiSnipsSnippetDirectories=["UltiSnips", "ultisnips"]
+
+  let g:UltiSnipsJumpForwardTrigger = '<c-j>'
+  let g:UltiSnipsJumpBackwardTrigger = '<c-k>'
+
+  " This just sets the path of where we edit/create personnal snippets
+  let g:UltiSnipsSnippetsDir=$HOME . "/.config/nvim/ultisnips"
+  " But the engine that loads the snippets for runtime
+  " load from neovim's runtimepath, so dir 'ultisnips' is loaded from
+  " ~/.config/nvim/ultisnips hence why using property:
+  " g:UltiSnipsSnippetDirectories not g:UltiSnipsSnippetsDir
+  " NOTE: having multiple snippet directories causes coc to prompt for source
+  " selection, so override to only custom source
+  let g:UltiSnipsSnippetDirectories=["ultisnips"]
+
+  packadd! ultisnips
+endif
 " }}} ultisnips
 " {{{ lightline
 " Update status bar to include search case insensitivity state
@@ -216,6 +228,16 @@ let g:lightline = {
 
 let g:toggle_smartsearch_state = 1
 " }}} lightline
+" {{{ coc - conquer of code
+if executable('node')
+  set shell=/bin/sh
+
+  " coc extensions to laod
+  let g:coc_global_extensions = ['coc-json', 'coc-ultisnips']
+
+  packadd! coc
+endif
+" }}} coc - conquer of code
 " }}} Plugin Settings
 " {{{ Custom Mappings
 " {{{ Splits
