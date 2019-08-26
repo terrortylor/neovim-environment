@@ -216,29 +216,56 @@ let g:lightline = {
       \ 'colorscheme': 'tender',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'readonly', 'filename', 'modified' ] ],
+      \             [ 'cocstatus', 'readonly', 'filename', 'modified' ] ],
       \   'right': [ [ 'lineinfo' ],
       \              [ 'percent' ],
       \              [ 'search_case_sensativity_state', 'fileformat', 'fileencoding', 'filetype' ] ]
       \ },
       \ 'component_function': {
+	    \   'cocstatus': 'coc#status',
       \   'search_case_sensativity_state': 'togglesmartsearch#statepretty'
       \ },
       \ }
 
 let g:toggle_smartsearch_state = 1
+"
+" Use auocmd to force lightline update.
+autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
 " }}} lightline
 " {{{ coc - conquer of code
 if executable('node')
   set shell=/bin/sh
 
   " coc extensions to laod
-  let g:coc_global_extensions = ['coc-json', 'coc-ultisnips']
+  let g:coc_global_extensions = ['coc-json', 'coc-ultisnips', 'coc-solargraph']
+
+  " <CR> to confirm completion
+  inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<CR>"
+
+  " show suggestions on insert mode
+  inoremap <silent><expr> <c-space> coc#refresh()
+
+  nnoremap <leader>dh <Plug>(coc-diagnostic-next)
 
   packadd! coc
+  " disable auto preview on complete
+  set completeopt-=preview
 endif
 " }}} coc - conquer of code
+" {{{ vim-tmux-navigator
+" I don't want the defualt TmuxNavigatePrevious mapping
+let g:tmux_navigator_no_mappings = 1
+nnoremap <silent> <c-h> :TmuxNavigateLeft<cr>
+nnoremap <silent> <c-j> :TmuxNavigateDown<cr>
+nnoremap <silent> <c-k> :TmuxNavigateUp<cr>
+nnoremap <silent> <c-l> :TmuxNavigateRight<cr>
+
+" Saves the hassel of saving the buffer when switching to
+" a terminal pane
+let g:tmux_navigator_save_on_switch = 1
+" }}} vim-tmux-navigator
 " }}} Plugin Settings
+"
 " {{{ Custom Mappings
 " {{{ Splits
 " See here for good tips: https://thoughtbot.com/blog/vim-splits-move-faster-and-more-naturally

@@ -7,3 +7,5 @@ set errorformat+=%A%f:%l:%c:\ %m              " Start of multiline unspecified s
 set errorformat+=%A%f:%l:\ %m                 " Start of multiline unspecified string is 'filename:linenumber:'
 set errorformat+=%C%*\\s%m                    " Continuation of multiline error message is indented
 set errorformat+=%-G%.%#                      " All lines not matching any of the above patterns are ignored
+
+autocmd BufWritePre *.go :call CocAction('runCommand', 'editor.action.organizeImport')
