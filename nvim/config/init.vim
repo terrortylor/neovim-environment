@@ -42,10 +42,13 @@ set tabstop=2 softtabstop=0 expandtab shiftwidth=2 smarttab
 " Note that this seems to be on in neovim
 set autoindent
 " }}} Indentation
-" {{{ Window scrolling behaviour
+" {{{ Window behaviour
 " Scroll before reaching the start/end of file
 set scrolloff=5
-" }}} Window scrolling behaviour
+" Open splits to the right and bellow
+set splitright
+set splitbelow
+" }}} Window  behaviour
 " {{{ Searching for files
 
 " Show file options above the command line
@@ -260,20 +263,21 @@ nnoremap <silent> <c-j> :TmuxNavigateDown<cr>
 nnoremap <silent> <c-k> :TmuxNavigateUp<cr>
 nnoremap <silent> <c-l> :TmuxNavigateRight<cr>
 
-" Saves the hassel of saving the buffer when switching to
+" Saves the hassel of saving the buffer when switching to, saves all buffers
 " a terminal pane
-let g:tmux_navigator_save_on_switch = 1
+let g:tmux_navigator_save_on_switch = 2
 " }}} vim-tmux-navigator
 " }}} Plugin Settings
-"
 " {{{ Custom Mappings
 " {{{ Splits
+" THIS IS DISABLED IN FAVOUR OF TmuxNavigateXXX
+" bindings, see plugin config above
 " See here for good tips: https://thoughtbot.com/blog/vim-splits-move-faster-and-more-naturally
 " Easier split navigation
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
+" nnoremap <C-J> <C-W><C-J>
+" nnoremap <C-K> <C-W><C-K>
+" nnoremap <C-L> <C-W><C-L>
+" nnoremap <C-H> <C-W><C-H>
 
 " See: https://vim.fandom.com/wiki/Resize_splits_more_quickly
 " Increase/Decrease vertical windows
