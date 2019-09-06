@@ -20,6 +20,7 @@ set nofoldenable
 
 " vim file folding overrides
 au FileType vim setl foldmethod=marker foldenable
+au FileType tmux setl foldmethod=marker foldenable
 
 " }}} VIM Settings
 " {{{ General Settings
