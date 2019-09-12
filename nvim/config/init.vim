@@ -388,6 +388,12 @@ function! TabbedQuicklist() abort
     tabnew
     " open quickfix list
     copen
+    " register macro to select next qf item
+    " and run it so it's in the `@:` register
+    " which is a hack to pre-populate the
+    " read-only register `@:`
+    let @l=':cn'
+    normal @l
     " select first item in top pane
     cfirst
   endif
