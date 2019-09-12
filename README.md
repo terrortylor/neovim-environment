@@ -40,6 +40,10 @@ The following is not an exhaustive list by any means of the plugins I use, howev
 
 NOTE: [This stackoverflow](https://stackoverflow.com/questions/20929336/git-submodule-add-a-git-directory-is-found-locally-issue) was useful when I got submodule issues adding and removing plugins this way.
 
+# Custom Functions
+## TabbedQuicklist
+Opens a new tab with the quicklist open and first item selected.
+
 # Noteworthy Key Mappings
 Checkout the `shared.vim` file, most of is is commented.
 
