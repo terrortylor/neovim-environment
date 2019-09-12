@@ -34,8 +34,7 @@ nnoremap <leader>s :set spell!<CR>
 " disable spell checking on start but set language
 set nospell spelllang=en_gb
 " }}} Spelling
-" {{{ Indentation
-" Configure indentation to spaces of width 2
+" {{{ Indentation Configure indentation to spaces of width 2
 " https://stackoverflow.com/questions/1878974/redefine-tab-as-4-spaces
 set tabstop=2 softtabstop=0 expandtab shiftwidth=2 smarttab
 
@@ -377,6 +376,28 @@ nnoremap <leader>sv :source $MYVIMRC<cr>
 :iabbrev adn and
 " }}} Abbreviations
 " {{{ Functions
-" {{{ ToggleSearchCase
-" }}} ToggleSearchCase
+
+" Opens a new tab with the quickfix list
+" and selects the first item
+function! TabbedQuicklist() abort
+  " echom "In function"
+  if empty(getqflist())
+    echo "No results to display"
+  else
+    " open a new tab
+    tabnew
+    " open quickfix list
+    copen
+    " select first item in top pane
+    cfirst
+  endif
+endfunction
+command! TabbedQuicklist call TabbedQuicklist()
+
+" Autocommand to open quickfix list if populated...
+augroup quickfix
+    autocmd!
+    autocmd QuickFixCmdPost [^l]* :call TabbedQuicklist()
+    autocmd QuickFixCmdPost l*    lwindow
+augroup END
 " }}} Functions
