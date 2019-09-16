@@ -18,9 +18,12 @@ set undodir=~/.config/nvim/undo//
 set foldmethod=indent
 set nofoldenable
 
-" vim file folding overrides
-au FileType vim setl foldmethod=marker foldenable
-au FileType tmux setl foldmethod=marker foldenable
+" vi file folding overrides
+augroup foldgroup
+  autocmd!
+  autocmd FileType vim setl foldmethod=marker foldenable
+  autocmd FileType tmux setl foldmethod=marker foldenable
+augroup END
 
 " }}} VIM Settings
 " {{{ General Settings
@@ -97,9 +100,11 @@ set statusline+=\ %P    "percent through file
 " Highlight current cursor line
 set cursorline
 " Toggle on and off as entering/leaving windows
-au WinEnter * setlocal cursorline
-au WinLeave * setlocal nocursorline
-
+augroup cursorlinegroup
+  autocmd!
+  augroup WinEnter * setlocal cursorline
+  augroup WinLeave * setlocal nocursorline
+augroup END
 " }}} Visual Settings
 " {{{ Buffer auto load / save
 " autosave buffers when switching between then
@@ -109,7 +114,10 @@ set autowrite
 set autoread
 
 " Auto remove trailing whitespace on :w
-autocmd BufWritePre * %s/\s\+$//e
+augroup writebuffgroup
+  autocmd!
+  autocmd BufWritePre * %s/\s\+$//e
+augroup END
 " }}} Buffer auto load / save
 " {{{ Searching within a buffer behaviour
 
@@ -160,12 +168,17 @@ noremap <Leader>P "+p
 nnoremap <C-\> :call NerdToggleFind()<CR>
 
 " Open NERDTree at current file location, close if open
+" Takes into account in a buffer is loaded or not
 function! NerdToggleFind()
   if exists("g:NERDTree")
-    if g:NERDTree.IsOpen()
+    if @% == ""
       NERDTreeToggle
     else
-      NERDTreeFind
+      if g:NERDTree.IsOpen()
+        NERDTreeToggle
+      else
+        NERDTreeFind
+      endif
     endif
   endif
 endfunction
@@ -253,6 +266,9 @@ if executable('node')
   packadd! coc
   " disable auto preview on complete
   set completeopt-=preview
+
+  " show signcolumn all the time, as jumps around when linting
+  set signcolumn=yes
 endif
 " }}} coc - conquer of code
 " {{{ vim-tmux-navigator
@@ -262,6 +278,9 @@ nnoremap <silent> <c-h> :TmuxNavigateLeft<cr>
 nnoremap <silent> <c-j> :TmuxNavigateDown<cr>
 nnoremap <silent> <c-k> :TmuxNavigateUp<cr>
 nnoremap <silent> <c-l> :TmuxNavigateRight<cr>
+
+" Disable tmux navigator when zooming the Vim pane
+let g:tmux_navigator_disable_when_zoomed = 1
 
 " Saves the hassel of saving the buffer when switching to, saves all buffers
 " a terminal pane
@@ -320,6 +339,13 @@ nnoremap c[ :cp<CR>
 " list open buffers
 nnoremap <leader>b :ls<CR>:b<Space>
 " }}} File Buffers
+" {{{ Yank and paste to system clipboard
+" These apply for all modes
+noremap <Leader>Y "*y
+noremap <Leader>P "*p
+noremap <Leader>y "+y
+noremap <Leader>p "+p
+" }}} Yank and paste to system clipboard
 " Wrap visual selection in double quotes
 vnoremap <leader>" :<esc>`<i"<esc>`>la"<esc>
 
@@ -406,4 +432,12 @@ augroup quickfix
     autocmd QuickFixCmdPost [^l]* :call TabbedQuicklist()
     autocmd QuickFixCmdPost l*    lwindow
 augroup END
+
+" Assign formatted date to p register
+" Jump to 2nd line, insert date as markdown header
+" move down a line
+function! StartNewDay()
+  let @p = strftime('%A %d %B %Y')
+  execute "normal! 2Go\<cr>\<esc>ki## \<esc>\"ppo\<cr>"
+endfunction
 " }}} Functions
