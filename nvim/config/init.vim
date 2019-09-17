@@ -30,6 +30,14 @@ augroup END
 " don't bother about trying to support older versions
 set nocompatible
 
+" Put curor in same place when re-open a file
+augroup vim-on-open
+  autocmd!
+  autocmd BufReadPost *
+        \ if line("'\"") > 0 && line("'\"") <= line("$") |
+        \     execute 'normal! g`"zvzz' |
+        \ endif
+augroup END
 " }}} General Settings
 " {{{ Spelling
 " Toggle spell checking
@@ -102,8 +110,8 @@ set cursorline
 " Toggle on and off as entering/leaving windows
 augroup cursorlinegroup
   autocmd!
-  augroup WinEnter * setlocal cursorline
-  augroup WinLeave * setlocal nocursorline
+  autocmd WinEnter * setlocal cursorline
+  autocmd WinLeave * setlocal nocursorline
 augroup END
 " }}} Visual Settings
 " {{{ Buffer auto load / save
@@ -368,6 +376,7 @@ nnoremap <leader>O O<ESC>j
 vnoremap < <gv
 vnoremap > >gv
 
+" {{{ Navigation
 " Disable arrow keys
 nnoremap <up> <nop>
 nnoremap <down> <nop>
@@ -377,6 +386,10 @@ nnoremap <right> <nop>
 "inoremap <down> <nop>
 "inoremap <left> <nop>
 "inoremap <right> <nop>
+
+" In insert more move using readline line start/end
+inoremap <c-e> <esc>A
+inoremap <c-a> <esc>I
 
 " Basic bracket closing
 "inoremap " ""<left>
@@ -390,8 +403,8 @@ nnoremap <right> <nop>
 "inoremap {<CR> {<CR>}<ESC>O
 "inoremap {;<CR> {<CR>};<ESC>O
 
-" Open shared vim in vertical split
-" Note this is set in the vimrc and neovim init files
+" }}} Navigation
+" Open vimrc in vertical split
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 " Source shared vim config
 nnoremap <leader>sv :source $MYVIMRC<cr>
@@ -401,11 +414,12 @@ nnoremap <leader>sv :source $MYVIMRC<cr>
 :iabbrev teh the
 :iabbrev adn and
 " }}} Abbreviations
-" {{{ Functions
+" Functions
+" {{{ Search Related
 
 " Opens a new tab with the quickfix list
 " and selects the first item
-function! TabbedQuicklist() abort
+function! TabbedQuicklistViewer() abort
   " echom "In function"
   if empty(getqflist())
     echo "No results to display"
@@ -418,21 +432,42 @@ function! TabbedQuicklist() abort
     " and run it so it's in the `@:` register
     " which is a hack to pre-populate the
     " read-only register `@:`
-    let @l=':cn'
+    let @l=':call TabbedQuicklistNextItem()'
     normal @l
     " select first item in top pane
     cfirst
   endif
 endfunction
-command! TabbedQuicklist call TabbedQuicklist()
+command! TabbedQuicklistViewer call TabbedQuicklistViewer()
+
+" This calls `cn`, then checks if the current position
+" is within a folded line, if so it expands the fold
+function! TabbedQuicklistNextItem()
+  cnext
+  " if fold closed `-1` then expand
+  if foldclosed(line('.')) > -1
+    foldopen
+    " wincmd t
+  endif
+
+  " if buffer has changed then select top-left split
+  let thisbuf = bufnr("%")
+  echom thisbuf
+  let lastwin = winnr("#")
+  let lastbuf = winbufnr(lastwin)
+  if thisbuf != lastbuf
+    wincmd t
+  endif
+endfunction
 
 " Autocommand to open quickfix list if populated...
 augroup quickfix
     autocmd!
-    autocmd QuickFixCmdPost [^l]* :call TabbedQuicklist()
+    autocmd QuickFixCmdPost [^l]* :call TabbedQuicklistViewer()
     autocmd QuickFixCmdPost l*    lwindow
 augroup END
-
+" }}} Search Related
+" {{{ Daybook Related
 " Assign formatted date to p register
 " Jump to 2nd line, insert date as markdown header
 " move down a line
@@ -440,4 +475,4 @@ function! StartNewDay()
   let @p = strftime('%A %d %B %Y')
   execute "normal! 2Go\<cr>\<esc>ki## \<esc>\"ppo\<cr>"
 endfunction
-" }}} Functions
+" }}} Daybook Related
