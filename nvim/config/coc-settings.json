@@ -6,6 +6,11 @@
       "command": "gopls",
       "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
       "filetypes": ["go"]
+    },
+    "efm": {
+     /* "trace.server": "verbose",*/
+      "command": "efm-langserver",
+      "filetypes": ["vim", "eruby", "markdown", "yaml"]
     }
   }
 }

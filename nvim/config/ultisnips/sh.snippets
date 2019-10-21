@@ -1,3 +1,45 @@
-snippet shebang
+snippet shebang "Add /bin/bash shebang"
 #!/bin/bash
+endsnippet
+
+snippet caseswitch "Add case/switch statement"
+case $opt in
+a)
+  echo "a was matched"
+  ;;
+[1-8]*)
+  echo "in here"
+  ;;
+*)
+  echo "Unknown"
+  ;;
+ esac
+endsnippet
+
+snippet forloop "Add a for loop" b
+for ${1:i} in ${2:\{1..10\}}; do
+  echo "$1 is \$\{$1\}"
+done
+endsnippet
+
+snippet ifthen "Adds an if/then statement" b
+if [ ${1:\$val -eq 1} ]; then
+  ${2:echo "yes boss"}
+fi
+endsnippet
+
+snippet ifelse "Adds an if/then/else statement" b
+if [ ${1:\$val -eq 1} ]; then
+  ${2:echo "yes boss"}
+else
+  ${2:echo "no boss"}
+fi
+endsnippet
+
+snippet ifempty "Add if statement for value empty" b
+if [ -z ${1:\$val} ]; then
+  echo "Is empty"
+else
+  echo "Is not empty"
+fi
 endsnippet

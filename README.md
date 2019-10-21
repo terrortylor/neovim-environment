@@ -1,7 +1,12 @@
 # (Neo)Vim config
-This repository is used to track my NeoVim configuration, which I now use over vim(8). Which I did maintain both vim and neovim via a shared configuration file, I repeatidly found that I wasn't using vim. I've not found a use case yet where there has been a need to rerevert.
 
-Feel free to copy/clone although I'd always suggest reading the `init.vim` file instead and adapt to fit your own workflow as this is a constantly evolving configuration.
+This repository is used to track my NeoVim configuration, which I now use over
+vim(8). Which I did maintain both vim and neovim via a shared configuration
+file, I repeatidly found that I wasn't using vim. I've not found a use case
+yet where there has been a need to rerevert.
+
+Feel free to copy/clone although I'd always suggest reading the `init.vim` file
+instead and adapt to fit your own workflow as this is a constantly evolving configuration.
 
 Neovim follows the [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html), so two directories need to be symlinked:
 * nvim/config needs to be pointed at by ~/.config/nvim

@@ -1,7 +1,7 @@
 filetype plugin indent on
+
 " This file uses folding to better organise:
-" :help fold-commands
-" {{{ VIM Settings
+" :help fold-commands  " {{{ VIM Settings
 " {{{ Theme
 set background=dark
 set termguicolors
@@ -49,6 +49,10 @@ set nospell spelllang=en_gb
 " https://stackoverflow.com/questions/1878974/redefine-tab-as-4-spaces
 set tabstop=2 softtabstop=0 expandtab shiftwidth=2 smarttab
 
+augroup fileindentgroup
+  autocmd!
+  autocmd FileType ruby setl expandtab
+augroup END
 " Autoindent from previous line
 " Note that this seems to be on in neovim
 set autoindent
@@ -179,11 +183,18 @@ nnoremap <C-\> :call NerdToggleFind()<CR>
 " Takes into account in a buffer is loaded or not
 function! NerdToggleFind()
   if exists("g:NERDTree")
+    " If no buffer has been loaded
     if @% == ""
       NERDTreeToggle
     else
+      " if nerdtree is open
       if g:NERDTree.IsOpen()
-        NERDTreeToggle
+        " if nerdtree focused then close
+        if bufwinnr(t:NERDTreeBufName) == winnr()
+          NERDTreeToggle
+        else
+          NERDTreeFind
+        endif
       else
         NERDTreeFind
       endif
@@ -192,11 +203,16 @@ function! NerdToggleFind()
 endfunction
 
 " Autoclose vim if only NERDTree open
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-
+augroup nerdtreegroup
+  autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+augroup END
+" Show hidden files
+let NERDTreeShowHidden=1
+" }}} NERDTree
+" {{{ CtrlP
 " Jump to open buffer if open:
 let g:ctrlp_switch_buffer = 'Et'
-" }}} NERDTree
+" }}} CtrlP
 " {{{ netrw
 " Configure netrw plugin to show file ls details
 " See: https://shapeshed.com/vim-netrw/
@@ -211,13 +227,17 @@ nnoremap <leader>E :Texplore<CR>
 " {{{ ultisnips
 if has("python3")
   " Ultisnips is used as it's fiarly light weight and is jsut the engine.
-  " Note that if COC is running then these keybinigs are disabled
+  " Note that if COC is running then these two keybinigs are disabled in
+  " favour of <CR>
   let g:UltiSnipsExpandTrigger = '<tab>'
   let g:UltiSnipsListSnippets  = '<c-tab>'
 
 
-  let g:UltiSnipsJumpForwardTrigger = '<c-j>'
-  let g:UltiSnipsJumpBackwardTrigger = '<c-k>'
+  " As using COC tab and shift tab feel more natural
+  " let g:UltiSnipsJumpForwardTrigger = '<c-j>'
+  " let g:UltiSnipsJumpBackwardTrigger = '<c-k>'
+  let g:UltiSnipsJumpForwardTrigger = '<TAB>'
+  let g:UltiSnipsJumpBackwardTrigger = '<S-TAB>'
 
   " This just sets the path of where we edit/create personnal snippets
   let g:UltiSnipsSnippetsDir=$HOME . "/.config/nvim/ultisnips"
@@ -254,7 +274,9 @@ let g:lightline = {
 let g:toggle_smartsearch_state = 1
 "
 " Use auocmd to force lightline update.
-autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
+augroup cocgroup
+  autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
+augroup END
 " }}} lightline
 " {{{ coc - conquer of code
 if executable('node')
@@ -265,6 +287,10 @@ if executable('node')
 
   " <CR> to confirm completion
   inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<CR>"
+
+  " The following are required to match the ultisnips mappings
+  let g:coc_snippet_next = '<TAB>'
+  let g:coc_snippet_prev = '<S-TAB>'
 
   " show suggestions on insert mode
   inoremap <silent><expr> <c-space> coc#refresh()
@@ -354,6 +380,14 @@ noremap <Leader>P "*p
 noremap <Leader>y "+y
 noremap <Leader>p "+p
 " }}} Yank and paste to system clipboard
+" {{{ Formatting helpers
+" Replace first pair of double quotes on line with single
+" return back to cursor location
+nnoremap cq mp0f"r';.`p
+
+" Toggle paste mode
+set pastetoggle=<F2>
+" }}} Formatting helpers
 " Wrap visual selection in double quotes
 vnoremap <leader>" :<esc>`<i"<esc>`>la"<esc>
 
