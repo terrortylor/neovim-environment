@@ -295,7 +295,7 @@ if executable('node')
   " show suggestions on insert mode
   inoremap <silent><expr> <c-space> coc#refresh()
 
-  nnoremap <leader>dh <Plug>(coc-diagnostic-next)
+  nnoremap <leader>dh <Plug>(coc-diagnostic-next)<CR>
 
   packadd! coc
   " disable auto preview on complete
@@ -340,22 +340,22 @@ nnoremap <leader>- :vertical resize -10<CR>
 " }}} Splits
 " {{{ TABs
 " easier tab navigation
-nnoremap th  :tabfirst<CR>    " moves to first tab
-nnoremap tk  :tabnext<CR>     " moves to next tab
-nnoremap tj  :tabprev<CR>     " moves to previous tab
-nnoremap tl  :tablast<CR>     " moves to last tab
-nnoremap <leader>1 1gt        " moves to tab 1
-nnoremap <leader>2 2gt        " moves to tab 2
-nnoremap <leader>3 3gt        " moves to tab 3
-nnoremap <leader>4 4gt        " moves to tab 4
-nnoremap <leader>5 5gt        " moves to tab 5
-nnoremap <leader>6 6gt        " moves to tab 6
-nnoremap <leader>7 7gt        " moves to tab 7
-nnoremap <leader>8 8gt        " moves to tab 8
-nnoremap <leader>9 9gt        " moves to tab 9
+nnoremap [T  :tabfirst<CR>    " moves to first tab
+nnoremap ]t  :tabnext<CR>     " moves to next tab
+nnoremap [t  :tabprev<CR>     " moves to previous tab
+nnoremap ]T  :tablast<CR>     " moves to last tab
+nnoremap <leader>1 1gt<CR>    " moves to tab 1
+nnoremap <leader>2 2gt<CR>    " moves to tab 2
+nnoremap <leader>3 3gt<CR>    " moves to tab 3
+nnoremap <leader>4 4gt<CR>    " moves to tab 4
+nnoremap <leader>5 5gt<CR>    " moves to tab 5
+nnoremap <leader>6 6gt<CR>    " moves to tab 6
+nnoremap <leader>7 7gt<CR>    " moves to tab 7
+nnoremap <leader>8 8gt<CR>    " moves to tab 8
+nnoremap <leader>9 9gt<CR>    " moves to tab 9
 
 " opens new tab
-nnoremap tn  :tabnew<Space>
+nnoremap tn  :tabnew<CR>
 
 " closes tab
 nnoremap tc  :tabclose<CR>
@@ -365,9 +365,11 @@ nnoremap <leader>cl :copen<CR>   " Open Quicklist
 nnoremap <leader>cc :cclose<CR>  " Close quicklist
 "
 " To quickly go through the Quicklist
-nnoremap c] :cn<CR>
-nnoremap c[ :cp<CR>
+nnoremap ]c :cn<CR>
+nnoremap [c :cp<CR>
 " }}} Quicklist End
+nnoremap ]b :buffer<CR>
+nnoremap [b :nbuffe<CR>
 " {{{ File Buffers
 " Easier navigation with file buffer
 " list open buffers
