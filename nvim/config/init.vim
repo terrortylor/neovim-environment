@@ -285,8 +285,8 @@ if executable('node')
   " coc extensions to laod
   let g:coc_global_extensions = ['coc-json', 'coc-ultisnips', 'coc-solargraph']
 
-  " <CR> to confirm completion
-  inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<CR>"
+  " <TAB> to confirm completion
+  inoremap <expr> <TAB> pumvisible() ? "\<C-y>" : "\<TAB>"
 
   " The following are required to match the ultisnips mappings
   let g:coc_snippet_next = '<TAB>'
@@ -295,7 +295,12 @@ if executable('node')
   " show suggestions on insert mode
   inoremap <silent><expr> <c-space> coc#refresh()
 
-  nnoremap <leader>dh <Plug>(coc-diagnostic-next)<CR>
+  " navigate diagnostics, probably covered by [c/]c already tbh
+  nmap <silent> [g <Plug>(coc-diagnostic-prev)
+  nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+  " Show all diagnostics
+  nnoremap <silent> dl  :<C-u>CocList diagnostics<cr>
 
   packadd! coc
   " disable auto preview on complete
@@ -374,6 +379,8 @@ nnoremap [b :nbuffe<CR>
 " Easier navigation with file buffer
 " list open buffers
 nnoremap <leader>b :ls<CR>:b<Space>
+nnoremap [b :bprevious<CR>
+nnoremap ]b :bnext<CR>
 " }}} File Buffers
 " {{{ Yank and paste to system clipboard
 " These apply for all modes
@@ -441,9 +448,9 @@ inoremap <c-a> <esc>I
 
 " }}} Navigation
 " Open vimrc in vertical split
-nnoremap <leader>ev :vsplit $MYVIMRC<cr>
+nnoremap <silent><leader>ev :vsplit $MYVIMRC<cr>
 " Source shared vim config
-nnoremap <leader>sv :source $MYVIMRC<cr>
+nnoremap <silent><leader>sv :source $MYVIMRC<cr>
 " }}} Custom Mappings
 " {{{ Abbreviations
 " Source my abbreviations
@@ -512,3 +519,61 @@ function! StartNewDay()
   execute "normal! 2Go\<cr>\<esc>ki## \<esc>\"ppo\<cr>"
 endfunction
 " }}} Daybook Related
+" {{{ Scratch Buffer Related
+" Scratch buffer name
+if !exists('s:scratch_buffer_name')
+ let s:scratch_buffer_name = 'scratch'
+endif
+
+" Scratch paste from register name
+if !exists('s:scratch_paste_register')
+ let s:scratch_paste_register = '*'
+endif
+
+" Opens a scratch buffer window
+" If no buffer exists then create window and buffer
+" If buffer and window exist then move to it
+" If buffer exist but not in window then open in split
+function! Scratch()
+  " if scratch buffer exists
+  if bufnr(s:scratch_buffer_name) > 0
+    " buffer exists check to see if window exists
+    let scratch_window_name = bufwinnr(s:scratch_buffer_name)
+    if scratch_window_name > 0
+      execute scratch_window_name . 'wincmd w'
+    else
+      " open in split
+      execute 'vsplit' s:scratch_buffer_name
+    endif
+  else
+    " otherwise open new split as setup
+    split
+    noswapfile hide enew
+    setlocal buftype=nofile
+    setlocal bufhidden=hide
+    execute 'file' s:scratch_buffer_name
+  endif
+endfunction
+
+" If a scratch buffer exists then paste from the +
+" register
+function! PasteToScratch()
+  " capture current and scratch buffers
+  let current_buffer = bufnr('%')
+  let scratch_buffer = bufnr(s:scratch_buffer_name)
+  if scratch_buffer > 0
+    " move to scratch buffer if not already in it
+    " as moving to same window sporks
+    if current_buffer != scratch_buffer
+      call Scratch()
+    endif
+    call append(line('$'), '')
+    call append(line('$'), getreg(s:scratch_paste_register))
+    if current_buffer != scratch_buffer
+      execute current_buffer . 'wincmd w'
+    endif
+  else
+    echom "No scratch file found"
+  endif
+endfunction
+" }}} Scratch Buffer Related

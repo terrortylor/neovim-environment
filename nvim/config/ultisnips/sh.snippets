@@ -43,3 +43,30 @@ else
   echo "Is not empty"
 fi
 endsnippet
+
+snippet ifnumargs "Adds if statement to check number of args" b
+if [ "\$#" -ne ${1:1} ]; then
+  echo "Illegal number of parameters, expected $1 got \$#"
+  echo -e "Usage:\n${FUNCNAME[0]} ${2:<SESSION>}"
+  return 1
+fi
+endsnippet
+
+snippet ifstringcontains "Adds if statement to check var contains string" b
+if [[ ${1:\${variable}} == *"${2:value}"* ]]; then
+  ${3:echo "It's there!"}
+fi
+endsnippet
+
+
+snippet ifdirexists "Adds if statement to check if directory exitsts" b
+if [ ${1:!} -d ${2:"directory"} ]; then
+  ${3:echo "here"}
+fi
+endsnippet
+
+snippet ifexitcode "Adds if statement to check on the exit code" b
+if [[ "$?" -ne ${1:0} ]]; then
+ ${2:echo "ooops"}
+fi
+endsnippet
