@@ -567,6 +567,7 @@ function! PasteToScratch()
     if current_buffer != scratch_buffer
       call Scratch()
     endif
+    " at end of file add new line and then reg contents
     call append(line('$'), '')
     call append(line('$'), getreg(s:scratch_paste_register))
     if current_buffer != scratch_buffer
