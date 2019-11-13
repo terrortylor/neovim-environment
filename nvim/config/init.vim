@@ -12,6 +12,8 @@ colorscheme tender
 set backupdir=~/.config/nvim/backup//
 set directory=~/.config/nvim/swap//
 set undodir=~/.config/nvim/undo//
+
+set undofile
 " }}} Swap, Backup and Undo File Location
 " {{{ Setup folding rules
 " Global to indent, and not close them by default

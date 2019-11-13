@@ -1,4 +1,7 @@
-au BufRead,BufNewFile *.go set filetype=go
+augroup goftgroup
+  autocmd BufRead,BufNewFile *.go set filetype=go
+  autocmd BufWritePre *.go :call CocAction('runCommand', 'editor.action.organizeImport')
+augroup END
 
 set errorformat =%-G#\ %.%#                   " Ignore lines beginning with '#' ('# command-line-arguments' line sometimes appears?)
 set errorformat+=%-G%.%#panic:\ %m            " Ignore lines containing 'panic: message'
@@ -8,4 +11,3 @@ set errorformat+=%A%f:%l:\ %m                 " Start of multiline unspecified s
 set errorformat+=%C%*\\s%m                    " Continuation of multiline error message is indented
 set errorformat+=%-G%.%#                      " All lines not matching any of the above patterns are ignored
 
-autocmd BufWritePre *.go :call CocAction('runCommand', 'editor.action.organizeImport')

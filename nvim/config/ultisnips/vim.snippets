@@ -3,3 +3,9 @@ if !exists('${1:s:variable}')
  let $1 = ${2:'value'}
 endif
 endsnippet
+
+snippet autogroup "Inserts an autogroup" b
+augroup ${1:autogroupname}
+  autocmd ${2}
+augroup END
+endsnippet
