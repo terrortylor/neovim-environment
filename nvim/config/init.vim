@@ -179,7 +179,7 @@ noremap <Leader>P "+p
 " }}} VIM Settings
 " {{{ Plugin Settings
 " {{{ NERDTree
-nnoremap <C-\> :call NerdToggleFind()<CR>
+nnoremap <silent><C-\> :call NerdToggleFind()<CR>
 
 " Open NERDTree at current file location, close if open
 " Takes into account in a buffer is loaded or not
@@ -580,3 +580,23 @@ function! PasteToScratch()
   endif
 endfunction
 " }}} Scratch Buffer Related
+" {{{ Prototyping helpers
+"
+" This function copies visual selection
+" pastes it below and comments out original
+" leaving cursor in first line on copied selection
+" It has a dependency on vim-commentary plugin
+function! Prototype() range
+  try
+    let a_save = @a
+    normal! gv"ay`>pgv
+    execute "normal \<Plug>Commentary"
+    normal! `>j
+    return @a
+  finally
+    let @a = a_save
+  endtry
+endfunction
+
+xnoremap pro :<c-u>call Prototype()<CR>
+" }}} Prototyping helpers
