@@ -512,15 +512,6 @@ augroup quickfix
     autocmd QuickFixCmdPost l*    lwindow
 augroup END
 " }}} Search Related
-" {{{ Daybook Related
-" Assign formatted date to p register
-" Jump to 2nd line, insert date as markdown header
-" move down a line
-function! StartNewDay()
-  let @p = strftime('%A %d %B %Y')
-  execute "normal! 2Go\<cr>\<esc>ki## \<esc>\"ppo\<cr>"
-endfunction
-" }}} Daybook Related
 " {{{ Scratch Buffer Related
 " Scratch buffer name
 if !exists('s:scratch_buffer_name')
