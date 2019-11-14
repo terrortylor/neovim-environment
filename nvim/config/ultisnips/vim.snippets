@@ -6,6 +6,15 @@ endsnippet
 
 snippet autogroup "Inserts an autogroup" b
 augroup ${1:autogroupname}
+  autocmd!
   autocmd ${2}
 augroup END
+endsnippet
+
+snippet pluginsettingwrapper "Inserts the standard plugin save/restore settings crap" b
+let s:cpo_save = &cpo
+set cpo&vim
+$1
+let &cpo = s:cpo_save
+unlet s:cpo_save
 endsnippet
