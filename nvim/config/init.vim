@@ -219,7 +219,6 @@ let g:ctrlp_switch_buffer = 'Et'
 " Configure netrw plugin to show file ls details
 " See: https://shapeshed.com/vim-netrw/
 let g:netrw_liststyle = 1
-"
 " Hide noisey banner
 let g:netrw_banner = 0
 
@@ -591,3 +590,12 @@ endfunction
 
 xnoremap pro :<c-u>call Prototype()<CR>
 " }}} Prototyping helpers
+" {{{ Random Functions
+
+" Show highlight group under cursor
+" https://stackoverflow.com/questions/9464844/how-to-get-group-name-of-highlighting-under-cursor-in-vim
+function! SynGroup()
+    let l:s = synID(line('.'), col('.'), 1)
+    echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
+endfun
+" }}} Random Functions

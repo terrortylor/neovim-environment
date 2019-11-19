@@ -1,6 +1,3 @@
-" Set spelling on as default
-set spell spelllang=en_gb
-
 " Assign formatted date to p register
 " Jump to 2nd line, insert date as markdown header
 " move down a line
