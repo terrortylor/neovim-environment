@@ -1,7 +1,6 @@
 let s:toc_title = "# Table of contents"
 let s:toc_end_marker = "<!--- end of toc -->"
 
-
 function! s:GetHeaders()
   let a:flags = "Wc" "'c' is required to include current/first line
   while search("^##", a:flags) != 0
@@ -13,7 +12,9 @@ endfunction
 
 function! s:RemoveTOC()
   execute "g/^" . s:toc_title . "/,/^" . s:toc_end_marker . "/d"
-  if getline(line(0)) == ""
+  " Bit of a hack as gerex wans't coming back as true/false
+  " so just see if there is a match for whitespace
+  if match(getline(1), '\S')
     call cursor(1,1)
     delete
   endif
@@ -31,10 +32,16 @@ function! s:WriteTOC()
     let a:heading_text = substitute(heading, "[#]", "","g")
     " Work out heading title for padding
     let a:heading_level = len(a:hashes) - 2
-    let a:padding = repeat(" ", 2 * a:heading_level)
+    if a:heading_level > 0
+      let a:padding = repeat(" ", 3 * a:heading_level)
+    else
+      let a:padding = ""
+    endif
+    " format heading link
+    let a:heading_link = "[" . trim(a:heading_text) . "](#" . substitute(trim(a:heading_text), " ", "_", "g") . ")"
     " insert toc line, numbered lists just need to be a number... makes it
     " easier :P
-    call append(a:line, a:padding . "1." . a:heading_text)
+    call append(a:line, a:padding . "1. " . a:heading_link)
     let a:line += 1
   endfor
 

@@ -29,7 +29,7 @@ function! s:SetSetting(setting_name)
   endif
 endfunction
 
-function! PringSettings()
+function! PrintSettings()
   echom "Debug Print Settings:"
   echom "Hide Mode: " . s:hidden_all
   for option in keys(s:saved_settings)
@@ -37,58 +37,122 @@ function! PringSettings()
   endfor
 endfunction
 
+" TODO does this need to be a toggle?
 function! HideNoiseToggle() abort
   if s:hidden_all==0
     let s:hidden_all = 1
 
     call s:SaveSetting("showmode")
-    set noshowmode
+    setlocal noshowmode
 
     call s:SaveSetting("ruler")
-    set noruler
+    setlocal noruler
 
     call s:SaveSetting("laststatus")
     set laststatus=0
 
+    call s:SaveSetting("showtabline")
+    set showtabline=0
+
     call s:SaveSetting("showcmd")
-    set noshowcmd
+    setlocal noshowcmd
 
     call s:SaveSetting("number")
-    set nonumber
+    setlocal nonumber
 
     call s:SaveSetting("relativenumber")
-    set norelativenumber
+    setlocal norelativenumber
   else
-    let s:hidden_all = 0
+    let l:this_tab = tabpagenr()
+    if l:this_tab == s:focus_tab
+      let s:hidden_all = 0
 
-    call s:SetSetting('showmode')
-    call s:SetSetting('ruler')
-    call s:SetSetting('laststatus')
-    call s:SetSetting('showcmd')
-    call s:SetSetting('number')
-    call s:SetSetting('relativenumber')
+      call s:SetSetting('showmode')
+      call s:SetSetting('ruler')
+      call s:SetSetting('laststatus')
+      call s:SetSetting('showtabline')
+      call s:SetSetting('showcmd')
+      call s:SetSetting('number')
+      call s:SetSetting('relativenumber')
+
+      let s:saved_settings = {}
+
+      let s:focus_tab=''
+    endif
+  endif
+
+  " need to also set some coloud scheme shit
+  " :hi NonText guifg=bg
+endfunction
+
+function! s:Init_Padding_Window(command)
+  execute a:command
+
+  " Make the new window blank/scratch
+  setlocal buftype=nofile bufhidden=wipe nomodifiable nobuflisted noswapfile
+    \ nonumber norelativenumber
+    \ nocursorline nocursorcolumn winfixwidth winfixheight
+    \ statusline=\
+
+  " return the window id for resizing later
+  return win_getid()
+endfunction
+
+function! s:Resize_Windows()
+  let l:width = &columns
+  let l:buf_win_width = (l:width - 100) / 2
+  echo "pad width: " . l:buf_win_width
+
+  " Set left padding
+  let l:win_id = t:padding_windows.left
+  call win_gotoid(l:win_id)
+  execute 'vertical resize ' . l:buf_win_width
+
+  " Set right padding
+  let l:win = bufwinnr(t:padding_windows.right)
+  call win_gotoid(l:win_id)
+  execute 'vertical resize ' . l:buf_win_width
+endfunction
+
+function! s:ManageHeaderFooter()
+  let l:this_tab = tabpagenr()
+  if l:this_tab == s:focus_tab
+    set laststatus=0
+    set showtabline=0
+  else
+    execute 'let &laststatus = get(s:saved_settings, "laststatus")'
+    execute 'let &showtabline = get(s:saved_settings, "showtabline")'
   endif
 endfunction
 
+" TODO rename to Focus and have have a cleanup function called when leave
+" buffer/new window etc
 function! FocusToggle() abort
-  let width = &columns
-  echo "width : " . width
-  let buf_win_width = (width - 100) / 2
-  echo "buf win : " . buf_win_width
 
   " Create a new tab and empty buffer each side as 'buffers'
-  tabedit %
-  vnew
-  wincmd H
-  wincmd l
-  vnew
-  wincmd h
-  wincmd h
+  tab split
+  let t:focus_window = win_getid()
+  let t:padding_windows = {}
+  let t:padding_windows.left = s:Init_Padding_Window('vertical topleft new')
+  let t:padding_windows.right = s:Init_Padding_Window('vertical botright new')
+  " Capture tab for status bar management
+  let s:focus_tab = tabpagenr()
 
-  " size 'buffers'
-  execute 'vertical resize ' . buf_win_width
-  wincmd l
-  vertical resize 100
+  call s:Resize_Windows()
+
+  " move back to buffer to edit
+  call win_gotoid(t:focus_window)
+
+  " Hide noise
+  call HideNoiseToggle()
+
+
+  " Setup autogroup to handle moving in/out of focus tab
+  augroup focusgroup
+    autocmd!
+    autocmd TabEnter,TabLeave * nested call s:ManageHeaderFooter()
+    autocmd TabClosed * nested call HideNoiseToggle()
+  augroup END
 endfunction
 
 let &cpo = s:cpo_save

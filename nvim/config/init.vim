@@ -30,7 +30,10 @@ augroup END
 " }}} VIM Settings
 " {{{ General Settings
 " don't bother about trying to support older versions
-set nocompatible
+" set nocompatible
+
+" Allow switching buffers without saving
+set hidden
 
 " Put curor in same place when re-open a file
 augroup vim-on-open
@@ -218,7 +221,8 @@ let g:ctrlp_switch_buffer = 'Et'
 " {{{ netrw
 " Configure netrw plugin to show file ls details
 " See: https://shapeshed.com/vim-netrw/
-let g:netrw_liststyle = 1
+let g:netrw_liststyle = 3
+"
 " Hide noisey banner
 let g:netrw_banner = 0
 
@@ -374,14 +378,13 @@ nnoremap <leader>cc :cclose<CR>  " Close quicklist
 nnoremap ]c :cn<CR>
 nnoremap [c :cp<CR>
 " }}} Quicklist End
-nnoremap ]b :buffer<CR>
-nnoremap [b :nbuffe<CR>
 " {{{ File Buffers
 " Easier navigation with file buffer
 " list open buffers
 nnoremap <leader>b :ls<CR>:b<Space>
 nnoremap [b :bprevious<CR>
 nnoremap ]b :bnext<CR>
+nnoremap bd :bdelete<CR>
 " }}} File Buffers
 " {{{ Yank and paste to system clipboard
 " These apply for all modes
