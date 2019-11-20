@@ -61,3 +61,5 @@ function! CreateTOC()
 
   call s:WriteTOC()
 endfunction
+
+command! CreateToc call CreateTOC()

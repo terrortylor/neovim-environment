@@ -5,3 +5,9 @@ function! StartNewDay()
   let @p = strftime('%A %d %B %Y')
   execute "normal! 2Go\<cr>\<esc>ki## \<esc>\"ppo\<cr>"
 endfunction
+
+" Auto create TOC on buf write is a note
+augroup notebufwritegroup
+  autocmd!
+  autocmd BufWrite *.md CreateToc
+augroup END
