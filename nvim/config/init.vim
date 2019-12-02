@@ -160,6 +160,11 @@ nnoremap <leader><space> :noh<CR>
 " Create command for global search in projct
 command! -nargs=1 GGrep vimgrep "<args>" **/*
 " }}} Searching within a buffer behaviour
+" {{{ Searching
+if executable('ack')
+  set grepprg=ack\ -H\ --column\ --nofilter\ --nocolor\ --nogroup
+endif
+" }}} Searching
 " {{{ Syntax Highlighting
 " enable syntax highlighting
 syntax enable
@@ -499,7 +504,6 @@ function! TabbedQuicklistNextItem()
 
   " if buffer has changed then select top-left split
   let thisbuf = bufnr("%")
-  echom thisbuf
   let lastwin = winnr("#")
   let lastbuf = winbufnr(lastwin)
   if thisbuf != lastbuf
