@@ -1,7 +1,8 @@
 filetype plugin indent on
 
 " This file uses folding to better organise:
-" :help fold-commands  " {{{ VIM Settings
+" :help fold-commands
+" {{{ VIM Settings
 " {{{ Theme
 set background=dark
 set termguicolors
@@ -184,6 +185,9 @@ noremap <Leader>p "*p
 noremap <Leader>Y "+y
 noremap <Leader>P "+p
 " }}} Registers
+" {{{ Tags
+set tags=./.git/tags;/
+" }}} Tags
 " }}} VIM Settings
 " {{{ Plugin Settings
 " {{{ NERDTree
