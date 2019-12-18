@@ -12,6 +12,10 @@ if !exists('s:saved_settings')
   let s:saved_settings = {}
 endif
 
+if !exists('s:non_text_hlg')
+ let s:non_text_hlg = {}
+endif
+
 " List of settings to disable
 if !exists('s:hide_settings')
  let s:hide_settings = ['showmode', 'ruler', 'number', 'relativenumber', 'showcmd']
@@ -37,7 +41,6 @@ function! PrintSettings()
   endfor
 endfunction
 
-" TODO does this need to be a toggle?
 function! HideNoiseToggle() abort
   if s:hidden_all==0
     let s:hidden_all = 1
@@ -62,6 +65,10 @@ function! HideNoiseToggle() abort
 
     call s:SaveSetting("relativenumber")
     setlocal norelativenumber
+
+    let s:non_text_hlg['ctermfg'] = s:Return_Highlight_Term('NonText', 'ctermfg')
+    let s:non_text_hlg['guifg'] = s:Return_Highlight_Term('NonText', 'guifg')
+    highlight NonText ctermfg=bg guifg=bg
   else
     let l:this_tab = tabpagenr()
     if l:this_tab == s:focus_tab
@@ -78,11 +85,19 @@ function! HideNoiseToggle() abort
       let s:saved_settings = {}
 
       let s:focus_tab=''
+
+      execute 'highlight NonText ctermfg=' . s:non_text_hlg['ctermfg'] . ' guifg=' . s:non_text_hlg['guifg']
+      let s:non_text_hlg = {}
     endif
   endif
+endfunction
 
-  " need to also set some coloud scheme shit
-  " :hi NonText guifg=bg
+function! s:Return_Highlight_Term(group, term)
+   " Store output of group to variable
+   let a:output = execute('hi ' . a:group)
+
+   " Find the term we're looking for
+   return matchstr(a:output, a:term .'=\zs\S*')
 endfunction
 
 function! s:Init_Padding_Window(command)
@@ -101,7 +116,6 @@ endfunction
 function! s:Resize_Windows()
   let l:width = &columns
   let l:buf_win_width = (l:width - 100) / 2
-  echo "pad width: " . l:buf_win_width
 
   " Set left padding
   let l:win_id = t:padding_windows.left
@@ -119,9 +133,11 @@ function! s:ManageHeaderFooter()
   if l:this_tab == s:focus_tab
     set laststatus=0
     set showtabline=0
+    highlight NonText ctermfg=bg guifg=bg
   else
     execute 'let &laststatus = get(s:saved_settings, "laststatus")'
     execute 'let &showtabline = get(s:saved_settings, "showtabline")'
+    execute 'highlight NonText ctermfg=' . s:non_text_hlg['ctermfg'] . ' guifg=' . s:non_text_hlg['guifg']
   endif
 endfunction
 
@@ -154,6 +170,8 @@ function! FocusToggle() abort
     autocmd TabClosed * nested call HideNoiseToggle()
   augroup END
 endfunction
+
+command! Focus call FocusToggle()
 
 let &cpo = s:cpo_save
 unlet s:cpo_save

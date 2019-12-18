@@ -29,3 +29,6 @@
 [submodule "nvim/plugins/opt/ultisnips"]
 	path = nvim/plugins/opt/ultisnips
 	url = https://github.com/SirVer/ultisnips.git
+[submodule "nvim/plugins/start/kotlin-vim"]
+	path = nvim/plugins/start/kotlin-vim
+	url = https://github.com/udalov/kotlin-vim.git
