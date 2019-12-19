@@ -1,20 +1,10 @@
-" TODO convert these to maps
-if !exists('s:search_engine_google')
-  let s:search_engine_google = 'www.google.com/search?q='
+if !exists('s:search_engines')
+  let s:search_engines = {'google' : 'www.google.com/search?q=', 'duckduckgo' : 'www.duckduckgo.com/?q='}
 endif
 
-if !exists('s:search_engine_duckduckgo')
-  let s:search_engine_duckduckgo = 'www.duckduckgo.com/?q='
+if !exists('s:browsers')
+  let s:browsers = {'chrome' : 'google-chrome', 'firefox' : 'firefox'}
 endif
-
-if !exists('s:exe_chrome')
-  let s:exe_chrome = 'google-chrome'
-endif
-
-if !exists('s:exe_firefox')
-  let s:exe_firefox = 'firefox'
-endif
-
 
 function! WebSearch(type) abort
   " Store current selection setting and @@ register
@@ -52,16 +42,18 @@ function! websearch#BuildSearchCommand() abort
     let a:search = substitute(trim(@@), ' \+', '+', 'g')
   endif
 
-  if g:websearch_browser ==? "chrome"
-    let l:browser = s:exe_chrome
-  elseif g:websearch_browser ==? "firefox"
-    let l:browser = s:exe_firefox
+  if has_key(s:browsers, g:websearch_browser)
+    let l:browser = get(s:browsers, g:websearch_browser)
+  else
+    echom "Browser: " . g:websearch_browser . " not found"
+    return ""
   endif
 
-  if g:websearch_search_engine ==? "google"
-    let l:engine = s:search_engine_google
-  elseif g:websearch_search_engine ==? "duckduckgo"
-    let l:engine = s:search_engine_duckduckgo
+  if has_key(s:search_engines, g:websearch_search_engine)
+    let l:engine = get(s:search_engines, g:websearch_search_engine)
+  else
+    echom "Search engine: " . g:websearch_search_engine . " not found"
+    return ""
   endif
 
   let l:command = "!" . l:browser . " '" . l:engine . a:search . "' &"
