@@ -1,7 +1,7 @@
 filetype plugin indent on
 
 " This file uses folding to better organise:
-" :help fold-commands
+ " :help fold-commands
 " {{{ VIM Settings
 " {{{ Theme
 set background=dark
@@ -72,8 +72,9 @@ set splitbelow
 " }}} Window  behaviour
 " {{{ Searching for files
 
-" Show file options above the command line
-set wildmenu
+" Show file options above the command line, in a more bash list way
+" matching on full/longest
+set wildmode=list,longest
 set wildignorecase
 
 set path+=**
@@ -149,12 +150,15 @@ set incsearch
 set showmatch
 set hlsearch
 
+" This is neovim specific, makes live s/ changes in buffer
+set inccommand=nosplit
+
 " Set global flag on for search are replace
 " :help gdefault
 set gdefault
 
 " Search and replace word under cursor
-nnoremap <leader>r :%s/<c-r><c-w>/
+nnoremap <leader>r :%s/<c-r><c-w>//<left>
 
 " turns of highlighting
 nnoremap <leader><space> :noh<CR>
@@ -272,6 +276,9 @@ if has("python3")
   let g:UltiSnipsSnippetDirectories=["ultisnips"]
 
   packadd! ultisnips
+
+  nnoremap <leader>ue :UltiSnipsEdit<CR>
+  nnoremap <leader>ur :call UltiSnips#RefreshSnippets()<CR>
 endif
 " }}} ultisnips
 " {{{ lightline
@@ -470,6 +477,9 @@ let g:tmux_navigator_disable_when_zoomed = 1
 " a terminal pane
 let g:tmux_navigator_save_on_switch = 2
 " }}} vim-tmux-navigator
+" {{{ Terminal / Plugin
+nnoremap <leader>tr :<C-u>TerminalReplFileToggle<cr>
+" }}} Terminal / Plugin
 " }}} Plugin Settings
 " {{{ Custom Mappings
 " {{{ Splits
@@ -518,14 +528,17 @@ nnoremap <leader>cc :cclose<CR>  " Close quicklist
 nnoremap ]c :cn<CR>
 nnoremap [c :cp<CR>
 " }}} Quicklist End
-" {{{ File Buffers
+" {{{ Buffer Navigation
 " Easier navigation with file buffer
 " list open buffers
-nnoremap <leader>b :ls<CR>:b<Space>
+nnoremap <leader>ls :ls<CR>:b<Space>
 nnoremap [b :bprevious<CR>
 nnoremap ]b :bnext<CR>
-nnoremap bd :bdelete<CR>
-" }}} File Buffers
+nnoremap <leader>bd :bdelete<CR>
+" }}} Buffer Navigation
+" {{{ Window related
+nnoremap <leader>wc :close<CR>
+" }}} Window related
 " {{{ Yank and paste to system clipboard
 " These apply for all modes
 noremap <Leader>Y "*y
@@ -543,15 +556,17 @@ nnoremap csq mp0f'r";.`p
 set pastetoggle=<F2>
 " }}} Formatting helpers
 " Wrap visual selection in double quotes
-vnoremap <leader>" :<esc>`<i"<esc>`>la"<esc>
+vnoremap <leader>s" :<esc>`<i"<esc>`>la"<esc>
 
 " Wrap visual selection in single quotes
-vnoremap <leader>' :<esc>`<i'<esc>`>la'<esc>
+vnoremap <leader>s' :<esc>`<i'<esc>`>la'<esc>
 
 " exit insert mode and save buffer
 inoremap jj <ESC>:w<cr>
 
 " insert a line above or below, and exit back to normal
+" TODO if this is run from a comment line then it adds a comment prefix which
+" I don't want
 nnoremap <leader>o o<ESC>k
 nnoremap <leader>O O<ESC>j
 
@@ -559,6 +574,12 @@ nnoremap <leader>O O<ESC>j
 " after indenting left or right
 vnoremap < <gv
 vnoremap > >gv
+
+" Select last pasted text
+nnoremap gp `[v`]
+
+" Format current paragraph
+nnoremap <leader>= Vap=
 
 " {{{ Navigation
 " Disable arrow keys
@@ -588,10 +609,12 @@ inoremap <c-a> <esc>I
 "inoremap {;<CR> {<CR>};<ESC>O
 
 " }}} Navigation
+" {{{ vimrc related
 " Open vimrc in vertical split
 nnoremap <silent><leader>ev :vsplit $MYVIMRC<cr>
 " Source shared vim config
 nnoremap <silent><leader>sv :source $MYVIMRC<cr>
+" }}} vimrc related
 " }}} Custom Mappings
 " {{{ Abbreviations
 " Source my abbreviations
@@ -730,7 +753,7 @@ function! Prototype() range
   endtry
 endfunction
 
-xnoremap pro :<c-u>call Prototype()<CR>
+xnoremap <leader>pro :<c-u>call Prototype()<CR>
 " }}} Prototyping helpers
 " {{{ Random Functions
 
@@ -741,3 +764,30 @@ function! SynGroup()
     echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
 endfun
 " }}} Random Functions
+
+" A tool to take a selection and make it 'pretty',
+" this is very much in the testing stages
+function! MakePretty(type) abort
+  " Store current selection setting and @@ register
+  let l:sel_save = &selection
+  let &selection = "inclusive"
+  let l:reg_save = @@
+
+  if a:type ==? "v" " invoked from visual mode
+    silent exe "normal! `<" . a:type . "`>y"
+  elseif a:type ==? "V" " invoked from visual line mode
+    silent exe "normal! '[V']y"
+  else
+    " invoved from normal mode so select current word
+    " silent exe "normal! `[v`]y"
+    silent exe "normal! viwy"
+  endif
+
+  echom "selection: " . @@
+
+  " Restore current selection setting and @@ register
+  let &selection = l:sel_save
+  let @@ = l:reg_save
+endfunction
+nnoremap <silent> <leader>mp :<C-u>call MakePretty(visualmode())<CR>
+vnoremap <silent> <leader>mp :<C-u>call MakePretty(visualmode())<Cr>
