@@ -42,6 +42,8 @@ The following is not an exhaustive list by any means of the plugins I use, howev
 * [ctrlp](https://github.com/ctrlpvim/ctrlp.vim) Note that `:CtrlPClearAllCaches` is very useful to know
 * [nerdtree](https://github.com/scrooloose/nerdtree.git) - used as repacement to netrw
 * [vim-commentary](https://github.com/tpope/vim-commentary) - used for comment toggeling
+* [vim-sandwich](https://github.com/machakann/vim-sandwich.git) - adds a set
+  of operators and text objects for handling surroundings
 
 NOTE: [This stackoverflow](https://stackoverflow.com/questions/20929336/git-submodule-add-a-git-directory-is-found-locally-issue) was useful when I got submodule issues adding and removing plugins this way.
 

@@ -195,6 +195,9 @@ set tags=./.git/tags;/
 " }}} Tags
 " }}} VIM Settings
 " {{{ Plugin Settings
+" {{{ vim-sneak
+" There is some remapping of 's' to '<space>s' see after/plugin/vim-sneak.vim
+" }}}
 " {{{ NERDTree
 " nnoremap <silent><C-\> :call NerdToggleFind()<CR>
 nnoremap <space>f :<C-u>call NerdToggleFind()<CR>

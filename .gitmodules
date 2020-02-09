@@ -32,3 +32,6 @@
 [submodule "nvim/plugins/start/kotlin-vim"]
 	path = nvim/plugins/start/kotlin-vim
 	url = https://github.com/udalov/kotlin-vim.git
+[submodule "nvim/plugins/start/vim-sandwich"]
+	path = nvim/plugins/start/vim-sandwich
+	url = https://github.com/machakann/vim-sandwich.git
