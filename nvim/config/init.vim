@@ -481,7 +481,8 @@ let g:tmux_navigator_disable_when_zoomed = 1
 let g:tmux_navigator_save_on_switch = 2
 " }}} vim-tmux-navigator
 " {{{ Terminal / Plugin
-nnoremap <leader>tr :<C-u>TerminalReplFileToggle<cr>
+nnoremap <leader>rr :<C-u>TerminalReplFile<cr>
+nnoremap <leader>rt :<C-u>TerminalReplFileToggle<cr>
 " }}} Terminal / Plugin
 " }}} Plugin Settings
 " {{{ Custom Mappings
