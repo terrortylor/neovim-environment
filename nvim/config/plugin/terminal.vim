@@ -1,9 +1,6 @@
-" TODO keep focus on calling window
 " TODO Better way of filetype detection to know what/how to run shit
-" TODO Expose command to run current file
 " TODO Expose function to send current line to REPL
 " TODO Expose function to send current selection to REPL
-" TODO Expose function that hides terminal/repl if open
 let s:cpo_save = &cpo
 set cpo&vim
 
@@ -18,8 +15,17 @@ if !exists('g:terminals')
   let g:terminals = {}
 endif
 
+" TODO do these need to be global?
+if !exists('g:repl_compile')
+  let g:repl_compile = ''
+endif
+
+if !exists('g:repl_run')
+  let g:repl_run = ''
+endif
+
 " Runs current file in a Terminal called 'REPL'
-command! -nargs=0 TerminalReplFile call ReplInNvimTerminal()
+command! -nargs=0 TerminalReplFile call RunFileInTerminal()
 command! -nargs=0 TRF TerminalReplFile
 
 " Toggles the Repl Terminal
@@ -29,10 +35,8 @@ command! -nargs=0 TRFC TerminalReplFileToggle
 augroup repl_filetype_executors
   autocmd!
   autocmd FileType kotlin
-    \ if executable('kotlinc') && executable('java') |
-    \   g:repl_compile = 'kotlinc'
-    \   g:repl_run = 'java'
-    \ end
+    \ let g:repl_compile = 'kotlinc' |
+    \ let g:repl_run = 'java'
 augroup END
 
 " Wrapper to jobsend
@@ -124,17 +128,20 @@ function! s:OpenTerminal(terminal_buffer_name) abort
   return l:terminal_job_id
 endfunction
 
-function! ReplInNvimTerminal() abort
-  " let l:file_name = expand('%:p')
-  " let l:file_name = @%
-  let l:file_path = '~/personnal-workspace/kotlin-playground/hello.kt'
-  let l:file_name = 'hello.kt'
-  let l:repl_command = 'kotlinc ' . l:file_path . ' -include-runtime -d /tmp/' . l:file_name . '.jar && java -jar /tmp/' . l:file_name . '.jar'
+function! RunFileInTerminal() abort
+  let l:file_path = expand('%:p')
+  let l:file_name = @%
+
+  if &filetype == 'kotlin'
+    let l:repl_command = [g:repl_compile . ' ' . l:file_path . ' -include-runtime -d /tmp/' . l:file_name . '.jar && ' . g:repl_run . ' -jar /tmp/' . l:file_name . '.jar']
+  elseif &filetype == 'sh'
+    let l:repl_command = ['sh ' . l:file_path]
+  endif
 
   let l:term_id = s:OpenTerminal('REPL')
 
   sleep 100m " Hack to prevent it looking like input has been sent twice
-  call s:RunCommandsInTerminal(l:term_id, [l:repl_command], v:true)
+  call s:RunCommandsInTerminal(l:term_id, l:repl_command, v:true)
 endfunction
 
 let &cpo = s:cpo_save
