@@ -35,3 +35,9 @@
 [submodule "nvim/plugins/start/vim-sandwich"]
 	path = nvim/plugins/start/vim-sandwich
 	url = https://github.com/machakann/vim-sandwich.git
+[submodule "nvim/plugins/start/tabular"]
+	path = nvim/plugins/start/tabular
+	url = https://github.com/godlygeek/tabular.git
+[submodule "nvim/plugins/start/vim-highlight"]
+	path = nvim/plugins/start/vim-highlight
+	url = https://github.com/terrortylor/vim-highlight

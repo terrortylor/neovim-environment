@@ -9,5 +9,8 @@ endfunction
 " Auto create TOC on buf write is a note
 augroup notebufwritegroup
   autocmd!
-  autocmd BufWrite *.md CreateToc
+  autocmd BufWrite *.md CreateTOC
 augroup END
+
+" Add markdown snippets to note type
+UltiSnipsAddFiletypes note.markdown

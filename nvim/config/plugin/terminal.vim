@@ -1,4 +1,3 @@
-" TODO Better way of filetype detection to know what/how to run shit
 " TODO Expose function to send current line to REPL
 " TODO Expose function to send current selection to REPL
 let s:cpo_save = &cpo
@@ -32,11 +31,15 @@ command! -nargs=0 TRF TerminalReplFile
 command! -nargs=0 TerminalReplFileToggle call s:ToggleTerminal('REPL')
 command! -nargs=0 TRFC TerminalReplFileToggle
 
+" TODO Better way of filetype detection to know what/how to run
 augroup repl_filetype_executors
   autocmd!
   autocmd FileType kotlin
     \ let g:repl_compile = 'kotlinc' |
     \ let g:repl_run = 'java'
+  autocmd FileType sh
+    \ let g:repl_compile = '' |
+    \ let g:repl_run = 'sh'
 augroup END
 
 " Wrapper to jobsend
@@ -135,7 +138,7 @@ function! RunFileInTerminal() abort
   if &filetype == 'kotlin'
     let l:repl_command = [g:repl_compile . ' ' . l:file_path . ' -include-runtime -d /tmp/' . l:file_name . '.jar && ' . g:repl_run . ' -jar /tmp/' . l:file_name . '.jar']
   elseif &filetype == 'sh'
-    let l:repl_command = ['sh ' . l:file_path]
+    let l:repl_command = [g:repl_run . ' ' . l:file_path]
   endif
 
   let l:term_id = s:OpenTerminal('REPL')

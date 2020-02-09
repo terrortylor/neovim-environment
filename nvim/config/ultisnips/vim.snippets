@@ -58,3 +58,13 @@ endsnippet
 snippet current_win_id "Assign current window id to variable"
 let l:${1:current_win_id} = win_getid()
 endsnippet
+
+snippet restorecursor "Captures and restores cursor"
+" Capture cursor position to be restored later with
+let [_, ${1:l:lnum}, ${2:l:col}, _] = getpos(${3:"."})
+
+${0}
+
+" Restores cursor position
+call cursor($1, $2)
+endsnippet

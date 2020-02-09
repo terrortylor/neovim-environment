@@ -1,3 +1,9 @@
+" Adds a markdown style TOC to the top of the markdown file
+command! -nargs=0 CreateTOC call CreateTOC()
+
+" Removes a markdown style TOC from the top of the markdown file
+command! -nargs=0 RemoveTOC call RemoveTOC()
+
 let s:toc_title = "# Table of contents"
 let s:toc_end_marker = "<!--- end of toc -->"
 
@@ -50,6 +56,9 @@ function! s:WriteTOC()
 endfunction
 
 function! CreateTOC()
+  "TODO set a mark to return to at the end of this function, it should store
+  "the mark incase user is using it and restore that too.
+
   " move to top of file
   call cursor(1,1)
 
@@ -61,5 +70,3 @@ function! CreateTOC()
 
   call s:WriteTOC()
 endfunction
-
-command! CreateToc call CreateTOC()

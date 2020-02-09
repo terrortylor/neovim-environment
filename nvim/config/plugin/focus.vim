@@ -1,3 +1,4 @@
+" TODO fix line numbers when switching back and forth
 let s:cpo_save = &cpo
 set cpo&vim
 " pppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp
@@ -17,6 +18,7 @@ if !exists('s:non_text_hlg')
 endif
 
 " List of settings to disable
+" TODO where is this used?
 if !exists('s:hide_settings')
  let s:hide_settings = ['showmode', 'ruler', 'number', 'relativenumber', 'showcmd']
 endif

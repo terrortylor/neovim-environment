@@ -3,6 +3,9 @@ filetype plugin indent on
 " This file uses folding to better organise:
  " :help fold-commands
 " {{{ VIM Settings
+" {{{ leader
+let mapleader = "\<Space>"
+" }}} leader
 " {{{ Theme
 set background=dark
 set termguicolors
@@ -161,7 +164,7 @@ set gdefault
 nnoremap <leader>r :%s/<c-r><c-w>//<left>
 
 " turns of highlighting
-nnoremap <leader><space> :noh<CR>
+nnoremap <leader>/ :noh<CR>
 
 " Create command for global search in projct
 command! -nargs=1 GGrep vimgrep "<args>" **/*
@@ -199,7 +202,6 @@ set tags=./.git/tags;/
 " There is some remapping of 's' to '<space>s' see after/plugin/vim-sneak.vim
 " }}}
 " {{{ NERDTree
-" nnoremap <silent><C-\> :call NerdToggleFind()<CR>
 nnoremap <space>f :<C-u>call NerdToggleFind()<CR>
 
 " Open NERDTree at current file location, close if open
@@ -383,7 +385,8 @@ if executable('node')
   " Remap keys for gotos
   nmap <silent> gd <Plug>(coc-definition)
   nmap <silent> gy <Plug>(coc-type-definition)
-  nmap <silent> gi <Plug>(coc-implementation)
+  " conflicts with  built in 'gi'
+  " nmap <silent> gi <Plug>(coc-implementation)
   nmap <silent> gr <Plug>(coc-references)
 
   " Use K to show documentation in preview window
@@ -404,8 +407,8 @@ if executable('node')
   nmap <leader>rn <Plug>(coc-rename)
 
   " Remap for format selected region
-  xmap <leader>f  <Plug>(coc-format-selected)
-  nmap <leader>f  <Plug>(coc-format-selected)
+  " xmap <leader>f  <Plug>(coc-format-selected)
+  " nmap <leader>f  <Plug>(coc-format-selected)
 
   augroup mygroup
     autocmd!
@@ -465,6 +468,14 @@ if executable('node')
   nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 endif
 " }}} coc - conquer of code
+" {{{ vim-highlight
+nnoremap <leader>h1 :HighlightLine hlYellow<cr>
+vnoremap <leader>h1 :'<,'>HighlightLine hlYellow<cr>
+nnoremap <leader>h2 :HighlightLine hlDarkBlue<cr>
+vnoremap <leader>h2 :'<,'>HighlightLine hlDarkBlue<cr>
+nnoremap <leader>rh :RemoveHighlighting<cr>
+vnoremap <leader>rh :'<,'>RemoveHighlighting<cr>
+" }}} vim-highlight
 " {{{ vim-tmux-navigator
 " I don't want the defualt TmuxNavigatePrevious mapping
 let g:tmux_navigator_no_mappings = 1
@@ -525,6 +536,8 @@ nnoremap tn  :tabnew<CR>
 nnoremap tc  :tabclose<CR>
 " }}} TABs
 " {{{ Quicklist
+" TODO set these up so that they close what ever locaton / quickfix window is
+" open... if more than one just close first one found
 nnoremap <leader>cl :copen<CR>   " Open Quicklist
 nnoremap <leader>cc :cclose<CR>  " Close quicklist
 "
@@ -617,7 +630,7 @@ inoremap <c-a> <esc>I
 " Open vimrc in vertical split
 nnoremap <silent><leader>ev :vsplit $MYVIMRC<cr>
 " Source shared vim config
-nnoremap <silent><leader>sv :source $MYVIMRC<cr>
+nnoremap <silent><leader>sv :w<cr>:source $MYVIMRC<cr>:echo "vimrc sourced mother licker"<cr>
 " }}} vimrc related
 " }}} Custom Mappings
 " {{{ Abbreviations
@@ -649,6 +662,8 @@ function! TabbedQuicklistViewer() abort
     cfirst
   endif
 endfunction
+
+" Opens a new tab with quickfix list open, selecting first item
 command! TabbedQuicklistViewer call TabbedQuicklistViewer()
 
 " This calls `cn`, then checks if the current position
@@ -688,7 +703,9 @@ if !exists('s:scratch_paste_register')
  let s:scratch_paste_register = '*'
 endif
 
+" Opens a scratch buffer, if one exists already open that
 command! Scratch call Scratch()
+" Puts the contents on the scratch_paste_register into the scratch buffer
 command! PasteToScratch call PasteToScratch()
 
 " Opens a scratch buffer window
@@ -745,6 +762,8 @@ endfunction
 " pastes it below and comments out original
 " leaving cursor in first line on copied selection
 " It has a dependency on vim-commentary plugin
+xnoremap <leader>pro :<c-u>call Prototype()<CR>
+
 function! Prototype() range
   try
     let a_save = @a
@@ -756,9 +775,18 @@ function! Prototype() range
     let @a = a_save
   endtry
 endfunction
-
-xnoremap <leader>pro :<c-u>call Prototype()<CR>
 " }}} Prototyping helpers
+" {{{ list related
+
+" Runs a search {pat} and returns results in a location list
+function! LocationListFromPattern(pat)
+    let buffer=bufnr("") "current buffer number
+    let b:lines=[]
+    execute ":%g/" . a:pat . "/let b:lines+=[{'bufnr':" . 'buffer' . ", 'lnum':" . "line('.')" . ", 'text': escape(getline('.'),'\"')}]"
+    call setloclist(0, [], ' ', {'items': b:lines})
+    lopen
+endfunction
+" }}} list related
 " {{{ Random Functions
 
 " Show highlight group under cursor
@@ -769,6 +797,7 @@ function! SynGroup()
 endfun
 " }}} Random Functions
 
+" TODO this is not complete
 " A tool to take a selection and make it 'pretty',
 " this is very much in the testing stages
 function! MakePretty(type) abort
@@ -790,8 +819,18 @@ function! MakePretty(type) abort
   echom "selection: " . @@
 
   " Restore current selection setting and @@ register
-  let &selection = l:sel_save
+ let &selection = l:sel_save
   let @@ = l:reg_save
 endfunction
 nnoremap <silent> <leader>mp :<C-u>call MakePretty(visualmode())<CR>
 vnoremap <silent> <leader>mp :<C-u>call MakePretty(visualmode())<Cr>
+
+" Opens the ftplugin for the given filetype
+function! OpenFTPluginFile() abort
+  let l:filetype_file = expand($VIMCONFIG . '/ftplugin/' . &filetype . '.vim')
+  execute 'edit ' . l:filetype_file
+endfunction
+" Wrap OpenFTPluginFile function in a command which opens the ftplugin file
+" for given file
+command! -nargs=0 OpenFTPluginFile call OpenFTPluginFile()
+

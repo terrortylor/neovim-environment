@@ -61,5 +61,6 @@ function! websearch#BuildSearchCommand() abort
   return l:command
 endfunction
 
+" TODO expose commands here and move mappings to vimrc
 nnoremap <silent> <leader>gs :<C-u>call WebSearch(visualmode())<CR>
 vnoremap <silent> <leader>gs :<C-u>call WebSearch(visualmode())<Cr>
