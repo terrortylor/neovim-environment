@@ -44,7 +44,7 @@ function! s:WriteTOC()
       let a:padding = ""
     endif
     " format heading link
-    let a:heading_link = "[" . trim(a:heading_text) . "](#" . substitute(trim(a:heading_text), " ", "_", "g") . ")"
+    let a:heading_link = "[" . trim(a:heading_text) . "](#" . substitute(tolower(trim(a:heading_text)), " ", "-", "g") . ")"
     " insert toc line, numbered lists just need to be a number... makes it
     " easier :P
     call append(a:line, a:padding . "1. " . a:heading_link)
@@ -56,8 +56,9 @@ function! s:WriteTOC()
 endfunction
 
 function! CreateTOC()
-  "TODO set a mark to return to at the end of this function, it should store
-  "the mark incase user is using it and restore that too.
+  let a:old_reg = getreg("a")
+  let a:old_reg_type = getregtype("a")
+  normal ma
 
   " move to top of file
   call cursor(1,1)
@@ -69,4 +70,7 @@ function! CreateTOC()
   call s:GetHeaders()
 
   call s:WriteTOC()
+
+  normal `a
+  call setreg("a", a:old_reg, a:old_reg_type)
 endfunction
