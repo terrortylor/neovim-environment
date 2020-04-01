@@ -449,6 +449,9 @@ if executable('node')
   nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 endif
 " }}} coc - conquer of code
+" {{{ vim-gutentags
+let g:gutentags_ctags_tagfile = '.git/tags'
+" }}} vim-gutentags
 " {{{ vim-highlight
 nnoremap <leader>h1 :HighlightLine hlYellow<cr>
 vnoremap <leader>h1 :'<,'>HighlightLine hlYellow<cr>

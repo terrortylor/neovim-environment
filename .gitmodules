@@ -41,3 +41,6 @@
 [submodule "nvim/plugins/start/vim-highlight"]
 	path = nvim/plugins/start/vim-highlight
 	url = https://github.com/terrortylor/vim-highlight
+[submodule "nvim/plugins/start/vim-gutentagss"]
+	path = nvim/plugins/start/vim-gutentagss
+	url = https://github.com/ludovicchabant/vim-gutentags

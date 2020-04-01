@@ -228,6 +228,7 @@ defined in the plugins help unless otherwise stated below:
 | [coc](https://github.com/neoclide/coc.nvim.git) | Used to add LSP, linting and auto-popup completion support | I'm not 100% on weather this should be kept or not |
 | [ultisnips](https://github.com/SirVer/ultisnips.git) | A snippet engine | Snippets live under `nvim\config\ultisnips` |
 | [kotlin-vim](https://github.com/udalov/kotlin-vim.git) | Adds some kotlin syntax support etc | Using this until NeoVim handles this it self |
+| [vim-gutentags](https://github.com/ludovicchabant/vim-gutentags) | Manages ctag creation/management in the background |
 
 ### Custom Plugins
 
