@@ -27,7 +27,8 @@ set nofoldenable
 " vi file folding overrides
 augroup foldgroup
   autocmd!
-  autocmd FileType vim setl foldmethod=marker foldenable
+  autocmd BufRead,BufNewFile init.vim setl foldmethod=marker foldenable
+  " autocmd FileType vim setl foldmethod=marker foldenable
   autocmd FileType tmux setl foldmethod=marker foldenable
 augroup END
 
