@@ -44,3 +44,6 @@
 [submodule "nvim/plugins/start/vim-gutentagss"]
 	path = nvim/plugins/start/vim-gutentagss
 	url = https://github.com/ludovicchabant/vim-gutentags
+[submodule "nvim/plugins/start/ctrlp-funky"]
+	path = nvim/plugins/start/ctrlp-funky
+	url = https://github.com/tacahiroy/ctrlp-funky

@@ -203,7 +203,7 @@ set tags=./.git/tags;/
 " There is some remapping of 's' to '<space>s' see after/plugin/vim-sneak.vim
 " }}}
 " {{{ NERDTree
-nnoremap <space>f :<C-u>call NerdToggleFind()<CR>
+nnoremap <space>t :<C-u>call NerdToggleFind()<CR>
 
 " Open NERDTree at current file location, close if open
 " Takes into account in a buffer is loaded or not
@@ -238,13 +238,15 @@ let NERDTreeShowHidden=1
 " try to force me to use go/gi for preview
 let NERDTreeQuitOnOpen=3
 " }}} NERDTree
-" {{{ CtrlP
+" {{{ CtrlP + Extensions
 " Jump to open buffer if open:
 let g:ctrlp_switch_buffer = 'Et'
 
 " Current Buffers
-nnoremap <space><space>  :<C-u>CtrlPBuffer<CR>
-" }}} CtrlP
+nnoremap <leader><space>  :<C-u>CtrlPBuffer<CR>
+" Functions in cuffent buffer
+nnoremap <leader>ff  :<C-u>CtrlPFunky<CR>
+" }}} CtrlP + Extensions
 " {{{ netrw
 " Configure netrw plugin to show file ls details
 " See: https://shapeshed.com/vim-netrw/

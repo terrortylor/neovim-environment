@@ -216,6 +216,7 @@ defined in the plugins help unless otherwise stated below:
 | ------ | ----------- | ----- |
 | [vim sneak](https://github.com/justinmk/vim-sneak) | A tool for quickly jumping to a location within a buffer | `t` has been remapped to `<leader>s` |
 | [ctrlp](https://github.com/ctrlpvim/ctrlp.vim) | A fuzzy finder | Buffer list mapped to `<leader><space>` |
+| [ctrlp-funky](https://github.com/tacahiroy/ctrlp-funky) | Populates ctrlp window with buffers functions |
 | [nerdtree](https://github.com/scrooloose/nerdtree.git) | A draw file explorer, a bloated replacement to built in netrw | |
 | [vim-commentary](https://github.com/tpope/vim-commentary) | Toggle comments on lines and blocks for various langugages | |
 | [vim-sandwich](https://github.com/machakann/vim-sandwich.git) | Adds a set of operators and text objects for handling surroundings | This clashed with `vim-sneak` mapping of `s` so remapped `vim-sneak` |
