@@ -47,3 +47,6 @@
 [submodule "nvim/plugins/start/ctrlp-funky"]
 	path = nvim/plugins/start/ctrlp-funky
 	url = https://github.com/tacahiroy/ctrlp-funky
+[submodule "nvim/plugins/start/vim-go"]
+	path = nvim/plugins/start/vim-go
+	url = https://github.com/fatih/vim-go

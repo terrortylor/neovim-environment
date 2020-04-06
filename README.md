@@ -212,6 +212,7 @@ The following is a list of the third party plugins used, key bindings are as
 defined in the plugins help unless otherwise stated below:
 
 
+TODO Add additional column to state if loaded on start or optional
 | Plugin | Description | Notes |
 | ------ | ----------- | ----- |
 | [vim sneak](https://github.com/justinmk/vim-sneak) | A tool for quickly jumping to a location within a buffer | `t` has been remapped to `<leader>s` |
@@ -227,6 +228,7 @@ defined in the plugins help unless otherwise stated below:
 | [vim-highlight](https://github.com/terrortylor/vim-highlight.git) | Adds ability to highlight lines in a buffer, not saved on exit |
 | [vim-tmux-navigator](https://github.com/christoomey/vim-tmux-navigator.git) | Used for easy navigation across vim windows and tmux windows | |
 | [coc](https://github.com/neoclide/coc.nvim.git) | Used to add LSP, linting and auto-popup completion support | I'm not 100% on weather this should be kept or not |
+| [vim-go](https://github.com/fatih/vim-go) | Go plugin that provides many IDE features, it's awesome |
 | [ultisnips](https://github.com/SirVer/ultisnips.git) | A snippet engine | Snippets live under `nvim\config\ultisnips` |
 | [kotlin-vim](https://github.com/udalov/kotlin-vim.git) | Adds some kotlin syntax support etc | Using this until NeoVim handles this it self |
 | [vim-gutentags](https://github.com/ludovicchabant/vim-gutentags) | Manages ctag creation/management in the background |
