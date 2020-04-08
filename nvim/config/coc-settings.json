@@ -3,6 +3,11 @@
   "suggest.minTriggerInputLength":3,
   "suggest.floatEnable": true,
   "languageserver": {
+    "golang": {
+      "command": "gopls",
+      "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
+      "filetypes": ["go"]
+    },
     "kotlin": {
       "command": "/opt/kotlin-language-server/kotlin-language-server-0.4.0/server/build/install/server/bin/kotlin-language-server",
       "filetypes": ["kotlin"]

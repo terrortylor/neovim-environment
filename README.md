@@ -232,6 +232,7 @@ TODO Add additional column to state if loaded on start or optional
 | [ultisnips](https://github.com/SirVer/ultisnips.git) | A snippet engine | Snippets live under `nvim\config\ultisnips` |
 | [kotlin-vim](https://github.com/udalov/kotlin-vim.git) | Adds some kotlin syntax support etc | Using this until NeoVim handles this it self |
 | [vim-gutentags](https://github.com/ludovicchabant/vim-gutentags) | Manages ctag creation/management in the background |
+| [rainbow_parentheses.vim](https://github.com/junegunn/rainbow_parentheses.vim) | Adds rainbow colouring to parentheses |
 
 ### Custom Plugins
 

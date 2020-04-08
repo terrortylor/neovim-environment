@@ -1,5 +1,6 @@
 " Highlights function block
 " TODO turn this into a object so can then do multiple levels
+" TODO this should be a if and af, if possible af shuld include comments
 nnoremap <leader>vf ?function<cr>v/endfunction<cr>$
 
 " echo's selection on line bellow
