@@ -9,7 +9,7 @@ let mapleader = "\<Space>"
 " {{{ Theme
 set background=dark
 set termguicolors
-colorscheme tender
+colorscheme xcodedarkhc
 " Note lightline status bar colour scheme is defined in plugin config bellow
 " }}} Theme Leave
 " {{{ Swap, Backup and Undo File Location
@@ -482,6 +482,9 @@ let g:tmux_navigator_save_on_switch = 2
 nnoremap <leader>rr :<C-u>TerminalReplFile<cr>
 nnoremap <leader>rt :<C-u>TerminalReplFileToggle<cr>
 " }}} Terminal / Plugin
+" {{{ vim-color-xcode
+let g:xcodedarkhc_green_comments = 1
+" }}} vim-color-xcode
 " }}} Plugin Settings
 " {{{ Custom Mappings
 " {{{ Splits

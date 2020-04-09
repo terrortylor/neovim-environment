@@ -222,6 +222,7 @@ defined in the plugins help unless otherwise stated below:
 | [vim-sandwich](https://github.com/machakann/vim-sandwich.git) | Adds a set of operators and text objects for handling surroundings | This clashed with `vim-sneak` mapping of `s` so remapped `vim-sneak` |
 | [tabular](https://github.com/godlygeek/tabular.git) | Used to line up text quickly/easily | |
 | [lightline.vim](https://github.com/itchyny/lightline.vim.git) | A status bar plugin | |
+| [vim-color-xcode](https://github.com/arzg/vim-colors-xcode) | xcode insprired colour scheme |
 | [tender.vim](https://github.com/jacoborus/tender.vim.git) | Colour scheme | |
 | [vim-togglesmartsearch](https://github.com/terrortylor/vim-togglesmartsearch.git) | A noddy plugin I made to try out making a plugin | This is utterly not needed... I should delete it really |
 | [vim-highlight](https://github.com/terrortylor/vim-highlight.git) | Adds ability to highlight lines in a buffer, not saved on exit |
