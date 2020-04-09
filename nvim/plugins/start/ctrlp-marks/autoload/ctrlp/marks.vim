@@ -6,18 +6,8 @@
 " To load this extension into ctrlp, add this to your vimrc:
 "
 "     let g:ctrlp_extensions = ['marks']
-"
-" Where 'marks' is the name of the file 'marks.vim'
-"
-" For multiple extensions:
-"
-"     let g:ctrlp_extensions = [
-"         \ 'my_extension',
-"         \ 'my_other_extension',
-
 
 " " Load guard
-" TODO uncommend this
 if ( exists('g:loaded_ctrlp_marks') && g:loaded_ctrlp_marks )
 	\ || v:version < 700 || &cp
 	finish
@@ -27,45 +17,20 @@ let g:loaded_ctrlp_marks = 1
 call add(g:ctrlp_ext_vars, {
 	\ 'init': 'ctrlp#marks#init()',
 	\ 'accept': 'ctrlp#marks#accept',
-	\ 'lname': 'registers',
-	\ 'sname': 'registers',
+	\ 'lname': 'marks',
+	\ 'sname': 'marks',
 	\ 'type': 'line',
 	\ 'sort': 0,
 	\ 'specinput': 0,
 	\ })
-
 
 " Provide a list of strings to search in
 "
 " Return: a Vim's List
 "
 function! ctrlp#marks#init()
-  " TODO this should be a script variable
-  let s = @a
-  let s = split(s, "\n")[1:]
-  for l in s
-    echom ' ' . l
-  endfor
-  return s
+  return s:cleaned_marks
 endfunction
-
-" TODO this should be script scoped
-function! Scratch(text, command)
-    split
-    noswapfile hide enew
-    setlocal buftype=nofile
-    setlocal bufhidden=hide
-    file scratch
-    " TODO backup and restore register
-    let @a = a:text
-    silent execute 'normal "ap' . a:command
-    "setlocal nobuflisted
-    silent normal ggVG"ay
-    bwipe
-    return @a
-endfunction
-
-
 
 " The action to perform on the selected string
 "
@@ -94,14 +59,23 @@ endfunction
 " to ctrlp before running commands, capture output of marks so that buffer
 " specspecific marks give line details not just filename
 function! ctrlp#marks#domarks()
-  let s = ''
-  redir => s
+  let marks = ''
+  redir => marks
   silent marks
   redir END
-  let s = Scratch(s, "ddw\<c-v>Gwwx")
-  let @a = s
+
+  " remove first line
+  let edited_marks = substitute(marks, 'mark line  col file/text', '', '')
+  let s = split(edited_marks, "\n")[1:]
+
+  " for each line trim the buf number and line
+  let s:cleaned_marks = []
+  for l in s
+    let new_marks = substitute(l, '\v^\s(\S)\s+(\d+)\s+(\d+)\s(\S+)', '\1 \4', '')
+    call add(s:cleaned_marks, new_marks)
+  endfor
+
   call ctrlp#init(ctrlp#marks#id())
 endfunction
 
 " vim:nofen:fdl=0:ts=2:sw=2:sts=2
-
