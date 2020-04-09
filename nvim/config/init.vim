@@ -4,6 +4,7 @@ filetype plugin indent on
  " :help fold-commands
 " {{{ VIM Settings
 " {{{ leader
+set timeoutlen=1500
 let mapleader = "\<Space>"
 " }}} leader
 " {{{ Theme
@@ -152,7 +153,11 @@ augroup END
 " Highlight search
 set incsearch
 set showmatch
-set hlsearch
+" set hlsearch
+augroup onsearch
+  autocmd!
+  autocmd VimEnter * set hlsearch
+augroup END
 
 " This is neovim specific, makes live s/ changes in buffer
 set inccommand=nosplit
@@ -162,10 +167,12 @@ set inccommand=nosplit
 set gdefault
 
 " Search and replace word under cursor
-nnoremap <leader>r :%s/<c-r><c-w>//<left>
+nnoremap <leader>rw :%s/<c-r><c-w>//<left>
+" when in visual mode the selection delimiters are added automatically
+vnoremap <leader>rw :s/<c-r>"//<left>
 
-" turns of highlighting
-nnoremap <leader>/ :noh<CR>
+" toggle highlighting
+nnoremap <leader>/ :set hlsearch!<CR>
 
 " Create command for global search in projct
 command! -nargs=1 GGrep vimgrep "<args>" **/*
@@ -246,6 +253,9 @@ let g:ctrlp_switch_buffer = 'Et'
 nnoremap <leader><space>  :<C-u>CtrlPBuffer<CR>
 " Functions in cuffent buffer
 nnoremap <leader>ff  :<C-u>CtrlPFunky<CR>
+nnoremap <leader>fm  :<C-u>CtrlPMarks<CR>
+
+let g:ctrlp_extensions = ['marks']
 " }}} CtrlP + Extensions
 " {{{ netrw
 " Configure netrw plugin to show file ls details
@@ -394,6 +404,7 @@ if executable('node')
   " xmap <leader>f  <Plug>(coc-format-selected)
   " nmap <leader>f  <Plug>(coc-format-selected)
 
+  " TODO rename this augroup
   augroup mygroup
     autocmd!
     " Setup formatexpr specified filetype(s).
@@ -430,9 +441,11 @@ if executable('node')
   " use `:OR` for organize import of current buffer
   command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
 
+  " TODO this is not used
   " Add status line support, for integration with other plugin, checkout `:h coc-status`
   set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
+  " TODO now started to use space as leader review these
   " Using CocList
   " Show all diagnostics
   nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
@@ -452,6 +465,15 @@ if executable('node')
   nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 endif
 " }}} coc - conquer of code
+" {{{ vim-go
+
+" See ftplugin/go.vim for mappings
+
+" let g:go_diagnostics_enabled = 0
+
+" let g:go_statusline_duration = 5000
+
+" }}} vim-go
 " {{{ vim-gutentags
 let g:gutentags_ctags_tagfile = '.git/tags'
 " }}} vim-gutentags
@@ -485,6 +507,13 @@ nnoremap <leader>rt :<C-u>TerminalReplFileToggle<cr>
 " {{{ vim-color-xcode
 let g:xcodedarkhc_green_comments = 1
 " }}} vim-color-xcode
+" {{{ rainbow_parentheses.vim
+augroup rainbowenter
+  autocmd!
+  autocmd VimEnter * RainbowParentheses
+augroup END
+let g:rainbow#pairs = [['(', ')'], ['[', ']'], ['{', '}']]
+" }}} rainbow_parentheses.vim
 " }}} Plugin Settings
 " {{{ Custom Mappings
 " {{{ Splits
@@ -532,8 +561,8 @@ nnoremap <leader>cl :copen<CR>   " Open Quicklist
 nnoremap <leader>cc :cclose<CR>  " Close quicklist
 "
 " To quickly go through the Quicklist
-nnoremap ]c :cn<CR>
-nnoremap [c :cp<CR>
+nnoremap ]c :cnext<CR>
+nnoremap [c :cprevious<CR>
 " }}} Quicklist End
 " {{{ Buffer Navigation
 " Easier navigation with file buffer
@@ -628,9 +657,11 @@ nnoremap <silent><leader>sv :w<cr>:source $MYVIMRC<cr>:echo "vimrc sourced mothe
 :iabbrev teh the
 :iabbrev adn and
 " }}} Abbreviations
+
 " Functions
 " {{{ Search Related
 
+" TODO tabbed work flow needs work
 " Opens a new tab with the quickfix list
 " and selects the first item
 function! TabbedQuicklistViewer() abort
@@ -676,11 +707,12 @@ function! TabbedQuicklistNextItem()
 endfunction
 
 " Autocommand to open quickfix list if populated...
-augroup quickfix
-    autocmd!
-    autocmd QuickFixCmdPost [^l]* :call TabbedQuicklistViewer()
-    autocmd QuickFixCmdPost l*    lwindow
-augroup END
+" TODO review this to be for just greps
+" augroup quickfix
+"     autocmd!
+"     autocmd QuickFixCmdPost [^l]* :call TabbedQuicklistViewer()
+"     autocmd QuickFixCmdPost l*    lwindow
+" augroup END
 " }}} Search Related
 " {{{ Scratch Buffer Related
 " Scratch buffer name
@@ -779,6 +811,16 @@ endfunction
 " }}} list related
 " {{{ Random Functions
 
+" Opens the ftplugin for the given filetype
+function! OpenFTPluginFile() abort
+  let l:filetype_file = expand($VIMCONFIG . '/ftplugin/' . &filetype . '.vim')
+  execute 'edit ' . l:filetype_file
+endfunction
+" Wrap OpenFTPluginFile function in a command which opens the ftplugin file
+" for given file
+command! -nargs=0 OpenFTPluginFile call OpenFTPluginFile()
+
+
 " Show highlight group under cursor
 " https://stackoverflow.com/questions/9464844/how-to-get-group-name-of-highlighting-under-cursor-in-vim
 function! SynGroup()
@@ -786,6 +828,13 @@ function! SynGroup()
     echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
 endfun
 " }}} Random Functions
+" {{{ lazygit
+" If lazygit is available then add command to call it
+if executable('lazygit')
+  " TODO this does not work, be nice to drop out to this from command though
+  command! -nargs=0 LazyGit :!lazygit
+endif
+" }}} lazygit
 
 " TODO this is not complete
 " A tool to take a selection and make it 'pretty',
@@ -799,10 +848,6 @@ function! MakePretty(type) abort
   if a:type ==? "v" " invoked from visual mode
     silent exe "normal! `<" . a:type . "`>y"
   elseif a:type ==? "V" " invoked from visual line mode
-    silent exe "normal! '[V']y"
-  else
-    " invoved from normal mode so select current word
-    " silent exe "normal! `[v`]y"
     silent exe "normal! viwy"
   endif
 
@@ -814,13 +859,4 @@ function! MakePretty(type) abort
 endfunction
 nnoremap <silent> <leader>mp :<C-u>call MakePretty(visualmode())<CR>
 vnoremap <silent> <leader>mp :<C-u>call MakePretty(visualmode())<Cr>
-
-" Opens the ftplugin for the given filetype
-function! OpenFTPluginFile() abort
-  let l:filetype_file = expand($VIMCONFIG . '/ftplugin/' . &filetype . '.vim')
-  execute 'edit ' . l:filetype_file
-endfunction
-" Wrap OpenFTPluginFile function in a command which opens the ftplugin file
-" for given file
-command! -nargs=0 OpenFTPluginFile call OpenFTPluginFile()
 

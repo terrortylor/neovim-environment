@@ -22,6 +22,12 @@ for ${1:i} in ${2:\{1..10\}}; do
 done
 endsnippet
 
+snippet whilelineinfile "while read line from file" b
+  while read ${1:l}; do
+    echo "\$\{$1\}"
+  done <${2}
+endsnippet
+
 snippet ifthen "Adds an if/then statement" b
 if [ ${1:\$val -eq 1} ]; then
   ${2:echo "yes boss"}
