@@ -65,7 +65,7 @@ endfunction
 " Entry function, before calling ctrlp#init(ctrlp#marks#id()) which switches
 " to ctrlp before running commands, capture output of marks so that buffer
 " specspecific marks give line details not just filename
-
+function! ctrlp#marks#enter()
   let marks = ''
   redir => marks
   silent marks
