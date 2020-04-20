@@ -7,4 +7,5 @@ function! SetFiletypeIfNote()
   end
 endfunction
 
-autocmd BufNewFile,BufRead *.md call SetFiletypeIfNote()
+" TODO writing TOC is causing issues
+" autocmd BufNewFile,BufRead *.md call SetFiletypeIfNote()

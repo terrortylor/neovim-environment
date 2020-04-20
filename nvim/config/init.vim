@@ -16,6 +16,7 @@ filetype plugin indent on
   set termguicolors
   colorscheme xcodedarkhc
   " Note lightline status bar colour scheme is defined in plugin config bellow
+  let g:xcodedarkhc_green_comments = 1
 
   " }}} Theme Leave
   " {{{ Swap, Backup and Undo File Location
@@ -291,14 +292,19 @@ filetype plugin indent on
   " }}} NERDTree
   " {{{ CtrlP + Extensions
 
-  " Jump to open buffer if open:
-  let g:ctrlp_switch_buffer = 'Et'
+  " Disable jumping to window/tab if buffer already open
+  let g:ctrlp_switch_buffer = 0
 
-  " Current Buffers
+  " Fuzzy find open buffers
   nnoremap <leader><space>  :<C-u>CtrlPBuffer<CR>
-  " Functions in cuffent buffer
+  " Fuzzy find functions in project
   nnoremap <leader>ff  :<C-u>CtrlPFunky<CR>
+  " Fuzzy find and jump to marks
   nnoremap <leader>fm  :<C-u>CtrlPMarks<CR>
+  " Fuzy find and insert contents of register
+  nnoremap <leader>fr  :<C-u>CtrlPRegister<CR>
+  " Fuzzy find and start Ultisnips snippet
+  nnoremap <leader>fu  :<C-u>CtrlPUltisnips<CR>
 
   let g:ctrlp_extensions = ['marks']
 
@@ -323,7 +329,9 @@ filetype plugin indent on
     " Note that if COC is running then these two keybinigs are disabled in
     " favour of <CR>
     let g:UltiSnipsExpandTrigger = '<tab>'
-    let g:UltiSnipsListSnippets  = '<c-tab>'
+    " let g:UltiSnipsListSnippets  = '<c-tab>'
+    " Does this mess with a Readline mapping at all?
+    let g:UltiSnipsListSnippets  = '<c-u>'
 
 
     " As using COC tab and shift tab feel more natural
@@ -563,11 +571,6 @@ filetype plugin indent on
   nnoremap <leader>rt :<C-u>TerminalReplFileToggle<cr>
 
   " }}} Terminal / Plugin
-  " {{{ vim-color-xcode
-
-  let g:xcodedarkhc_green_comments = 1
-
-  " }}} vim-color-xcode
   " {{{ rainbow_parentheses.vim
 
   augroup rainbowenter
@@ -581,6 +584,11 @@ filetype plugin indent on
 " }}} Plugin Settings
 " {{{ Custom Mappings
 
+  " {{{ Operator Pending
+  " Selects 'inner line', from first non-whitespace charecter to end of line, not
+  " including carisge return
+  onoremap il :<c-u>normal! ^v$h<cr>
+  " }}} Operator Pending
   " {{{ Splits
 
   " THIS IS DISABLED IN FAVOUR OF TmuxNavigateXXX

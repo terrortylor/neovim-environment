@@ -1,3 +1,4 @@
+" TODO if heading has charecters like /. etc then strip them out for links
 " Adds a markdown style TOC to the top of the markdown file
 command! -nargs=0 CreateTOC call CreateTOC()
 

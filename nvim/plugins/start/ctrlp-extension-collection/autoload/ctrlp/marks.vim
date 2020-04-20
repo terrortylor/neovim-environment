@@ -1,13 +1,10 @@
 " =============================================================================
 " File:          autoload/ctrlp/marks.vim
-" Description:   Example extension for ctrlp.vim
+" Description:   An extension to jump to a mark, output is displayed as per
+"                output of `marks` command.
 " =============================================================================
 
-" To load this extension into ctrlp, add this to your vimrc:
-"
-"     let g:ctrlp_extensions = ['marks']
-
-" " Load guard
+" Load guard
 if ( exists('g:loaded_ctrlp_marks') && g:loaded_ctrlp_marks )
 	\ || v:version < 700 || &cp
 	finish
@@ -20,6 +17,7 @@ call add(g:ctrlp_ext_vars, {
 	\ 'lname': 'marks',
 	\ 'sname': 'marks',
 	\ 'type': 'line',
+	\ 'enter': 'ctrlp#marks#enter()',
 	\ 'sort': 0,
 	\ 'specinput': 0,
 	\ })
@@ -39,12 +37,21 @@ endfunction
 "           the values are 'e', 'v', 't' and 'h', respectively
 "  a:str    the selected string
 "
+" TODO: handle the modes to open in split etc
 function! ctrlp#marks#accept(mode, str)
 	" For this example, just exit ctrlp and run help
 	call ctrlp#exit()
 
-  let l:reg = trim(split(a:str)[0])
-  execute('silent normal! `' . l:reg)
+  if a:mode ==? 'v'
+    vsplit
+  elseif a:mode ==? 'h'
+    split
+  elseif a:mode ==? 't'
+    tabnew %
+  endif
+
+  let l:mark = trim(split(a:str)[0])
+  execute('silent normal! `' . l:mark)
 endfunction
 
 " Give the extension an ID
@@ -58,15 +65,14 @@ endfunction
 " Entry function, before calling ctrlp#init(ctrlp#marks#id()) which switches
 " to ctrlp before running commands, capture output of marks so that buffer
 " specspecific marks give line details not just filename
-function! ctrlp#marks#domarks()
+
   let marks = ''
   redir => marks
   silent marks
   redir END
 
-  " remove first line
-  let edited_marks = substitute(marks, 'mark line  col file/text', '', '')
-  let s = split(edited_marks, "\n")[1:]
+  " convert to list and remove first line as a heading
+  let s = split(marks, "\n")[1:]
 
   " for each line trim the buf number and line
   let s:cleaned_marks = []

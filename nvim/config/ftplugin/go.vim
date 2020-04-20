@@ -6,15 +6,28 @@
 " removed
 let g:go_list_type = "quickfix"
 
+" Run all tests
 nmap <leader>gt <Plug>(go-test)
-nmap <leader>gct <Plug>(go-coverage-toggle)
+
+" Run the test currently in
 nnoremap <leader>gft :GoTestFunc<CR>
+
+" Toggles test coverage on and off
+nmap <leader>gct <Plug>(go-coverage-toggle)
+
 nnoremap <leader>gb :<C-u>call <SID>build_go_files()<CR>
-nmap <leader>gr <Plug>(go-run)
 
-" let g:go_diagnostics_enabled=0
+" Rename variable/word
+nmap <leader>gr <Plug>(go-rename)
 
-" let g:go_statusline_duration = 5000
+" Runs the program, note this is synchronous
+nmap <leader>ge <Plug>(go-run)
+
+" Toggle between file and test file
+nnoremap <leader>ga :<C-u>GoAlternate<CR>
+
+" Show function signature and return type on status line
+nmap <Leader>gfi <Plug>(go-info)
 
 " Lifted straight out of https://github.com/fatih/vim-go/wiki/Tutorial
 " run :GoBuild or :GoTestCompile based on the go file
@@ -26,8 +39,6 @@ function! s:build_go_files()
     call go#cmd#Build(0)
   endif
 endfunction
-
-nnoremap <leader>gb :<C-u>call <SID>build_go_files()<CR>
 
 " Use goimports rather than gofmt so format and imports missing packages on
 " write
