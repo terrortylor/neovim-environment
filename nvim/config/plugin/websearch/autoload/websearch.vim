@@ -1,3 +1,4 @@
+" TODO these should be global and move to plugin file
 if !exists('s:search_engines')
   let s:search_engines = {'google' : 'www.google.com/search?q=', 'duckduckgo' : 'www.duckduckgo.com/?q='}
 endif

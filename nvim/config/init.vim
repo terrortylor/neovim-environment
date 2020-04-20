@@ -14,6 +14,13 @@ filetype plugin indent on
 
   set background=dark
   set termguicolors
+
+  " Override fold highlighting
+  augroup vimrc_highlight_overrides
+    autocmd!
+    autocmd ColorScheme * highlight Folded ctermfg=56 ctermbg=215 cterm=NONE
+  augroup END
+
   colorscheme xcodedarkhc
   " Note lightline status bar colour scheme is defined in plugin config bellow
   let g:xcodedarkhc_green_comments = 1
@@ -34,11 +41,13 @@ filetype plugin indent on
   set foldmethod=indent
   set nofoldenable
 
-  " vimrc file folding overrides
-  augroup foldgroup
+  " custom file specific folding overrides
+  augroup custom_file_folding
     autocmd!
-    autocmd BufRead,BufNewFile init.vim setl foldmethod=marker foldenable fillchars=fold:\  foldtext=MyVimrcFoldText()
-    autocmd FileType tmux setl foldmethod=marker foldenable
+    autocmd BufRead,BufNewFile init.vim setl
+      \ foldmethod=marker
+      \ foldenable
+      \ fillchars=fold:\  foldtext=MyVimrcFoldText()
   augroup END
 
   function! MyVimrcFoldText()
@@ -52,14 +61,11 @@ filetype plugin indent on
   " }}} Setup folding rules
   " {{{ General Settings
 
-  " don't bother about trying to support older versions
-  " set nocompatible
-
   " Allow switching buffers without saving
   set hidden
 
   " Put curor in same place when re-open a file
-  augroup vim-on-open
+  augroup return_to_last_edit_in_buffer
     autocmd!
     autocmd BufReadPost *
           \ if line("'\"") > 0 && line("'\"") <= line("$") |
@@ -70,11 +76,9 @@ filetype plugin indent on
   " }}} General Settings
   " {{{ Spelling
 
-  " TODO clash
-  " Toggle spell checking
-  nnoremap <leader>s :set spell!<CR>
   " disable spell checking on start but set language
-  set nospell spelllang=en_gb
+  set nospell
+  set spelllang=en_gb
 
   " }}} Spelling
   " {{{ Indentation
@@ -83,19 +87,12 @@ filetype plugin indent on
   " https://stackoverflow.com/questions/1878974/redefine-tab-as-4-spaces
   set tabstop=2 softtabstop=0 expandtab shiftwidth=2 smarttab
 
-  augroup fileindentgroup
-    autocmd!
-    autocmd FileType ruby setl expandtab
-  augroup END
-
-  " Autoindent from previous line
-  " Note that this seems to be on in neovim
-  set autoindent
   " }}} Indentation
   " {{{ Window behaviour
 
   " Scroll before reaching the start/end of file
   set scrolloff=5
+
   " Open splits to the right and bellow
   set splitright
   set splitbelow
@@ -113,7 +110,7 @@ filetype plugin indent on
   set wildignore+=*.bmp,*.gif,*.ico,*.jpg,*.png,*.ico
   set wildignore+=*.pdf,*.psd
   set wildignore+=node_modules/*,bower_components/*
-  set wildignore+=bin/*,tags,*.session
+  set wildignore+=tags,*.session
 
   " `gf` opens file under cursor in a new vertical split
   " See this page on notes on autochdir: https://gist.github.com/csswizardry/9a33342dace4786a9fee35c73fa5deeb
@@ -127,10 +124,8 @@ filetype plugin indent on
 
   " See: https://vim.fandom.com/wiki/Display_line_numbers
   " show current line number and relative line numbers
-  set number relativenumber!
-
-  " toggle relative number
-  nnoremap <leader>rln :set relativenumber!<CR>
+  set number
+  set relativenumber!
 
   " " Always showstatus bar
   " Currently not using this in favoure of a plugin
@@ -150,8 +145,10 @@ filetype plugin indent on
 
   " Highlight current cursor line
   set cursorline
+
   " Toggle on and off as entering/leaving windows
-  augroup cursorlinegroup
+  " TODO fix issue with toggling nerdtree
+  augroup cursor_line_group
     autocmd!
     autocmd WinEnter * setlocal cursorline
     autocmd WinLeave * setlocal nocursorline
@@ -167,7 +164,7 @@ filetype plugin indent on
   set autoread
 
   " Auto remove trailing whitespace on :w
-  augroup writebuffgroup
+  augroup remove_trailing_whitespace
     autocmd!
     autocmd BufWritePre * %s/\s\+$//e
   augroup END
@@ -175,18 +172,19 @@ filetype plugin indent on
   " }}} Buffer auto load / save
   " {{{ Searching within a buffer behaviour
 
-  " Set searching to only use case when an uppercase is used
-  " set ignorecase
-  " set smartcase
-
   " Highlight search
   set incsearch
   set showmatch
-  " set hlsearch
-  augroup onsearch
+
+  " set hlsearch, set as autogroup so on sourcing $VIMRC doesn't turn on if
+  " toggled off
+  augroup enable_search_highlight_on_enter
     autocmd!
     autocmd VimEnter * set hlsearch
   augroup END
+
+  " toggle highlighting
+  nnoremap <leader>/ :set hlsearch!<CR>
 
   " This is neovim specific, makes live s/ changes in buffer
   set inccommand=nosplit
@@ -199,10 +197,7 @@ filetype plugin indent on
   nnoremap <leader>rw :%s/<c-r><c-w>//<left>
   " when in visual mode the selection delimiters are added automatically
   vnoremap <leader>rw :s/<c-r>"//<left>
-
-  " toggle highlighting
-  nnoremap <leader>/ :set hlsearch!<CR>
-
+  "
   " Create command for global search in projct
   command! -nargs=1 GGrep vimgrep "<args>" **/*
 
@@ -221,23 +216,12 @@ filetype plugin indent on
 
   filetype plugin on
 
-  " Force syntax high lighting to sync from start of file
+  " Force syntax highlighting to sync from start of file
   " as syntax highlighting gets messed up when scrolling larger files
   syn sync fromstart
   syn sync minlines=20
 
   " }}} Syntax Highlighting
-  " {{{ Registers
-
-  " TODO move to mappings
-  "Map primary (*) clipboard
-  noremap <Leader>y "*y
-  noremap <Leader>p "*p
-  " Map clipboard (+)
-  noremap <Leader>Y "+y
-  noremap <Leader>P "+p
-
-  " }}} Registers
   " {{{ Tags
 
   set tags=./.git/tags;/
@@ -280,7 +264,7 @@ filetype plugin indent on
   endfunction
 
   " Autoclose vim if only NERDTree open
-  augroup nerdtreegroup
+  augroup nerdtree_group
     autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
   augroup END
   " Show hidden files
@@ -353,7 +337,11 @@ filetype plugin indent on
     packadd! ultisnips
 
     nnoremap <leader>ue :UltiSnipsEdit<CR>
-    nnoremap <leader>ur :call UltiSnips#RefreshSnippets()<CR>
+
+    augroup auto_reload_snippets_after_write
+      autocmd!
+      autocmd BufWritePost *.snippets :call UltiSnips#RefreshSnippets()
+    augroup END
   endif
 
   " }}} ultisnips
@@ -382,7 +370,7 @@ filetype plugin indent on
 
   " TODO wrap the coc stuff
   " Use auocmd to force lightline update.
-  augroup cocgroup
+  augroup coc_group
     autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
   augroup END
 
@@ -399,7 +387,6 @@ filetype plugin indent on
     " coc extensions to laod
     " coc-java : auto downloads eclipse java lsp
     " coc-solargraph : ruby lsp
-    " TODO only load java and solargraph if correct filetype
     let g:coc_global_extensions = [
       \ 'coc-java',
       \ 'coc-json',
@@ -476,13 +463,13 @@ filetype plugin indent on
     augroup end
 
     " Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
-    xmap <leader>a  <Plug>(coc-codeaction-selected)
-    nmap <leader>a  <Plug>(coc-codeaction-selected)
+    " xmap <leader>a  <Plug>(coc-codeaction-selected)
+    " nmap <leader>a  <Plug>(coc-codeaction-selected)
 
     " Remap for do codeAction of current line
-    nmap <leader>ac  <Plug>(coc-codeaction)
+    " nmap <leader>ac  <Plug>(coc-codeaction)
     " Fix autofix problem of current line
-    nmap <leader>qf  <Plug>(coc-fix-current)
+    " nmap <leader>qf  <Plug>(coc-fix-current)
 
     " Create mappings for function text object, requires document symbols feature of languageserver.
     xmap if <Plug>(coc-funcobj-i)
@@ -503,26 +490,24 @@ filetype plugin indent on
     " use `:OR` for organize import of current buffer
     command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
 
-    " TODO this is not used
-    " Add status line support, for integration with other plugin, checkout `:h coc-status`
-    set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
-
     " TODO now started to use space as leader review these
     " Using CocList
     " Show all diagnostics
-    nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+    nnoremap <silent> <space>ld  :<C-u>CocList diagnostics<cr>
     " Manage extensions
-    nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+    nnoremap <silent> <space>le  :<C-u>CocList extensions<cr>
     " Show commands
-    nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+    nnoremap <silent> <space>lc  :<C-u>CocList commands<cr>
     " Find symbol of current document
-    nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+    nnoremap <silent> <space>lo  :<C-u>CocList outline<cr>
     " Search workspace symbols
-    nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+    nnoremap <silent> <space>ls  :<C-u>CocList -I symbols<cr>
     " Do default action for next item.
     nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+
     " Do default action for previous item.
     nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+
     " Resume latest coc list
     nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
   endif
@@ -552,6 +537,7 @@ filetype plugin indent on
 
   " I don't want the defualt TmuxNavigatePrevious mapping
   let g:tmux_navigator_no_mappings = 1
+
   nnoremap <silent> <c-h> :TmuxNavigateLeft<cr>
   nnoremap <silent> <c-j> :TmuxNavigateDown<cr>
   nnoremap <silent> <c-k> :TmuxNavigateUp<cr>
@@ -560,20 +546,31 @@ filetype plugin indent on
   " Disable tmux navigator when zooming the Vim pane
   let g:tmux_navigator_disable_when_zoomed = 1
 
-  " Saves the hassel of saving the buffer when switching to, saves all buffers
+  " Saves the hassel of saving the buffer when switching to another tmux pane, saves all buffers
   " a terminal pane
   let g:tmux_navigator_save_on_switch = 2
 
   " }}} vim-tmux-navigator
   " {{{ Terminal / Plugin
 
+  " TODO maybe remap to leader gr
+  " can toggle be used only!?
   nnoremap <leader>rr :<C-u>TerminalReplFile<cr>
+  " TODO find better chord
   nnoremap <leader>rt :<C-u>TerminalReplFileToggle<cr>
 
   " }}} Terminal / Plugin
+  " {{{ vim-color-xcode
+
+  augroup set_green_comments
+    autocmd!
+    autocmd ColorScheme * let g:xcodedarkhc_green_comments = 1
+  augroup END
+
+  " }}} vim-color-xcode
   " {{{ rainbow_parentheses.vim
 
-  augroup rainbowenter
+  augroup enable_rainbow_on_vim_enter
     autocmd!
     autocmd VimEnter * RainbowParentheses
   augroup END
@@ -591,7 +588,7 @@ filetype plugin indent on
   " }}} Operator Pending
   " {{{ Splits
 
-  " THIS IS DISABLED IN FAVOUR OF TmuxNavigateXXX
+  " Load of tmux navigator isn't loaded
   " bindings, see plugin config above
   " See here for good tips: https://thoughtbot.com/blog/vim-splits-move-faster-and-more-naturally
   " Easier split navigation
@@ -640,7 +637,8 @@ filetype plugin indent on
 
   " Easier navigation with file buffer
   " list open buffers
-  nnoremap <leader>ls :ls<CR>:b<Space>
+  " nnoremap <leader><space> :ls<CR>:b<Space>
+
   nnoremap [b :bprevious<CR>
   nnoremap ]b :bnext<CR>
   nnoremap <leader>bd :bdelete<CR>
@@ -671,14 +669,25 @@ filetype plugin indent on
   " exit insert mode and save buffer
   inoremap jj <ESC>:w<cr>
 
-  " insert a line above or below, and exit back to normal
-  " TODO if this is run from a comment line then it adds a comment prefix which
-  " I don't want
-  nnoremap <leader>o o<ESC>k
-  nnoremap <leader>O O<ESC>j
+  " insert a line above or below, and exit back to normal, this does not
+  " continue a comment block
+  nnoremap <leader>o :call NewLineNoComment(v:true)<cr>
+  nnoremap <leader>O :call NewLineNoComment(v:false)<cr>
+
+  function! NewLineNoComment(below)
+    let op = &formatoptions
+    set formatoptions-=o
+    if a:below == v:true
+      execute "normal! o\<ESC>k"
+    else
+      execute "normal! O\<ESC>j"
+    endif
+    let &formatoptions = op
+  endfunction
 
   " Reselect previous selection (gv) in visual mode
   " after indenting left or right
+
   vnoremap < <gv
   vnoremap > >gv
 
@@ -689,38 +698,21 @@ filetype plugin indent on
   nnoremap <leader>= Vap=
 
   " {{{ Navigation
-  " Disable arrow keys
-  nnoremap <up> <nop>
-  nnoremap <down> <nop>
-  nnoremap <left> <nop>
-  nnoremap <right> <nop>
-  "inoremap <up> <nop>
-  "inoremap <down> <nop>
-  "inoremap <left> <nop>
-  "inoremap <right> <nop>
 
   " In insert more move using readline line start/end
   inoremap <c-e> <esc>A
   inoremap <c-a> <esc>I
-
-  " Basic bracket closing
-  "inoremap " ""<left>
-  "inoremap ' ''<left>
-  "inoremap ` ``<left>
-  "inoremap ``` ```<CR>```<ESC>O
-  "inoremap < <><left>
-  "inoremap ( ()<left>
-  "inoremap [ []<left>
-  "inoremap { {}<left>
-  "inoremap {<CR> {<CR>}<ESC>O
-  "inoremap {;<CR> {<CR>};<ESC>O
 
   " }}} Navigation
   " {{{ vimrc related
   " Open vimrc in vertical split
   nnoremap <silent><leader>ev :vsplit $MYVIMRC<cr>
   " Source shared vim config
-  nnoremap <silent><leader>sv :w<cr>:source $MYVIMRC<cr>:echo "vimrc sourced mother licker"<cr>
+  augroup auto_load_vimrc_on_write
+    autocmd!
+    autocmd BufWritePost init.vim :source %
+          \ | echo "vimrc sourced mother licker"
+  augroup END
   " }}} vimrc related
 
 " }}} Custom Mappings
@@ -733,62 +725,6 @@ filetype plugin indent on
 " }}} Abbreviations
 
 " Functions
-" {{{ Search Related
-
-" TODO tabbed work flow needs work
-" Opens a new tab with the quickfix list
-" and selects the first item
-function! TabbedQuicklistViewer() abort
-  " echom "In function"
-  if empty(getqflist())
-    echo "No results to display"
-  else
-    " open a new tab
-    tabnew
-    " open quickfix list
-    copen
-    " register macro to select next qf item
-    " and run it so it's in the `@:` register
-    " which is a hack to pre-populate the
-    " read-only register `@:`
-    let @l=':call TabbedQuicklistNextItem()'
-    normal @l
-    " select first item in top pane
-    cfirst
-  endif
-endfunction
-
-" Opens a new tab with quickfix list open, selecting first item
-command! TabbedQuicklistViewer call TabbedQuicklistViewer()
-
-" This calls `cn`, then checks if the current position
-" is within a folded line, if so it expands the fold
-function! TabbedQuicklistNextItem()
-  cnext
-  " if fold closed `-1` then expand
-  if foldclosed(line('.')) > -1
-    foldopen
-    " wincmd t
-  endif
-
-  " if buffer has changed then select top-left split
-  let thisbuf = bufnr("%")
-  let lastwin = winnr("#")
-  let lastbuf = winbufnr(lastwin)
-  if thisbuf != lastbuf
-    wincmd t
-  endif
-endfunction
-
-" Autocommand to open quickfix list if populated...
-" TODO review this to be for just greps
-" augroup quickfix
-"     autocmd!
-"     autocmd QuickFixCmdPost [^l]* :call TabbedQuicklistViewer()
-"     autocmd QuickFixCmdPost l*    lwindow
-" augroup END
-
-" }}} Search Related
 " {{{ Scratch Buffer Related
 
 " Scratch buffer name
@@ -908,15 +844,6 @@ function! SynGroup()
 endfun
 
 " }}} Random Functions
-" {{{ lazygit
-
-" If lazygit is available then add command to call it
-if executable('lazygit')
-  " TODO this does not work, be nice to drop out to this from command though
-  command! -nargs=0 LazyGit :!lazygit
-endif
-
-" }}} lazygit
 
 " TODO this is not complete
 " A tool to take a selection and make it 'pretty',

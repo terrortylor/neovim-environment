@@ -173,7 +173,5 @@ function! FocusToggle() abort
   augroup END
 endfunction
 
-command! Focus call FocusToggle()
-
 let &cpo = s:cpo_save
 unlet s:cpo_save

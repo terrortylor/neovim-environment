@@ -1,16 +1,13 @@
 " Highlights function block
-" TODO turn this into a object so can then do multiple levels
-" TODO this should be a if and af, if possible af shuld include comments
-nnoremap <leader>vf ?function<cr>v/endfunction<cr>$
+onoremap af :<c-u>execute "normal! ?^function\rv/^endfunction\r$"<cr>
+xnoremap af ?^function<cr>o/^endfunction<cr>$
 
 " echo's selection on line bellow
 xnoremap <leader>ev yoechom '": ' . "
 
 " Populates a location list with the functions in the current file
 nnoremap <leader>lf :call LocationListFromPattern('^\(\s*\)\=function!\=.*(.*)\( abort\)\=$')<cr>
-" command! -nargs=0 ListFunctions call LocationListFromPattern('^\(\s*\)\=function!\=.*(.*)\( abort\)\=$')
 
-" TODO customise the fold line
 set foldmethod=expr
 set foldexpr=FoldVimFunctions(v:lnum)
 

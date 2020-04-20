@@ -1,47 +1,3 @@
-" TODO Expose function to send current line to REPL
-" TODO Expose function to send current selection to REPL
-let s:cpo_save = &cpo
-set cpo&vim
-
-" Playing with some terminal stuff
-let s:debug = v:true
-
-" TODO this should probably be prefixed with <leader>
-tnoremap <Esc> <C-\><C-n>
-
-" TODO is this used any more?
-if !exists('g:terminals')
-  let g:terminals = {}
-endif
-
-" TODO do these need to be global?
-if !exists('g:repl_compile')
-  let g:repl_compile = ''
-endif
-
-if !exists('g:repl_run')
-  let g:repl_run = ''
-endif
-
-" Runs current file in a Terminal called 'REPL'
-command! -nargs=0 TerminalReplFile call RunFileInTerminal()
-command! -nargs=0 TRF TerminalReplFile
-
-" Toggles the Repl Terminal
-command! -nargs=0 TerminalReplFileToggle call s:ToggleTerminal('REPL')
-command! -nargs=0 TRFC TerminalReplFileToggle
-
-" TODO Better way of filetype detection to know what/how to run
-augroup repl_filetype_executors
-  autocmd!
-  autocmd FileType kotlin
-    \ let g:repl_compile = 'kotlinc' |
-    \ let g:repl_run = 'java'
-  autocmd FileType sh
-    \ let g:repl_compile = '' |
-    \ let g:repl_run = 'sh'
-augroup END
-
 " Wrapper to jobsend
 " takes multi-lines as a list and boolean on weather to send <CR>
 function! s:RunCommandsInTerminal(job_id, lines, exec) abort
@@ -146,6 +102,3 @@ function! RunFileInTerminal() abort
   sleep 100m " Hack to prevent it looking like input has been sent twice
   call s:RunCommandsInTerminal(l:term_id, l:repl_command, v:true)
 endfunction
-
-let &cpo = s:cpo_save
-unlet s:cpo_save
