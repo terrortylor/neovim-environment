@@ -581,11 +581,6 @@ filetype plugin indent on
 " }}} Plugin Settings
 " {{{ Custom Mappings
 
-  " {{{ Operator Pending
-  " Selects 'inner line', from first non-whitespace charecter to end of line, not
-  " including carisge return
-  onoremap il :<c-u>normal! ^v$h<cr>
-  " }}} Operator Pending
   " {{{ Splits
 
   " Load of tmux navigator isn't loaded
@@ -642,6 +637,10 @@ filetype plugin indent on
   nnoremap [b :bprevious<CR>
   nnoremap ]b :bnext<CR>
   nnoremap <leader>bd :bdelete<CR>
+
+  " Make <c-e> & <c-y> a bit more useable
+  nnoremap <c-y> 5<c-y>
+  nnoremap <c-e> 5<c-e>
 
   " }}} Buffer Navigation
   " {{{ Window related
