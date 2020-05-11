@@ -1,9 +1,9 @@
 filetype plugin indent on
 
 " This file uses folding to better organise:
- " :help fold-commands
-" {{{ VIM Settings
+  " :help fold-commands
 
+" {{{ VIM Settings
   " {{{ leader
 
   set timeoutlen=1500
@@ -227,10 +227,9 @@ filetype plugin indent on
   set tags=./.git/tags;/
 
   " }}} Tags
-
 " }}} VIM Settings
-" {{{ Plugin Settings
 
+" {{{ Plugin Settings
   " {{{ vim-sneak
 
   " There is some remapping of 's' to '<space>s' see after/plugin/vim-sneak.vim
@@ -238,7 +237,7 @@ filetype plugin indent on
   " }}} vim-sneak
   " {{{ NERDTree
 
-  nnoremap <space>t :<C-u>call NerdToggleFind()<CR>
+  nnoremap <leader>tt :<C-u>call NerdToggleFind()<CR>
 
   " Open NERDTree at current file location, close if open
   " Takes into account in a buffer is loaded or not
@@ -295,15 +294,13 @@ filetype plugin indent on
   " }}} CtrlP + Extensions
   " {{{ netrw
 
-  " Configure netrw plugin to show file ls details
-  " See: https://shapeshed.com/vim-netrw/
-  let g:netrw_liststyle = 3
-  "
-  " Hide noisey banner
-  let g:netrw_banner = 0
 
   " Open new tab in explorer
-  nnoremap <leader>E :Texplore<CR>
+  " nnoremap <leader>E :Texplore<CR>
+  " nnoremap <leader>e :Explore<CR>
+
+  " Open Lexplore with my WIP plugin...
+  " nmap <leader>v <Plug>RiceVinegarFind
 
   " }}} netrw
   " {{{ ultisnips
@@ -493,23 +490,23 @@ filetype plugin indent on
     " TODO now started to use space as leader review these
     " Using CocList
     " Show all diagnostics
-    nnoremap <silent> <space>ld  :<C-u>CocList diagnostics<cr>
+    nnoremap <silent> <leader>ld  :<C-u>CocList diagnostics<cr>
     " Manage extensions
-    nnoremap <silent> <space>le  :<C-u>CocList extensions<cr>
+    nnoremap <silent> <leader>le  :<C-u>CocList extensions<cr>
     " Show commands
-    nnoremap <silent> <space>lc  :<C-u>CocList commands<cr>
+    nnoremap <silent> <leader>lc  :<C-u>CocList commands<cr>
     " Find symbol of current document
-    nnoremap <silent> <space>lo  :<C-u>CocList outline<cr>
+    nnoremap <silent> <leader>lo  :<C-u>CocList outline<cr>
     " Search workspace symbols
-    nnoremap <silent> <space>ls  :<C-u>CocList -I symbols<cr>
+    nnoremap <silent> <leader>ls  :<C-u>CocList -I symbols<cr>
     " Do default action for next item.
-    nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+    nnoremap <silent> <leader>j  :<C-u>CocNext<CR>
 
     " Do default action for previous item.
-    nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+    nnoremap <silent> <leader>k  :<C-u>CocPrev<CR>
 
     " Resume latest coc list
-    nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+    nnoremap <silent> <leader>p  :<C-u>CocListResume<CR>
   endif
 
   " }}} coc - conquer of code
@@ -577,10 +574,9 @@ filetype plugin indent on
   let g:rainbow#pairs = [['(', ')'], ['[', ']'], ['{', '}']]
 
   " }}} rainbow_parentheses.vim
-
 " }}} Plugin Settings
-" {{{ Custom Mappings
 
+" {{{ Custom Mappings
   " {{{ Splits
 
   " Load of tmux navigator isn't loaded
@@ -601,19 +597,21 @@ filetype plugin indent on
   " {{{ TABs
 
   " easier tab navigation
-  nnoremap [T  :tabfirst<CR>    " moves to first tab
-  nnoremap ]t  :tabnext<CR>     " moves to next tab
-  nnoremap [t  :tabprev<CR>     " moves to previous tab
-  nnoremap ]T  :tablast<CR>     " moves to last tab
-  nnoremap <leader>1 1gt<CR>    " moves to tab 1
-  nnoremap <leader>2 2gt<CR>    " moves to tab 2
-  nnoremap <leader>3 3gt<CR>    " moves to tab 3
-  nnoremap <leader>4 4gt<CR>    " moves to tab 4
-  nnoremap <leader>5 5gt<CR>    " moves to tab 5
-  nnoremap <leader>6 6gt<CR>    " moves to tab 6
-  nnoremap <leader>7 7gt<CR>    " moves to tab 7
-  nnoremap <leader>8 8gt<CR>    " moves to tab 8
-  nnoremap <leader>9 9gt<CR>    " moves to tab 9
+  nnoremap [T  :tabfirst<CR>        " moves to first tab
+  nnoremap ]t  :tabnext<CR>         " moves to next tab
+  nnoremap [t  :tabprev<CR>         " moves to previous tab
+  nnoremap ]T  :tablast<CR>         " moves to last tab
+  nnoremap <leader>1 1gt<CR>        " moves to tab 1
+  nnoremap <leader>2 2gt<CR>        " moves to tab 2
+  nnoremap <leader>3 3gt<CR>        " moves to tab 3
+  nnoremap <leader>4 4gt<CR>        " moves to tab 4
+  nnoremap <leader>5 5gt<CR>        " moves to tab 5
+  nnoremap <leader>6 6gt<CR>        " moves to tab 6
+  nnoremap <leader>7 7gt<CR>        " moves to tab 7
+  nnoremap <leader>8 8gt<CR>        " moves to tab 8
+  nnoremap <leader>9 9gt<CR>        " moves to tab 9
+  nnoremap <leader>tc :tabclose<CR> " closes current tab
+  nnoremap <leader>tn :tabnew<CR>   " opens a tab
 
   " }}} TABs
   " {{{ Quicklist
@@ -637,6 +635,9 @@ filetype plugin indent on
   nnoremap [b :bprevious<CR>
   nnoremap ]b :bnext<CR>
   nnoremap <leader>bd :bdelete<CR>
+
+  " easier switching to alternate/last buffer
+  nnoremap <leader>a <c-^>
 
   " Make <c-e> & <c-y> a bit more useable
   nnoremap <c-y> 5<c-y>
@@ -663,10 +664,6 @@ filetype plugin indent on
 
   " Toggle paste mode
   set pastetoggle=<F2>
-  " }}} Formatting helpers
-
-  " exit insert mode and save buffer
-  inoremap jj <ESC>:w<cr>
 
   " insert a line above or below, and exit back to normal, this does not
   " continue a comment block
@@ -690,12 +687,13 @@ filetype plugin indent on
   vnoremap < <gv
   vnoremap > >gv
 
-  " Select last pasted text
-  nnoremap gp `[v`]
-
   " Format current paragraph
   nnoremap <leader>= Vap=
 
+  " }}} Formatting helpers
+  " {{{ Macro
+  nnoremap <leader>q @q
+  " }}} Macro Helpers
   " {{{ Navigation
 
   " In insert more move using readline line start/end
@@ -713,8 +711,18 @@ filetype plugin indent on
           \ | echo "vimrc sourced mother licker"
   augroup END
   " }}} vimrc related
+  " {{{ Spelling
+  " Auto selects the first spelling suggestion for current word
+  nnoremap <leader>zz 1z=
+  " }}} Spelling
 
+  " exit insert mode and save buffer
+  inoremap jj <ESC>:w<cr>
+
+  " Select last pasted text
+  nnoremap gp `[v`]
 " }}} Custom Mappings
+
 " {{{ Abbreviations
 
 " Source my abbreviations
@@ -723,126 +731,83 @@ filetype plugin indent on
 
 " }}} Abbreviations
 
-" Functions
-" {{{ Scratch Buffer Related
+" {{{ Functions
+  " {{{ Prototyping helpers
 
-" Scratch buffer name
-if !exists('s:scratch_buffer_name')
- let s:scratch_buffer_name = 'scratch'
-endif
+  " This function copies visual selection
+  " pastes it below and comments out original
+  " leaving cursor in first line on copied selection
+  " It has a dependency on vim-commentary plugin
+  xnoremap <leader>pro :<c-u>call Prototype()<CR>
 
-" Scratch paste from register name
-if !exists('s:scratch_paste_register')
- let s:scratch_paste_register = '*'
-endif
+  function! Prototype() range
+    try
+      let a_save = @a
+      normal! gv"ay`>pgv
+      execute "normal \<Plug>Commentary"
+      normal! `>j
+      return @a
+    finally
+      let @a = a_save
+    endtry
+  endfunction
 
-" Opens a scratch buffer, if one exists already open that
-command! Scratch call Scratch()
-" Puts the contents on the scratch_paste_register into the scratch buffer
-command! PasteToScratch call PasteToScratch()
+  " }}} Prototyping helpers
+  " {{{ list related
 
-" Opens a scratch buffer window
-" If no buffer exists then create window and buffer
-" If buffer and window exist then move to it
-" If buffer exist but not in window then open in split
-function! Scratch()
-  " if scratch buffer exists
-  if bufnr(s:scratch_buffer_name) > 0
-    " buffer exists check to see if window exists
-    let scratch_window_name = bufwinnr(s:scratch_buffer_name)
-    if scratch_window_name > 0
-      execute scratch_window_name . 'wincmd w'
+  " Runs a search {pat} and returns results in a location list
+  function! LocationListFromPattern(pat)
+      let buffer=bufnr("") "current buffer number
+      let b:lines=[]
+      execute ":%g/" . a:pat . "/let b:lines+=[{'bufnr':" . 'buffer' . ", 'lnum':" . "line('.')" . ", 'text': escape(getline('.'),'\"')}]"
+      call setloclist(0, [], ' ', {'items': b:lines})
+      lopen
+  endfunction
+
+  " }}} list related
+  " {{{ Random Functions
+
+  " Opens the ftplugin for the given filetype
+  function! OpenFTPluginFile() abort
+    let l:filetype_file = expand($VIMCONFIG . '/ftplugin/' . &filetype . '.vim')
+    execute 'edit ' . l:filetype_file
+  endfunction
+  " Wrap OpenFTPluginFile function in a command which opens the ftplugin file
+  " for given file
+  command! -nargs=0 OpenFTPluginFile call OpenFTPluginFile()
+
+
+  " Show highlight group under cursor
+  " https://stackoverflow.com/questions/9464844/how-to-get-group-name-of-highlighting-under-cursor-in-vim
+  function! SynGroup()
+      let l:s = synID(line('.'), col('.'), 1)
+      echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
+  endfun
+
+  " }}} Random Functions
+  " {{{ Toggle Functions
+  " TODO This should be moved into a single plugin
+  let s:hidden_all = 0
+  function! ToggleHiddenAll()
+    if s:hidden_all  == 0
+      let s:hidden_all = 1
+      set noshowmode
+      set noruler
+      set laststatus=0
+      set noshowcmd
+      set nonumber
+      set norelativenumber
     else
-      " open in split
-      execute 'vsplit' s:scratch_buffer_name
+      let s:hidden_all = 0
+      set showmode
+      set ruler
+      set laststatus=2
+      set showcmd
+      set number
+      set relativenumber
     endif
-  else
-    " otherwise open new split as setup
-    split
-    noswapfile hide enew
-    setlocal buftype=nofile
-    setlocal bufhidden=hide
-    execute 'file' s:scratch_buffer_name
-  endif
-endfunction
-
-" If a scratch buffer exists then paste from the +
-" register
-function! PasteToScratch()
-  " capture current and scratch buffers
-  let current_buffer = bufnr('%')
-  let scratch_buffer = bufnr(s:scratch_buffer_name)
-  if scratch_buffer > 0
-    " move to scratch buffer if not already in it
-    " as moving to same window sporks
-    if current_buffer != scratch_buffer
-      call Scratch()
-    endif
-    " at end of file add new line and then reg contents
-    call append(line('$'), '')
-    call append(line('$'), getreg(s:scratch_paste_register))
-    if current_buffer != scratch_buffer
-      execute current_buffer . 'wincmd w'
-    endif
-  else
-    echom "No scratch file found"
-  endif
-endfunction
-
-" }}} Scratch Buffer Related
-" {{{ Prototyping helpers
-
-" This function copies visual selection
-" pastes it below and comments out original
-" leaving cursor in first line on copied selection
-" It has a dependency on vim-commentary plugin
-xnoremap <leader>pro :<c-u>call Prototype()<CR>
-
-function! Prototype() range
-  try
-    let a_save = @a
-    normal! gv"ay`>pgv
-    execute "normal \<Plug>Commentary"
-    normal! `>j
-    return @a
-  finally
-    let @a = a_save
-  endtry
-endfunction
-
-" }}} Prototyping helpers
-" {{{ list related
-
-" Runs a search {pat} and returns results in a location list
-function! LocationListFromPattern(pat)
-    let buffer=bufnr("") "current buffer number
-    let b:lines=[]
-    execute ":%g/" . a:pat . "/let b:lines+=[{'bufnr':" . 'buffer' . ", 'lnum':" . "line('.')" . ", 'text': escape(getline('.'),'\"')}]"
-    call setloclist(0, [], ' ', {'items': b:lines})
-    lopen
-endfunction
-
-" }}} list related
-" {{{ Random Functions
-
-" Opens the ftplugin for the given filetype
-function! OpenFTPluginFile() abort
-  let l:filetype_file = expand($VIMCONFIG . '/ftplugin/' . &filetype . '.vim')
-  execute 'edit ' . l:filetype_file
-endfunction
-" Wrap OpenFTPluginFile function in a command which opens the ftplugin file
-" for given file
-command! -nargs=0 OpenFTPluginFile call OpenFTPluginFile()
-
-
-" Show highlight group under cursor
-" https://stackoverflow.com/questions/9464844/how-to-get-group-name-of-highlighting-under-cursor-in-vim
-function! SynGroup()
-    let l:s = synID(line('.'), col('.'), 1)
-    echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
-endfun
-
-" }}} Random Functions
+  endfunction
+  " }}} Toggle Functions
 
 " TODO this is not complete
 " A tool to take a selection and make it 'pretty',
@@ -868,3 +833,4 @@ endfunction
 nnoremap <silent> <leader>mp :<C-u>call MakePretty(visualmode())<CR>
 vnoremap <silent> <leader>mp :<C-u>call MakePretty(visualmode())<Cr>
 
+" }}} Functions

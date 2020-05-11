@@ -12,3 +12,7 @@ plugins
 plugin
 NeoVim
 config
+whitespace
+struct
+echom
+echom's

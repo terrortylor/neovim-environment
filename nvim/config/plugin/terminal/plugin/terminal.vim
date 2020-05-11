@@ -30,12 +30,15 @@ command! -nargs=0 TerminalReplFile call RunFileInTerminal()
 command! -nargs=0 TRF TerminalReplFile
 
 " Toggles the Repl Terminal
-command! -nargs=0 TerminalReplFileToggle call s:ToggleTerminal('REPL')
+command! -nargs=0 TerminalReplFileToggle call ToggleTerminal('REPL')
 command! -nargs=0 TRFC TerminalReplFileToggle
 
 " TODO Better way of filetype detection to know what/how to run
 augroup repl_filetype_executors
   autocmd!
+  autocmd FileType go
+    \ let g:repl_compile = '' |
+    \ let g:repl_run = 'go run'
   autocmd FileType kotlin
     \ let g:repl_compile = 'kotlinc' |
     \ let g:repl_run = 'java'

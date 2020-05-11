@@ -11,7 +11,7 @@ function! s:RunCommandsInTerminal(job_id, lines, exec) abort
   call jobsend(a:job_id, a:lines)
 endfunction
 
-function! s:ToggleTerminal(terminal_buffer_name) abort
+function! ToggleTerminal(terminal_buffer_name) abort
   " Get current window id in case terminal window exists
   let l:current_win_id = win_getid()
 
@@ -91,10 +91,23 @@ function! RunFileInTerminal() abort
   let l:file_path = expand('%:p')
   let l:file_name = @%
 
-  if &filetype == 'kotlin'
+  " if scratch then need to create temporary file
+  if expand('%') ==# 'scratch'
+    execute 'w! /tmp/scratch.' . &filetype
+    let l:file_path = '/tmp/scratch.' . &filetype
+    let l:file_name .= '.' . &filetype
+    echo 'written /tmp/scratch'
+  endif
+
+  if &filetype ==# 'kotlin'
     let l:repl_command = [g:repl_compile . ' ' . l:file_path . ' -include-runtime -d /tmp/' . l:file_name . '.jar && ' . g:repl_run . ' -jar /tmp/' . l:file_name . '.jar']
-  elseif &filetype == 'sh'
+  elseif &filetype ==# 'sh'
     let l:repl_command = [g:repl_run . ' ' . l:file_path]
+  elseif &filetype ==# 'go'
+    let l:repl_command = [g:repl_run . ' ' . l:file_path]
+  else
+    echo 'Unsupported FileType'
+    return
   endif
 
   let l:term_id = s:OpenTerminal('REPL')
