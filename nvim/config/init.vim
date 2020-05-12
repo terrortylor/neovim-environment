@@ -294,7 +294,6 @@ filetype plugin indent on
   " }}} CtrlP + Extensions
   " {{{ netrw
 
-
   " Open new tab in explorer
   " nnoremap <leader>E :Texplore<CR>
   " nnoremap <leader>e :Explore<CR>
@@ -309,17 +308,48 @@ filetype plugin indent on
     " Ultisnips is used as it's fiarly light weight and is jsut the engine.
     " Note that if COC is running then these two keybinigs are disabled in
     " favour of <CR>
-    let g:UltiSnipsExpandTrigger = '<tab>'
-    " let g:UltiSnipsListSnippets  = '<c-tab>'
-    " Does this mess with a Readline mapping at all?
+    let g:UltiSnipsExpandTrigger = '<TAB>'
+    " This is doubled up by the fuzzy ultisnips menu
     let g:UltiSnipsListSnippets  = '<c-u>'
 
 
-    " As using COC tab and shift tab feel more natural
-    " let g:UltiSnipsJumpForwardTrigger = '<c-j>'
-    " let g:UltiSnipsJumpBackwardTrigger = '<c-k>'
+    " Jump back and forth between snippet placeholders
     let g:UltiSnipsJumpForwardTrigger = '<TAB>'
     let g:UltiSnipsJumpBackwardTrigger = '<S-TAB>'
+
+    " Want to use <TAB> and <S-TAB> to move through completion menu as well as
+    " snippet placeholders. These functions check if the PUMVISIBLE and if so
+    " then move up or down accordingly; if not then tried to jump through
+    " snipper placeholders, otherwise just do a <TAB>
+    function! g:UltiSnipsComplete()
+      if pumvisible()
+        return "\<C-n>"
+      else
+        call UltiSnips#JumpForwards()
+        if g:ulti_jump_forwards_res == 0
+          return "\<TAB>"
+        endif
+        return ""
+      endif
+    endfunction
+
+    function! g:UltiSnipsReverse()
+      if pumvisible()
+        return "\<C-P>"
+      else
+        call UltiSnips#JumpBackwards()
+        if g:ulti_jump_backwards_res == 0
+          return "\<S-TAB>"
+        endif
+        return ""
+      endif
+    endfunction
+
+    augroup pumvisible_within_snippet
+      autocmd!
+      autocmd InsertEnter * exec "inoremap <silent> " . g:UltiSnipsJumpForwardTrigger  . " <C-R>=g:UltiSnipsComplete()<cr>"
+      autocmd InsertEnter * exec "inoremap <silent> " . g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnipsReverse()<cr>"
+    augroup END
 
     " This just sets the path of where we edit/create personnal snippets
     let g:UltiSnipsSnippetsDir=$HOME . "/.config/nvim/ultisnips"
@@ -415,6 +445,9 @@ filetype plugin indent on
     " always show signcolumns
     set signcolumn=yes
 
+    " Use '<CR>' for completion select
+    inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+
     " Use <c-space> to trigger completion.
     inoremap <silent><expr> <c-space> coc#refresh()
 
@@ -469,6 +502,7 @@ filetype plugin indent on
     " nmap <leader>qf  <Plug>(coc-fix-current)
 
     " Create mappings for function text object, requires document symbols feature of languageserver.
+    " NOTE: these may be overridden in ftplugin files, i.e. vim overrides af
     xmap if <Plug>(coc-funcobj-i)
     xmap af <Plug>(coc-funcobj-a)
     omap if <Plug>(coc-funcobj-i)
@@ -715,6 +749,14 @@ filetype plugin indent on
   " Auto selects the first spelling suggestion for current word
   nnoremap <leader>zz 1z=
   " }}} Spelling
+  " {{{ Write and Source
+  nnoremap <leader>ws :w <bar> source %<CR>
+  " }}} Write and Source
+  " {{{ Marks
+  " 'm' is my default quick mark, so this is quick jump mark 'm' to save my
+  " pinky :P
+  nnoremap <leader>mm `m
+  " }}} Marks
 
   " exit insert mode and save buffer
   inoremap jj <ESC>:w<cr>

@@ -24,7 +24,7 @@ nmap <leader>gr <Plug>(go-rename)
 nmap <leader>ge <Plug>(go-run)
 
 " Toggle between file and test file
-nnoremap <leader>ga :<C-u>GoAlternate<CR>
+nnoremap <leader>ga :<C-u>GoAlternate!<CR>
 
 " Show function signature and return type on status line
 nmap <Leader>gfi <Plug>(go-info)

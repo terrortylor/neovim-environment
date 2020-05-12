@@ -12,3 +12,9 @@ func Test${1:Something}(t *testing.T) {
 	}
 }
 endsnippet
+
+snippet trun "t.Run(name, func(t *testing.T) { ... })"
+t.Run(${1}, func(t *testing.T) {
+  ${2}
+})
+endsnippet
