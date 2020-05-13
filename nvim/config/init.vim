@@ -1,5 +1,3 @@
-filetype plugin indent on
-
 " This file uses folding to better organise:
   " :help fold-commands
 
@@ -12,7 +10,6 @@ filetype plugin indent on
   " }}} leader
   " {{{ Theme
 
-  set background=dark
   set termguicolors
 
   " Override fold highlighting
@@ -26,15 +23,9 @@ filetype plugin indent on
   let g:xcodedarkhc_green_comments = 1
 
   " }}} Theme Leave
-  " {{{ Swap, Backup and Undo File Location
-
-  set backupdir=~/.config/nvim/backup//
-  set directory=~/.config/nvim/swap//
-  set undodir=~/.config/nvim/undo//
-
+  " {{{ Persistent Undofile
   set undofile
-
-" }}} Swap, Backup and Undo File Location
+  " }}} Persistent Undofile
   " {{{ Setup folding rules
 
   " Global to indent, and not close them by default
@@ -85,7 +76,7 @@ filetype plugin indent on
 
   " Configure indentation to spaces of width 2
   " https://stackoverflow.com/questions/1878974/redefine-tab-as-4-spaces
-  set tabstop=2 softtabstop=0 expandtab shiftwidth=2 smarttab
+  set tabstop=2 softtabstop=0 expandtab shiftwidth=2
 
   " }}} Indentation
   " {{{ Window behaviour
@@ -127,9 +118,6 @@ filetype plugin indent on
   set number
   set relativenumber!
 
-  " " Always showstatus bar
-  " Currently not using this in favoure of a plugin
-  " set laststatus=2
   " " Format the status line
   " set statusline=%f       "Path of the file
   " set statusline+=%=      "left/right separator
@@ -160,9 +148,6 @@ filetype plugin indent on
   " autosave buffers when switching between then
   set autowrite
 
-  " Auto load changes from the filesytem
-  set autoread
-
   " Auto remove trailing whitespace on :w
   augroup remove_trailing_whitespace
     autocmd!
@@ -172,16 +157,8 @@ filetype plugin indent on
   " }}} Buffer auto load / save
   " {{{ Searching within a buffer behaviour
 
-  " Highlight search
-  set incsearch
+  " visually show bracket matches
   set showmatch
-
-  " set hlsearch, set as autogroup so on sourcing $VIMRC doesn't turn on if
-  " toggled off
-  augroup enable_search_highlight_on_enter
-    autocmd!
-    autocmd VimEnter * set hlsearch
-  augroup END
 
   " toggle highlighting
   nnoremap <leader>/ :set hlsearch!<CR>
@@ -210,11 +187,6 @@ filetype plugin indent on
 
   " }}} Searching
   " {{{ Syntax Highlighting
-
-  " enable syntax highlighting
-  syntax enable
-
-  filetype plugin on
 
   " Force syntax highlighting to sync from start of file
   " as syntax highlighting gets messed up when scrolling larger files

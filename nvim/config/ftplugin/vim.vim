@@ -11,6 +11,9 @@ nnoremap <leader>lf :call LocationListFromPattern('^\(\s*\)\=function!\=.*(.*)\(
 set foldmethod=expr
 set foldexpr=FoldVimFunctions(v:lnum)
 
+" Allow ':' to be classed as a word charecter
+set iskeyword+=:
+
 " Folds top level functions
 " including functions that are commented out
 function! FoldVimFunctions(line)
