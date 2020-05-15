@@ -1,11 +1,11 @@
 {
   "suggest.noselect": false,
-  "suggest.minTriggerInputLength":3,
+  "suggest.minTriggerInputLength":5,
   "suggest.floatEnable": true,
-  "diagnostic.errorSign":"⛔️",
-  "diagnostic.warningSign": "☢️",
-  "diagnostic.infoSign":"⚠️",
-  "diagnostic.hintSign":"💡",
+  "diagnostic.errorSign":"E",
+  "diagnostic.warningSign": "W",
+  "diagnostic.infoSign":"I",
+  "diagnostic.hintSign":"H",
   "list.source.outline.ctagsFilestypes": ["vim"],
   "languageserver": {
     "golang": {

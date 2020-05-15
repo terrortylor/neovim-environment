@@ -18,3 +18,13 @@ t.Run(${1}, func(t *testing.T) {
   ${2}
 })
 endsnippet
+
+snippet check_struct_interface "var _ Interface = Struct{}"
+var _ ${1:Interface} = ${2:Struct\{\}}
+endsnippet
+
+snippet typeOf_stringer "reflect.TypeOf(list).String()"
+if reflect.TypeOf(list).String() != "*widgets.List" {
+	t.Fatal("Expected list to be of type *widgets.list, but got: ")
+}
+endsnippet

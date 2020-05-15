@@ -174,15 +174,16 @@
   nnoremap <leader>rw :%s/<c-r><c-w>//<left>
   " when in visual mode the selection delimiters are added automatically
   vnoremap <leader>rw :s/<c-r>"//<left>
-  "
-  " Create command for global search in projct
-  command! -nargs=1 GGrep vimgrep "<args>" **/*
 
   " }}} Searching within a buffer behaviour
   " {{{ Searching
 
   if executable('ack')
     set grepprg=ack\ -H\ --column\ --nofilter\ --nocolor\ --nogroup
+  else
+    " Added the -r flag so that it's recurssive by default and doesn't include
+    " loads of 'is a directory' output
+    set grepprg=grep\ -rn\ $*\ /dev/null
   endif
 
   " }}} Searching
@@ -199,9 +200,32 @@
   set tags=./.git/tags;/
 
   " }}} Tags
+  " {{{ Completion
+  set completeopt=menuone,preview,noselect,noinsert
+  " }}} Completion
 " }}} VIM Settings
 
 " {{{ Plugin Settings
+  " {{{ cfilter
+  " cfilter is a built in plugin for filtering quickfix and location lists
+  " it exposes to new ex command Cfilter and Lfilter
+  packadd cfilter
+  " }}} cfilter
+  " {{{ quickfix
+  function! QuickfixMappings() abort
+    nmap <leader>ce <Plug>(QuicklistCreateEditableBuffer)
+    nmap <leader>cs <Plug>(QuickfixCreateFromBuffer)
+
+    nnoremap [C :colder<cr>
+    nnoremap ]C :cnewer<cr>
+  endfunction
+
+  augroup quickfix_mappings
+    autocmd!
+    " autocmd BufReadPost quickfix nested :call QuickfixMappings()
+    autocmd WinEnter * if &buftype == 'quickfix' | call QuickfixMappings() | endif
+  augroup END
+  " }}} quickfix
   " {{{ vim-sneak
 
   " There is some remapping of 's' to '<space>s' see after/plugin/vim-sneak.vim
@@ -335,7 +359,7 @@
 
     packadd! ultisnips
 
-    nnoremap <leader>ue :UltiSnipsEdit<CR>
+    nnoremap <leader>ue :UltiSnipsEdit<CR>:set filetype=snippets<CR>
 
     augroup auto_reload_snippets_after_write
       autocmd!

@@ -4,45 +4,47 @@
 
 " Opens a new tab with the quickfix list
 " and selects the first item
-function! TabbedQuicklistViewer() abort
+function! quickfix#tabbed#TabbedQuicklistViewer() abort
   " echom "In function"
   if empty(getqflist())
     echo "No results to display"
   else
     " open a new tab
     tabnew
+    " select first item in top pane
+    cfirst
     " open quickfix list
     copen
 
-    call SetupMappings()
+    " Setup mappings, note this needs to run in the opened quickfix
+    call s:setupMappings()
 
     " register macro to select next qf item
     " and run it so it's in the `@:` register
     " which is a hack to pre-populate the
     " read-only register `@:`
     " TODO this register shoyld be saved first and restored
-    let @l=':call TabbedQuicklistNextItem()'
+    let @l=':call s:tabbedQuicklistNextItem()'
     normal @l
-    " select first item in top pane
-    cfirst
   endif
 endfunction
 
-function! SetupMappings()
-  " scrolling also selects buffer
-  nnoremap <buffer> j j<cr><c-w>j
-  nnoremap <buffer> k k<cr><c-w>j
+function! s:setupMappings()
+  " scrolling also selects entry then jumps back to quickfix
+  nnoremap <buffer> j j<cr>:copen<CR>
+  nnoremap <buffer> k k<cr>:copen<CR>
 endfunction
 
 " This calls `cn`, then checks if the current position
 " is within a folded line, if so it expands the fold
-function! TabbedQuicklistNextItem()
+" TODO rethink if this is actually required
+function! s:tabbedQuicklistNextItem()
   cnext
   " if fold closed `-1` then expand
   if foldclosed(line('.')) > -1
     foldopen
-    " TODO when switching the buffer should be checked if wxista and unloaded
-    " if it didnt so buf list doeant get full
+    " TODO when switching the buffer should be checked if already exists and
+    " if not then unload from buffer list so not to polute it
     " TODO add maping to leave in buffer list and to clear and populate arg
     " list
     " wincmd t
