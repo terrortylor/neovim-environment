@@ -1,6 +1,6 @@
 {
   "suggest.noselect": false,
-  "suggest.minTriggerInputLength":5,
+  "suggest.minTriggerInputLength": 3,
   "suggest.floatEnable": true,
   "diagnostic.errorSign":"E",
   "diagnostic.warningSign": "W",

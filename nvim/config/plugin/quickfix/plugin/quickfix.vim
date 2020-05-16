@@ -9,6 +9,31 @@ if !exists('g:quickfix_local_errorformat')
   let g:quickfix_local_errorformat = '%f\|%l\ col\ %c\|%m'
 endif
 
+" The configuration for external binary to use
+if !exists('g:quickfix_search_binaries')
+  let g:quickfix_search_binaries = {
+    \ 'grep' : {
+      \'bin' : 'grep',
+      \'default_options' : '-rn',
+      \'case_insensitive' : '-i'
+    \ },
+    \ 'ack' : {
+      \ 'bin' : 'ack',
+      \ 'default_options' : '-H --column --nofilter --nocolor --nogroup',
+      \ 'case_insensitive' : '-i'
+    \ }
+  \ }
+endif
+
+" Sets the external binary to use, falls back to grep
+if !exists('g:quickfix_external_binary')
+  if executable('ack')
+    let g:quickfix_external_binary = 'ack'
+  else
+    let g:quickfix_external_binary = 'grep'
+  endif
+endif
+
 augroup quickfix_disable_numbers
   autocmd!
   autocmd BufReadPost quickfix nested set nonumber
@@ -31,4 +56,12 @@ command! -nargs=+ -complete=file_in_path -bar SimpleGrep :call quickfix#search#S
 nnoremap <Plug>(QuicklistCreateEditableBuffer) :call quickfix#edit#SetModifiable()<CR>
 
 " Create Plug mapping load take edited buffer and make quicklist
-nnoremap <Plug>(QuickfixCreateFromBuffer) :cal quickfix#edit#QuickfixFromBuffer()<CR>
+nnoremap <Plug>(QuickfixCreateFromBuffer) :call quickfix#edit#QuickfixFromBuffer()<CR>
+
+" Apply changes made in quickfix and apply them to the relatvent files/lines
+nnoremap <Plug>(QuickfixApplyLineChanges) :call quickfix#edit#MakeChangesInQuickfix()<CR>
+
+  " {{{ Searching
+
+
+  " }}} Searching
