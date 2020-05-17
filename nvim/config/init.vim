@@ -22,7 +22,7 @@
   " Note lightline status bar colour scheme is defined in plugin config bellow
   let g:xcodedarkhc_green_comments = 1
 
-  " }}} Theme Leave
+  " }}} Theme
   " {{{ Persistent Undofile
   set undofile
   " }}} Persistent Undofile
@@ -169,24 +169,23 @@
   " Set global flag on for search are replace
   " :help gdefault
   set gdefault
+  " }}} Searching within a buffer behaviour
+  " {{{ Search and Replace
 
-  " Search and replace word under cursor
+  " Search and replace word under cursor within buffer
   nnoremap <leader>rw :%s/<c-r><c-w>//<left>
-  " when in visual mode the selection delimiters are added automatically
+  " Search and replace visual selection.
+  " When in visual mode the selection delimiters are added automatically
   vnoremap <leader>rw :s/<c-r>"//<left>
 
-  " }}} Searching within a buffer behaviour
-  " {{{ Searching
+  " Custom Grep (tabbed view) for selection within current directory, path can
+  " be added
+  vnoremap <leader>gg y:Grep <c-r>"
+  " Custom Grep for selection within current directory with standard quickfix
+  " window, path can be added
+  vnoremap <leader>sg y:SimpleGrep <c-r>"
+  " }}} Search and Replace
 
-  if executable('ack')
-    set grepprg=ack\ -H\ --column\ --nofilter\ --nocolor\ --nogroup
-  else
-    " Added the -r flag so that it's recurssive by default and doesn't include
-    " loads of 'is a directory' output
-    set grepprg=grep\ -rn\ $*\ /dev/null
-  endif
-
-  " }}} Searching
   " {{{ Syntax Highlighting
 
   " Force syntax highlighting to sync from start of file
@@ -215,6 +214,7 @@
   function! QuickfixMappings() abort
     nmap <leader>ce <Plug>(QuicklistCreateEditableBuffer)
     nmap <leader>cs <Plug>(QuickfixCreateFromBuffer)
+    nmap <leader>ca <Plug>(QuickfixApplyLineChanges)
 
     nnoremap [C :colder<cr>
     nnoremap ]C :cnewer<cr>

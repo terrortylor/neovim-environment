@@ -26,7 +26,7 @@ function! s:run_search(...) abort
   " Set error format to NOT have a space after the column and before the
   " message
   let l:errorformat = &errorformat
-  execute('let &errorformat="%A%f:%l:%c:%m,%A%f:%l:%m"')
+  execute('let &errorformat="' . g:quickfix_search_binaries_errorformat . '"')
 
   " run the query as a sub process
   cgetexpr system(l:command)

@@ -4,9 +4,14 @@ if exists('g:loaded_quickfix_plugin')
 endif
 let g:loaded_quickfix_plugin = 1
 
-" The errorformat used when reading a modified list format
-if !exists('g:quickfix_local_errorformat')
-  let g:quickfix_local_errorformat = '%f\|%l\ col\ %c\|%m'
+" The errorformat used when reading a modified buffer list in list
+if !exists('g:quickfix_local_buffer_errorformat')
+  let g:quickfix_local_buffer_errorformat = '%f\|%l\ col\ %c\|%m,%f\|%l\|%m'
+endif
+
+" The error format of the external binaries results
+if !exists('g:quickfix_search_binaries_errorformat')
+  let g:quickfix_search_binaries_errorformat = '%A%f:%l:%c:%m,%A%f:%l:%m'
 endif
 
 " The configuration for external binary to use
