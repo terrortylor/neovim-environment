@@ -1,3 +1,7 @@
+" TODO ignorecase is off.. thought this should be on as default on nvim...
+" also check that autowrite is working as expected
+" maybe from my crappy plugin?
+
 " This file uses folding to better organise:
   " :help fold-commands
 
@@ -19,7 +23,6 @@
   augroup END
 
   colorscheme xcodedarkhc
-  " Note lightline status bar colour scheme is defined in plugin config bellow
   let g:xcodedarkhc_green_comments = 1
 
   " }}} Theme
@@ -56,6 +59,7 @@
   set hidden
 
   " Put curor in same place when re-open a file
+  " TODO move this out to function for consistency
   augroup return_to_last_edit_in_buffer
     autocmd!
     autocmd BufReadPost *
@@ -117,19 +121,6 @@
   " show current line number and relative line numbers
   set number
   set relativenumber!
-
-  " " Format the status line
-  " set statusline=%f       "Path of the file
-  " set statusline+=%=      "left/right separator
-  " set statusline+=[%{strlen(&fenc)?&fenc:'none'}, "file encoding
-  " set statusline+=%{&ff}] "file format
-  " set statusline+=%h      "help file flag
-  " set statusline+=%m      "modified flag
-  " set statusline+=%r      "read only flag
-  " set statusline+=%y      "filetype
-  " set statusline+=%3c,     "cursor column
-  " set statusline+=%4l/%L   "cursor line/total lines
-  " set statusline+=\ %P    "percent through file
 
   " Highlight current cursor line
   set cursorline
@@ -368,40 +359,6 @@
   endif
 
   " }}} ultisnips
-  " {{{ lightline
-
-  " Update status bar to include search case insensitivity state
-  " call ToggleSmartsearch#toggle()
-
-  let g:lightline = {
-        \ 'colorscheme': 'tender',
-        \ 'active': {
-        \   'left': [ [ 'mode', 'paste' ],
-        \             [ 'currentfunction', 'cocstatus', 'readonly', 'filename', 'modified' ] ],
-        \   'right': [ [ 'lineinfo' ],
-        \              [ 'percent' ],
-        \              [ 'search_case_sensativity_state', 'fileformat', 'fileencoding', 'filetype' ] ]
-        \ },
-        \ 'component_function': {
-        \   'cocstatus': 'coc#status',
-        \   'currentfunction': 'CocCurrentFunction',
-        \   'search_case_sensativity_state': 'togglesmartsearch#statepretty'
-        \ },
-        \ }
-
-  let g:toggle_smartsearch_state = 1
-
-  " TODO wrap the coc stuff
-  " Use auocmd to force lightline update.
-  augroup coc_group
-    autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
-  augroup END
-
-  function! CocCurrentFunction()
-      return get(b:, 'coc_current_function', '')
-  endfunction
-
-  " }}} lightline
   " {{{ coc - conquer of code
 
   if executable('node')
@@ -793,6 +750,7 @@
   " }}} Prototyping helpers
   " {{{ list related
 
+  " TODO move to quickfix plugin
   " Runs a search {pat} and returns results in a location list
   function! LocationListFromPattern(pat)
       let buffer=bufnr("") "current buffer number
@@ -801,6 +759,8 @@
       call setloclist(0, [], ' ', {'items': b:lines})
       lopen
   endfunction
+
+  command! -nargs=1 LSimpleGrep call LocationListFromPattern('<args>')
 
   " }}} list related
   " {{{ Random Functions

@@ -13,9 +13,6 @@
 [submodule "nvim/plugins/start/tender"]
 	path = nvim/plugins/start/tender
 	url = https://github.com/jacoborus/tender.vim.git
-[submodule "nvim/plugins/start/lightline"]
-	path = nvim/plugins/start/lightline
-	url = https://github.com/itchyny/lightline.vim.git
 [submodule "nvim/plugins/start/vim-togglesmartsearch"]
 	path = nvim/plugins/start/vim-togglesmartsearch
 	url = https://github.com/terrortylor/vim-togglesmartsearch.git

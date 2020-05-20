@@ -1,22 +1,36 @@
 snippet exists "Inserts if variable exists statement" b
 if !exists('${1:s:variable}')
-  let $1 = ${2:'value'}
+	let $1 = ${2:'value'}
 endif
 endsnippet
 
-snippet elseif "elseif CONDITION"
-  elseif ${1:"foo" == "foo"}
+snippet if "if ... then"
+if ${1:CONDITION}
+	${2}
+endif
+endsnippet
+
+snippet ifelse "if ... else ... then"
+if ${1:CONDITION}
+	${2}
+else
+	${3}
+endif
+endsnippet
+
+snippet elif "elseif CONDITION"
+	elseif ${1:"foo" == "foo"}
 endsnippet
 
 snippet function "function! <NAME> [abort]"
 function! ${1:function_name}(${2:args}) ${3:abort}
-  ${4}
+	${4}
 endfunction
 endsnippet
 
 snippet debug_message "debug echom"
 if s:debug
-  echo${1:m} ${2:'This is a message'}
+	echo${1:m} ${2:'This is a message'}
 endif
 endsnippet
 
@@ -30,7 +44,7 @@ endsnippet
 
 snippet for "for i in ..."
 for ${1:i} in ${2:[1, 2, 3]}
-  ${3}
+	${3}
 endfor
 endsnippet
 
@@ -40,12 +54,19 @@ endsnippet
 
 snippet autogroup "Inserts an autogroup" b
 augroup ${1:autogroupname}
-  autocmd!
-  autocmd ${2}
+	autocmd!
+	autocmd ${2}
 augroup END
 endsnippet
 
-snippet pluginsettingwrapper "Inserts the standard plugin save/restore settings crap" b
+snippet plugin_guard "description"
+if exists('g:loaded_${1:plugin_name}_plugin')
+	finish
+endif
+let g:${1} = 1
+endsnippet
+
+snippet plugin_setting_wrapper "Inserts the standard plugin save/restore settings crap" b
 let s:cpo_save = &cpo
 set cpo&vim
 $1
@@ -59,7 +80,7 @@ snippet current_win_id "Assign current window id to variable"
 let l:${1:current_win_id} = win_getid()
 endsnippet
 
-snippet restorecursor "Captures and restores cursor"
+snippet restore_cursor "Captures and restores cursor"
 " Capture cursor position to be restored later with
 let [_, ${1:l:lnum}, ${2:l:col}, _] = getpos(${3:"."})
 
