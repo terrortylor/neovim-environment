@@ -74,15 +74,17 @@ endfunction
 
 function! statusline#atoms#readonly(winnr) abort
   let l:readonly = getwinvar(a:winnr, '&readonly')
-  if l:readonly == 1
-    return s:WrapWithBrackets('%#AtomText#RO')
+  if l:readonly == 0
+    return ''
   endif
+  return s:WrapWithBrackets('%#AtomText#RO')
 endfunction
 
 function! statusline#atoms#modified() abort
-  if &modified
-    return s:WrapWithBrackets('%#AtomText#+')
+  if &modified == 0
+    return ''
   endif
+  return s:WrapWithBrackets('%#AtomText#+')
 endfunction
 
 function! statusline#atoms#non_modifiable(type) abort
@@ -91,7 +93,7 @@ endfunction
 
 function! statusline#atoms#case_sensitivity() abort
   let l:atom='%#AtomText#'
-  let l:atom .= &ignorecase ? '*aA*' : ' aA '
+  let l:atom .= &ignorecase ? '*aA*' : 'aA'
   return s:WrapWithBrackets(l:atom)
 endfunction
 
@@ -122,44 +124,47 @@ function! statusline#atoms#git_branch()
 endfunction
 
 function! statusline#atoms#mode(active) abort
-  if g:statusline_show_mode == v:true
-    " Work out max mode display length for padding
-    if !exists('s:mode_max_length')
-      let s:mode_max_length = 0
-      for i in keys(s:statusline_modes)
-        if s:mode_max_length < strchars(get(s:statusline_modes, i).display)
-          let s:mode_max_length = strchars(get(s:statusline_modes, i).display)
-        endif
-      endfor
-    endif
-
-    if a:active == 1
-      if has_key(s:statusline_modes, mode())
-        let l:display = get(s:statusline_modes, mode()).display
-        let l:atom = ' %#' . get(s:statusline_modes, mode()).highlight . '#'
-        let l:atom .= l:display . ' '
-        " Want to fix the length so swtiching windows doesn't make text jump
-        " around
-        return s:WrapWithBrackets(l:atom) . repeat(' ', s:mode_max_length - strchars(l:display) -1) . ' '
+  if g:statusline_show_mode == v:false
+    return ''
+  endif
+  " Work out max mode display length for padding
+  if !exists('s:mode_max_length')
+    let s:mode_max_length = 0
+    for i in keys(s:statusline_modes)
+      if s:mode_max_length < strchars(get(s:statusline_modes, i).display)
+        let s:mode_max_length = strchars(get(s:statusline_modes, i).display)
       endif
-    else
-      return repeat(' ', s:mode_max_length + 4)
+    endfor
+  endif
+
+  if a:active == 1
+    if has_key(s:statusline_modes, mode())
+      let l:display = get(s:statusline_modes, mode()).display
+      let l:atom = ' %#' . get(s:statusline_modes, mode()).highlight . '#'
+      let l:atom .= l:display . ' '
+      " Want to fix the length so swtiching windows doesn't make text jump
+      " around
+      return s:WrapWithBrackets(l:atom) . repeat(' ', s:mode_max_length - strchars(l:display) -1) . ' '
     endif
+  else
+    return repeat(' ', s:mode_max_length + 4)
   endif
 endfunction
 
 function! statusline#atoms#coc_diagnostics() abort
-  if exists('b:coc_diagnostic_info')
-    let l:info = b:coc_diagnostic_info
-    let l:atom='%#AtomColon#E: ' . '%#AtomText#' . l:info.error . ' '
-    let l:atom.='%#AtomColon#W: ' . '%#AtomText#' . l:info.warning
-    return s:WrapWithBrackets(' ' . l:atom . ' ')
+  if !exists('b:coc_diagnostic_info')
+    return ''
   endif
+  let l:info = b:coc_diagnostic_info
+  let l:atom='%#AtomColon#E: ' . '%#AtomText#' . l:info.error . ' '
+  let l:atom.='%#AtomColon#W: ' . '%#AtomText#' . l:info.warning
+  return s:WrapWithBrackets(' ' . l:atom . ' ')
 endfunction
 
 function! statusline#atoms#coc_function() abort
   let l:func = get(b:, 'coc_current_function', '')
-  if strlen(l:func) > 0
-    return s:WrapWithBrackets('%#AtomText#' . l:func)
+  if strlen(l:func) == 0
+    return ''
   endif
+  return s:WrapWithBrackets('%#AtomText#' . l:func)
 endfunction

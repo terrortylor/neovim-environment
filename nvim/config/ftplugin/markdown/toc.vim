@@ -8,12 +8,13 @@ command! -nargs=0 RemoveTOC call RemoveTOC()
 let s:toc_title = "# Table of contents"
 let s:toc_end_marker = "<!--- end of toc -->"
 
+" TODO this doesn't take into account a section, i.e. does not end with #'s
 function! s:GetHeaders()
-  let a:flags = "Wc" "'c' is required to include current/first line
-  while search("^##", a:flags) != 0
+  let l:flags = "Wc" "'c' is required to include current/first line
+  while search("^##", l:flags) != 0
     let l:line = getline(".")
     let s:found_headings = add(s:found_headings, l:line)
-    let a:flags = "W" "'c' need to remove c to prevent loop breakage
+    let l:flags = "W" "'c' need to remove c to prevent loop breakage
   endwhile
 endfunction
 
@@ -31,34 +32,34 @@ function! s:WriteTOC()
   call append(0, '')
   call append(0, s:toc_title)
   call append(1, '')
-  let a:line = 2
+  let l:line = 2
   for heading in s:found_headings
     " Get #'s
-    let a:hashes = substitute(heading, "[^#]", "","g")
+    let l:hashes = substitute(heading, "[^#]", "","g")
     " Get rest of heading title
-    let a:heading_text = substitute(heading, "[#]", "","g")
+    let l:heading_text = substitute(heading, "[#]", "","g")
     " Work out heading title for padding
-    let a:heading_level = len(a:hashes) - 2
-    if a:heading_level > 0
-      let a:padding = repeat(" ", 3 * a:heading_level)
+    let l:heading_level = len(l:hashes) - 2
+    if l:heading_level > 0
+      let l:padding = repeat(" ", 3 * l:heading_level)
     else
-      let a:padding = ""
+      let l:padding = ""
     endif
     " format heading link
-    let a:heading_link = "[" . trim(a:heading_text) . "](#" . substitute(tolower(trim(a:heading_text)), " ", "-", "g") . ")"
+    let l:heading_link = "[" . trim(l:heading_text) . "](#" . substitute(tolower(trim(l:heading_text)), " ", "-", "g") . ")"
     " insert toc line, numbered lists just need to be a number... makes it
     " easier :P
-    call append(a:line, a:padding . "1. " . a:heading_link)
-    let a:line += 1
+    call append(l:line, l:padding . "1. " . l:heading_link)
+    let l:line += 1
   endfor
 
   " add a comment line that will be used to mark end of TOC
-  call append(a:line, s:toc_end_marker)
+  call append(l:line, s:toc_end_marker)
 endfunction
 
 function! CreateTOC()
-  let a:old_reg = getreg("a")
-  let a:old_reg_type = getregtype("a")
+  let l:old_reg = getreg("a")
+  let l:old_reg_type = getregtype("a")
   normal ma
 
   " move to top of file
@@ -73,5 +74,5 @@ function! CreateTOC()
   call s:WriteTOC()
 
   normal `a
-  call setreg("a", a:old_reg, a:old_reg_type)
+  call setreg("a", l:old_reg, l:old_reg_type)
 endfunction

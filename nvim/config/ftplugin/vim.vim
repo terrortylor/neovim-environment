@@ -14,6 +14,10 @@ set foldexpr=FoldVimFunctions(v:lnum)
 " Allow ':' to be classed as a word charecter
 set iskeyword+=:
 
+" Add consistency using gd over ctrl-]
+" NOTE this also overrides COC's mapping
+nnoremap gd <c-]>
+
 " Folds top level functions
 " including functions that are commented out
 function! FoldVimFunctions(line)

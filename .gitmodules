@@ -53,3 +53,6 @@
 [submodule "nvim/plugins/start/rainbow_parentheses.vim"]
 	path = nvim/plugins/start/rainbow_parentheses.vim
 	url = https://github.com/junegunn/rainbow_parentheses.vim
+[submodule "nvim/plugins/start/vim-markdown"]
+	path = nvim/plugins/start/vim-markdown
+	url = https://github.com/plasticboy/vim-markdown

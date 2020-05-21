@@ -2,10 +2,9 @@
 function! SetFiletypeIfNote()
   " get file path
   let l:path = expand('%:p')
-  if l:path =~ 'workspace/notes'
+  if l:path =~ 'personnal-workspace/notes\|workspace/notes'
     set filetype=note.markdown
   end
 endfunction
 
-" TODO writing TOC is causing issues
-" autocmd BufNewFile,BufRead *.md call SetFiletypeIfNote()
+autocmd BufNewFile,BufRead *.md call SetFiletypeIfNote()

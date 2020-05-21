@@ -5,3 +5,7 @@ set spell spelllang=en_gb
 set textwidth=78
 " Ensure required formatoptions are set
 set formatoptions+=cqt
+
+" Set's conceallevel to make markdown a little nicer
+" This currently depends on vim-markdown plugin
+set conceallevel=2

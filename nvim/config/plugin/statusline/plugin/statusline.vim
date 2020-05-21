@@ -13,7 +13,7 @@ if !exists('g:statusline_show_git_branch')
 endif
 
 if !exists('g:statusline_show_mode')
-  let g:statusline_show_mode = v:true
+  let g:statusline_show_mode = v:false
 endif
 
 augroup statusline_update
