@@ -27,7 +27,7 @@ function! statusline#build(winnr) abort
       let l:statusline.=statusline#atoms#git_branch()
       let l:statusline.=' '
       let l:statusline.=statusline#atoms#filename()
-      let l:statusline.=statusline#atoms#modified()
+      let l:statusline.=statusline#atoms#modified(a:winnr)
       let l:statusline.=statusline#atoms#readonly(a:winnr)
       let l:statusline.=statusline#atoms#coc_function()
     else

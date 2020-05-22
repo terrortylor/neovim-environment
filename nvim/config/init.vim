@@ -1,7 +1,3 @@
-" TODO ignorecase is off.. thought this should be on as default on nvim...
-" also check that autowrite is working as expected
-" maybe from my crappy plugin?
-
 " This file uses folding to better organise:
   " :help fold-commands
 
@@ -19,9 +15,11 @@
   " Override fold highlighting
   augroup vimrc_highlight_overrides
     autocmd!
-    autocmd ColorScheme * highlight Folded ctermfg=56 ctermbg=215 cterm=NONE
+    " TODO choose better colours
+    autocmd ColorScheme * highlight Folded guifg=56 guibg=215
   augroup END
 
+  " TODO this colour scheme causes breakage when resourced
   colorscheme xcodedarkhc
   let g:xcodedarkhc_green_comments = 1
 
@@ -38,7 +36,7 @@
   " custom file specific folding overrides
   augroup custom_file_folding
     autocmd!
-    autocmd BufRead,BufNewFile init.vim setl
+    autocmd BufRead,BufWinEnter init.vim setlocal
       \ foldmethod=marker
       \ foldenable
       \ fillchars=fold:\  foldtext=MyVimrcFoldText()
@@ -148,6 +146,9 @@
   " }}} Buffer auto load / save
   " {{{ Searching within a buffer behaviour
 
+  " ignorecase when searching
+  set ignorecase
+
   " visually show bracket matches
   set showmatch
 
@@ -176,7 +177,6 @@
   " window, path can be added
   vnoremap <leader>sg y:SimpleGrep <c-r>"
   " }}} Search and Replace
-
   " {{{ Syntax Highlighting
 
   " Force syntax highlighting to sync from start of file
@@ -194,8 +194,22 @@
   set completeopt=menuone,preview,noselect,noinsert
   " }}} Completion
 " }}} VIM Settings
-
 " {{{ Plugin Settings
+  " {{{ Tabular
+  packadd tabular
+  " }}} Tabluar
+  " {{{ vim-markdown
+  " tabular needs to be sourced before vim-markdown
+  " according to the repository site
+  packadd vim-markdown
+
+  " Don't require .md extension
+  let g:vim_markdown_no_extensions_in_markdown = 1
+
+  " Autosave when following links
+  let g:vim_markdown_autowrite = 1
+
+  " }}} vim-markdown
   " {{{ cfilter
   " cfilter is a built in plugin for filtering quickfix and location lists
   " it exposes to new ex command Cfilter and Lfilter
@@ -562,18 +576,8 @@
 
   " }}} rainbow_parentheses.vim
 " }}} Plugin Settings
-
 " {{{ Custom Mappings
   " {{{ Splits
-
-  " Load of tmux navigator isn't loaded
-  " bindings, see plugin config above
-  " See here for good tips: https://thoughtbot.com/blog/vim-splits-move-faster-and-more-naturally
-  " Easier split navigation
-  " nnoremap <C-J> <C-W><C-J>
-  " nnoremap <C-K> <C-W><C-K>
-  " nnoremap <C-L> <C-W><C-L>
-  " nnoremap <C-H> <C-W><C-H>
 
   " See: https://vim.fandom.com/wiki/Resize_splits_more_quickly
   " Increase/Decrease vertical windows
@@ -717,7 +721,6 @@
   " Select last pasted text
   nnoremap gp `[v`]
 " }}} Custom Mappings
-
 " {{{ Abbreviations
 
 " Source my abbreviations
@@ -725,7 +728,6 @@
 :iabbrev adn and
 
 " }}} Abbreviations
-
 " {{{ Functions
   " {{{ Prototyping helpers
 

@@ -35,41 +35,8 @@ snippet hhhead "heading level 3" b
 ### ${1:Heading Name}
 $0
 endsnippet
-# Lifted from vim-snippets
 
-###########################
-# Sections and Paragraphs #
-###########################
-snippet sec "Section" b
-# ${1:Section Name} #
-$0
-endsnippet
-
-snippet ssec "Sub Section" b
-## ${1:Section Name} ##
-$0
-endsnippet
-
-snippet sssec "SubSub Section" b
-### ${1:Section Name} ###
-$0
-endsnippet
-
-snippet par "Paragraph" b
-#### ${1:Paragraph Name} ####
-$0
-endsnippet
-
-snippet spar "Paragraph" b
-##### ${1:Paragraph Name} #####
-$0
-endsnippet
-
-###################
-# Text formatting #
-###################
-
-snippet * "italics"
+snippet * "italic"
 *${1:${VISUAL}}*$0
 endsnippet
 
@@ -77,7 +44,7 @@ snippet ** "bold"
 **${1:${VISUAL}}**$0
 endsnippet
 
-snippet *** "bold italics"
+snippet *** "bold italic"
 ***${1:${VISUAL}}***$0
 endsnippet
 

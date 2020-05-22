@@ -6,11 +6,12 @@ function! StartNewDay()
   execute "normal! 2Go\<cr>\<esc>ki## \<esc>\"ppo\<cr>"
 endfunction
 
-" Auto create TOC on buf write is a note
-augroup notebufwritegroup
-  autocmd!
-  autocmd BufWrite *.md CreateTOC
-augroup END
+" TODO does vim-markdown break this... is it still required?
+" " Auto create TOC on buf write is a note
+" augroup notebufwritegroup
+"   autocmd!
+"   autocmd BufWrite *.md CreateTOC
+" augroup END
 
 " Add markdown snippets to note type
 UltiSnipsAddFiletypes note.markdown

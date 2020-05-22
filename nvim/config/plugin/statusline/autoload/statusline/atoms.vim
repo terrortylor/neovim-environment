@@ -80,8 +80,9 @@ function! statusline#atoms#readonly(winnr) abort
   return s:WrapWithBrackets('%#AtomText#RO')
 endfunction
 
-function! statusline#atoms#modified() abort
-  if &modified == 0
+function! statusline#atoms#modified(winnr) abort
+  let l:modified = getwinvar(a:winnr, '&modified')
+  if modified == 0
     return ''
   endif
   return s:WrapWithBrackets('%#AtomText#+')

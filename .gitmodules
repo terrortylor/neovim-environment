@@ -32,9 +32,6 @@
 [submodule "nvim/plugins/start/vim-sandwich"]
 	path = nvim/plugins/start/vim-sandwich
 	url = https://github.com/machakann/vim-sandwich.git
-[submodule "nvim/plugins/start/tabular"]
-	path = nvim/plugins/start/tabular
-	url = https://github.com/godlygeek/tabular.git
 [submodule "nvim/plugins/start/vim-highlight"]
 	path = nvim/plugins/start/vim-highlight
 	url = https://github.com/terrortylor/vim-highlight
@@ -53,6 +50,9 @@
 [submodule "nvim/plugins/start/rainbow_parentheses.vim"]
 	path = nvim/plugins/start/rainbow_parentheses.vim
 	url = https://github.com/junegunn/rainbow_parentheses.vim
-[submodule "nvim/plugins/start/vim-markdown"]
-	path = nvim/plugins/start/vim-markdown
+[submodule "nvim/plugins/opt/vim-markdown"]
+	path = nvim/plugins/opt/vim-markdown
 	url = https://github.com/plasticboy/vim-markdown
+[submodule "nvim/plugins/opt/tabular"]
+	path = nvim/plugins/opt/tabular
+	url = https://github.com/godlygeek/tabular.git
