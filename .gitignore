@@ -1,6 +1,2 @@
-nvim/.netrwhist
-nvim/config/.netrwhist
-nvim/config/backup/*
-nvim/config/swap/*
-nvim/config/undo/*
-
+.netrwhist
+.netrwhist

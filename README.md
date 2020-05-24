@@ -46,10 +46,7 @@ git clone --recursive https://github.com/terrortylor/vim-environment.git
 
 ### Setting up symlinks
 
-Neovim follows the [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html), so two directories need to be symlinked:
-
-* nvim/config needs to be pointed at by ~/.config/nvim
-* nvim/plugins needs to be pointed at by ~/.local/share/nvim/site/pack/plugins
+Neovim follows the [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html), so this repository needs to be located: ~/.config/nvim
 
 I have an ansible project for managing environment/dotfiles although often I'll just want to set this up on a target quickly so a separate repository lends it self to that use case. My [ansible project can be found here](https://github.com/terrortylor/ansible_dev_machine_setup).
 
@@ -238,7 +235,7 @@ TODO Add additional column to state if loaded on start or optional
 ### Custom Plugins
 
 These are plugins that I have created for whatever reason, they work as is and
-can be found under `nvim/config/plugin`.
+can be found in either `plugin|ftplugin|autoload`.
 
 NOTE: I generally like the workflow of a single tab; using other tabs for
 breakaway tasks like searching for text across a project or checking the git
