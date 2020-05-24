@@ -199,13 +199,16 @@
   call pluginman#CacheInstalledPlugins()
 
   " {{{ Tabular
-  InstallPlugin https://github.com/godlygeek/tabular {'load': 'opt'}
+  let opts = {'load': 'opt'}
+  call pluginman#AddPlugin('https://github.com/godlygeek/tabular', opts)
+  " InstallPlugin https://github.com/godlygeek/tabular opts
   packadd tabular
   " }}} Tabluar
   " {{{ vim-markdown
   " tabular needs to be sourced before vim-markdown
   " according to the repository site
-  InstallPlugin https://github.com/plasticboy/vim-markdown {'load': 'opt'}
+  let opts = {'load': 'opt'}
+  call pluginman#AddPlugin('https://github.com/plasticboy/vim-markdown', opts)
   packadd vim-markdown
 
   " Don't require .md extension
@@ -312,7 +315,8 @@
 
   " }}} netrw
   " {{{ ultisnips
-  InstallPlugin https://github.com/SirVer/ultisnips {'load': 'opt'}
+  let opts = {'load': 'opt'}
+  call pluginman#AddPlugin('https://github.com/SirVer/ultisnips', opts)
 
   if has("python3")
     " Ultisnips is used as it's fiarly light weight and is jsut the engine.
@@ -383,7 +387,8 @@
 
   " }}} ultisnips
   " {{{ coc - conquer of code
-  InstallPlugin https://github.com/neoclide/coc.nvim {'load': 'opt'}
+  let opts = {'load': 'opt', 'branch': 'release'}
+  call pluginman#AddPlugin('https://github.com/neoclide/coc.nvim', opts)
 
   if executable('node')
     set shell=/bin/sh

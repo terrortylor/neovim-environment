@@ -17,7 +17,7 @@ endif
 function! pluginman#CacheInstalledPlugins() abort
   let g:pluginman_installed_plugins = pluginman#GetInstalledPlugins()
 
-  command! -nargs=+ InstallPlugin :call InstallPlugin(<f-args>)
+  command! -nargs=1 InstallPlugin :call InstallPlugin(<f-args>)
 endfunction
 
 function! pluginman#DeleteCacheInstalledPlugins() abort
@@ -28,7 +28,7 @@ function! pluginman#InitPluginPath() abort
   call system('mkdir -p ' . g:pluginman_plugin_path . '{start,opt}')
 endfunction
 
-function! pluginman#AddPlugin(plugin_url, optional) abort
+function! pluginman#AddPlugin(plugin_url, opts) abort
   let l:plugin_name = s:GetNameFromUrl(a:plugin_url)
 
   if exists('g:pluginman_installed_plugins')
@@ -39,13 +39,22 @@ function! pluginman#AddPlugin(plugin_url, optional) abort
 
   if !has_key(l:installed_plugins, l:plugin_name)
     echom 'Installing Plugin: ' . l:plugin_name
-    let l:opt_path = a:optional ? 'opt' : 'start'
-    let l:plugin_path = g:pluginman_plugin_path . l:opt_path . '/'
+    let l:plugin_path = g:pluginman_plugin_path . a:opts.load . '/'
     let l:command = 'mkdir -p ' . l:plugin_path . l:plugin_name
     call system(l:command)
-    let l:command = 'git -C ' . l:plugin_path . ' clone ' . a:plugin_url
+
+    let l:command = 'git -C ' . l:plugin_path . ' clone --single-branch'
+    if has_key(a:opts, 'branch') && a:opts.branch !=# ''
+      let l:command .= ' --branch ' . a:opts.branch
+    endif
+    let l:command .= ' ' .a:plugin_url
     call system(l:command)
     echom 'Done'
+
+    if has_key(a:opts, 'post') && a:opts.post !=# ''
+      let l:command = 'cd ' . l:plugin_path . l:plugin_name . ' && ' . a:opts.post
+      call system(l:command)
+    endif
 
     if exists('g:pluginman_installed_plugins')
       call pluginman#CacheInstalledPlugins()
@@ -87,14 +96,8 @@ function! pluginman#GetInstalledPlugins() abort
   return l:installed_plugins
 endfunction
 
-function! InstallPlugin(...) abort
-  if a:0 == 1
-    call pluginman#AddPlugin(a:1, v:false)
-  else
-    call pluginman#AddPlugin(a:1, v:true)
-  endif
+function! InstallPlugin(plugin) abort
+  call pluginman#AddPlugin(a:plugin, {'load': 'opts'})
 endfunction
-
-" command! -nargs=+ InstallPlugin :call AddPlugin(<f-args>)
 
 call pluginman#InitPluginPath()
