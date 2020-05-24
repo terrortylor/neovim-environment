@@ -195,12 +195,17 @@
   " }}} Completion
 " }}} VIM Settings
 " {{{ Plugin Settings
+  " Cached installed plugins
+  call pluginman#CacheInstalledPlugins()
+
   " {{{ Tabular
+  InstallPlugin https://github.com/godlygeek/tabular {'load': 'opt'}
   packadd tabular
   " }}} Tabluar
   " {{{ vim-markdown
   " tabular needs to be sourced before vim-markdown
   " according to the repository site
+  InstallPlugin https://github.com/plasticboy/vim-markdown {'load': 'opt'}
   packadd vim-markdown
 
   " Don't require .md extension
@@ -232,11 +237,12 @@
   augroup END
   " }}} quickfix
   " {{{ vim-sneak
-
+  InstallPlugin https://github.com/justinmk/vim-sneak
   " There is some remapping of 's' to '<space>s' see after/plugin/vim-sneak.vim
 
   " }}} vim-sneak
   " {{{ NERDTree
+  InstallPlugin https://github.com/preservim/nerdtree
 
   nnoremap <leader>tt :<C-u>call NerdToggleFind()<CR>
 
@@ -275,6 +281,8 @@
 
   " }}} NERDTree
   " {{{ CtrlP + Extensions
+  InstallPlugin https://github.com/ctrlpvim/ctrlp.vim
+  InstallPlugin https://github.com/tacahiroy/ctrlp-funky
 
   " Disable jumping to window/tab if buffer already open
   let g:ctrlp_switch_buffer = 0
@@ -304,6 +312,7 @@
 
   " }}} netrw
   " {{{ ultisnips
+  InstallPlugin https://github.com/SirVer/ultisnips {'load': 'opt'}
 
   if has("python3")
     " Ultisnips is used as it's fiarly light weight and is jsut the engine.
@@ -374,6 +383,7 @@
 
   " }}} ultisnips
   " {{{ coc - conquer of code
+  InstallPlugin https://github.com/neoclide/coc.nvim {'load': 'opt'}
 
   if executable('node')
     set shell=/bin/sh
@@ -392,7 +402,7 @@
     let g:coc_snippet_next = '<TAB>'
     let g:coc_snippet_prev = '<S-TAB>'
 
-    packadd! coc
+    packadd! coc.nvim
 
     " disable auto preview on complete
     " set completeopt-=preview
@@ -512,16 +522,19 @@
 
   " }}} coc - conquer of code
   " {{{ vim-go
+  InstallPlugin https://github.com/fatih/vim-go
 
   " See ftplugin/go.vim for mappings
 
   " }}} vim-go
   " {{{ vim-gutentags
+  InstallPlugin https://github.com/ludovicchabant/vim-gutentags
 
   let g:gutentags_ctags_tagfile = '.git/tags'
 
   " }}} vim-gutentags
   " {{{ vim-highlight
+  InstallPlugin https://github.com/terrortylor/vim-highlight
 
   nnoremap <leader>h1 :HighlightLine hlYellow<cr>
   vnoremap <leader>h1 :'<,'>HighlightLine hlYellow<cr>
@@ -532,6 +545,7 @@
 
   " }}} vim-highlight
   " {{{ vim-tmux-navigator
+  InstallPlugin https://github.com/christoomey/vim-tmux-navigator
 
   " I don't want the defualt TmuxNavigatePrevious mapping
   let g:tmux_navigator_no_mappings = 1
@@ -559,6 +573,7 @@
 
   " }}} Terminal / Plugin
   " {{{ vim-color-xcode
+  InstallPlugin https://github.com/arzg/vim-colors-xcode
 
   augroup set_green_comments
     autocmd!
@@ -567,6 +582,7 @@
 
   " }}} vim-color-xcode
   " {{{ rainbow_parentheses.vim
+  InstallPlugin https://github.com/junegunn/rainbow_parentheses.vim
 
   augroup enable_rainbow_on_vim_enter
     autocmd!
@@ -575,6 +591,17 @@
   let g:rainbow#pairs = [['(', ')'], ['[', ']'], ['{', '}']]
 
   " }}} rainbow_parentheses.vim
+
+  InstallPlugin https://github.com/tpope/vim-commentary
+  InstallPlugin https://github.com/terrortylor/vim-togglesmartsearch
+  InstallPlugin https://github.com/jacoborus/tender.vim
+  InstallPlugin https://github.com/udalov/kotlin-vim
+  InstallPlugin https://github.com/machakann/vim-sandwich
+
+  " Delete cached installed plugin list
+  call pluginman#DeleteCacheInstalledPlugins()
+  " TODO need to fix up toggle help file
+  helptags ALL
 " }}} Plugin Settings
 " {{{ Custom Mappings
   " {{{ Splits

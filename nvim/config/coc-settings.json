@@ -20,7 +20,7 @@
     "efm": {
      /* "trace.server": "verbose",*/
       "command": "efm-langserver",
-      "filetypes": ["vim", "eruby", "markdown", "yaml"]
+      "filetypes": ["vim", "eruby", "markdown", "note.markdown", "yaml"]
     }
   }
 }

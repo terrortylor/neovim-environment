@@ -63,7 +63,7 @@ snippet plugin_guard "description"
 if exists('g:loaded_${1:plugin_name}_plugin')
 	finish
 endif
-let g:${1} = 1
+let g:loaded_$1_plugin = 1
 endsnippet
 
 snippet plugin_setting_wrapper "Inserts the standard plugin save/restore settings crap" b
