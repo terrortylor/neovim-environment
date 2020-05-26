@@ -1,55 +1,44 @@
-if !exists('s:diff_options')
-  " Note that diff_options should end with a space
-  let s:diff_options = '-w '
-endif
+" Displays a floating window over current line(s) with git blame information.
+" Output: hash author date
+" Input: accepts a range
+function! gittools#GitBlameFloat() range
+  let output = system('git blame -L ' . a:firstline . ',' . a:lastline .' ' . expand('%'))
+  let lines = split(output, '\n')
 
-function! gittools#GitDiffFile()
-  " Capture current file
-  let a:current_file = expand("%")
-  " and filetype
-  let a:filetype = &filetype
-
-  tabnew
-  let a:git_diff_command = "git diff " . s:diff_options . a:current_file
-  " let a:git_diff = split(system(a:git_diff_command))
-  let a:git_diff = systemlist(a:git_diff_command)
-  call append(0, a:git_diff)
-
-  " Set some additional syntax to mark diff addition/removal etc
-  " reuse filetype=git highlight group names but limit match to begining of
-  " the line
-  highlight diffAdded ctermbg=DarkGreen guibg=#7EE081 ctermfg=black guifg=#00000
-  highlight diffRemoved ctermbg=DarkRed guibg=#DD9787 ctermfg=black guifg=#000000
-  highlight diffSection ctermbg=Blue guibg=#258EA6 ctermfg=black guifg=#000000
-  call matchadd('diffAdded', '^+', 11)
-  call matchadd('diffRemoved', '^-', 11)
-  call matchadd('diffSection', '^@@.*@@', 11)
-
-  " Set filetype to selected buffers for some syntax rather then set filetype
-  " to git
-  execute('set filetype=' . a:filetype)
-
-  " Make the new window blank/scratch and nonmodifiable
-  setlocal buftype=nofile bufhidden=wipe nomodifiable nobuflisted noswapfile
-    \ nonumber norelativenumber
-    \ nocursorline nocursorcolumn winfixwidth winfixheight
-    \ statusline=\
+  " lines have too much info, so trim
+  " h45h the/file/name.vim (Author Name   2020-05-11 20:33:19 +0100 2)   The actual line
+  "
+  " only want to show:
+  " h45h Author Name 2020-05-11 20:33:19
+  let l:modified_lines = []
+  for l in lines
+    " TODO doesn't take into account line not exist in git
+    " 00000000 (Not Committed Yet 2020-05-25 21:26:21 +0100 6) function! gittools#FloatGitBlame() range
+    let l:modified_lines = add(l:modified_lines, substitute(l, '\v^(\S+)\s\S+\s\((.*)\s\+\d+\s\d+\).*', '\1 \2', ''))
+  endfor
+  call helper#float#info(l:modified_lines, v:true)
 endfunction
 
-function! gittools#GitLogTree()
+" Calls 'git log' in a 'pretty' format and displays in a new tab, with basix
+" syntax
+function! gittools#GitLogPretty()
   tabnew
-  let a:git_log_command= "git log --pretty=format:'%h %s [%ad %cn]' --decorate --date=short --graph --all"
-  let a:git_diff = systemlist(a:git_log_command)
-  call append(0, a:git_diff)
+  let l:git_log_command= "git log --pretty=format:'%h %s [%ad %cn]' --decorate --date=short --graph --all"
+  " TODO look for where i'm calling split(system and replace with systemlist
+  let l:git_diff = systemlist(l:git_log_command)
+  call append(0, l:git_diff)
 
   " Set filetype to selected buffers for some syntax rather then set filetype
   " to vim-git-tools
   execute('set filetype=vim-git-tools')
 
   call gittools#SetNonEditWindow()
+  " TODO Highlighting could be really improved
   call gittools#GitLogSyntax()
+  normal! gg
 endfunction
 
+" TODO move to helper function?
 function! gittools#SetNonEditWindow() abort
     " Make the new window blank/scratch and nonmodifiable
      setlocal buftype=nofile
@@ -68,13 +57,10 @@ function! gittools#GitLogSyntax() abort
   syntax match myFullLine "^\*.*$" contains=myFileAsterisk,myFileHash,myDate
   syntax match myFileAsterisk "*\s" contained
   syntax match myFileHash "^\*\s\w\{7}" contained contains=myFileAsterisk
-  syntax match myDate "\[\d\{4}-\d\{2}-\d\{2} \S\+\]" contained
+  syntax match myDate "\[\d\{4}-\d\{2}-\d\{2} .\{-}\]" contained
 
   highlight link myFileAsterisk Number
   highlight link myFileHash     Statement
   highlight link myFullLine     String
   highlight link myDate         Delimiter
 endfunction
-
-" command! GitDiffFile call GitDiffFile()
-" command! GitLogTree call GitLogTree()

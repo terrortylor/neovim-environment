@@ -8,9 +8,6 @@ let g:loaded_terminal_plugin = 1
 " Playing with some terminal stuff
 let s:debug = v:true
 
-" TODO this should probably be prefixed with <leader>
-tnoremap <Esc> <C-\><C-n>
-
 " TODO is this used any more?
 if !exists('g:terminals')
   let g:terminals = {}

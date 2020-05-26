@@ -4,6 +4,7 @@
 " could work for what to display in window based on width
 " TODO if window isn't wide enough then status line gets messed up
 " understandably, look at prioritising atoms
+" TODO if filetype is nerdtree then just show nerdtree
 function! statusline#update() abort
   for nr in range(1, winnr('$'))
     call setwinvar(nr, '&statusline', '%!statusline#build(' . nr . ')')

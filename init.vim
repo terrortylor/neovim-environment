@@ -596,6 +596,13 @@
   let g:rainbow#pairs = [['(', ')'], ['[', ']'], ['{', '}']]
 
   " }}} rainbow_parentheses.vim
+  " {{{ git
+  " Open lazy git in throw away popup window
+  " TODO problem about this is it uses <space> to stage/unstage a file which
+  " is leader so either pause, or hit <CR> but that goes into stage view so
+  " haev to hit <ESC>
+  nnoremap <leader>lg :call helper#float#SingleUseTerminal('lazygit')<CR>
+  " }}} git
 
   InstallPlugin https://github.com/tpope/vim-commentary
   InstallPlugin https://github.com/terrortylor/vim-togglesmartsearch
@@ -746,6 +753,10 @@
   " pinky :P
   nnoremap <leader>mm `m
   " }}} Marks
+  " {{{ Terminal
+  tnoremap <leader><Esc> <C-\><C-n>
+  tnoremap <leader>jj <C-\><C-n>
+  " }}} Terminal
 
   " exit insert mode and save buffer
   inoremap jj <ESC>:w<cr>

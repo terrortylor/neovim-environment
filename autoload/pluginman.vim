@@ -97,7 +97,7 @@ function! pluginman#GetInstalledPlugins() abort
 endfunction
 
 function! InstallPlugin(plugin) abort
-  call pluginman#AddPlugin(a:plugin, {'load': 'opts'})
+  call pluginman#AddPlugin(a:plugin, {'load': 'start'})
 endfunction
 
 call pluginman#InitPluginPath()

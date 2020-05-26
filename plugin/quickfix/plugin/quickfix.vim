@@ -55,6 +55,7 @@ command! -nargs=+ -complete=file_in_path -bar Grep :call quickfix#search#TabbedG
 
 " This is just a warpper for calling grep, and opening the quickfix list, but
 " not jumping to first selection
+" TODO simple grep unsets modifiable when scolling... so can't edit
 command! -nargs=+ -complete=file_in_path -bar SimpleGrep :call quickfix#search#SimpleGrep(<f-args>)
 
 " Create Plug mapping to make quickfix editable buffer
