@@ -1,4 +1,6 @@
-" Todo camel case all variables rwview google code practice
+" TODO on tabbed grep view, capture current window and have mapping to close
+" tab and open current buffer in original window
+" TODO camel case all variables rwview google code practice
 if exists('g:loaded_quickfix_plugin')
   finish
 endif
@@ -57,6 +59,9 @@ command! -nargs=+ -complete=file_in_path -bar Grep :call quickfix#search#TabbedG
 " not jumping to first selection
 " TODO simple grep unsets modifiable when scolling... so can't edit
 command! -nargs=+ -complete=file_in_path -bar SimpleGrep :call quickfix#search#SimpleGrep(<f-args>)
+
+" Wrapper for :g[lobal] but displays results in location list
+command! -nargs=+ FindInBuffer call quickfix#search#GlobalToLocationList(<f-args>)
 
 " Create Plug mapping to make quickfix editable buffer
 nnoremap <Plug>(QuicklistCreateEditableBuffer) :call quickfix#edit#SetModifiable()<CR>

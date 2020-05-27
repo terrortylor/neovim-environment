@@ -2,18 +2,9 @@
 " File:          autoload/ctrlp/register.vim
 " Description:   Extends the `register` command so that the output can be
 "                searched with ctrlp, the contents of the register is then put into the
-"                buffer.
-"                Modes:
-"                * If run from insert more it's simply put where the cursor is
-"                * If in normal mode it is [p]ut not [P]ut
-"                * If visual mode then the selection is replaced with register
+"                buffer. Note register contents is [p]ut not [P]ut
 " =============================================================================
 
-" TODO list registers in ctrlp
-" TODO handle normal mode put
-" TODO handle insert mode put
-" TODO handle visual modes:
-" TODO  * list the visual modes
 " TODO work out how to conrol filter or what's displayed to user
 
 " Load guard

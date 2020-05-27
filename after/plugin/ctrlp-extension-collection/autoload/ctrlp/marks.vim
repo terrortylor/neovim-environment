@@ -37,7 +37,6 @@ endfunction
 "           the values are 'e', 'v', 't' and 'h', respectively
 "  a:str    the selected string
 "
-" TODO: handle the modes to open in split etc
 function! ctrlp#marks#accept(mode, str)
 	" For this example, just exit ctrlp and run help
 	call ctrlp#exit()

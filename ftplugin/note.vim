@@ -15,3 +15,21 @@ endfunction
 
 " Add markdown snippets to note type
 UltiSnipsAddFiletypes note.markdown
+
+" Mark todo item as todo
+nnoremap <leader>mt :call MarkAsTodo()<cr>
+function! MarkAsTodo() abort
+  let l:old_m = @m
+  let @m='dd/^## TODOjp'
+  normal @m
+  let @m = l:old_m
+endfunction
+
+" Mark todo item as done
+nnoremap <leader>md :call MarkTodoDone()<cr>
+function! MarkTodoDone() abort
+  let l:old_m = @m
+  let @m='dd/^## DONEjp'
+  normal @m
+  let @m = l:old_m
+endfunction

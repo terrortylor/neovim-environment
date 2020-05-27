@@ -2,8 +2,6 @@
 " define them here so that mappings that overlap with COC take presidence
 
 " Always use quickfix
-" TODO if do function to handle quickfix or location list then this can be
-" removed
 let g:go_list_type = "quickfix"
 
 " Run all tests

@@ -17,10 +17,24 @@ function! quickfix#search#SimpleGrep(...) abort
   endif
 endfunction
 
+" Runs a global search {pat} and displays results in locationlist window
+function! quickfix#search#GlobalToLocationList(...)
+  let buffer=bufnr("") "current buffer number
+  let b:lines=[]
+  let l:pattern = join(a:000)
+  " g jumps if match found so remeber where we were
+  let l:position = getpos('.')
+  execute ":%g/" . l:pattern . "/let b:lines+=[{'bufnr':" . 'buffer' . ", 'lnum':" . "line('.')" . ", 'text': escape(getline('.'),'\"')}]"
+  call setloclist(0, [], ' ', {'items': b:lines})
+  " TODO format buffer so only matches are shown, not file (and line?)
+  if len(getloclist(winnr())) > 0
+    call setpos('.', l:position)
+    lopen
+  endif
+endfunction
+
 function! s:run_search(...) abort
   " call is used here to pass on the varagrs
-  " let l:command = call('s:build_ack_command', a:000)
-  " let l:command = call('s:build_grep_command', a:000)
   let l:command = call('s:build_external_search_command', a:000)
 
   " Set error format to NOT have a space after the column and before the

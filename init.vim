@@ -93,9 +93,8 @@
   " }}} Window  behaviour
   " {{{ Searching for files
 
-  " Show file options above the command line, in a more bash list way
-  " matching on full/longest
-  set wildmode=list,longest
+  " Show all matches, don't expand to first selection
+  set wildmode=longest:full
   set wildignorecase
 
   set path+=**
@@ -124,7 +123,6 @@
   set cursorline
 
   " Toggle on and off as entering/leaving windows
-  " TODO fix issue with toggling nerdtree
   augroup cursor_line_group
     autocmd!
     autocmd WinEnter * setlocal cursorline
@@ -135,7 +133,7 @@
   " {{{ Buffer auto load / save
 
   " autosave buffers when switching between then
-  set autowrite
+  set autowriteall
 
   " Auto remove trailing whitespace on :w
   augroup remove_trailing_whitespace
@@ -170,12 +168,6 @@
   " When in visual mode the selection delimiters are added automatically
   vnoremap <leader>rw :s/<c-r>"//<left>
 
-  " Custom Grep (tabbed view) for selection within current directory, path can
-  " be added
-  vnoremap <leader>gg y:Grep <c-r>"
-  " Custom Grep for selection within current directory with standard quickfix
-  " window, path can be added
-  vnoremap <leader>sg y:SimpleGrep <c-r>"
   " }}} Search and Replace
   " {{{ Syntax Highlighting
 
@@ -238,6 +230,24 @@
     " autocmd BufReadPost quickfix nested :call QuickfixMappings()
     autocmd WinEnter * if &buftype == 'quickfix' | call QuickfixMappings() | endif
   augroup END
+
+  " Custom global search within buffer, displays results in location list
+  " just clears it self
+  nnoremap <leader>lf :FindInBuffer
+  " Custom global search within buffer using selection, displays results in location list
+  vnoremap <leader>lf y:FindInBuffer <c-r>"
+  " Custom Grep (tabbed view) for selection within current directory, path can
+  " be added
+  vnoremap <leader>tf y:Grep <c-r>"
+  " Custom Grep (tabbed view) within current directory, path can
+  " be added
+  nnoremap <leader>tf :Grep
+  " Custom Grep for selection within current directory with standard quickfix
+  " window, path can be added
+  vnoremap <leader>sf y:SimpleGrep <c-r>"
+  " Custom Grep within current directory with standard quickfix
+  " window, path can be added
+  nnoremap <leader>sf y:SimpleGrep
   " }}} quickfix
   " {{{ vim-sneak
   InstallPlugin https://github.com/justinmk/vim-sneak
@@ -379,6 +389,7 @@
 
     nnoremap <leader>ue :UltiSnipsEdit<CR>:set filetype=snippets<CR>
 
+    " TODO this is apparently supported OOTB
     augroup auto_reload_snippets_after_write
       autocmd!
       autocmd BufWritePost *.snippets :call UltiSnips#RefreshSnippets()
@@ -387,6 +398,7 @@
 
   " }}} ultisnips
   " {{{ coc - conquer of code
+  " TODO COC introduces a bug where location list is emptied on selection or if closed
   let opts = {'load': 'opt', 'branch': 'release'}
   call pluginman#AddPlugin('https://github.com/neoclide/coc.nvim', opts)
 
@@ -601,11 +613,12 @@
   " TODO problem about this is it uses <space> to stage/unstage a file which
   " is leader so either pause, or hit <CR> but that goes into stage view so
   " haev to hit <ESC>
+  " SEE HERE: https://github.com/jesseduffield/lazygit/blob/master/docs/Config.md
+  " Mapping file needs to be persisted to ansible
   nnoremap <leader>lg :call helper#float#SingleUseTerminal('lazygit')<CR>
   " }}} git
 
   InstallPlugin https://github.com/tpope/vim-commentary
-  InstallPlugin https://github.com/terrortylor/vim-togglesmartsearch
   InstallPlugin https://github.com/jacoborus/tender.vim
   InstallPlugin https://github.com/udalov/kotlin-vim
   InstallPlugin https://github.com/machakann/vim-sandwich
@@ -646,10 +659,10 @@
   " }}} TABs
   " {{{ Quicklist
 
-  " TODO set these up so that they close what ever locaton / quickfix window is
-  " open... if more than one just close first one found
-  nnoremap <leader>cl :copen<CR>   " Open Quicklist
-  nnoremap <leader>cc :cclose<CR>  " Close quicklist
+  " Opens first non empty list, location list is local to window
+  nnoremap <leader>cl :call quickfix#window#OpenList()<CR>
+  " Close all quicklist windows
+  nnoremap <leader>cc :call quickfix#window#CloseAll()<CR>
   "
   " To quickly go through the Quicklist
   nnoremap ]c :cnext<CR>
@@ -793,21 +806,6 @@
   endfunction
 
   " }}} Prototyping helpers
-  " {{{ list related
-
-  " TODO move to quickfix plugin
-  " Runs a search {pat} and returns results in a location list
-  function! LocationListFromPattern(pat)
-      let buffer=bufnr("") "current buffer number
-      let b:lines=[]
-      execute ":%g/" . a:pat . "/let b:lines+=[{'bufnr':" . 'buffer' . ", 'lnum':" . "line('.')" . ", 'text': escape(getline('.'),'\"')}]"
-      call setloclist(0, [], ' ', {'items': b:lines})
-      lopen
-  endfunction
-
-  command! -nargs=1 LSimpleGrep call LocationListFromPattern('<args>')
-
-  " }}} list related
   " {{{ Random Functions
 
   " Opens the ftplugin for the given filetype
@@ -870,9 +868,10 @@ function! MakePretty(type) abort
   echom "selection: " . @@
 
   " Restore current selection setting and @@ register
- let &selection = l:sel_save
+  let &selection = l:sel_save
   let @@ = l:reg_save
 endfunction
+
 nnoremap <silent> <leader>mp :<C-u>call MakePretty(visualmode())<CR>
 vnoremap <silent> <leader>mp :<C-u>call MakePretty(visualmode())<Cr>
 

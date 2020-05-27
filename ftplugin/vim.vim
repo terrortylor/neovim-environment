@@ -5,9 +5,6 @@ xnoremap af ?^function<cr>o/^endfunction<cr>$
 " echo's selection on line bellow
 xnoremap <leader>ev yoechom '": ' . "
 
-" Populates a location list with the functions in the current file
-nnoremap <leader>lf :call LocationListFromPattern('^\(\s*\)\=function!\=.*(.*)\( abort\)\=$')<cr>
-
 set foldmethod=expr
 set foldexpr=FoldVimFunctions(v:lnum)
 
