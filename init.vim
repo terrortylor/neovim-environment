@@ -57,14 +57,16 @@
   set hidden
 
   " Put curor in same place when re-open a file
-  " TODO move this out to function for consistency
   augroup return_to_last_edit_in_buffer
     autocmd!
-    autocmd BufReadPost *
-          \ if line("'\"") > 0 && line("'\"") <= line("$") |
-          \     execute 'normal! g`"zvzz' |
-          \ endif
+    autocmd BufReadPost * call s:MoveToLastEdit()
   augroup END
+
+  function! s:MoveToLastEdit() abort
+    if line("'\"") > 0 && line("'\"") <= line("$") |
+      execute 'normal! g`"zvzz' |
+    endif
+  endfunction
 
   " }}} General Settings
   " {{{ Spelling
@@ -94,7 +96,7 @@
   " {{{ Searching for files
 
   " Show all matches, don't expand to first selection
-  set wildmode=longest:full
+  set wildmode=full
   set wildignorecase
 
   set path+=**
@@ -113,11 +115,6 @@
 
   " Always show the tab line
   set showtabline=2
-
-  " See: https://vim.fandom.com/wiki/Display_line_numbers
-  " show current line number and relative line numbers
-  set number
-  set relativenumber!
 
   " Highlight current cursor line
   set cursorline
@@ -163,10 +160,10 @@
   " {{{ Search and Replace
 
   " Search and replace word under cursor within buffer
-  nnoremap <leader>rw :%s/<c-r><c-w>//<left>
+  nnoremap <leader>rw :%s/\C\<<c-r><c-w>\>//<left>
   " Search and replace visual selection.
   " When in visual mode the selection delimiters are added automatically
-  vnoremap <leader>rw :s/<c-r>"//<left>
+  vnoremap <leader>rw :s/\C\<<c-r>"\>//<left>
 
   " }}} Search and Replace
   " {{{ Syntax Highlighting
@@ -210,6 +207,10 @@
   let g:vim_markdown_autowrite = 1
 
   " }}} vim-markdown
+  " {{{ ftplugin markdown
+  " This is partly the built in markdown syntax and partly my changes,
+  let g:markdown_fenced_languages = ['bash=sh', 'sh', 'ruby']
+  " }}} ftplugin markdown
   " {{{ cfilter
   " cfilter is a built in plugin for filtering quickfix and location lists
   " it exposes to new ex command Cfilter and Lfilter
@@ -233,22 +234,25 @@
 
   " Custom global search within buffer, displays results in location list
   " just clears it self
-  nnoremap <leader>lf :FindInBuffer
+  nnoremap <leader>fb :FindInBuffer
   " Custom global search within buffer using selection, displays results in location list
-  vnoremap <leader>lf y:FindInBuffer <c-r>"
+  vnoremap <leader>fb y:FindInBuffer <c-r>"
   " Custom Grep (tabbed view) for selection within current directory, path can
   " be added
-  vnoremap <leader>tf y:Grep <c-r>"
+  vnoremap <leader>ftp y:Grep <c-r>"
   " Custom Grep (tabbed view) within current directory, path can
   " be added
-  nnoremap <leader>tf :Grep
+  nnoremap <leader>ftp :Grep
   " Custom Grep for selection within current directory with standard quickfix
   " window, path can be added
-  vnoremap <leader>sf y:SimpleGrep <c-r>"
+  vnoremap <leader>fp y:SimpleGrep <c-r>"
   " Custom Grep within current directory with standard quickfix
   " window, path can be added
-  nnoremap <leader>sf y:SimpleGrep
+  nnoremap <leader>fp y:SimpleGrep
   " }}} quickfix
+  " {{{ tmux
+  nnoremap <leader>nn :call tmux#SendCommandToPane()<CR>
+  " }}} tmux
   " {{{ vim-sneak
   InstallPlugin https://github.com/justinmk/vim-sneak
   " There is some remapping of 's' to '<space>s' see after/plugin/vim-sneak.vim
@@ -257,6 +261,7 @@
   " {{{ NERDTree
   InstallPlugin https://github.com/preservim/nerdtree
 
+  " Toggle NERDTree using custom toggle func
   nnoremap <leader>tt :<C-u>call NerdToggleFind()<CR>
 
   " Open NERDTree at current file location, close if open
@@ -473,68 +478,13 @@
     " Remap for rename current word
     nmap <leader>rn <Plug>(coc-rename)
 
-    " Remap for format selected region
-    " xmap <leader>f  <Plug>(coc-format-selected)
-    " nmap <leader>f  <Plug>(coc-format-selected)
-
-    " TODO rename this augroup
-    augroup mygroup
+    augroup coc_actions
       autocmd!
       " Setup formatexpr specified filetype(s).
       autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
       " Update signature help on jump placeholder
       autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
     augroup end
-
-    " Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
-    " xmap <leader>a  <Plug>(coc-codeaction-selected)
-    " nmap <leader>a  <Plug>(coc-codeaction-selected)
-
-    " Remap for do codeAction of current line
-    " nmap <leader>ac  <Plug>(coc-codeaction)
-    " Fix autofix problem of current line
-    " nmap <leader>qf  <Plug>(coc-fix-current)
-
-    " Create mappings for function text object, requires document symbols feature of languageserver.
-    " NOTE: these may be overridden in ftplugin files, i.e. vim overrides af
-    xmap if <Plug>(coc-funcobj-i)
-    xmap af <Plug>(coc-funcobj-a)
-    omap if <Plug>(coc-funcobj-i)
-    omap af <Plug>(coc-funcobj-a)
-
-    " Use <C-d> for select selections ranges, needs server support, like: coc-tsserver, coc-python
-    " nmap <silent> <C-d> <Plug>(coc-range-select)
-    " xmap <silent> <C-d> <Plug>(coc-range-select)
-
-    " Use `:Format` to format current buffer
-    command! -nargs=0 Format :call CocAction('format')
-
-    " Use `:Fold` to fold current buffer
-    command! -nargs=? Fold :call     CocAction('fold', <f-args>)
-
-    " use `:OR` for organize import of current buffer
-    command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
-
-    " TODO now started to use space as leader review these
-    " Using CocList
-    " Show all diagnostics
-    nnoremap <silent> <leader>ld  :<C-u>CocList diagnostics<cr>
-    " Manage extensions
-    nnoremap <silent> <leader>le  :<C-u>CocList extensions<cr>
-    " Show commands
-    nnoremap <silent> <leader>lc  :<C-u>CocList commands<cr>
-    " Find symbol of current document
-    nnoremap <silent> <leader>lo  :<C-u>CocList outline<cr>
-    " Search workspace symbols
-    nnoremap <silent> <leader>ls  :<C-u>CocList -I symbols<cr>
-    " Do default action for next item.
-    nnoremap <silent> <leader>j  :<C-u>CocNext<CR>
-
-    " Do default action for previous item.
-    nnoremap <silent> <leader>k  :<C-u>CocPrev<CR>
-
-    " Resume latest coc list
-    nnoremap <silent> <leader>p  :<C-u>CocListResume<CR>
   endif
 
   " }}} coc - conquer of code
@@ -545,6 +495,8 @@
 
   " }}} vim-go
   " {{{ vim-gutentags
+  " TODO sometimes VIM freezes when coming out of background process, think
+  " it's gutentags
   InstallPlugin https://github.com/ludovicchabant/vim-gutentags
 
   let g:gutentags_ctags_tagfile = '.git/tags'
@@ -557,8 +509,8 @@
   vnoremap <leader>h1 :'<,'>HighlightLine hlYellow<cr>
   nnoremap <leader>h2 :HighlightLine hlDarkBlue<cr>
   vnoremap <leader>h2 :'<,'>HighlightLine hlDarkBlue<cr>
-  nnoremap <leader>rh :RemoveHighlighting<cr>
-  vnoremap <leader>rh :'<,'>RemoveHighlighting<cr>
+  nnoremap <leader>hr :RemoveHighlighting<cr>
+  vnoremap <leader>hr :'<,'>RemoveHighlighting<cr>
 
   " }}} vim-highlight
   " {{{ vim-tmux-navigator
@@ -582,11 +534,10 @@
   " }}} vim-tmux-navigator
   " {{{ Terminal / Plugin
 
-  " TODO maybe remap to leader gr
-  " can toggle be used only!?
+  " Run buffer in REPL
   nnoremap <leader>rr :<C-u>TerminalReplFile<cr>
-  " TODO find better chord
-  nnoremap <leader>rt :<C-u>TerminalReplFileToggle<cr>
+  " Toggle REPL Terminal
+  nnoremap <leader>tr :<C-u>TerminalReplFileToggle<cr>
 
   " }}} Terminal / Plugin
   " {{{ vim-color-xcode
@@ -612,10 +563,11 @@
   " Open lazy git in throw away popup window
   " TODO problem about this is it uses <space> to stage/unstage a file which
   " is leader so either pause, or hit <CR> but that goes into stage view so
-  " haev to hit <ESC>
+  " have to hit <ESC>
   " SEE HERE: https://github.com/jesseduffield/lazygit/blob/master/docs/Config.md
   " Mapping file needs to be persisted to ansible
-  nnoremap <leader>lg :call helper#float#SingleUseTerminal('lazygit')<CR>
+  command! -nargs=0 Lazygit call helper#float#SingleUseTerminal('lazygit')
+  nnoremap <leader>lg :<CR>
   " }}} git
 
   InstallPlugin https://github.com/tpope/vim-commentary
@@ -653,8 +605,8 @@
   nnoremap <leader>7 7gt<CR>        " moves to tab 7
   nnoremap <leader>8 8gt<CR>        " moves to tab 8
   nnoremap <leader>9 9gt<CR>        " moves to tab 9
-  nnoremap <leader>tc :tabclose<CR> " closes current tab
-  nnoremap <leader>tn :tabnew<CR>   " opens a tab
+  nnoremap <leader>ct :tabclose<CR> " closes current tab
+  nnoremap <leader>nt :tabnew<CR>   " opens a tab
 
   " }}} TABs
   " {{{ Quicklist
@@ -675,9 +627,46 @@
   " list open buffers
   " nnoremap <leader><space> :ls<CR>:b<Space>
 
+  " TODO set these up as functions so that if next buffer is quickfix then
+  " move to next one
   nnoremap [b :bprevious<CR>
   nnoremap ]b :bnext<CR>
   nnoremap <leader>bd :bdelete<CR>
+  " Taken from: https://stackoverflow.com/questions/1444322/how-can-i-close-a-buffer-without-closing-the-window/44950143#44950143
+  nnoremap <Leader>bd :call DeleteCurBufferNotCloseWindow()<CR>
+
+  func! DeleteCurBufferNotCloseWindow() abort
+    if &modified
+      echohl ErrorMsg
+      echom "E89: no write since last change"
+      echohl None
+    elseif winnr('$') == 1
+      bd
+    else  " multiple window
+      let oldbuf = bufnr('%')
+      let oldwin = winnr()
+      while 1   " all windows that display oldbuf will remain open
+        if buflisted(bufnr('#'))
+          b#
+        else
+          bn
+          let curbuf = bufnr('%')
+          if curbuf == oldbuf
+            enew    " oldbuf is the only buffer, create one
+          endif
+        endif
+        let win = bufwinnr(oldbuf)
+        if win == -1
+          break
+        else        " there are other window that display oldbuf
+          exec win 'wincmd w'
+        endif
+      endwhile
+      " delete oldbuf and restore window to oldwin
+      exec oldbuf 'bd'
+      exec oldwin 'wincmd w'
+    endif
+  endfunc
 
   " easier switching to alternate/last buffer
   nnoremap <leader>a <c-^>
@@ -689,7 +678,14 @@
   " }}} Buffer Navigation
   " {{{ Window related
 
-  nnoremap <leader>wc :close<CR>
+  " Close window
+  nnoremap <leader>cw :close<CR>
+
+  " Toggle line numbers
+  nnoremap <leader>tn :set number!<CR>
+  " Toggle relative line numbers
+  nnoremap <leader>tr :set relativenumber!<CR>
+
 
   " }}} Window related
   " {{{ Yank and paste to system clipboard
@@ -726,9 +722,12 @@
 
   " Reselect previous selection (gv) in visual mode
   " after indenting left or right
-
   vnoremap < <gv
   vnoremap > >gv
+  " Indent line in normal mode
+  nnoremap > <s-v>><ESC>
+  " Indent line in normal mode
+  nnoremap < <s-v><<ESC>
 
   " Format current paragraph
   nnoremap <leader>= Vap=
@@ -757,6 +756,15 @@
   " {{{ Spelling
   " Auto selects the first spelling suggestion for current word
   nnoremap <leader>zz 1z=
+
+  " Toggle spell checker
+  nnoremap <leader>ts :set spell!<CR>
+
+  " Fix last incorrect word in insert mode: https://stackoverflow.com/a/16481737
+  inoremap <c-f> <c-g>u<Esc>[s1z=`]a<c-g>u
+
+  " TODO add normal mapping for fix first spelling mistatke on line, retruning to current possition
+
   " }}} Spelling
   " {{{ Write and Source
   nnoremap <leader>ws :w <bar> source %<CR>
@@ -770,6 +778,9 @@
   tnoremap <leader><Esc> <C-\><C-n>
   tnoremap <leader>jj <C-\><C-n>
   " }}} Terminal
+  " {{{ Searching
+  nnoremap <leader>tc :set ignorecase!<cr>
+  " }}} Searching
 
   " exit insert mode and save buffer
   inoremap jj <ESC>:w<cr>
@@ -810,7 +821,8 @@
 
   " Opens the ftplugin for the given filetype
   function! OpenFTPluginFile() abort
-    let l:filetype_file = expand($VIMCONFIG . '/ftplugin/' . &filetype . '.vim')
+    let l:vim_config_path = fnamemodify(expand("$MYVIMRC"), ":p:h")
+    let l:filetype_file = expand(l:vim_config_path . '/ftplugin/' . &filetype . '.vim')
     execute 'edit ' . l:filetype_file
   endfunction
   " Wrap OpenFTPluginFile function in a command which opens the ftplugin file
@@ -826,29 +838,6 @@
   endfun
 
   " }}} Random Functions
-  " {{{ Toggle Functions
-  " TODO This should be moved into a single plugin
-  let s:hidden_all = 0
-  function! ToggleHiddenAll()
-    if s:hidden_all  == 0
-      let s:hidden_all = 1
-      set noshowmode
-      set noruler
-      set laststatus=0
-      set noshowcmd
-      set nonumber
-      set norelativenumber
-    else
-      let s:hidden_all = 0
-      set showmode
-      set ruler
-      set laststatus=2
-      set showcmd
-      set number
-      set relativenumber
-    endif
-  endfunction
-  " }}} Toggle Functions
 
 " TODO this is not complete
 " A tool to take a selection and make it 'pretty',

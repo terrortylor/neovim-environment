@@ -88,3 +88,14 @@ ${0}
 " Restores cursor position
 call cursor($1, $2)
 endsnippet
+
+snippet trycatch "try ... catch ... finally"
+try
+	echom 'Do something'
+catch
+	echom v:exception
+	break
+finally
+	ehcom 'finally'
+endtry
+endsnippet

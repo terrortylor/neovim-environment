@@ -1,29 +1,14 @@
-" TODO some charecters like: ^R are note printing out... see vim.vim
-" Generates a markdown table that displays the active mappings in nvim's
-" init.vim file. As mappings are often grouped it maintains the order that
-" they are declared.
-" File:       vim_doc_generator.vim
-" Maintainer: Alex Tylor
-
-let s:cpo_save = &cpo
-set cpo&vim
-
-" Searches for 'documentation' tags and populates them accordingly, based on
-" mapping/command definitions and comments
-command! -nargs=0 GenerateVimMappingDocumentationTable call GenerateDocumentation()
-
-" Generates 'documentation' tags for files in a number of locations
-command! -nargs=0 GenerateVimMappingDocumentationTags call GenerateDocumentationTags()
-
-" Dictionary to store matched items and comments
-let s:mappings = {}
-" List to store keys order
-let s:mapping_key_ordered = []
-
-if !exists('g:autodoc_show_missing')
-  let g:autodoc_show_missing = v:false
+if !exists('s:find_mapping_regex')
+  let s:find_mapping_regex = '\v^(\s+)?[nvicsxolt]?(nore)?map'
 endif
 
+if !exists('s:find_command_regex')
+  let s:find_command_regex =  '\v^command(!)?'
+endif
+
+
+" TODO add ability to look for <Plug> declarations and commands in autoload
+" and plugin/xxx locations
 function! GenerateDocumentationTags() abort
   " Want all actions to be carried out as single action, so user can undo with
   " single 'u' press, set has been editied as false
@@ -33,7 +18,7 @@ function! GenerateDocumentationTags() abort
   call AddAutoDocumentationMarker('mappings', 'init.vim')
 
  " Generate ftplugin mappings tags
-  for full_ftplugin_path in split(globpath($VIMCONFIG . '/ftplugin', '*'), '\n')
+  for full_ftplugin_path in split(globpath(g:autodoc_config_path . '/ftplugin', '*'), '\n')
     let l:ftplugin_filename = s:GenerateFtpluginFilename(full_ftplugin_path)
 
     call AddAutoDocumentationMarker('mappings', 'ftplugin/' . l:ftplugin_filename)
@@ -43,12 +28,40 @@ function! GenerateDocumentationTags() abort
   call AddAutoDocumentationMarker('commands', 'init.vim')
 
  " Generate ftplugin commands tags
-  for full_ftplugin_path in split(globpath($VIMCONFIG . '/ftplugin', '**/*.vim'), '\n')
-    let l:ftplugin_filename = substitute(full_ftplugin_path, $VIMCONFIG . '/', '', '')
+  for full_ftplugin_path in split(globpath(g:autodoc_config_path . '/ftplugin', '**/*.vim'), '\n')
+    let l:ftplugin_filename = substitute(full_ftplugin_path, g:autodoc_config_path . '/', '', '')
 
     call AddAutoDocumentationMarker('commands', l:ftplugin_filename)
   endfor
 
+endfunction
+
+function! GenerateMissingDocumentationTags() abort
+  " Want all actions to be carried out as single action, so user can undo with
+  " single 'u' press, set has been editied as false
+  let s:has_edited = v:false
+
+  " Generate init.vi mappings
+  call s:PrintMissingTags('init.vim', 'mappings')
+
+  " Generate ftplugin mappings
+  " So list ftplugin directory listings
+  for full_ftplugin_path in split(globpath(g:autodoc_config_path . '/ftplugin', '*'), '\n')
+    let l:ftplugin_filename = s:GenerateFtpluginFilename(full_ftplugin_path)
+
+    call s:PrintMissingTags('ftplugin/' . l:ftplugin_filename, 'mappings')
+  endfor
+
+  " Generate init.vi commands
+  call s:PrintMissingTags('init.vim', 'commands')
+
+  " Generate ftplugin commands
+  " So list ftplugin directory listings
+  for full_ftplugin_path in split(globpath(g:autodoc_config_path . '/ftplugin', '**/*.vim'), '\n')
+    let l:ftplugin_filename = substitute(full_ftplugin_path, g:autodoc_config_path . '/', '', '')
+
+    call s:PrintMissingTags(l:ftplugin_filename, 'commands')
+  endfor
 endfunction
 
 function! GenerateDocumentation() abort
@@ -61,7 +74,7 @@ function! GenerateDocumentation() abort
 
   " Generate ftplugin mappings
   " So list ftplugin directory listings
-  for full_ftplugin_path in split(globpath($VIMCONFIG . '/ftplugin', '*'), '\n')
+  for full_ftplugin_path in split(globpath(g:autodoc_config_path . '/ftplugin', '*'), '\n')
     let l:ftplugin_filename = s:GenerateFtpluginFilename(full_ftplugin_path)
 
     call s:PrintMappings('ftplugin/' . l:ftplugin_filename)
@@ -72,8 +85,8 @@ function! GenerateDocumentation() abort
 
   " Generate ftplugin commands
   " So list ftplugin directory listings
-  for full_ftplugin_path in split(globpath($VIMCONFIG . '/ftplugin', '**/*.vim'), '\n')
-    let l:ftplugin_filename = substitute(full_ftplugin_path, $VIMCONFIG . '/', '', '')
+  for full_ftplugin_path in split(globpath(g:autodoc_config_path . '/ftplugin', '**/*.vim'), '\n')
+    let l:ftplugin_filename = substitute(full_ftplugin_path, g:autodoc_config_path . '/', '', '')
 
     call s:PrintCommands(l:ftplugin_filename)
   endfor
@@ -99,23 +112,28 @@ function! s:PopulateItemAndComments(filename, regex) abort
   let s:mappings = {}
   let s:mapping_key_ordered = []
 
-  let l:vim_path_filename = $VIMCONFIG . '/' . a:filename
+  let l:vim_path_filename = g:autodoc_config_path . '/' . a:filename
   " Capture current buffer to switch back to later
   let l:buf_name = expand("%")
 
   " Capture cursor position to be restored later with
   let [_, l:lnum, l:col, _] = getpos(".")
 
-  let l:filename_loaded = s:LoadHiddenBufferToSearch(l:vim_path_filename)
+  try
+    let l:filename_loaded = s:LoadHiddenBufferToSearch(l:vim_path_filename)
+  catch
+    echom v:exception
+    break
+  endtry
 
   " move to top of file
   call cursor(1,1)
 
   " This is a variable as needs to change after inition match
-  let a:flags = "Wc" "'c' is required to include current/first line
+  let l:flags = "Wc" "'c' is required to include current/first line
 
 
-  while search(a:regex, a:flags) != 0
+  while search(a:regex, l:flags) != 0
     let l:found_item = s:GetItemWithComments()
 
     " Add key to ordered list
@@ -123,7 +141,7 @@ function! s:PopulateItemAndComments(filename, regex) abort
     " Add result to overall dictionary
     let s:mappings[l:found_item[0]] = l:found_item[1]
 
-    let a:flags = "W" "'c' need to remove c to prevent loop breakage
+    let l:flags = "W" "'c' need to remove c to prevent loop breakage
   endwhile
 
   call s:SwitchBackToOriginalBuffer(l:buf_name, l:vim_path_filename, l:filename_loaded, l:lnum, l:col)
@@ -154,7 +172,22 @@ endfunction
 
 " Puts either a start or end markdown comment for given string, these are used
 " to find and replace existing auto documentation
+" Only Prints if mappings or commands found
 function! AddAutoDocumentationMarker(type, filepath) abort
+    if a:type ==# 'mappings'
+      call s:PopulateItemAndComments(a:filepath, s:find_mapping_regex)
+      if len(s:mapping_key_ordered) == 0
+        return
+      endif
+    else
+
+      call s:PopulateItemAndComments(a:filepath, s:find_command_regex)
+
+      if len(s:mapping_key_ordered) == 0
+        return
+      endif
+    endif
+
     let l:lines = []
     call add(l:lines, s:GetDocumentationBlockMarker(a:type, v:true, a:filepath))
     call add(l:lines, s:GetDocumentationBlockMarker(a:type, v:false, a:filepath))
@@ -173,10 +206,25 @@ function! s:UndoableAppend(location, lines) abort
   endif
 endfunction
 
+" Echo's any markers that can't be found
+function! s:PrintMissingTags(filename, type) abort
+ " Capture cursor position to be restored later with
+ let [_, l:lnum, l:col, _] = getpos(".")
+
+  " Find mappings marker tags
+  let l:doc_block_exists = search(s:GetDocumentationBlockMarker(a:type, v:true, a:filename))
+
+  if l:doc_block_exists == 0
+    call AddAutoDocumentationMarker(a:type, a:filename)
+  endif
+
+ " Restores cursor position
+ call cursor(l:lnum, l:col)
+endfunction
+
 " This prints the found mappings to the buffer, note that as the start
 " location is set and just using append to current line, it's printed
 " backwards.
-" TODO add markdown header to state filename, header level should be configurable
 function! s:PrintMappings(filename) abort
   " Delete existing contents
   call s:RemoveDocumentationBlockContents('mappings', a:filename)
@@ -185,12 +233,17 @@ function! s:PrintMappings(filename) abort
   let l:doc_block_exists = search(s:GetDocumentationBlockMarker('mappings', v:true, a:filename))
 
   if l:doc_block_exists > 0
-    call s:PopulateItemAndComments(a:filename, '\v^(\s+)?[nvicsxolt]?(nore)?map')
+    call s:PopulateItemAndComments(a:filename, s:find_mapping_regex)
 
     let l:lines = []
     if len(s:mapping_key_ordered) > 0
-      call add(l:lines, '| Mapmode | Mapping | Action | Description |')
-      call add(l:lines, '| ------- | ------- | -------| ----------- |')
+      if g:autodoc_table_show_action == v:true
+        call add(l:lines, '| Mapmode | Mapping | Action | Description |')
+        call add(l:lines, '| ------- | ------- | -------| ----------- |')
+      else
+        call add(l:lines, '| Mapmode | Mapping | Description |')
+        call add(l:lines, '| ------- | ------- | ----------- |')
+      endif
     endif
 
     " Want to display mappings with column for:
@@ -213,7 +266,11 @@ function! s:PrintMappings(filename) abort
       let l:rhs = s:EscapeForMarkdown(l:rhs)
 
       " now print out all the parts in columns
-      call add(l:lines, '| ' . l:mapmode . ' | ' . l:mapping . ' | ' . l:rhs . ' | ' . s:mappings[i] . ' |')
+      if g:autodoc_table_show_action == v:true
+        call add(l:lines, '| ' . l:mapmode . ' | ' . l:mapping . ' | ' . l:rhs . ' | ' . s:mappings[i] . ' |')
+      else
+        call add(l:lines, '| ' . l:mapmode . ' | ' . l:mapping . ' | ' . s:mappings[i] . ' |')
+      endif
     endfor
 
     if len(s:mapping_key_ordered) > 0
@@ -228,7 +285,6 @@ function! s:PrintMappings(filename) abort
 endfunction
 
 " This prints the found commmands to the buffer
-" TODO add markdown header to state filename, header level should be configurable
 function! s:PrintCommands(filename) abort
   " Delete existing contents
   call s:RemoveDocumentationBlockContents('commands', a:filename)
@@ -366,6 +422,3 @@ function! s:SearchForComments(start_line) abort
 
     return trim(substitute(l:item_comments, '"', '', 'g'))
 endfunction
-
-let &cpo = s:cpo_save
-unlet s:cpo_save

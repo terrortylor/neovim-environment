@@ -3,7 +3,7 @@ onoremap af :<c-u>execute "normal! ?^function\rv/^endfunction\r$"<cr>
 xnoremap af ?^function<cr>o/^endfunction<cr>$
 
 " echo's selection on line bellow
-xnoremap <leader>ev yoechom '": ' . "
+xnoremap <leader>ev yoechom '<c-r>": ' . <c-r>"<esc>
 
 set foldmethod=expr
 set foldexpr=FoldVimFunctions(v:lnum)

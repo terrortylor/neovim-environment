@@ -3,4 +3,4 @@ if exists('g:loaded_focus_plugin')
 endif
 let g:loaded_focus_plugin = 1
 
-command! Focus call FocusToggle()
+command! FocusBuffer call FocusBuffer()

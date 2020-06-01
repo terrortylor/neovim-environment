@@ -1,4 +1,3 @@
-" TODO if heading has charecters like /. etc then strip them out for links
 " Adds a markdown style TOC to the top of the markdown file
 command! -nargs=0 CreateTOC call CreateTOC()
 
@@ -8,7 +7,6 @@ command! -nargs=0 RemoveTOC call RemoveTOC()
 let s:toc_title = "# Table of contents"
 let s:toc_end_marker = "<!--- end of toc -->"
 
-" TODO this doesn't take into account a section, i.e. does not end with #'s
 function! s:GetHeaders()
   let l:flags = "Wc" "'c' is required to include current/first line
   while search("^##", l:flags) != 0
@@ -29,10 +27,10 @@ function! s:RemoveTOC()
 endfunction
 
 function! s:WriteTOC()
-  call append(0, '')
-  call append(0, s:toc_title)
-  call append(1, '')
-  let l:line = 2
+  let s:has_edited = v:false
+  let l:lines = []
+  call add(l:lines, s:toc_title)
+  call add(l:lines, '')
   for heading in s:found_headings
     " Get #'s
     let l:hashes = substitute(heading, "[^#]", "","g")
@@ -46,15 +44,26 @@ function! s:WriteTOC()
       let l:padding = ""
     endif
     " format heading link
-    let l:heading_link = "[" . trim(l:heading_text) . "](#" . substitute(tolower(trim(l:heading_text)), " ", "-", "g") . ")"
+    let l:heading_link = s:CreateHeadingLink(l:heading_text)
     " insert toc line, numbered lists just need to be a number... makes it
     " easier :P
-    call append(l:line, l:padding . "1. " . l:heading_link)
-    let l:line += 1
+    call add(l:lines, l:padding . "1. " . l:heading_link)
   endfor
 
   " add a comment line that will be used to mark end of TOC
-  call append(l:line, s:toc_end_marker)
+  call add(l:lines, s:toc_end_marker)
+  call add(l:lines, '')
+  call append(0, l:lines)
+endfunction
+
+" Formats a TOC heading anchor link
+function! s:CreateHeadingLink(heading_text) abort
+  " Replace spaces in header text to dashes
+  let l:anchor = substitute(tolower(trim(a:heading_text)), ' ', '-', 'g')
+  " Replace anything other than az- with nothing
+  let l:anchor = substitute(l:anchor, '[^a-z\-]', '','g')
+  let l:heading_link = '[' . trim(a:heading_text) . '](#' . l:anchor . ')'
+  return l:heading_link
 endfunction
 
 function! CreateTOC()
