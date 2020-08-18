@@ -251,7 +251,7 @@
   nnoremap <leader>fp y:SimpleGrep
   " }}} quickfix
   " {{{ tmux
-  nnoremap <leader>nn :call tmux#SendCommandToPane()<CR>
+  nnoremap <leader>nn :lua require('tmux.send_command').send_command_to_pane()<CR>
   " }}} tmux
   " {{{ vim-sneak
   InstallPlugin https://github.com/justinmk/vim-sneak
@@ -574,11 +574,12 @@
   InstallPlugin https://github.com/jacoborus/tender.vim
   InstallPlugin https://github.com/udalov/kotlin-vim
   InstallPlugin https://github.com/machakann/vim-sandwich
+  InstallPlugin https://github.com/PProvost/vim-ps1
 
   " Delete cached installed plugin list
   call pluginman#DeleteCacheInstalledPlugins()
   " TODO need to fix up toggle help file
-  helptags ALL
+  " helptags ALL
 " }}} Plugin Settings
 " {{{ Custom Mappings
   " {{{ Splits
