@@ -28,6 +28,7 @@ describe('tmux library', function()
         assert.are.equal(2, testModule._get_pane_number())
         assert.are.equal('pwd', testModule._get_user_command())
         assert.stub(m.nvim_command).was_called_with('wa')
+        assert.stub(os.execute).was_called_with('tmux if-shell -F -t "2" "#{pane_in_mode}" "send-keys Escape" ""')
         assert.stub(os.execute).was_called_with('tmux send-keys -t "2" C-z "pwd" Enter')
 
         -- reset stubs
@@ -103,6 +104,7 @@ describe('tmux library', function()
         testModule._execute_user_command()
 
         -- assert execute called
+        assert.stub(os.execute).was_called_with('tmux if-shell -F -t "2" "#{pane_in_mode}" "send-keys Escape" ""')
         assert.stub(os.execute).was_called_with('tmux send-keys -t "2" C-z "pwd" Enter')
         assert.stub(_G.print).was_not_called_with('Missing pane or command, not running')
 

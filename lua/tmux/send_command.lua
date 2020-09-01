@@ -4,6 +4,7 @@ local api = vim.api
 -- Add tab scoped variables that override command and pane
 -- Sanity check there is more than one pane to send too
 -- :redraw was used to hide prompt after input before... doesn't seem to work in lua though
+-- send Escape before command, so if in copy mode it's escaped first
 
 -- Initialise some local varirables
 local pane_number
@@ -45,6 +46,9 @@ function execute_user_command()
   end
 
   vim.api.nvim_command('wa')
+  -- if not in normal mode go back to it
+  os.execute('tmux if-shell -F -t "' .. pane_number .. '" "#{pane_in_mode}" "send-keys Escape" ""')
+  -- run command
   os.execute('tmux send-keys -t "' .. pane_number .. '" C-z "' .. user_command .. '" Enter')
 end
 

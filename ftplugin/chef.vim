@@ -1,6 +1,3 @@
-let s:cpo_save = &cpo
-set cpo&vim
-
 " the nvim ruby ftplugin overrides gf: /usr/share/nvim/runtime/ftplugin/ruby.vim
 " so override it here
 nnoremap gf :wincmd f<CR>
@@ -25,6 +22,5 @@ endfunction
 
 set includeexpr=LoadChefRecipe(v:fname)
 
-
-let &cpo = s:cpo_save
-unlet s:cpo_save
+" Allow '-' to be classed as a word charecter
+set iskeyword+=_
