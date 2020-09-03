@@ -140,5 +140,39 @@ describe('tmux library', function()
         assert.are.equal('pwd', testModule._get_user_command())
       end)
     end)
+
+    describe('scroll', function()
+      it('Should scroll up', function()
+        -- Setup stubbed values
+        local m = mock(vim.api, true)
+        m.nvim_call_function.on_call_with('input', {'Enter pane to send command too: '}).returns(2)
+        stub(os, 'execute')
+
+        testModule.scroll(true)
+
+        -- assert execute called
+        assert.stub(os.execute).was_called_with('tmux if-shell -F -t "2" "#{pane_in_mode}" "" "copy-mode"')
+        assert.stub(os.execute).was_called_with('tmux send-keys -t "2" -X halfpage-up')
+
+        -- reset stubs
+        os.execute:revert()
+      end)
+
+      it('Should scroll down', function()
+        -- Setup stubbed values
+        local m = mock(vim.api, true)
+        m.nvim_call_function.on_call_with('input', {'Enter pane to send command too: '}).returns(2)
+        stub(os, 'execute')
+
+        testModule.scroll(false)
+
+        -- assert execute called
+        assert.stub(os.execute).was_called_with('tmux if-shell -F -t "2" "#{pane_in_mode}" "" "copy-mode"')
+        assert.stub(os.execute).was_called_with('tmux send-keys -t "2" -X halfpage-down')
+
+        -- reset stubs
+        os.execute:revert()
+      end)
+    end)
   end)
 end)

@@ -131,6 +131,10 @@
 
   " autosave buffers when switching between then
   set autowriteall
+  augroup vimrc_auto_write
+    autocmd!
+    autocmd Insertleave,TextChanged * :update
+  augroup END
 
   " Auto remove trailing whitespace on :w
   augroup remove_trailing_whitespace
@@ -158,6 +162,9 @@
   set gdefault
   " }}} Searching within a buffer behaviour
   " {{{ Search and Replace
+  if executable('rg')
+    set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
+  endif
 
   " Search and replace word under cursor within buffer
   nnoremap <leader>rw :%s/\C\<<c-r><c-w>\>//<left>
@@ -260,6 +267,11 @@
   " }}} vim-sneak
   " {{{ NERDTree
   InstallPlugin https://github.com/preservim/nerdtree
+
+
+  " Overwrite reuse behaviour so open in expected window not jump to window if
+  " already open
+  let NERDTreeCustomOpenArgs={'file': {'reuse': '', 'where': 'p'}, 'dir': {}}
 
   " Toggle NERDTree using custom toggle func
   nnoremap <leader>tt :<C-u>call NerdToggleFind()<CR>
@@ -742,6 +754,10 @@
   " In insert more move using readline line start/end
   inoremap <c-e> <esc>A
   inoremap <c-a> <esc>I
+
+  " Disbale pageup/down in insert mode, keep hittin by mistake
+  inoremap <PageUp> <nop>
+  inoremap <PageDown> <nop>
 
   " }}} Navigation
   " {{{ vimrc related

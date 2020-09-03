@@ -58,10 +58,24 @@ end
 
 function M.send_command_to_pane()
   capture_pane_number()
+  -- TODO should not run if pane not set
   capture_user_command()
   execute_user_command()
 end
 
+-- Used to scroll a pane up/down
+-- @param up True/False, should scroll up
+function M.scroll(up)
+  capture_pane_number()
+  -- ensure in copy-mode
+  os.execute('tmux if-shell -F -t "' .. pane_number .. '" "#{pane_in_mode}" "" "copy-mode"')
+  -- run scroll command
+  local direction = "halfpage-down"
+  if up then
+    direction = "halfpage-up"
+  end
+  os.execute('tmux send-keys -t "' .. pane_number .. '" -X ' .. direction)
+end
 
 -- export locals for test
 if _TEST then
