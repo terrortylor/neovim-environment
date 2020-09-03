@@ -1,7 +1,8 @@
 local api = vim.api
 
 -- TODO Some extension ideas:
--- Add tab scoped variables that override command and pane
+-- Probably not worth tihs one, see line below - Add tab scoped variables that override command and pane
+-- Add ability to store multiple commands/ panes
 -- Sanity check there is more than one pane to send too
 -- :redraw was used to hide prompt after input before... doesn't seem to work in lua though
 -- send Escape before command, so if in copy mode it's escaped first
@@ -39,8 +40,9 @@ function get_user_command()
   return user_command
 end
 
-function execute_user_command()
-  if not pane_number or not user_command then
+-- TODO move these to lib so can be mocked easily
+function M.execute_user_command(command)
+  if not pane_number or not command then
     print("Missing pane or command, not running")
     return
   end
@@ -49,7 +51,7 @@ function execute_user_command()
   -- if not in normal mode go back to it
   os.execute('tmux if-shell -F -t "' .. pane_number .. '" "#{pane_in_mode}" "send-keys Escape" ""')
   -- run command
-  os.execute('tmux send-keys -t "' .. pane_number .. '" C-z "' .. user_command .. '" Enter')
+  os.execute('tmux send-keys -t "' .. pane_number .. '" C-z "' .. command .. '" Enter')
 end
 
 function M.clear_user_command()
@@ -60,7 +62,18 @@ function M.send_command_to_pane()
   capture_pane_number()
   -- TODO should not run if pane not set
   capture_user_command()
-  execute_user_command()
+  M.execute_user_command(user_command)
+end
+
+function M.send_one_off_command_to_pane()
+  capture_pane_number()
+  -- TODO should not run if pane not set
+  local one_off_command = vim.api.nvim_call_function('input', {'Enter command to send: '})
+  if one_off_command then
+    M.execute_user_command(one_off_command)
+  else
+    print('No command captured!')
+  end
 end
 
 -- Used to scroll a pane up/down
@@ -84,7 +97,6 @@ if _TEST then
   M._get_pane_number = get_pane_number
   M._capture_user_command = capture_user_command
   M._get_user_command = get_user_command
-  M._execute_user_command = execute_user_command
 end
 
 -- Create commands

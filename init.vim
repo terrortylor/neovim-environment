@@ -1,5 +1,5 @@
 " This file uses folding to better organise:
-  " :help fold-commands
+" :help fold-commands
 
 " {{{ VIM Settings
   " {{{ leader
@@ -572,6 +572,8 @@
 
   " }}} rainbow_parentheses.vim
   " {{{ git
+  lua require('git').setup()
+
   " Open lazy git in throw away popup window
   " TODO problem about this is it uses <space> to stage/unstage a file which
   " is leader so either pause, or hit <CR> but that goes into stage view so
@@ -800,7 +802,7 @@
   " }}} Searching
 
   " exit insert mode and save buffer
-  inoremap jj <ESC>:w<cr>
+  inoremap jj <ESC>
 
   " Select last pasted text
   nnoremap gp `[v`]

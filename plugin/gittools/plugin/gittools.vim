@@ -13,7 +13,7 @@ command! GitDiffFileWithSyntax call gittools#gitdiff#WithSyntax()
 command! GitLogPretty call gittools#GitLogPretty()
 command! GitFileHistoryExplore call gittools#filehistory#GitFileHistoryExplore()
 " Displays git blame info in a floating window
-command! -nargs=0 -range GitBlameFloat :<line1>,<line2>call gittools#GitBlameFloat()
+" command! -nargs=0 -range GitBlameFloat :<line1>,<line2>call gittools#GitBlameFloat()
 
 " Create internal mappings to be mapped as required
 " TODO feel like there is a better way

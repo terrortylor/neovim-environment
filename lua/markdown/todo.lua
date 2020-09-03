@@ -99,6 +99,7 @@ function M.insert_empty_todo_box(is_below)
   end
   return ''
 end
+
 -- export locals for test
 if _TEST then
   M._is_line_todo_item = is_line_todo_item

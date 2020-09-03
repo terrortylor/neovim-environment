@@ -81,7 +81,7 @@ describe('tmux library', function()
         testModule.clear_user_command()
 
         -- call capture function
-        testModule._execute_user_command()
+        testModule.execute_user_command()
 
         -- assert execute not called
         assert.stub(os.execute).was_not_called()
@@ -101,7 +101,7 @@ describe('tmux library', function()
         testModule._capture_user_command()
 
         -- call capture function
-        testModule._execute_user_command()
+        testModule.execute_user_command('pwd')
 
         -- assert execute called
         assert.stub(os.execute).was_called_with('tmux if-shell -F -t "2" "#{pane_in_mode}" "send-keys Escape" ""')
@@ -138,6 +138,23 @@ describe('tmux library', function()
         -- check prompt behaviour
         assert.stub(m.nvim_call_function).was_not.called()
         assert.are.equal('pwd', testModule._get_user_command())
+      end)
+    end)
+
+    describe('send_one_off_command_to_pane', function()
+      it('Should prompt for user input and send', function()
+        -- Setup stubbed values
+        local m = mock(vim.api, true)
+        m.nvim_call_function.on_call_with('input', {'Enter command to send: '}).returns('pwd')
+        stub(testModule, 'execute_user_command')
+
+        -- call capture function
+        testModule.send_one_off_command_to_pane()
+
+        assert.stub(m.nvim_call_function).was_called_with('input', {'Enter command to send: '})
+        assert.stub(testModule.execute_user_command).was_called_with('pwd')
+
+        mock.revert(m)
       end)
     end)
 
