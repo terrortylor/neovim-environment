@@ -260,6 +260,9 @@
   " {{{ tmux
   nnoremap <leader>nn :lua require('tmux.send_command').send_command_to_pane()<CR>
   " }}} tmux
+  " {{{ alternate file
+  nnoremap <leader>ga :<C-u>lua require('alternate').get_alternate_file()<CR>
+  " }}} alternate file
   " {{{ vim-sneak
   InstallPlugin https://github.com/justinmk/vim-sneak
   " There is some remapping of 's' to '<space>s' see after/plugin/vim-sneak.vim
