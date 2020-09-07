@@ -73,7 +73,6 @@ function M.get_alternate_file()
   end
 
   -- TODO check file exists
-  -- print(alternate_file)
   api.nvim_command("e " .. alternate_file)
 end
 

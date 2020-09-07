@@ -22,7 +22,7 @@ describe('alternate', function()
         direction = "_test.code$",
         transformers = {
           [".code"] = "_test.code",
-          ["src"] = "test"
+          ["src/"] = "test/"
         }
       }
     }
@@ -48,7 +48,7 @@ describe('alternate', function()
       stub(testModule, '_transform_path')
       m.nvim_buf_get_option.on_call_with(0, 'filetype').returns('code')
       m.nvim_call_function.on_call_with("expand", {"%:p"}).returns('assets/file.jpeg')
-      
+
       testModule.get_alternate_file()
 
       assert.stub(_G.print).was_not_called_with('No alternate file rule found for filetype: cats')
@@ -61,42 +61,43 @@ describe('alternate', function()
       print:revert()
       testModule._transform_path:revert()
     end)
-    
+
     it('Should try to open expected alternate file', function()
       local m = mock(vim.api, true)
-      stub(_G, 'print')
+      -- stub(_G, 'print')
       m.nvim_buf_get_option.on_call_with(0, 'filetype').returns('code')
       m.nvim_call_function.on_call_with("expand", {"%:p"}).returns('src/module/funcs.code')
-      
+
       testModule.get_alternate_file()
 
-      assert.stub(_G.print).was_not_called_with('No alternate file rule found for filetype: cats')
+      -- assert.stub(_G.print).was_not_called_with('No alternate file rule found for filetype: cats')
       assert.stub(m.nvim_command).was_called_with("e test/module/funcs_test.code")
 
       -- reset stubs
       mock.revert(m)
-      print:revert()
+      -- print:revert()
     end)
 
     it('Should try to open expected file from alternate file', function()
       local m = mock(vim.api, true)
-      stub(_G, 'print')
+      -- stub(_G, 'print')
       m.nvim_buf_get_option.on_call_with(0, 'filetype').returns('code')
       m.nvim_call_function.on_call_with("expand", {"%:p"}).returns('test/module/funcs_test.code')
-      
+
       testModule.get_alternate_file()
 
-      assert.stub(_G.print).was_not_called_with('No alternate file rule found for filetype: cats')
+      -- assert.stub(_G.print).was_not_called_with('No alternate file rule found for filetype: cats')
       assert.stub(m.nvim_command).was_called_with("e src/module/funcs.code")
 
       -- reset stubs
       mock.revert(m)
-      print:revert()
+      -- print:revert()
     end)
   end)
 
   describe('transform_path', function()
     local transformers = {
+      -- TODO add % before . busted throws error, differences in lua?
       [".code"] = "_test.code",
       ["src/"] =  "test/"
     }
