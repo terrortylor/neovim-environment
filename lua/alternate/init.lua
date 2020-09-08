@@ -15,6 +15,14 @@ M.rules = {
       ["/recipes/"] = "/spec/unit/recipes/"
     }
   },
+  ["ruby"] = {
+    condition = ".*",
+    direction = "_spec%.rb",
+    transformers = {
+      ["%.rb"] = "_spec%.rb",
+      ["/lib/"] = "/spec/lib/"
+    }
+  },
   ["lua"] = {
     condition = "/lua/",
     direction = "_spec.lua",
