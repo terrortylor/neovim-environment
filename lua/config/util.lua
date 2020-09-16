@@ -1,0 +1,46 @@
+local api = vim.api
+
+local M = {}
+
+M.noremap_silent = {noremap = true, silent = true}
+
+-- TODO remove once nvim 0.5
+function M.set_options(options)
+  for k,v in pairs(options) do
+    api.nvim_set_option(k, v)
+  end
+end
+
+function M.set_buf_options(options, buffer)
+  buffer = buffer or 0
+  for k,v in pairs(options) do
+    api.nvim_buf_set_option(buffer, k, v)
+  end
+end
+
+-- TODO remove once nvim 0.5
+function M.set_variables(variables)
+  for k,v in pairs(variables) do
+    api.nvim_set_var(k, v)
+  end
+end
+
+function M.create_keymap(mode, lhs, rhs, opts)
+  -- change this from opts to ... and  loop on them to build up
+  opts = opts or {noremap = true}
+  api.nvim_set_keymap(mode, lhs, rhs, opts)
+end
+
+function M.create_autogroups(definitions)
+  for group, definition in pairs(definitions) do
+    vim.api.nvim_command('augroup '..group)
+    vim.api.nvim_command('autocmd!')
+    for _, line in ipairs(definition) do
+      local command = table.concat(vim.tbl_flatten{'autocmd', line}, ' ')
+      vim.api.nvim_command(command)
+    end
+    vim.api.nvim_command('augroup END')
+  end
+end
+
+return M

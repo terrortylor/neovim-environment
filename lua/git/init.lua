@@ -5,7 +5,7 @@ local M = {}
 
 -- Define settings
 M.defaults = {
-  ["blame_close"] = {"<ESC>", "<CR>"}
+  blame_close = {"<ESC>", "<CR>"}
 }
 
 --- Wrapper for running git blame

@@ -48,8 +48,14 @@ function M.close_window()
   window_id = nil
 end
 
--- TODO Add tests
 --- Creates the buffer and floating window used to show git blame results
+-- Displays float on cursor location, setting width and height to be the max
+-- width and sixe of lines map
+-- Also creates a numberof mappings to close the window based on lhs_mappins table
+-- @param lines lines to be displayed in buffer
+-- @param row row to show float on
+-- @param col column to show float on
+-- @param lhs_mappings list of LHS key map values to map to closing the floating window
 function M.create_window(lines, row, col, lhs_mappings)
   local max_width = 0
   for k, v in ipairs(lines) do
@@ -61,12 +67,12 @@ function M.create_window(lines, row, col, lhs_mappings)
   local buf = api.nvim_create_buf(false, true)
 
   api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')
-  api.nvim_buf_set_option(buf, 'filetype', 'hover')
+  api.nvim_buf_set_option(buf, 'filetype', 'gitblame')
   api.nvim_buf_set_lines(buf, 0, -1, true, lines)
   for _, v in pairs(lhs_mappings) do
     api.nvim_buf_set_keymap(buf, "n", v, "<CMD>lua require('git.lib.blame').close_window()<CR>", { noremap = true })
   end
-  api.nvim_command [[autocmd WinLeave <buffer> ++once :lua require('git.lib.blame').close_window()]]
+  api.nvim_command("autocmd WinLeave <buffer=" .. buf .."> ++once :lua require('git.lib.blame').close_window()")
 
   local opts = {
     style = "minimal",
@@ -83,7 +89,6 @@ function M.create_window(lines, row, col, lhs_mappings)
   window_id = win
 end
 
--- TODO add tests
 --- Main hook, used for running git blame
 -- Ensures that a single instance of it is running, otherwise escapes
 -- @param line_start first line to show blame for
@@ -97,10 +102,10 @@ function M.go(line_start, line_end, close_mappings)
 
   -- TODO is full path good, or relative from git home?
   local file_name = api.nvim_call_function("expand", {"%:p"})
-  local _, cursor_column = unpack(api.nvim_win_get_cursor(0))
   local blame_results = M.get_blame_results(file_name, line_start, line_end)
   local blame_lines = M.convert_and_format_result(blame_results)
-  if table.getn(blame_lines) > 0 then
+  if #blame_lines > 0 then
+    local _, cursor_column = unpack(api.nvim_win_get_cursor(0))
     M.create_window(blame_lines, line_start, cursor_column, close_mappings)
   else
     print("GitBlame: File not tracked")
