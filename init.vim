@@ -148,10 +148,11 @@ lua require 'config'
   InstallPlugin https://github.com/ludovicchabant/vim-gutentags
   InstallPlugin https://github.com/christoomey/vim-tmux-navigator
 
-  " Run buffer in REPL
-  nnoremap <leader>rr :<C-u>TerminalReplFile<cr>
-  " Toggle REPL Terminal
-  nnoremap <leader>tr :<C-u>TerminalReplFileToggle<cr>
+  " TODO have a think about this plugin, overlaps with TMUX one
+  " " Run buffer in REPL
+  " nnoremap <leader>rr :<C-u>TerminalReplFile<cr>
+  " " Toggle REPL Terminal
+  " nnoremap <leader>tr :<C-u>TerminalReplFileToggle<cr>
 
   InstallPlugin https://github.com/junegunn/rainbow_parentheses.vim
 

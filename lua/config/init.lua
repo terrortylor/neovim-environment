@@ -1,5 +1,10 @@
 -- TODO look at some pcall wrapping so everthing doesn't break if single error
 local api = vim.api
+
+-- If error later in scripts then this may/may not be set,
+-- this is a crued way to guard around that
+api.nvim_buf_set_option(0, "undofile", true)
+
 -- TODO implement 'gf' for lua
 local util = require('config.util')
 
@@ -41,8 +46,6 @@ local options = {
   -- Visual
   termguicolors  = true,
   showtabline    = 2,
-  cursorline     = true,
-  number         = true,
 
   -- Searching
   ignorecase     = true,
@@ -58,6 +61,14 @@ local options = {
 }
 
 util.set_options(options)
+
+local win_options = {
+  -- Visual
+  cursorline     = true,
+  number         = true,
+}
+
+util.set_win_options(win_options)
 
 local buf_options = {
   -- persistent undo
@@ -90,6 +101,11 @@ local autogroups = {
   remove_trailing_whitespace = {
     {"BufWritePre", "*", [[%s/\s\+$//e]]}
   },
+  -- FIXME this loads on filetype correctly
+  -- but fun is unable to set buffer options
+  -- lua_filetype_loading = {
+  --   {"FileType", "*", "lua require('config.function.filetype').load_filetype_config()"}
+  -- },
   return_to_last_edit_in_buffer = {
     {"BufReadPost", "*", "lua require('config.function.autocommands').move_to_last_edit()"}
   },
