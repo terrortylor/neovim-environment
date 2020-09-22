@@ -120,10 +120,8 @@ end
 function M.stop()
   timer:close()
   -- Cleanup
-  for _,v in ipairs(snake_segments) do
-    M.close_window(v.w_id)
-  end
-  M.close_window(food.w_id)
+  snake:cleanup()
+  food:close_window()
   -- TODO restore keymappings
   -- TODO Unload / wipe all sprite buffers
 end

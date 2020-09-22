@@ -63,3 +63,9 @@ function Snake:collision(x, y)
 
   return false
 end
+
+function Snake:cleanup()
+  for _,v in ipairs(self.segments) do
+    v:close_window()
+  end
+end
