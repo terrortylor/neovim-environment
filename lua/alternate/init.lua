@@ -1,6 +1,13 @@
 local api = vim.api
+local util = require('config.util')
+local nresil = util.noremap_silent
 
 local M = {}
+
+-- Define settings
+M.mappings = {
+  ["<leader>ga"]   = ":<C-u>lua require('alternate').get_alternate_file()<CR>",
+}
 
 --- Rules are defined for filetypes:
 -- condition    : used to control if alternate file will work on given path
@@ -9,6 +16,7 @@ local M = {}
 M.rules = {
   ["ruby.chef"] = {
     condition = "/cookbooks/(.-)/recipes/",
+    -- TODO rename direction to alternate_matcher or something this that
     direction = "_spec%.rb",
     transformers = {
       ["%.rb"] = "_spec%.rb",
@@ -82,6 +90,15 @@ function M.get_alternate_file()
 
   -- TODO check file exists
   api.nvim_command("e " .. alternate_file)
+end
+
+-- Create commands and setup mappings
+-- TODO add test
+function M.setup()
+  -- Create mappings
+  for k, v in pairs(M.mappings) do
+    util.create_keymap("n", k, v, nresil)
+  end
 end
 
 -- export locals for test

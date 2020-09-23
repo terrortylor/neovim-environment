@@ -1,11 +1,11 @@
 describe('tmux library', function()
-  describe('send_command', function()
+  describe('init', function()
     setup(function()
       _G._TEST = true
       _G.vim = {
         api = require('spec.vim_api_helper')
       }
-      testModule = require('tmux.send_command')
+      testModule = require('tmux')
     end)
 
     teardown(function()

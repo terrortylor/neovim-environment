@@ -1,4 +1,6 @@
 local api = vim.api
+local util = require('config.util')
+local nresil = util.noremap_silent
 
 -- TODO Some extension ideas:
 -- Probably not worth tihs one, see line below - Add tab scoped variables that override command and pane
@@ -12,6 +14,13 @@ local pane_number
 local user_command
 
 local M = {}
+
+-- Define settings
+M.mappings = {
+  ["<C-PAGEUP>"]   = ":lua require('tmux').scroll(true)<CR>",
+  ["<C-PAGEDOWN>"] = ":lua require('tmux').scroll(false)<CR>",
+  ["<leader>nn"]   = ":lua require('tmux').send_command_to_pane()<CR>",
+}
 
 function capture_pane_number()
   if not pane_number then
@@ -90,6 +99,22 @@ function M.scroll(up)
   os.execute('tmux send-keys -t "' .. pane_number .. '" -X ' .. direction)
 end
 
+-- Create commands and setup mappings
+-- TODO add test
+function M.setup()
+  -- Create Commands
+  -- TODO if argument passed then use that as command, no panel number behaviour change
+  api.nvim_command("command! -nargs=0 TmuxSendCommandToPane call luaeval('require(\"tmux\").send_command_to_pane()', expand('<args>'))")
+  api.nvim_command("command! -nargs=0 TmuxSendOneOffCommandToPane call luaeval('require(\"tmux\").send_one_off_command_to_pane()', expand('<args>'))")
+  api.nvim_command("command! -nargs=0 TmuxClearUserCommand call luaeval('require(\"tmux\").clear_user_command()', expand('<args>'))")
+  api.nvim_command("command! -nargs=0 TmuxClearPaneNumber call luaeval('require(\"tmux\").clear_pane_number()', expand('<args>'))")
+
+  -- Create mappings
+  for k, v in pairs(M.mappings) do
+    util.create_keymap("n", k, v, nresil)
+  end
+end
+
 -- export locals for test
 if _TEST then
   -- setup test alias for private elements using a modified name
@@ -98,9 +123,5 @@ if _TEST then
   M._capture_user_command = capture_user_command
   M._get_user_command = get_user_command
 end
-
--- Create commands
--- Keeping these in init.vim for now...
--- vim.api.nvim_command("command! -nargs=0 TmuxSendCommandToPane call luaeval('M.send_command_to_pane()', expand('<args>'))")
 
 return M
