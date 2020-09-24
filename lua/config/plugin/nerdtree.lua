@@ -1,4 +1,4 @@
-local util = require('config.util')
+local util = require('util.config')
 local nresil = util.noremap_silent
 
 util.create_keymap("n", "<leader>tt", ":<C-u>call NerdToggleFind()<CR>", nresil)

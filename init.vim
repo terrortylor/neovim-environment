@@ -7,15 +7,9 @@ lua require 'config'
     autocmd ColorScheme * highlight Folded guifg=56 guibg=215
   augroup END
 
-  " custom file specific folding overrides
-  augroup custom_file_folding
-    autocmd!
-    autocmd BufRead,BufWinEnter init.vim setlocal
-      \ foldmethod=marker
-      \ foldenable
-      \ fillchars=fold:\  foldtext=MyVimrcFoldText()
-      \ foldtext=MyVimrcFoldText()
-  augroup END
+  " {{{ test fold
+  " some stuff goes here
+  " }}} test fold
 
   function! MyVimrcFoldText()
       let line = getline(v:foldstart)
@@ -24,7 +18,6 @@ lua require 'config'
       let foldtext = spaces . '-' . line_text
       return foldtext
   endfunction
-
 
   set path+=**
 

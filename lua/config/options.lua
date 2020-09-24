@@ -2,7 +2,7 @@
 local api = vim.api
 
 -- TODO implement 'gf' for lua
-local util = require('config.util')
+local util = require('util.config')
 
 local wildignore = "*.bmp,*.gif,*.ico,*.jpg,*.png,*.ico"
 wildignore = wildignore .. "*.pdf,*.psd"

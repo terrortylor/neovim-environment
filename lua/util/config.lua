@@ -1,3 +1,4 @@
+-- FIXME no tests
 local api = vim.api
 
 local M = {}

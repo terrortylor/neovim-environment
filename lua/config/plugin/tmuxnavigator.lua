@@ -1,4 +1,4 @@
-local util = require("config.util")
+local util = require("util.config")
 local nresil = util.noremap_silent
 
 local global_variables = {

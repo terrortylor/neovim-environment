@@ -1,5 +1,5 @@
 -- TODO look at some pcall wrapping so everthing doesn't break if single error
-local util = require('config.util')
+local util = require('util.config')
 
 local autogroups = {
   cursor_line_group = {
@@ -15,9 +15,9 @@ local autogroups = {
   },
   -- FIXME this loads on filetype correctly
   -- but fun is unable to set buffer options
-  -- lua_filetype_loading = {
-  --   {"FileType", "*", "lua require('config.function.filetype').load_filetype_config()"}
-  -- },
+  lua_filetype_loading = {
+    {"VimEnter,FileType", "*", "lua require('config.function.filetype').load_filetype_config()"}
+  },
   return_to_last_edit_in_buffer = {
     {"BufReadPost", "*", "lua require('config.function.autocommands').move_to_last_edit()"}
   },

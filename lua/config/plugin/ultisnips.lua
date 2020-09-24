@@ -1,4 +1,4 @@
-local util = require('config.util')
+local util = require('util.config')
 
 local global_variables = {
   ["UltiSnipsExpandTrigger"]       = "<tab>",

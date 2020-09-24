@@ -1,5 +1,5 @@
 local api = vim.api
-local util = require('config.util')
+local util = require('util.config')
 local nresil = util.noremap_silent
 
 -- TODO Some extension ideas:
@@ -22,16 +22,16 @@ M.mappings = {
   ["<leader>nn"]   = ":lua require('tmux').send_command_to_pane()<CR>",
 }
 
-function capture_pane_number()
+local function capture_pane_number()
   if not pane_number then
     -- any way to prevent switching panes if pressed before numbers disappear
     os.execute('tmux display-panes')
 
-    pane_number = vim.api.nvim_call_function('input', {'Enter pane to send command too: '})
+    pane_number = api.nvim_call_function('input', {'Enter pane to send command too: '})
   end
 end
 
-function get_pane_number()
+local function get_pane_number()
   return pane_number
 end
 
@@ -39,13 +39,13 @@ function M.clear_pane_number()
   pane_number = nil
 end
 
-function capture_user_command()
+local function capture_user_command()
   if not user_command then
-    user_command = vim.api.nvim_call_function('input', {'Enter command to send: '})
+    user_command = api.nvim_call_function('input', {'Enter command to send: '})
   end
 end
 
-function get_user_command()
+local function get_user_command()
   return user_command
 end
 
@@ -56,7 +56,7 @@ function M.execute_user_command(command)
     return
   end
 
-  vim.api.nvim_command('wa')
+  api.nvim_command('wa')
   -- if not in normal mode go back to it
   os.execute('tmux if-shell -F -t "' .. pane_number .. '" "#{pane_in_mode}" "send-keys Escape" ""')
   -- run command
@@ -77,7 +77,7 @@ end
 function M.send_one_off_command_to_pane()
   capture_pane_number()
   -- TODO should not run if pane not set
-  local one_off_command = vim.api.nvim_call_function('input', {'Enter command to send: '})
+  local one_off_command = api.nvim_call_function('input', {'Enter command to send: '})
   if one_off_command then
     M.execute_user_command(one_off_command)
   else

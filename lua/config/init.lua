@@ -6,7 +6,7 @@ local api = vim.api
 api.nvim_buf_set_option(0, "undofile", true)
 
 -- TODO implement 'gf' for lua
-local util = require('config.util')
+local util = require('util.config')
 
 api.nvim_set_var("mapleader", " ")
 
