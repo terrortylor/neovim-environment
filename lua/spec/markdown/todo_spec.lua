@@ -1,3 +1,5 @@
+local testModule
+
 describe('markdown', function()
   describe('todo', function()
     setup(function()
@@ -10,10 +12,6 @@ describe('markdown', function()
 
     teardown(function()
       _G._TEST = nil
-    end)
-
-    after_each(function()
-      mock.revert(m)
     end)
 
     describe('nvim_escaped_command', function()
@@ -30,7 +28,7 @@ describe('markdown', function()
 
     describe('_is_line_todo_item', function()
       it('Should return the todo marker/prefix or an empty string', function()
-        lines = {
+        local lines = {
           ['hello'] = false,
           ['-- comment'] = false,
           ['* not todo'] = false,
@@ -111,7 +109,7 @@ describe('markdown', function()
       end)
 
       it("Should clear line and return carridge return if empty comment", function()
-        lines = {
+        local lines = {
           -- check line cleared for empty comments
           "*",
           " *",

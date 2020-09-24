@@ -1,3 +1,5 @@
+local testModule
+
 describe('config', function()
   describe('function', function()
     describe('autocommands', function()
@@ -11,10 +13,6 @@ describe('config', function()
 
       teardown(function()
         _G._TEST = nil
-      end)
-
-      after_each(function()
-        mock.revert(m)
       end)
 
       describe('move_to_last_edit', function()

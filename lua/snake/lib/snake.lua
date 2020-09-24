@@ -1,4 +1,3 @@
-local api = vim.api
 require'snake.lib.cell'
 
 -- Meta class
@@ -40,7 +39,7 @@ function Snake:draw()
 end
 
 function Snake:move(x, y, has_eaten)
-  new_snake_segment = Cell:new(nil, x, y, self.sprite)
+  local new_snake_segment = Cell:new(nil, x, y, self.sprite)
   table.insert(self.segments, 1, new_snake_segment)
   if not has_eaten then
     local removed = table.remove(self.segments)
@@ -49,14 +48,11 @@ function Snake:move(x, y, has_eaten)
 end
 
 function Snake:collision(x, y)
-  local collision = false
-  
   -- look for collision
   for i, v in ipairs(self.segments) do
     if i ~= #self.segments
       and x == v.x
       and y == v.y then
-      collision = true
       return true
     end
   end

@@ -1,3 +1,5 @@
+local testModule
+
 describe('alternate', function()
   setup(function()
     _G._TEST = true
@@ -9,10 +11,6 @@ describe('alternate', function()
 
   teardown(function()
     _G._TEST = nil
-  end)
-
-  after_each(function()
-    mock.revert(m)
   end)
 
   describe('get_alternate_file', function()

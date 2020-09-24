@@ -11,6 +11,7 @@ local autogroups = {
     {"InsertLeave,TextChanged", "*", ":update"}
   },
   remove_trailing_whitespace = {
+    -- FIXME this moves the cursor, so need to set mark and jump back
     {"BufWritePre", "*", [[%s/\s\+$//e]]}
   },
   -- FIXME this loads on filetype correctly

@@ -30,7 +30,7 @@ M.mappings = {
 
 -- Returns true/false depending on if the
 -- line is a listed TODO checkbox item
-function is_line_todo_item(line)
+local function is_line_todo_item(line)
   local marker = line:match('%s*[*-]%s%[[%sox]%]')
   if marker then
     return true

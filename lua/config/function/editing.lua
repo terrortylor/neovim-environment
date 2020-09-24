@@ -3,7 +3,7 @@ local api = vim.api
 local M = {}
 
 function M.new_line_no_comment(insert_above)
-  local line, col = unpack(api.nvim_win_get_cursor(0))
+  local line,_ = unpack(api.nvim_win_get_cursor(0))
   if insert_above then
     api.nvim_buf_set_lines(0, line - 1, line - 1, 0, {""})
   else
@@ -17,7 +17,7 @@ function M.prototype()
 
   -- pcall to wrap an issues so can reset command like a final block
   -- as calling external plugin
-  local ok, _ = pcall(function()
+  local _,_ = pcall(function()
     -- Reselect, copy to a reg, move to end of selection, put and reselect
     api.nvim_command("normal! gv\"ay`>\"apgv")
     -- Comment out using commentary

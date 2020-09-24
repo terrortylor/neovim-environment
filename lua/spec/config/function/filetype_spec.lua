@@ -1,3 +1,5 @@
+local testModule
+
 describe('config', function()
   describe('function', function()
     describe('filetype', function()
@@ -11,10 +13,6 @@ describe('config', function()
 
       teardown(function()
         _G._TEST = nil
-      end)
-
-      after_each(function()
-        mock.revert(m)
       end)
 
       describe('open_ftplugin_file', function()

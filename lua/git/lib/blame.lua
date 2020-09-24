@@ -9,14 +9,14 @@ local window_id
 -- and commit_id in a table
 -- @param string result from nvim_command_output
 function M.convert_and_format_result(blame_results)
-  blame_lines = {}
+  local blame_lines = {}
   if blame_results then
     for line in blame_results:gmatch("[^\r\n]+") do
-      _, _, commit_id, user, date = string.find(line , "(%w+).*%((.*)%s(%d+-%d+-%d+%s%d+:%d+:%d+).*%+")
+      local _, _, commit_id, user, date = string.find(line , "(%w+).*%((.*)%s(%d+-%d+-%d+%s%d+:%d+:%d+).*%+")
       -- only add to result if values found, this is essentiall to skip first line which it the command run
       if commit_id then
-        local line = user .. " " .. date .. " " .. commit_id
-        table.insert(blame_lines, line)
+        local blame_line = user .. " " .. date .. " " .. commit_id
+        table.insert(blame_lines, blame_line)
       end
     end
   end
@@ -58,7 +58,7 @@ end
 -- @param lhs_mappings list of LHS key map values to map to closing the floating window
 function M.create_window(lines, row, col, lhs_mappings)
   local max_width = 0
-  for k, v in ipairs(lines) do
+  for _,v in ipairs(lines) do
     if string.len(v) > max_width then
       max_width = string.len(v)
     end

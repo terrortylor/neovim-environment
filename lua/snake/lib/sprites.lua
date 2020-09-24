@@ -3,7 +3,6 @@ local M = {}
 
 local sprites = {}
 
-
 function M.get_sprite(name)
   local sprite = sprites[name]
 
@@ -19,7 +18,7 @@ function M.create_sprite(name, text)
   if sprite and sprite > 0 then
     return sprite
   end
- 
+
   local buf_id = api.nvim_create_buf(false, true)
   api.nvim_buf_set_option(buf_id, 'filetype', 'snakegame')
   -- TODO last col should be 1 not -1

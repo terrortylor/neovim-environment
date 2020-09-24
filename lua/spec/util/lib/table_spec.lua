@@ -1,3 +1,5 @@
+local testModule
+
 describe('util', function()
   describe('lib', function()
     describe('table', function()

@@ -81,7 +81,7 @@ function M.new_food()
     for food_y = 1, canvas.height do
       local possible = true
 
-      for segmentIndex, segment in ipairs(snake.segments) do
+      for _,segment in ipairs(snake.segments) do
         if food_x == segment.x and food_y == segment.y then
           possible = false
         end
@@ -93,8 +93,8 @@ function M.new_food()
     end
   end
 
-  pos = possible_positions[math.random(#possible_positions)]
-  new_food = Cell:new(nil, pos.x, pos.y, sprites.get_sprite("food"))
+  local pos = possible_positions[math.random(#possible_positions)]
+  local new_food = Cell:new(nil, pos.x, pos.y, sprites.get_sprite("food"))
   food = new_food
 end
 

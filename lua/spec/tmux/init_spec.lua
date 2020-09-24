@@ -1,3 +1,5 @@
+local testModule
+
 describe('tmux library', function()
   describe('init', function()
     setup(function()
@@ -10,10 +12,6 @@ describe('tmux library', function()
 
     teardown(function()
       _G._TEST = nil
-    end)
-
-    after_each(function()
-      mock.revert(m)
     end)
 
     describe('send_command_to_pane', function()

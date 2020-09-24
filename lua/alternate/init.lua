@@ -75,12 +75,12 @@ function M.get_alternate_file()
   end
 
   -- check condition is true and file has alternate
-  local path = vim.api.nvim_call_function("expand", {"%:p"})
+  local path = api.nvim_call_function("expand", {"%:p"})
   if not path:match(rules.condition) then
     return
   end
 
-  local alternate_file = ""
+  local alternate_file
   -- check which direction transformation is to happen
   if path:match(rules.direction) then
     alternate_file = transform_path(path, rules.transformers, 1)

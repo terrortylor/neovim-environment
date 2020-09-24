@@ -1,3 +1,5 @@
+local testModule
+
 describe('git', function()
   describe('lib', function()
     describe('blame', function()
@@ -13,13 +15,9 @@ describe('git', function()
         _G._TEST = nil
       end)
 
-      after_each(function()
-        mock.revert(m)
-      end)
-
       describe('convert_and_format_result', function()
         it('Should convert result as expected', function()
-          tests = {
+          local tests = {
             {
               input = [[
               git blame -L 1,2 init.vim
@@ -125,8 +123,10 @@ describe('git', function()
           -- buffer created with expected lines
           assert.stub(m.nvim_buf_set_lines).was_called_with(101, 0, -1, true, lines)
           -- mappings created to close window with
-          assert.stub(m.nvim_buf_set_keymap).was_called_with(101, "n", "<ESC>", "<CMD>lua require('git.lib.blame').close_window()<CR>", { noremap = true })
-          assert.stub(m.nvim_buf_set_keymap).was_called_with(101, "n", "<CR>", "<CMD>lua require('git.lib.blame').close_window()<CR>", { noremap = true })
+          assert.stub(m.nvim_buf_set_keymap).was_called_with(101, "n", "<ESC>",
+            "<CMD>lua require('git.lib.blame').close_window()<CR>", { noremap = true })
+          assert.stub(m.nvim_buf_set_keymap).was_called_with(101, "n", "<CR>",
+            "<CMD>lua require('git.lib.blame').close_window()<CR>", { noremap = true })
 
           local opts = {
             style = "minimal",
@@ -147,31 +147,32 @@ describe('git', function()
           local m = mock(vim.api, true)
           testModule._set_window_id(1)
 
-	  testModule.go(1, 3, {"<ESC>", "<C-x>"})
-	
-	  assert.stub(m.nvim_call_function).was_not_called()
+	        testModule.go(1, 3, {"<ESC>", "<C-x>"})
+
+	        assert.stub(m.nvim_call_function).was_not_called()
         end)
 
         it('Should call create_window with expected values', function()
           local m = mock(vim.api, true)
           testModule._set_window_id(nil)
-	  local blame_lines = [[
-c21aa714 (dave.smith 2020-09-03 14:40:48 +0100 1) some line
-c21aa714 (dave.smith 2020-09-03 14:40:48 +0100 2) some other line
-	  ]]
+          local blame_lines = [[
+          c21aa714 (dave.smith 2020-09-03 14:40:48 +0100 1) some line
+          c21aa714 (dave.smith 2020-09-03 14:40:48 +0100 2) some other line
+          ]]
+
           stub(testModule, "get_blame_results").returns(blame_lines)
           stub(testModule, "create_window")
-	  spy.on(testModule, "convert_and_format_result")
+          spy.on(testModule, "convert_and_format_result")
           m.nvim_call_function.on_call_with("expand", {"%:p"}).returns("/some/file.txt")
-	  m.nvim_win_get_cursor.returns({3,5})
+          m.nvim_win_get_cursor.returns({3,5})
 
 
-	  testModule.go(1, 3, {"<ESC>", "<C-x>"})
-	
-	  local buf_lines = {"dave.smith 2020-09-03 14:40:48 c21aa714", "dave.smith 2020-09-03 14:40:48 c21aa714"}
-	  assert.stub(testModule.get_blame_results).was_called_with("/some/file.txt", 1, 3)
-	  assert.stub(testModule.convert_and_format_result).was_called_with(blame_lines)
-	  assert.stub(testModule.create_window).was_called_with(buf_lines, 1, 5, {"<ESC>", "<C-x>"})
+          testModule.go(1, 3, {"<ESC>", "<C-x>"})
+
+          local buf_lines = {"dave.smith 2020-09-03 14:40:48 c21aa714", "dave.smith 2020-09-03 14:40:48 c21aa714"}
+          assert.stub(testModule.get_blame_results).was_called_with("/some/file.txt", 1, 3)
+          assert.stub(testModule.convert_and_format_result).was_called_with(blame_lines)
+          assert.stub(testModule.create_window).was_called_with(buf_lines, 1, 5, {"<ESC>", "<C-x>"})
 
           mock.revert(m)
         end)
@@ -180,19 +181,19 @@ c21aa714 (dave.smith 2020-09-03 14:40:48 +0100 2) some other line
           local m = mock(vim.api, true)
           testModule._set_window_id(nil)
           stub(testModule, "get_blame_results").returns(nil)
-	  spy.on(testModule, "convert_and_format_result")
+          spy.on(testModule, "convert_and_format_result")
           m.nvim_call_function.on_call_with("expand", {"%:p"}).returns("/some/file.txt")
-	  stub(_G, 'print')
+          stub(_G, 'print')
 
 
-	  testModule.go(1, 3, {"<ESC>", "<C-x>"})
-	
-	  assert.stub(testModule.get_blame_results).was_called_with("/some/file.txt", 1, 3)
-	  assert.stub(testModule.convert_and_format_result).was_called_with(nil)
-	  assert.stub(_G.print).was_called_with("GitBlame: File not tracked")
+          testModule.go(1, 3, {"<ESC>", "<C-x>"})
+
+          assert.stub(testModule.get_blame_results).was_called_with("/some/file.txt", 1, 3)
+          assert.stub(testModule.convert_and_format_result).was_called_with(nil)
+          assert.stub(_G.print).was_called_with("GitBlame: File not tracked")
 
           mock.revert(m)
-	  _G.print:revert()
+          _G.print:revert()
         end)
       end)
     end)

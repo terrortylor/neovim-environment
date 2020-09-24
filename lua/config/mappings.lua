@@ -1,7 +1,7 @@
 local util = require('util.config')
 local nresil = util.noremap_silent
 
-local noremaps = {
+local mappings = {
   n = {
     -- Search / highlights
     -- Toggle highlight
@@ -51,7 +51,7 @@ local noremaps = {
     -- Buffer List
     ["[b"]         = ":bprevious<CR>",
     ["]b"]         = ":bnext<CR>",
-    ["bd"]         = ":call DeleteCurBufferNotCloseWindow()<CR>",
+    ["<leader>bd"] = ":call DeleteCurBufferNotCloseWindow()<CR>",
 
     -- Insert new line without a comment
     ["<leader>O"]  = ":lua require'config.function.editing'.new_line_no_comment(true)<CR>",
@@ -105,13 +105,13 @@ local noremaps = {
 }
 
 -- Silent maps
-for mode, maps in pairs(noremaps) do
+for mode, maps in pairs(mappings) do
   for k, v in pairs(maps) do
     util.create_keymap(mode, k, v, nresil)
   end
 end
 
-local noremaps = {
+mappings = {
   n = {
     -- Refactoring
     ["<leader>rw"] = [[:%s/\C\<<c-r><c-w>\>//<left>]],
@@ -123,8 +123,8 @@ local noremaps = {
   },
 }
 
--- Silent maps
-for mode, maps in pairs(noremaps) do
+-- Non silent
+for mode, maps in pairs(mappings) do
   for k, v in pairs(maps) do
     util.create_keymap(mode, k, v)
   end

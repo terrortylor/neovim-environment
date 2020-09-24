@@ -41,13 +41,13 @@ end
 
 function M.create_autogroups(definitions)
   for group, definition in pairs(definitions) do
-    vim.api.nvim_command('augroup '..group)
-    vim.api.nvim_command('autocmd!')
+    api.nvim_command('augroup '..group)
+    api.nvim_command('autocmd!')
     for _, line in ipairs(definition) do
       local command = table.concat(vim.tbl_flatten{'autocmd', line}, ' ')
-      vim.api.nvim_command(command)
+      api.nvim_command(command)
     end
-    vim.api.nvim_command('augroup END')
+    api.nvim_command('augroup END')
   end
 end
 

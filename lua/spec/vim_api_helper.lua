@@ -74,7 +74,6 @@ return {
   nvim_get_proc = function() end,
   nvim_select_popupmenu_item = function() end,
   nvim__inspect_cell = function() end,
-  nvim_buf_get_lines = function() end,
   nvim_buf_line_count = function() end,
   nvim_buf_attach = function() end,
   nvim_buf_detach = function() end,
