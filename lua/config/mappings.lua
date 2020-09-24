@@ -111,7 +111,6 @@ for mode, maps in pairs(noremaps) do
   end
 end
 
-
 local noremaps = {
   n = {
     -- Refactoring

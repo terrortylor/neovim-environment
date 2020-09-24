@@ -7,9 +7,26 @@
 -- explore formatlistpat so wrapping works with
 -- add some way on handling functionality without o formatoption
 -- move plug mapping to here
+local util = require('util.config')
 local api = vim.api
 
 local M = {}
+
+M.mappings = {
+  n = {
+    -- handle new line o/O
+    o = [[o<C-R>=luaeval("require('markdown.todo').insert_empty_todo_box(true)")<CR>]],
+    O = [[O<C-R>=luaeval("require('markdown.todo').insert_empty_todo_box(false)")<CR>]],
+    -- Mark item as todo/done/started
+    ["<leader>mt"] = ":lua require('markdown.todo').set_todo_state(' ')<CR>",
+    ["<leader>ms"] = ":lua require('markdown.todo').set_todo_state('o')<CR>",
+    ["<leader>md"] = ":lua require('markdown.todo').set_todo_state('x')<CR>",
+  },
+  i = {
+    -- handle new line in insert mode
+    ["<CR>"] = "<C-O><cmd>lua require('markdown.todo').handle_carridge_return()<cr>",
+  }
+}
 
 -- Returns true/false depending on if the
 -- line is a listed TODO checkbox item
@@ -103,6 +120,16 @@ end
 -- export locals for test
 if _TEST then
   M._is_line_todo_item = is_line_todo_item
+end
+
+-- TODO no tests
+function M.setup()
+  -- maps
+  for mode, maps in pairs(M.mappings) do
+    for k, v in pairs(maps) do
+      util.create_keymap(mode, k, v)
+    end
+  end
 end
 
 return M

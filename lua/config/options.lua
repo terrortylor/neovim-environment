@@ -11,7 +11,7 @@ wildignore = wildignore .. "tags,*.session"
 
 -- TODO when 0.5 upate to use lua-vim-options
 -- TODO move setting to sperate file once 'gf' implemented
-local options = {
+local global_options = {
   -- wildignore
   wildmode       = "full",
   wildignorecase = true,
@@ -20,17 +20,9 @@ local options = {
   -- leader timeout
   timeoutlen     = 1500,
 
-  -- Defualt folding to indent, open by default
-  foldmethod     = "indent",
-  foldenable     = false,
-
   -- Allow switching buffers without writing changes
   hidden         = true,
   autowriteall   = true,
-
-  -- Selling
-  spell          = false,
-  spelllang      = "en_gb",
 
   -- Some default window behaviour
   scrolloff      = 5,
@@ -54,12 +46,19 @@ local options = {
   completeopt    = "menuone,preview,noselect,noinsert",
 }
 
-util.set_options(options)
+util.set_options(global_options)
 
 local win_options = {
   -- Visual
   cursorline     = true,
   number         = true,
+
+  -- Selling
+  spell          = false,
+
+  -- Default folding to indent, open by default
+  foldmethod     = "indent",
+  foldenable     = false,
 }
 
 util.set_win_options(win_options)
@@ -74,6 +73,9 @@ local buf_options = {
   softtabstop   = 0,
   expandtab     = true,
   shiftwidth    = 2,
+
+  -- Selling
+  spelllang      = "en_gb",
 }
 
 util.set_buf_options(buf_options)
