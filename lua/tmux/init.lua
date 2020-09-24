@@ -104,10 +104,36 @@ end
 function M.setup()
   -- Create Commands
   -- TODO if argument passed then use that as command, no panel number behaviour change
-  api.nvim_command("command! -nargs=0 TmuxSendCommandToPane call luaeval('require(\"tmux\").send_command_to_pane()', expand('<args>'))")
-  api.nvim_command("command! -nargs=0 TmuxSendOneOffCommandToPane call luaeval('require(\"tmux\").send_one_off_command_to_pane()', expand('<args>'))")
-  api.nvim_command("command! -nargs=0 TmuxClearUserCommand call luaeval('require(\"tmux\").clear_user_command()', expand('<args>'))")
-  api.nvim_command("command! -nargs=0 TmuxClearPaneNumber call luaeval('require(\"tmux\").clear_pane_number()', expand('<args>'))")
+  local command = {
+    "command!",
+    "-nargs=0",
+    "TmuxSendCommandToPane",
+    "call luaeval('require(\"tmux\").send_command_to_pane()', expand('<args>'))"
+  }
+  api.nvim_command(table.concat(command, " "))
+  command = {
+    "command!",
+    "-nargs=0",
+    "TmuxSendOneOffCommandToPane",
+    "call luaeval('require(\"tmux\").send_one_off_command_to_pane()', expand('<args>'))"
+  }
+  api.nvim_command(table.concat(command, " "))
+
+  command = {
+    "command!",
+    "-nargs=0",
+    "TmuxClearUserCommand",
+    "call luaeval('require(\"tmux\").clear_user_command()', expand('<args>'))"
+  }
+  api.nvim_command(table.concat(command, " "))
+
+  command = {
+    "command!",
+    "-nargs=0",
+    "TmuxClearPaneNumber",
+    "call luaeval('require(\"tmux\").clear_pane_number()', expand('<args>'))"
+  }
+  api.nvim_command(table.concat(command, " "))
 
   -- Create mappings
   for k, v in pairs(M.mappings) do

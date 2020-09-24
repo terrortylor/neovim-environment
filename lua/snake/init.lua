@@ -18,7 +18,7 @@ local food = Cell:new(nil, 0, 0, sprites.get_sprite("food"))
 -- Stores window with / height
 local canvas = {}
 
-function M:get_next_pos()
+function M.get_next_pos()
   local x = snake.segments[1].x
   local y = snake.segments[1].y
 
