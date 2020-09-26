@@ -1,4 +1,4 @@
-local table = require('util.lib.table')
+local table = require('util.table')
 local M = {}
 
 LOG_LEVEL = "ERROR"

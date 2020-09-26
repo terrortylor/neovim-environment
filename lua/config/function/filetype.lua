@@ -1,5 +1,5 @@
 local api = vim.api
-local util = require('util')
+local log = require('util.log')
 
 local M = {}
 
@@ -32,7 +32,7 @@ function M.load_filetype_config()
   local vim_config_path = api.nvim_eval("expand('$MYVIMRC')")
   vim_config_path = vim_config_path:gsub("/init.vim$", "")
   local ftfile_path = string.format("%s/lua/filetype/%s.lua", vim_config_path, filetype)
-  util.log.debug("Filetype to be loaded: " .. ftfile_path)
+  log.debug("Filetype to be loaded: " .. ftfile_path)
   if file_check(ftfile_path) then
     api.nvim_command("luafile " .. ftfile_path)
   end
