@@ -14,11 +14,6 @@ local autogroups = {
     -- FIXME this moves the cursor, so need to set mark and jump back
     {"BufWritePre", "*", [[%s/\s\+$//e]]}
   },
-  -- FIXME this loads on filetype correctly
-  -- but fun is unable to set buffer options
-  lua_filetype_loading = {
-    {"VimEnter,FileType", "*", "lua require('config.function.filetype').load_filetype_config()"}
-  },
   return_to_last_edit_in_buffer = {
     {"BufReadPost", "*", "lua require('config.function.autocommands').move_to_last_edit()"}
   },

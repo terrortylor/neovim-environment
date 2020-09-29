@@ -68,7 +68,15 @@ function M.open_float(buf, has_border, title, opts)
 
     border_win = api.nvim_open_win(border_buf, true, border_opts)
 
-    api.nvim_command('autocmd BufWipeout <buffer> exe "silent bwipeout! "'..border_buf)
+    -- TODO not sure its gettig rid of the scratch buf, needs checking
+    local command = {
+      "autocmd",
+      "BufWipeout",
+      "<buffer=" .. border_buf .."> ++once",
+      "exe 'silent bwipeout! " .. border_buf
+    }
+    api.nvim_command(table.concat(command, " "))
+    -- api.nvim_command('autocmd BufWipeout <buffer> exe "silent bwipeout! "'..border_buf)
   end
 
 
@@ -78,22 +86,23 @@ function M.open_float(buf, has_border, title, opts)
   -- for _, v in pairs(lhs_mappings) do
   --   api.nvim_buf_set_keymap(buf, "n", v, "<CMD>lua require('git.lib.blame').close_window()<CR>", { noremap = true })
   -- end
+  -- TODO how is buffer removed from list?
   if has_border then
-  local command = {
-    "autocmd",
-    "WinLeave",
-    "<buffer=" .. buf .."> ++once",
-    ":lua require('util.window.float').close_windows(" .. win .. ", " .. border_win .. ")"
-  }
-  api.nvim_command(table.concat(command, " "))
+    local command = {
+      "autocmd",
+      "WinLeave",
+      "<buffer=" .. buf .."> ++once",
+      ":lua require('util.window.float').close_windows(" .. win .. ", " .. border_win .. ")"
+    }
+    api.nvim_command(table.concat(command, " "))
   else
-  local command = {
-    "autocmd",
-    "WinLeave",
-    "<buffer=" .. buf .."> ++once",
-    ":lua require('util.window.float').close_windows(" .. win .. ")"
-  }
-  api.nvim_command(table.concat(command, " "))
+    local command = {
+      "autocmd",
+      "WinLeave",
+      "<buffer=" .. buf .."> ++once",
+      ":lua require('util.window.float').close_windows(" .. win .. ")"
+    }
+    api.nvim_command(table.concat(command, " "))
   end
 end
 

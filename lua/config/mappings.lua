@@ -94,6 +94,9 @@ local mappings = {
     -- Disbale pageup/down in insert mode, keep hittin by mistake
     ["<PageUp>"]   = "",
     ["<PageDown>"] =  "",
+
+    -- Add and move to empty line above current one
+    ["<A-o>"]      = "<C-o>O",
   },
   x = {
     ["<leader>pro"] = ":lua require'config.function.editing'.prototype()<CR>"
