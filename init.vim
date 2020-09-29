@@ -231,11 +231,3 @@ augroup auto_load_vimrc_on_write
   autocmd BufWritePost init.vim :source %
         \ | echo "vimrc sourced mother licker"
 augroup END
-
-
-" Show highlight group under cursor
-" https://stackoverflow.com/questions/9464844/how-to-get-group-name-of-highlighting-under-cursor-in-vim
-function! SynGroup()
-    let l:s = synID(line('.'), col('.'), 1)
-    echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
-endfun

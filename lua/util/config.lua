@@ -51,4 +51,19 @@ function M.create_autogroups(definitions)
   end
 end
 
+-- Show highlight group under cursor
+-- https://stackoverflow.com/questions/9464844/how-to-get-group-name-of-highlighting-under-cursor-in-vim
+function M.show_highlight_group()
+  local line,col = unpack(api.nvim_win_get_cursor(0))
+  local syn_id = api.nvim_call_function("synID", {line, col, 1})
+  if syn_id > 0 then
+    local syn_name = api.nvim_call_function("synIDattr", {syn_id, "name"})
+    local syn_group_id = api.nvim_call_function("synIDtrans", {syn_id})
+    local syn_group_name = api.nvim_call_function("synIDattr", {syn_group_id, "name"})
+    print(syn_name .. " -> " .. syn_group_name)
+  else
+    print("No group info found")
+  end
+end
+
 return M
