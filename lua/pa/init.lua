@@ -8,6 +8,14 @@ local function load_tasks_buffer()
   local buf = api.nvim_call_function("bufnr", {M.tasks_file, true})
   api.nvim_buf_set_option(buf, "buflisted", true)
   api.nvim_buf_set_option(buf, 'filetype', 'markdown')
+
+  -- Filetype doesn't seem to pick up the format options so enforce here
+  local fo = api.nvim_buf_get_option(buf, 'formatoptions')
+  if not fo:match("o") then
+    fo = fo .. "o"
+    api.nvim_buf_set_option(buf, 'formatoptions', fo)
+  end
+
   return buf
 end
 
