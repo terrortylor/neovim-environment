@@ -42,17 +42,6 @@ M.rules = {
   }
 }
 
--- -- TODO move this to a helper
--- function M.file_exists(filename)
---     local file = io.open(filename, "r")
---     if (file) then
---         -- Obviously close the file if it did successfully open.
---         file:close()
---         return true
---     end
---     return false
--- end
-
 local function transform_path(path, transformers, direction)
   local new_path = path
   for v, k in pairs(transformers) do
@@ -88,7 +77,7 @@ function M.get_alternate_file()
     alternate_file = transform_path(path, rules.transformers, 0)
   end
 
-  -- TODO check file exists
+  -- TODO check file path exists, if not prompt to create
   api.nvim_command("e " .. alternate_file)
 end
 

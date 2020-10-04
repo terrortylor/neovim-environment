@@ -10,6 +10,11 @@ local log_levels = {
   "DEBUG",
 }
 
+-- TODO replace print here with echomessage with highlight groups i.e.
+-- echohl ErrorMsg
+-- echom "E89: no write since last change"
+-- echohl None
+
 function M.log_message(level, message)
   local log_level = table.find(log_levels, level)
   if log_level < 0 then

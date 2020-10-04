@@ -51,11 +51,15 @@ local mappings = {
     -- Buffer List
     ["[b"]         = ":bprevious<CR>",
     ["]b"]         = ":bnext<CR>",
-    ["<leader>bd"] = ":call DeleteCurBufferNotCloseWindow()<CR>",
+    ["<leader>bd"] = ":lua require'ui.window'.delete_buffer_keep_window()<cr>",
+
+    -- Quickfix
+    ["[c"]         = ":cprevious<CR>",
+    ["]c"]         = ":cnext<CR>",
 
     -- Insert new line without a comment
-    ["<leader>O"]  = ":lua require'config.function.editing'.new_line_no_comment(true)<CR>",
-    ["<leader>o"]  = ":lua require'config.function.editing'.new_line_no_comment(false)<CR>",
+    ["<leader>O"]  = ":lua require'ui.buffer'.new_line_no_comment(true)<CR>",
+    ["<leader>o"]  = ":lua require'ui.buffer'.new_line_no_comment(false)<CR>",
 
     -- Quick play macro
     -- TODO can this take a count?

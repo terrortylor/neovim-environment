@@ -7,6 +7,13 @@ augroup vimrc_highlight_overrides
   autocmd ColorScheme * highlight Folded guifg=56 guibg=215
 augroup END
 
+" Source shared vim config
+augroup auto_load_vimrc_on_write
+  autocmd!
+  autocmd BufWritePost init.vim :source %
+        \ | echo "vimrc sourced mother licker"
+augroup END
+
   " custom file specific folding overrides
 augroup custom_file_folding
   autocmd!
@@ -151,15 +158,6 @@ InstallPlugin https://github.com/christoomey/vim-tmux-navigator
 " " Toggle REPL Terminal
 " nnoremap <leader>tr :<C-u>TerminalReplFileToggle<cr>
 
-InstallPlugin https://github.com/junegunn/rainbow_parentheses.vim
-
-augroup enable_rainbow_on_vim_enter
-  autocmd!
-  autocmd VimEnter * RainbowParentheses
-augroup END
-let g:rainbow#pairs = [['(', ')'], ['[', ']'], ['{', '}']]
-
-
 " Open lazy git in throw away popup window
 " TODO problem about this is it uses <space> to stage/unstage a file which
 " is leader so either pause, or hit <CR> but that goes into stage view so
@@ -186,48 +184,3 @@ call pluginman#DeleteCacheInstalledPlugins()
 nnoremap <leader>cl :call quickfix#window#OpenList()<CR>
 " Close all quicklist windows
 nnoremap <leader>cc :call quickfix#window#CloseAll()<CR>
-"
-" To quickly go through the Quicklist
-nnoremap ]c :cnext<CR>
-nnoremap [c :cprevious<CR>
-
-" Taken from: https://stackoverflow.com/questions/1444322/how-can-i-close-a-buffer-without-closing-the-window/44950143#44950143
-func! DeleteCurBufferNotCloseWindow() abort
-  if &modified
-    echohl ErrorMsg
-    echom "E89: no write since last change"
-    echohl None
-  elseif winnr('$') == 1
-    bd
-  else  " multiple window
-    let oldbuf = bufnr('%')
-    let oldwin = winnr()
-    while 1   " all windows that display oldbuf will remain open
-      if buflisted(bufnr('#'))
-        b#
-      else
-        bn
-        let curbuf = bufnr('%')
-        if curbuf == oldbuf
-          enew    " oldbuf is the only buffer, create one
-        endif
-      endif
-      let win = bufwinnr(oldbuf)
-      if win == -1
-        break
-      else        " there are other window that display oldbuf
-        exec win 'wincmd w'
-      endif
-    endwhile
-    " delete oldbuf and restore window to oldwin
-    exec oldbuf 'bd'
-    exec oldwin 'wincmd w'
-  endif
-endfunc
-
-" Source shared vim config
-augroup auto_load_vimrc_on_write
-  autocmd!
-  autocmd BufWritePost init.vim :source %
-        \ | echo "vimrc sourced mother licker"
-augroup END

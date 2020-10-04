@@ -78,7 +78,9 @@ local buf_options = {
   spelllang      = "en_gb",
 }
 
+-- viml set option sets global and local: https://github.com/nanotee/nvim-lua-guide#using-meta-accessors
 util.set_buf_options(buf_options)
+util.set_options(buf_options)
 
 -- Force syntax highlighting to sync from start of file
 -- as syntax highlighting gets messed up when scrolling larger files
