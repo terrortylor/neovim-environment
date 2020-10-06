@@ -1,3 +1,4 @@
+-- TODO add tests
 local api = vim.api
 local float = require('util.window.float')
 local fs = require('util.filesystem')
@@ -23,21 +24,21 @@ local function open_markdown_buf(filename)
   return buf
 end
 
-function center_float(filename)
+function center_float(title, filename)
   local buf = open_markdown_buf(filename)
   local opts = float.gen_centered_float_opts(0.8, 0.8)
-  float.open_float(buf, true, "Tasks", opts)
+  float.open_float(buf, true, title, opts)
 end
 
 function M.tasks()
   local filepath = string.format('%s/%s', M.notes_path, 'tasks.md')
-  center_float(filepath)
+  center_float(" Tasks ", filepath)
 end
 
 function M.remindme(reminder)
   local filepath = string.format("%s/remindme/%s.md", M.notes_path, reminder)
   if fs.file_exists(filepath) then
-    center_float(filepath)
+    center_float(string.format(" RemindMe: %s ", reminder), filepath)
   else
     log.error("RemindMe - File not found: " .. filepath)
   end

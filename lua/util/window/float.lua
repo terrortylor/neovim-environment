@@ -3,6 +3,7 @@ local M = {}
 -- TODO vim.deepcopy() build in
 local table_utils = require('util.table')
 
+-- TODO pop up scrath terminal, that is repl for filetype
 
 local function center(str, width, pad_char)
   local shift = math.floor((width - string.len(str)) / 2)
