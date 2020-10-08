@@ -8,6 +8,7 @@ local nresil = util.noremap_silent
 -- Sanity check there is more than one pane to send too
 -- :redraw was used to hide prompt after input before... doesn't seem to work in lua though
 -- send Escape before command, so if in copy mode it's escaped first
+-- Update TmuxClearCommand to TmuxSetCommand that takes 0 or 1 argument, if 0 then clear it, otherwise set it to given argement
 
 -- Initialise some local varirables
 local pane_number

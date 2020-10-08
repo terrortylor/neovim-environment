@@ -1,3 +1,8 @@
+--- A simple module that is used to alternate between two files, that are
+-- 'alternates' of each other.
+-- In most cases this will be between a file and it's test file companion,
+-- but could be to a header file, or compiled version of a template.
+
 local api = vim.api
 local util = require('util.config')
 local nresil = util.noremap_silent

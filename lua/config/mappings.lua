@@ -53,6 +53,10 @@ local mappings = {
     ["]b"]         = ":bnext<CR>",
     ["<leader>bd"] = ":lua require'ui.window'.delete_buffer_keep_window()<cr>",
 
+    -- Arg List
+    ["[a"]         = ":previous<CR>",
+    ["]a"]         = ":next<CR>",
+
     -- Quickfix
     ["[c"]         = ":cprevious<CR>",
     ["]c"]         = ":cnext<CR>",
