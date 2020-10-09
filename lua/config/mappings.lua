@@ -107,7 +107,7 @@ local mappings = {
     ["<A-o>"]      = "<C-o>O",
   },
   x = {
-    ["<leader>pro"] = ":lua require'config.function.editing'.prototype()<CR>"
+    ["<leader>pro"] = ":lua require'ui.buffer'.prototype()<CR>"
   },
   t ={
     ["<leader><ESC>"] = "<C-\\><C-n>",
