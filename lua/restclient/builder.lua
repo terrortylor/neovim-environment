@@ -60,19 +60,16 @@ function M.build_curl(config)
   local url = get_url(config)
 
   -- start to build curl command
-  local curl = "curl"
-  curl = string.format('%s -X %s "%s', curl, verb, url)
+  local curl = string.format('-X %s %s', verb, url)
 
   -- are there query parameters to add
   -- TODO rather than POST, check for GET or DELETE
-  if verb == "POST" or verb == "PUT" or data == "" then
-    curl = string.format('%s"', curl)
-
+  if verb == "POST" or verb == "PUT" then
     if data ~= "" then
       curl = string.format('%s --data %s', curl, data)
     end
   else
-    curl = string.format('%s?%s"', curl, data)
+    curl = string.format('%s?%s', curl, data)
   end
   return curl
 end
