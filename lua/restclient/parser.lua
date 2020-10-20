@@ -1,49 +1,73 @@
+require'restclient.request'
+local s_util = require'util.string'
+
 local M = {}
 
-local rest_blocks = {}
-local block = {}
-local key = ""
-local value = {}
+local requests
 
--- TODO choose a better name
-function update_block(insert)
-  if key ~= "" then
-    -- todo value should be a string not table
-    block[key] = value
-    key = ""
-    value = {}
-    if insert then
-      table.insert(rest_blocks, block)
-      block = {}
-    end
+local function reset()
+  requests = {}
+end
+
+local function add_request(request)
+  if request and request.url then
+    table.insert(requests, request)
   end
 end
 
+local function is_url(s)
+  if s:match('^http[s]?://') then
+    return true
+  elseif s:match('^www.') then
+    return true
+  elseif s:match('(.*)%.(.*)$') then
+    return true
+  end
+  return false
+end
+
 function M.parse_lines(buf_lines)
+  reset()
+  local req = Request:new(nil)
+
+-- TODO add json block support
+-- TODO special json headers
   for _,l in pairs(buf_lines) do
-    if l == "" then
-      update_block(true)
-    else
-      -- Captures rest call property name and argument
-      -- Ignores whitespace at begining and end
-      -- and before and after the : seperator
-      local name, arg = l:match("^%s*(%S+)%s*:%s*(%S+)%s*$")
-      if name then
-        update_block(false)
-        key = name
-        table.insert(value, arg)
-      else
-        -- if no property name, then chck if argument is multiline
-        local arg = l:match("^%s*\\%s*(.-)%s*$")
-        if arg then
-          table.insert(value, arg)
-        end
-      end
+    -- matches if to use skip ssl flag
+    if l:match('^skipSSL$') then
+      req.skipSSL = true
+      -- matches url
+    elseif is_url(l) then
+      req.url = l
+      -- matches verb and path
+    elseif l:match('^%a+%s[%a%d/_-]+') then
+      local verb, path = l:match('(.*)%s(.*)')
+      req.verb = verb
+      req.path = path
+      -- matches headers
+    elseif l:match('^H[EADER]*[=:].*[=:]') then
+      local key,value = l:match('^H[EADER]*[=:](.*)[=:](.*)')
+      req:add_header(key, s_util.trim_whitespace(value))
+      -- Matches data key value pairs
+    elseif l:match('^(.*)[=:](.*)$') then
+      local key,value = l:match('(.*)[=:](.*)')
+      req:add_data(key, value)
+    elseif l:match('^%@') then
+      req.data_filename = l
+    elseif l:match('^%s*$') then
+      add_request(req)
+      req = Request:new(nil)
     end
   end
-  update_block(true)
+  add_request(req)
 
-  return rest_blocks
+  return requests
+end
+
+if _TEST then
+  M._reset = reset
+  M._add_request = add_request
+  M._get_requests = function() return requests end
 end
 
 return M

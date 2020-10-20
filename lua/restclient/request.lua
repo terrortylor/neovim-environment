@@ -1,99 +1,81 @@
-local api = vim.api
--- TODO is log required?
-local log = require('util.log')
-
 -- Meta class
 Request = {
   url = nil,
-  verb = 'GET',
+  verb = nil,
+  path = nil,
   data = nil,
+  data_filename = nil,
+  headers = nil,
+  skipSSL = false,
   response = nil
 }
 
 -- should these be set via getters?
-function Request:new(o, url)
+function Request:new(o)
    o = o or {}
-   o.url = url
    setmetatable(o, self)
    self.__index = self
+
+   -- Tables have to be initialised
+   self.data = {}
+   self.headers = {}
    return o
 end
 
+function Request:add_data(key, value)
+  self.data[key] = value
+end
+
+function Request:add_header(key, value)
+  self.headers[key] = value
+end
+
 function Request:get_title()
-  return self.verb .. " - " .. self.url
+  local verb = 'GET'
+  if self.verb then
+    verb = self.verb
+  end
+  return verb .. " - " .. self.url
 end
 
-function Request:on_read_callback(err, data)
-  self.response = {}
-  if err then
-    -- print('ERROR: ', err)
-    -- TODO handle err
-    table.insert(self.response, "Error")
-  end
-  if data then
-    local vals = vim.split(data, "\n")
-    for _, d in pairs(vals) do
-      if d == "" then goto continue end
-      table.insert(self.response, d)
-      ::continue::
+function Request:get_data()
+  local data_string = ''
+  if self.data_filename then
+    return self.data_filename
+  elseif self.data then
+    -- data is key/value pairs
+    for k,v in pairs(self.data) do
+      data_string = data_string .. string.format('%s=%s&', k, v)
+    end
+    -- trim remaining &
+    if data_string:match("&$") then
+      data_string = data_string:sub(1, -2)
     end
   end
+  return data_string
 end
 
-local function on_read_callback(err, data)
-  self.response = {}
-  if err then
-    -- print('ERROR: ', err)
-    -- TODO handle err
-    table.insert(self.response, "Error")
+function Request:get_curl()
+  -- get all the parts
+  local verb = 'GET'
+  if self.verb then
+    verb = self.verb
   end
-  if data then
-    local vals = vim.split(data, "\n")
-    for _, d in pairs(vals) do
-      if d == "" then goto continue end
-      table.insert(self.response, d)
-      ::continue::
+  local data = self:get_data()
+
+  -- start to build curl command
+  -- TODO wrap url in double quotes
+  local curl = string.format('-X %s %s', verb, self.url)
+
+  -- are there query parameters to add
+  -- TODO rather than POST, check for GET or DELETE
+  -- TODO no handling of PATCH
+  if data ~= '' then
+    if verb == "POST" or verb == "PUT" then
+      curl = string.format('%s --data %s', curl, data)
+    else
+      curl = string.format('%s?%s', curl, data)
     end
   end
+  return curl
 end
-
-function Request:run(on_complete_callback)
-  -- local curl_args = builder.build_curl(rest)
-  -- local curl_args = {
-  --   '-X',
-  --   self.verb,
-  --   self.url
-  -- }
-  local curl_args = '-X ' .. self.verb .. " " .. self.url
-
-  local stdout = vim.loop.new_pipe(false)
-  local stderr = vim.loop.new_pipe(false)
-
-  log.debug("Running cUrl: curl " .. curl_args)
-  -- log.debug(vim.inspect(vim.split(curl_args, ' ')))
-
-  local handle
-  handle = vim.loop.spawn('curl', {
-      args = vim.split(curl_args, ' '),
-      stdio = {stdout,stderr}
-    },
-    vim.schedule_wrap(function()
-        stdout:read_stop()
-        stderr:read_stop()
-        stdout:close()
-        stderr:close()
-        handle:close()
-
-        on_complete_callback() 
-      end
-    )
-  )
-  vim.loop.read_start(stdout, self:on_read_callback)
-  vim.loop.read_start(stderr, self:on_read_callback)
-end
-
-
--- function Request:draw()
---   self:close_window(self.win_id)
---   self:create_window()
--- end

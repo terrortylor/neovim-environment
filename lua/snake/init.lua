@@ -126,4 +126,22 @@ function M.stop()
   -- TODO Unload / wipe all sprite buffers
 end
 
+function M.setup()
+  local command = {
+    "command!",
+    "-nargs=0",
+    "Snake",
+    "lua require('snake').start()"
+  }
+  api.nvim_command(table.concat(command, " "))
+
+  local command = {
+    "command!",
+    "-nargs=0",
+    "SnakeStop",
+    "lua require('snake').stop()"
+  }
+  api.nvim_command(table.concat(command, " "))
+end
+
 return M

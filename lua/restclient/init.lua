@@ -1,19 +1,18 @@
 local api = vim.api
 local loop = vim.loop
+local util = require('util.config')
 local parser = require('restclient.parser')
-local builder = require('restclient.builder')
 local draw = require('ui.window.draw')
 local log = require('util.log')
-  LOG_LEVEL = "DEBUG"
+-- LOG_LEVEL = "DEBUG"
 local M = {}
 
-  local rest_blocks = nil
+local requests = nil
 local result_buf = nil
 -- TODO move to func
   local results = {}
 
 local function clear_result_buf(inc_results)
-  print("clearing")
   api.nvim_buf_set_lines(
   result_buf,
   0,
@@ -26,8 +25,7 @@ end
 
 -- FIXME this needs to be a queue
 local function update_result_buf()
-  print("in update_results_buf " .. api.nvim_buf_line_count(result_buf))
-    clear_result_buf(false)
+  clear_result_buf(false)
   api.nvim_buf_set_lines(
   result_buf,
   api.nvim_buf_line_count(result_buf),
@@ -50,7 +48,6 @@ end
 
 local function on_read_callback(err, data)
   if err then
-    -- print('ERROR: ', err)
     -- TODO handle err
     table.insert(results, "Error")
   end
@@ -64,9 +61,8 @@ local function on_read_callback(err, data)
   end
 end
 
-local function async_run_curl(rest, next_id, callback)
-  print("run_curl: " .. vim.inspect(rest))
-  local curl_args = builder.build_curl(rest)
+local function async_run_curl(request, next_id, callback)
+  local curl_args = request:get_curl()
 
   local stdout = vim.loop.new_pipe(false)
   local stderr = vim.loop.new_pipe(false)
@@ -79,11 +75,7 @@ local function async_run_curl(rest, next_id, callback)
     table.insert(results, "")
   end
   table.insert(results, "##########")
-  if rest.verb then
-    table.insert(results, "# " .. rest.verb[1] .. " - ".. rest.url[1])
-  else
-    table.insert(results, "# GET - ".. rest.url[1])
-  end
+  table.insert(results, "# " .. request:get_title())
   table.insert(results, "")
 
   local handle
@@ -108,31 +100,49 @@ local function async_run_curl(rest, next_id, callback)
 end
 
 function M.run_next(i)
-  print("in run_next: " .. i)
-  if rest_blocks then
-    print("  has requests")
-    local request = rest_blocks[i]
+  if requests then
+    local request = requests[i]
+
     if request then
-      print("  found request: " .. i)
-    async_run_curl(request, i +1, M.run_next)
+      async_run_curl(request, i +1, M.run_next)
     end
   end
 end
 
 function M.run()
   local buf = api.nvim_win_get_buf(0)
-  -- TODO add check to ensure correct filetype
-  local buf_lines = api.nvim_buf_get_lines(buf, 0, api.nvim_buf_line_count(buf), false)
-  rest_blocks = parser.parse_lines(buf_lines)
+  local filetype = api.nvim_buf_get_option(0, 'filetype')
 
-  create_result_scratch_buf()
+  if filetype == 'rest' then
+    local buf_lines = api.nvim_buf_get_lines(buf, 0, api.nvim_buf_line_count(buf), false)
+    requests = parser.parse_lines(buf_lines)
 
-  draw.open_draw(result_buf)
+    create_result_scratch_buf()
 
-  M.run_next(1)
-  -- for _,v in pairs(rest_blocks) do
-  --   async_run_curl(v)
-  -- end
+    draw.open_draw(result_buf)
+
+    M.run_next(1)
+  else
+    log.error('Must be filetype: rest')
+  end
+end
+
+function M.setup()
+  command = {
+    'command!',
+    '-nargs=0',
+    'RestclientRunFile',
+    "call luaeval('require(\"restclient\").run()', expand('<args>'))"
+  }
+  api.nvim_command(table.concat(command, ' '))
+
+  local autogroups = {
+    rest_filetype_detect = {
+      {"BufNewFile,BufRead", "*.rest", "set filetype=rest"}
+    }
+  }
+
+  util.create_autogroups(autogroups)
 end
 
 return M

@@ -6,6 +6,23 @@ describe('util', function()
       testModule = require('util.table')
     end)
 
+    describe('dict_size', function()
+      it('Should return 0 for nil table', function()
+        local table = nil
+        local result = testModule.dict_size(table)
+        assert.equal(0, result)
+      end)
+
+      it('Should return expected size', function()
+        local table = {
+          goat = 'cheese',
+          book = 'words'
+        }
+        local result = testModule.dict_size(table)
+        assert.equal(2, result)
+      end)
+    end)
+
     describe('find', function()
       it('Should return -1 if value not found', function()
         local result = testModule.find({"good", "list"}, "goat")
