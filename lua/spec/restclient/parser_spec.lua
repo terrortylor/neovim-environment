@@ -37,6 +37,18 @@ describe('restclient', function()
         end
       end)
 
+      it('Should skip comments lines', function()
+        local lines = {
+          "# comment",
+          "goats.com",
+          "  # comment",
+          "         # comment"
+        }
+        local result = testModule.parse_lines(lines)
+
+        assert.same('goats.com', result[1].url)
+      end)
+
       it('Should not match verb and path if both not provided', function()
         local lines = {
           "goats.com",

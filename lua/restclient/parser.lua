@@ -33,8 +33,10 @@ function M.parse_lines(buf_lines)
 -- TODO add json block support
 -- TODO special json headers
   for _,l in pairs(buf_lines) do
+    if l:match('^%s*#') then
+      goto skip_to_next_line
     -- matches if to use skip ssl flag
-    if l:match('^skipSSL$') then
+    elseif l:match('^skipSSL$') then
       req.skipSSL = true
       -- matches url
     elseif is_url(l) then
@@ -58,6 +60,7 @@ function M.parse_lines(buf_lines)
       add_request(req)
       req = Request:new(nil)
     end
+    ::skip_to_next_line::
   end
   add_request(req)
 

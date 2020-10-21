@@ -50,6 +50,28 @@ describe('restclient', function()
       end)
     end)
 
+    describe('get_url', function()
+      it('Should return when no path set', function()
+        local testObj = Request:new(nil)
+        testObj.url = 'goats.com'
+        assert.equal('goats.com', testObj:get_url())
+      end)
+
+      it('Should return when path set', function()
+        local testObj = Request:new(nil)
+        testObj.url = 'goats.com'
+        testObj.path = '/cheese'
+        assert.equal('goats.com/cheese', testObj:get_url())
+      end)
+
+      it('Should return when path set but not prefixed', function()
+        local testObj = Request:new(nil)
+        testObj.url = 'goats.com'
+        testObj.path = 'cheese'
+        assert.equal('goats.com/cheese', testObj:get_url())
+      end)
+    end)
+
     describe('get_data', function()
       it('Should return empty string when nothing set', function()
         local testObj = Request:new(nil)
