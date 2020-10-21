@@ -1,13 +1,13 @@
 local testModule
 
 describe('markdown', function()
-  describe('todo', function()
+  describe('tasks', function()
     setup(function()
       _G._TEST = true
       _G.vim = {
         api = require('spec.vim_api_helper')
       }
-      testModule = require('markdown.todo')
+      testModule = require('markdown.tasks')
     end)
 
     teardown(function()
@@ -26,12 +26,12 @@ describe('markdown', function()
       end)
     end)
 
-    describe('_is_line_todo_item', function()
-      it('Should return the todo marker/prefix or an empty string', function()
+    describe('_is_line_task_item', function()
+      it('Should return the task marker/prefix or an empty string', function()
         local lines = {
           ['hello'] = false,
           ['-- comment'] = false,
-          ['* not todo'] = false,
+          ['* not task'] = false,
           ['- stadard comment'] = false,
           ['- [] close but no'] = false,
           ['* [] close but no'] = false,
@@ -39,22 +39,22 @@ describe('markdown', function()
           ['- [ ] '] = true, -- check empty list item
           ['* [ ]'] = true,  -- check empty list item
           ['* [ ] '] = true, -- check empty list item
-          ['- [ ] empty todo'] = true,
-          ['- [o] in progress todo'] = true,
-          ['- [x] done todo'] = true,
-          ['* [ ] empty todo'] = true,
-          ['* [o] in progress todo'] = true,
-          ['* [x] done todo'] = true,
-          ['  - [ ] empty todo'] = true,
-          ['  - [o] in progress todo'] = true,
-          ['  - [x] done todo'] = true,
-          ['  * [ ] empty todo'] = true,
-          ['  * [o] in progress todo'] = true,
-          ['  * [x] done todo'] = true,
+          ['- [ ] empty task'] = true,
+          ['- [o] in progress task'] = true,
+          ['- [x] done task'] = true,
+          ['* [ ] empty task'] = true,
+          ['* [o] in progress task'] = true,
+          ['* [x] done task'] = true,
+          ['  - [ ] empty task'] = true,
+          ['  - [o] in progress task'] = true,
+          ['  - [x] done task'] = true,
+          ['  * [ ] empty task'] = true,
+          ['  * [o] in progress task'] = true,
+          ['  * [x] done task'] = true,
         }
 
         for line, expected in pairs(lines) do
-          local marker = testModule._is_line_todo_item(line)
+          local marker = testModule._is_line_task_item(line)
           assert.are.equal(expected, marker)
         end
       end)
@@ -119,7 +119,7 @@ describe('markdown', function()
           " -",
           " - ",
           " -  ",
-          -- check line cleared for empty todo's
+          -- check line cleared for empty task's
           "* [ ]",
           " * [ ]",
           " * [ ] ",
@@ -145,10 +145,10 @@ describe('markdown', function()
         end
       end)
 
-      it("Should start new line with empty TODO if current line non-empty TODO", function()
+      it("Should start new line with empty task if current line non-empty task", function()
         local m = mock(vim.api, true)
         m.nvim_call_function.on_call_with('pumvisible', {}).returns(0)
-        m.nvim_get_current_line.returns("* [ ] Non-empty todo line")
+        m.nvim_get_current_line.returns("* [ ] Non-empty task line")
 
         stub(testModule, "nvim_escaped_command")
 
@@ -161,12 +161,12 @@ describe('markdown', function()
       end)
     end)
 
-    describe("set_todo_state", function()
-      it("Should not update line if not todo", function()
+    describe("set_task_state", function()
+      it("Should not update line if not task", function()
         local m = mock(vim.api, true)
-        m.nvim_get_current_line.returns(" * note a todo")
+        m.nvim_get_current_line.returns(" * note a task")
 
-        testModule.set_todo_state(" ")
+        testModule.set_task_state(" ")
         assert.stub(m.nvim_get_current_line).was_called(1)
         assert.stub(m.nvim_set_current_line).was_called(0)
 
@@ -175,35 +175,35 @@ describe('markdown', function()
 
       it("Should update line if comment", function()
         local m = mock(vim.api, true)
-        m.nvim_get_current_line.returns(" * [ ] a todo")
+        m.nvim_get_current_line.returns(" * [ ] a task")
 
-        testModule.set_todo_state("x")
+        testModule.set_task_state("x")
         assert.stub(m.nvim_get_current_line).was_called(1)
         assert.stub(m.nvim_set_current_line).was_called(1)
-        assert.stub(m.nvim_set_current_line).was_called_with(" * [x] a todo")
+        assert.stub(m.nvim_set_current_line).was_called_with(" * [x] a task")
 
         mock.revert(m)
       end)
 
-      it("Should not update line if todo but state not valid", function()
+      it("Should not update line if task but state not valid", function()
         local m = mock(vim.api, true)
-        m.nvim_get_current_line.returns(" * [ ] valid todo")
+        m.nvim_get_current_line.returns(" * [ ] valid task")
 
-        testModule.set_todo_state("g")
+        testModule.set_task_state("g")
         assert.stub(m.nvim_get_current_line).was_called(1)
         assert.stub(m.nvim_set_current_line).was_called(0)
 
         mock.revert(m)
       end)
 
-      it("Should update line if todo but state valid", function()
+      it("Should update line if task but state valid", function()
         local states = {" ", "x", "o"}
 
         for _, state in pairs(states) do
           local m = mock(vim.api, true)
-          m.nvim_get_current_line.returns(" * [ ] valid todo")
+          m.nvim_get_current_line.returns(" * [ ] valid task")
 
-          testModule.set_todo_state(state)
+          testModule.set_task_state(state)
           assert.stub(m.nvim_get_current_line).was_called(1)
           assert.stub(m.nvim_set_current_line).was_called(1)
 
@@ -212,20 +212,20 @@ describe('markdown', function()
       end)
     end)
 
-    describe('insert_empty_todo_box', function()
-      it('Should start empty TODO going down', function()
+    describe('insert_empty_task_box', function()
+      it('Should start empty task going down', function()
         -- check going down
-        stub(testModule, "buf_get_line_above_below", "- [ ] valid TODO line")
+        stub(testModule, "buf_get_line_above_below", "- [ ] valid task line")
 
-        local result = testModule.insert_empty_todo_box(true)
+        local result = testModule.insert_empty_task_box(true)
         assert.are.equal('[ ] ', result)
       end)
 
-      it('Should start empty TODO going up', function()
+      it('Should start empty task going up', function()
         -- -- check going up
-        stub(testModule, "buf_get_line_above_below", '- [ ] valid TODO line')
+        stub(testModule, "buf_get_line_above_below", '- [ ] valid task line')
 
-        local result = testModule.insert_empty_todo_box(false)
+        local result = testModule.insert_empty_task_box(false)
         assert.are.equal('[ ] ', result)
       end)
     end)

@@ -116,19 +116,9 @@ function! NerdToggleFind()
   endif
 endfunction
 
-InstallPlugin https://github.com/ctrlpvim/ctrlp.vim
-InstallPlugin https://github.com/tacahiroy/ctrlp-funky
-
-" Fuzzy find open buffers
-nnoremap <leader><space>  :<C-u>CtrlPBuffer<CR>
-" Fuzzy find functions in project
-nnoremap <leader>ff  :<C-u>CtrlPFunky<CR>
-" Fuzzy find and jump to marks
-nnoremap <leader>fm  :<C-u>CtrlPMarks<CR>
-" Fuzy find and insert contents of register
-nnoremap <leader>fr  :<C-u>CtrlPRegister<CR>
-" Fuzzy find and start Ultisnips snippet
-nnoremap <leader>fu  :<C-u>CtrlPUltisnips<CR>
+" FZF installed via package manager which installs nvim plugin
+" InstallPlugin https://github.com/junegunn/fzf
+InstallPlugin https://github.com/junegunn/fzf.vim
 
 let g:ctrlp_extensions = ['marks']
 

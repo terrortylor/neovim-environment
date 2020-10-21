@@ -15,22 +15,22 @@ local M = {}
 M.mappings = {
   n = {
     -- handle new line o/O
-    o = [[o<C-R>=luaeval("require('markdown.todo').insert_empty_todo_box(true)")<CR>]],
-    O = [[O<C-R>=luaeval("require('markdown.todo').insert_empty_todo_box(false)")<CR>]],
-    -- Mark item as todo/done/started
-    ["<leader>mt"] = ":lua require('markdown.todo').set_todo_state(' ')<CR>",
-    ["<leader>ms"] = ":lua require('markdown.todo').set_todo_state('o')<CR>",
-    ["<leader>md"] = ":lua require('markdown.todo').set_todo_state('x')<CR>",
+    o = [[o<C-R>=luaeval("require('markdown.tasks').insert_empty_task_box(true)")<CR>]],
+    O = [[O<C-R>=luaeval("require('markdown.tasks').insert_empty_task_box(false)")<CR>]],
+    -- Mark item as task/done/started
+    ["<leader>mt"] = ":lua require('markdown.tasks').set_task_state(' ')<CR>",
+    ["<leader>ms"] = ":lua require('markdown.tasks').set_task_state('o')<CR>",
+    ["<leader>md"] = ":lua require('markdown.tasks').set_task_state('x')<CR>",
   },
   i = {
     -- handle new line in insert mode
-    ["<CR>"] = "<C-O><cmd>lua require('markdown.todo').handle_carridge_return()<cr>",
+    ["<CR>"] = "<C-O><cmd>lua require('markdown.tasks').handle_carridge_return()<cr>",
   }
 }
 
 -- Returns true/false depending on if the
--- line is a listed TODO checkbox item
-local function is_line_todo_item(line)
+-- line is a listed task checkbox item
+local function is_line_task_item(line)
   local marker = line:match('%s*[*-]%s%[[%sox]%]')
   if marker then
     return true
@@ -39,9 +39,9 @@ local function is_line_todo_item(line)
   end
 end
 
-function M.set_todo_state(state)
+function M.set_task_state(state)
     local line = api.nvim_get_current_line()
-    if is_line_todo_item(line) then
+    if is_line_task_item(line) then
       if state:match("[%sxo]") then
         line = line:gsub("%[[%sox]%]", "[" .. state .. "]", 1)
         api.nvim_set_current_line(line)
@@ -50,8 +50,8 @@ function M.set_todo_state(state)
 end
 
 -- Called when pressing <CR> in insert mode
--- if list item empty or empty todo then clear current line and <CR>
--- if list item or todo is non empty then <CR> and insert todo notaion
+-- if list item empty or empty task then clear current line and <CR>
+-- if list item or task is non empty then <CR> and insert task notaion
 -- FIXME doesn't take into account wrapped lines
 function M.handle_carridge_return()
   local action = "a<CR>"
@@ -60,13 +60,13 @@ function M.handle_carridge_return()
   if api.nvim_call_function('pumvisible', {}) == 0 then
     -- and line is a list item
     local line = api.nvim_get_current_line()
-    -- if is todo item
-    if is_line_todo_item(line) then
+    -- if is task item
+    if is_line_task_item(line) then
       -- if empty clear line
       if line:match("^%s*[*-]%s?%[[%sox]%]%s?$") then
         api.nvim_set_current_line("")
       else
-        -- add emptry todo item to line
+        -- add emptry task item to line
         action = "a<CR>[ ] "
       end
     -- if empty comment then clear line
@@ -101,17 +101,17 @@ function M.buf_get_line_above_below(is_below)
   return vim.api.nvim_buf_get_lines(0, previous_line_nr - 1, previous_line_nr, false)[1]
 end
 
--- luaeval("require('markdown.todo').insert_empty_todo_box(true)")
+-- luaeval("require('markdown.tasks').insert_empty_task_box(true)")
 --
 -- To be used after build in o/O in normal mode
--- Checks if in a todo todo and adds a new empty todo item notation
--- after */- todo notation
-function M.insert_empty_todo_box(is_below)
+-- Checks if in a task and adds a new empty task item notation
+-- after */- task notation
+function M.insert_empty_task_box(is_below)
   local previous_line = M.buf_get_line_above_below(is_below)
 
-  -- if line is not nil and line was a TODO checked item
+  -- if line is not nil and line was a task checked item
   -- return new empty check box
-  if previous_line and is_line_todo_item(previous_line) then
+  if previous_line and is_line_task_item(previous_line) then
     return '[ ] '
   end
   return ''
@@ -119,7 +119,7 @@ end
 
 -- export locals for test
 if _TEST then
-  M._is_line_todo_item = is_line_todo_item
+  M._is_line_task_item = is_line_task_item
 end
 
 -- TODO no tests
