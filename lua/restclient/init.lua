@@ -2,66 +2,45 @@ local api = vim.api
 local loop = vim.loop
 local util = require('util.config')
 local parser = require('restclient.parser')
+local view = require('restclient.view')
 local draw = require('ui.window.draw')
 local log = require('util.log')
 -- LOG_LEVEL = "DEBUG"
 local M = {}
 
 local requests = nil
-local result_buf = nil
+local next_request_id = 1
 -- TODO move to func
-  local results = {}
-
-local function clear_result_buf(inc_results)
-  api.nvim_buf_set_lines(
-  result_buf,
-  0,
-  api.nvim_buf_line_count(result_buf),
-  false,
-  {}
-  )
-  if inc_results then results = {} end
-end
-
--- FIXME this needs to be a queue
-local function update_result_buf()
-  clear_result_buf(false)
-  api.nvim_buf_set_lines(
-  result_buf,
-  api.nvim_buf_line_count(result_buf),
-  api.nvim_buf_line_count(result_buf),
-  false,
-  results
-  )
-end
-
-
-local function create_result_scratch_buf()
-  if result_buf then
-    clear_result_buf(true)
-  else
-    -- create unlisted scratch buffer
-    result_buf = api.nvim_create_buf(false, true)
-    -- TODO set not modifiable
-  end
-end
+local results = {}
 
 local function on_read_callback(err, data)
-  if err then
-    -- TODO handle err
-    table.insert(results, "Error")
-  end
-  if data then
-    local vals = vim.split(data, "\n")
-    for _, d in pairs(vals) do
-      if d == "" then goto continue end
-      table.insert(results, d)
-      ::continue::
+  local request
+  if requests then
+    request = requests[next_request_id]
+    if request then
+      if err then
+        -- TODO handle err
+        request:add_result_line("ERROR")
+        if data then
+          request:add_result_line(data)
+        end
+      end
+      if data then
+        request.result = data
+        -- local vals = vim.split(data, "\n")
+        -- for _, d in pairs(vals) do
+        --   -- TODO continue not rquired here
+        --   if d == "" then goto continue end
+        --   request:add_result_line(d)
+        --   ::continue::
+        -- end
+      end
     end
   end
 end
 
-local function async_run_curl(request, next_id, callback)
+local function async_run_curl(run_next_callback)
+  local request = requests[next_request_id]
   local curl_args = request:get_curl()
 
   local stdout = vim.loop.new_pipe(false)
@@ -71,13 +50,6 @@ local function async_run_curl(request, next_id, callback)
   -- log.debug(vim.inspect(vim.split(curl_args, ' ')))
 
   -- TODO move to func, request would benefit from being class
-  if next_id > 1 then
-    table.insert(results, "")
-  end
-  table.insert(results, "##########")
-  table.insert(results, "# " .. request:get_title())
-  table.insert(results, "")
-
   local handle
   handle = vim.loop.spawn('curl', {
       args = vim.split(curl_args, ' '),
@@ -90,8 +62,10 @@ local function async_run_curl(request, next_id, callback)
         stderr:close()
         handle:close()
 
-        update_result_buf()
-  callback(next_id)
+        view.update_result_buf(requests)
+
+        next_request_id = next_request_id + 1
+        run_next_callback()
       end
     )
   )
@@ -99,12 +73,10 @@ local function async_run_curl(request, next_id, callback)
   vim.loop.read_start(stderr, on_read_callback)
 end
 
-function M.run_next(i)
+function M.run_next()
   if requests then
-    local request = requests[i]
-
-    if request then
-      async_run_curl(request, i +1, M.run_next)
+    if requests[next_request_id] then
+      async_run_curl(M.run_next)
     end
   end
 end
@@ -116,12 +88,13 @@ function M.run()
   if filetype == 'rest' then
     local buf_lines = api.nvim_buf_get_lines(buf, 0, api.nvim_buf_line_count(buf), false)
     requests = parser.parse_lines(buf_lines)
+    next_request_id = 1
 
-    create_result_scratch_buf()
+    view.create_result_scratch_buf()
 
-    draw.open_draw(result_buf)
+    draw.open_draw(view.result_buf)
 
-    M.run_next(1)
+    M.run_next()
   else
     log.error('Must be filetype: rest')
   end
@@ -138,7 +111,8 @@ function M.setup()
 
   local autogroups = {
     rest_filetype_detect = {
-      {"BufNewFile,BufRead", "*.rest", "set filetype=rest"}
+      {"BufNewFile,BufRead", "*.rest", "set filetype=rest"},
+      {"BufNewFile,BufRead", "*.rest", "nnoremap <leader>gt :RestclientRunFile<CR>"},
     }
   }
 

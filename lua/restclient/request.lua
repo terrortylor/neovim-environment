@@ -5,6 +5,7 @@ Request = {
   path = nil,
   data = nil,
   data_filename = nil,
+  result = nil,
   headers = nil,
   skipSSL = false,
   response = nil
@@ -19,7 +20,23 @@ function Request:new(o)
    -- Tables have to be initialised
    self.data = {}
    self.headers = {}
+   -- self.result = {}
    return o
+end
+
+-- TODO Add tests
+-- can be used to format? maybe user differnet classes?
+function Request:get_results()
+  local result_lines = {}
+  if self.result then
+    local vals = vim.split(self.result, "\n")
+    for _, d in pairs(vals) do
+      if d ~= "" then 
+        table.insert(result_lines, d)
+      end
+    end
+  end
+  return result_lines
 end
 
 function Request:add_data(key, value)
@@ -66,6 +83,10 @@ function Request:get_url()
   end
   return url
 end
+
+-- function Request:add_result_line(line)
+--   table.insert(self.result, line)
+-- end
 
 function Request:get_curl()
   -- get all the parts

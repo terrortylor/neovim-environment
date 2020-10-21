@@ -183,5 +183,31 @@ describe('restclient', function()
         assert.equals('-X POST goats.com --data goat=cheese', curl)
       end)
     end)
+
+    -- describe('add_result_line', function()
+    --   it('Should have empty results table if not called', function()
+    --     local testObj = Request:new(nil)
+
+    --     assert.equal(0, #testObj.result)
+    --     assert.same({}, testObj.result)
+    --   end)
+
+    --   it('Should have result if called', function()
+    --     local testObj = Request:new(nil)
+    --     testObj:add_result_line("goat")
+
+    --     assert.equal(1, #testObj.result)
+    --     assert.same({'goat'}, testObj.result)
+    --   end)
+
+    --   it('Should have results if called', function()
+    --     local testObj = Request:new(nil)
+    --     testObj:add_result_line("goat")
+    --     testObj:add_result_line("house music")
+
+    --     assert.equal(2, #testObj.result)
+    --     assert.same({'goat', 'house music'}, testObj.result)
+    --   end)
+    -- end)
   end)
 end)
