@@ -39,13 +39,16 @@ end
 
 -- TODO add tests
 local function call_git(name, docs_path, args)
-  -- FIXME if github url not found then it promps for login which crashes
-  print(vim.inspect(args))
+  -- print(vim.inspect(args))
   local handle
-  handle = vim.loop.spawn('git',
-  {args = args},
-  vim.schedule_wrap(
-  function(code, signal)
+
+  local options = {
+    args = args,
+    -- Prevents prompts which we don't want to handle
+    env = {"GIT_TERMINAL_PROMPT=0"}
+  }
+
+  local on_exit_cb = function(code, signal)
     if code == 0 then
       -- TODO better output...?
       print('Cloned plugin: ' .. name)
@@ -58,8 +61,8 @@ local function call_git(name, docs_path, args)
     end
     handle:close()
   end
-  )
-  )
+
+  handle = vim.loop.spawn('git', options, vim.schedule_wrap( on_exit_cb))
 end
 
 local function exists(plugin)
@@ -78,7 +81,7 @@ local function get_git_args(plugin)
     table.insert(args, '-b')
     table.insert(args, plugin.branch)
   end
-  
+
   table.insert(args, get_url(plugin.name))
 
   table.insert(args, get_install_path(plugin))
