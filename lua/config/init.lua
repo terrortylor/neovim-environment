@@ -1,5 +1,9 @@
 local api = vim.api
 
+-- If error later in scripts then this may/may not be set,
+-- this is a crued way to guard around that
+api.nvim_buf_set_option(0, "undofile", true)
+
 -- Safe require... a little expensive though
 local function p_require(module)
   local result, return_module = pcall(function() require(module) end)
@@ -9,12 +13,9 @@ local function p_require(module)
   return return_module
 end
 
--- If error later in scripts then this may/may not be set,
--- this is a crued way to guard around that
-api.nvim_buf_set_option(0, "undofile", true)
-
 -- TODO implement 'gf' for lua
 local util = require('util.config')
+local plug = require('pluginman')
 
 api.nvim_set_var("mapleader", " ")
 
@@ -32,11 +33,38 @@ require('config.commands')
 require('config.abbreviations')
 
 -- Plugins
+-- TODO make optional
+plug.add('godlygeek/tabular')
+-- tabular needs to be sourced before vim-markdown
+-- according to the repository site
+-- TODO make optional
+plug.add('plasticboy/vim-markdown')
+plug.add('justinmk/vim-sneak')
+
+plug.add('preservim/nerdtree')
 require('config.plugin.nerdtree')
+
+plug.add('junegunn/fzf.vim')
 require('config.plugin.fzf')
-require('config.plugin.gutentags')
-require('config.plugin.tmuxnavigator')
+
+-- TODO make optional, see init.vim so loads if python3
+plug.add('SirVer/ultisnips')
 require('config.plugin.ultisnips')
+
+plug.add('fatih/vim-go')
+
+plug.add('ludovicchabant/vim-gutentags')
+require('config.plugin.gutentags')
+
+plug.add('christoomey/vim-tmux-navigator')
+require('config.plugin.tmuxnavigator')
+
+plug.add('tpope/vim-commentary')
+plug.add('jacoborus/tender.vim')
+plug.add('udalov/kotlin-vim')
+plug.add('machakann/vim-sandwich')
+plug.add('PProvost/vim-ps1')
+plug.install()
 
 -- Custom Plugins
 -- TODO setup is in init.lua... but then all dependencies are sourced

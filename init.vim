@@ -36,19 +36,7 @@ function! MyVimrcFoldText()
     return foldtext
 endfunction
 
-call pluginman#CacheInstalledPlugins()
-
-let opts = {'load': 'opt'}
-call pluginman#AddPlugin('https://github.com/godlygeek/tabular', opts)
-" InstallPlugin https://github.com/godlygeek/tabular opts
-packadd tabular
-
-" tabular needs to be sourced before vim-markdown
-" according to the repository site
-let opts = {'load': 'opt'}
-call pluginman#AddPlugin('https://github.com/plasticboy/vim-markdown', opts)
-packadd vim-markdown
-
+" This is for plasticboy/vim-markdown
 " Don't require .md extension
 let g:vim_markdown_no_extensions_in_markdown = 1
 
@@ -88,11 +76,6 @@ vnoremap <leader>fp y:SimpleGrep <c-r>"
 " window, path can be added
 nnoremap <leader>fp y:SimpleGrep
 
-InstallPlugin https://github.com/justinmk/vim-sneak
-" There is some remapping of 's' to '<space>s' see after/plugin/vim-sneak.vim
-
-InstallPlugin https://github.com/preservim/nerdtree
-
 " Open NERDTree at current file location, close if open
 " Takes into account in a buffer is loaded or not
 function! NerdToggleFind()
@@ -116,14 +99,7 @@ function! NerdToggleFind()
   endif
 endfunction
 
-" FZF installed via package manager which installs nvim plugin
-" InstallPlugin https://github.com/junegunn/fzf
-InstallPlugin https://github.com/junegunn/fzf.vim
-
 let g:ctrlp_extensions = ['marks']
-
-let opts = {'load': 'opt'}
-call pluginman#AddPlugin('https://github.com/SirVer/ultisnips', opts)
 
 if has("python3")
   packadd! ultisnips
@@ -137,10 +113,6 @@ if has("python3")
   augroup END
 endif
 
-
-InstallPlugin https://github.com/fatih/vim-go
-InstallPlugin https://github.com/ludovicchabant/vim-gutentags
-InstallPlugin https://github.com/christoomey/vim-tmux-navigator
 
 " TODO have a think about this plugin, overlaps with TMUX one
 " " Run buffer in REPL
@@ -158,16 +130,7 @@ command! -nargs=0 Lazygit call helper#float#SingleUseTerminal('lazygit')
 nnoremap <leader>lg :<CR>
 " }}} git
 
-InstallPlugin https://github.com/tpope/vim-commentary
-InstallPlugin https://github.com/jacoborus/tender.vim
 colorscheme tender
-InstallPlugin https://github.com/udalov/kotlin-vim
-InstallPlugin https://github.com/machakann/vim-sandwich
-InstallPlugin https://github.com/PProvost/vim-ps1
-
-" Delete cached installed plugin list
-call pluginman#DeleteCacheInstalledPlugins()
-" TODO need to fix up toggle help file
 " helptags ALL
 
 " Opens first non empty list, location list is local to window
