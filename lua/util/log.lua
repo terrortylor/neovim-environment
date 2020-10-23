@@ -1,30 +1,30 @@
-local table = require('util.table')
+local api = vim.api
+
 local M = {}
 
 LOG_LEVEL = "ERROR"
 
 local log_levels = {
-  "ERROR",
-  "WARN",
-  "INFO",
-  "DEBUG",
+  ERROR = { order = 0, hl = 'ErrorMsg' },
+  WARN = { order = 1, hl = 'WarningMsg' },
+  INFO = { order = 2, hl = 'None' },
+  DEBUG = { order = 3, hl = 'None' },
 }
 
--- TODO replace print here with echomessage with highlight groups i.e.
--- echohl ErrorMsg
--- echom "E89: no write since last change"
--- echohl None
-
 function M.log_message(level, message)
-  local log_level = table.find(log_levels, level)
-  if log_level < 0 then
-    print("ERROR: Invalid log level: " .. level)
+  local log_level = log_levels[level]
+  if not log_level then
+    api.nvim_command('echohl ErrorMsg')
+    api.nvim_command('echom "ERROR: Invalid log level: ' .. level .. '"')
+    api.nvim_command('echohl None')
     return
   end
 
-  local global_log_level = table.find(log_levels, LOG_LEVEL)
-  if log_level <= global_log_level then
-    print(level .. ": " .. message)
+  local global_log_level = log_levels[LOG_LEVEL]
+  if log_level.order <= global_log_level.order then
+    api.nvim_command('echohl ' .. log_level.hl)
+    api.nvim_command('echom "' .. level .. ': ' .. message .. '"')
+    api.nvim_command('echohl None')
   end
 end
 
@@ -38,7 +38,7 @@ setmetatable(M, {
         return x
       end
       -- create log level methods on the fly
-      if table.find(log_levels, k:upper()) then
+      if log_levels[k:upper()] then
         local func = function(...) M.log_message(k:upper(), ...) end
         mt[k] = func
         return func
