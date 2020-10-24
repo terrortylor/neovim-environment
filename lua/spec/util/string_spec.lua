@@ -28,5 +28,30 @@ describe('util', function()
         end
       end)
     end)
+
+    describe('escape', function()
+      local test_table = {
+        ['%'] = '%%',
+        ['^'] = '%^',
+        ['$'] = '%$',
+        ['('] = '%(',
+        [')'] = '%)',
+        ['.'] = '%.',
+        ['['] = '%[',
+        [']'] = '%]',
+        ['*'] = '%*',
+        ['+'] = '%+',
+        ['-'] = '%-',
+        ['?'] = '%?'
+      }
+
+      for input,expected in pairs(test_table) do
+        it('Should escape carecters as expected: ' .. input, function()
+          local actual = testModule.escape(input)
+
+          assert.equals(expected, actual)
+        end)
+      end
+    end)
   end)
 end)

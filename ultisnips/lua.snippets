@@ -1,0 +1,39 @@
+snippet forpairs "for i,v in pairs()" bA
+for ${1:i},${2:v} in pairs(${3:table}) do
+	${0}
+end
+endsnippet
+
+snippet if "if ... then .. end" bA
+if ${1:CONDITION} then
+	${0}
+end
+endsnippet
+
+snippet elseif "elseif ... then" bA
+elseif ${1:CONDITION} then
+	${0}
+end
+endsnippet
+
+snippet localm "local M .. return M" bA
+local M = {}
+
+${0}
+
+return M
+endsnippet
+
+# TODO add file detect so _spec.lua is lua.spec and move to own filetype
+snippet desc "describe(string, func)" bA
+describe('${1:method_name}', function()
+	${0}
+end)
+endsnippet
+
+snippet it "it(string, func)" bA
+it('${1:Should do something}', function()
+	${0}
+end)
+endsnippet
+
