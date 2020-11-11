@@ -13,6 +13,18 @@ local commands = {
     "ShowHighlightGroup",
     "lua require('util.config').show_highlight_group()"
   },
+  {
+    "command!",
+    "-nargs=0",
+    "Gron",
+    "%!gron"
+  },
+  {
+    "command!",
+    "-nargs=0",
+    "UnGron",
+    "%!gron --ungron"
+  },
 }
 for _,v in pairs(commands) do
   api.nvim_command(table.concat(v, " "))

@@ -59,7 +59,6 @@ require('config.plugin.gutentags')
 plug.add('christoomey/vim-tmux-navigator')
 require('config.plugin.tmuxnavigator')
 
-plug.add('tpope/vim-commentary')
 plug.add('jacoborus/tender.vim')
 plug.add('udalov/kotlin-vim')
 plug.add('machakann/vim-sandwich')
@@ -70,6 +69,7 @@ plug.install()
 -- TODO setup is in init.lua... but then all dependencies are sourced
 -- so maybe init.lua just set's up what is required to get going like autoload vs plugin directory
 require('git').setup()
+require('ui.buffer.comment').setup()
 require('tmux').setup()
 require('alternate').setup()
 require('pa').setup()

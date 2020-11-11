@@ -1,8 +1,11 @@
 local util = require('util.config')
+local log = require('util.log')
 local nresil = util.noremap_silent
 
 local mappings = {
   n = {
+    -- Refactoring
+    ["<leader>rw"] = {[[:%s/\C\<<c-r><c-w>\>//<left>]], {noremap = true}},
     -- Search / highlights
     -- Toggle highlight
     ["<leader>/"]  = ":set hlsearch!<CR>",
@@ -74,10 +77,14 @@ local mappings = {
     -- Write and source
     ["<leader>ws"] = ":w <bar> source %<CR>",
 
+
     -- Spelling
+
     -- Auto select first entry
     ["<leader>zz"] = "1z=",
+
     ["<leader>ts"] = ":set spell!<CR>",
+
 
     -- Reselect last put
     ["gp"]         = "`[v`]",
@@ -85,11 +92,25 @@ local mappings = {
     -- Indent Line
     ["<"]          = "<s-v><<ESC>",
     [">"]          = "<s-v>><ESC>",
+
+    -- smart lines
+    ["j"]          = {"(v:count? 'j' : 'gj')", {noremap = true, silent = true, expr = true}},
+    ["k"]          = {"(v:count? 'k' : 'gk')", {noremap = true, silent = true, expr = true}},
+
+    -- Comment
+    ["gc"]         = ":CommentToggle<cr>",
   },
   v = {
     -- Indent Lines and reselect
     ["<"]          = "<gv",
     [">"]          = ">gv",
+
+    -- replace default register contents with XXX in selection
+    -- FIXME the double quote in the rhs breaks formatiing
+    ["<leader>rw"] = {[[:s/\C\<<c-r>"\>//<left>]], {noremap = true}},
+
+    -- Comment
+    ["gc"]         = ":'<,'>CommentToggle<cr>",
   },
   i = {
     -- Exit insert mode
@@ -118,25 +139,14 @@ local mappings = {
 -- Silent maps
 for mode, maps in pairs(mappings) do
   for k, v in pairs(maps) do
+    if type(v) == 'string' then
     util.create_keymap(mode, k, v, nresil)
-  end
-end
-
-mappings = {
-  n = {
-    -- Refactoring
-    ["<leader>rw"] = [[:%s/\C\<<c-r><c-w>\>//<left>]],
-  },
-  v = {
-    -- replace default register contents with XXX in selection
-    -- FIXME the double quote in the rhs breaks formatiing
-    ["<leader>rw"] = [[:s/\C\<<c-r>"\>//<left>]],
-  },
-}
-
--- Non silent
-for mode, maps in pairs(mappings) do
-  for k, v in pairs(maps) do
-    util.create_keymap(mode, k, v)
+    elseif type(v) == 'table' then
+      if #v == 2 then
+        util.create_keymap(mode, k, v[1], v[2])
+      else
+        log.error("Mapping not run for lhs: " .. k .. " mode: " .. mode)
+      end
+    end
   end
 end

@@ -9,7 +9,7 @@ local function get_comment_wrapper()
   local cs = api.nvim_buf_get_option(0, 'commentstring')
 
   -- make sure comment string is understood
-  if cs:match('%%s') then
+  if cs:find('%%s') then
    local left = cs:match('^(.*)%%s')
    local right = cs:match('^.*%%s(.*)')
    return left, right
@@ -53,7 +53,7 @@ function M.comment_toggle(line_start, line_end)
     return
   end
 
-  local lines = api.nvim_buf_get_lines(0, line_start, line_end, false)
+  local lines = api.nvim_buf_get_lines(0, line_start - 1, line_end, false)
   if not lines then
     return
   end
@@ -61,7 +61,7 @@ function M.comment_toggle(line_start, line_end)
   local count = 0
   local esc_left = escape(left)
   for _,v in pairs(lines) do
-    if v:match('^' .. esc_left) then
+    if v:find('^' .. esc_left) then
       count = count + 1
     end
   end
@@ -84,7 +84,18 @@ function M.comment_toggle(line_start, line_end)
     lines[i] = line
   end
 
-  api.nvim_buf_set_lines(0, line_start, line_end, lines)
+  api.nvim_buf_set_lines(0, line_start - 1, line_end, false, lines)
+
+  -- The lua call seems to clear the visual selection so reset it
+  -- 2147483647 is vimL built in
+  api.nvim_call_function("setpos", {"'<", {0, line_start, 1, 0}})
+  api.nvim_call_function("setpos", {"'>", {0, line_end, 2147483647, 0}})
+end
+
+-- TODO add tests
+-- TODO move to directory?
+function M.setup()
+  api.nvim_command("command! -range CommentToggle lua require('ui.buffer.comment').comment_toggle(<line1>, <line2>)")
 end
 
 if _TEST then

@@ -179,7 +179,7 @@ describe('ui', function()
       describe('comment_toggle', function()
         it('Should add left hand side comments only on entire range', function()
           api_mock.nvim_buf_get_option.on_call_with(0, 'commentstring').returns('-- %s')
-          api_mock.nvim_buf_get_lines.on_call_with(0, 1, 3, false).returns({
+          api_mock.nvim_buf_get_lines.on_call_with(0, 0, 3, false).returns({
             "line1",
             "line2",
             "line3",
@@ -187,17 +187,19 @@ describe('ui', function()
 
           testModule.comment_toggle(1, 3)
 
-          assert.stub(api_mock.nvim_buf_set_lines).was_called_with(0, 1, 3, {
+          assert.stub(api_mock.nvim_buf_set_lines).was_called_with(0, 0, 3, false, {
             "-- line1",
             "-- line2",
             "-- line3",
           })
+          assert.stub(api_mock.nvim_call_function).was_called_with('setpos', {"'<", {0, 1, 1, 0}})
+          assert.stub(api_mock.nvim_call_function).was_called_with('setpos', {"'>", {0, 3, 2147483647, 0}})
 
         end)
 
         it('Should remove left hand side comments only on entire range', function()
           api_mock.nvim_buf_get_option.on_call_with(0, 'commentstring').returns('-- %s')
-          api_mock.nvim_buf_get_lines.on_call_with(0, 1, 3, false).returns({
+          api_mock.nvim_buf_get_lines.on_call_with(0, 0, 3, false).returns({
             "-- line1",
             "-- line2",
             "-- line3",
@@ -205,16 +207,18 @@ describe('ui', function()
 
           testModule.comment_toggle(1, 3)
 
-          assert.stub(api_mock.nvim_buf_set_lines).was_called_with(0, 1, 3, {
+          assert.stub(api_mock.nvim_buf_set_lines).was_called_with(0, 0, 3, false, {
             "line1",
             "line2",
             "line3",
           })
+          assert.stub(api_mock.nvim_call_function).was_called_with('setpos', {"'<", {0, 1, 1, 0}})
+          assert.stub(api_mock.nvim_call_function).was_called_with('setpos', {"'>", {0, 3, 2147483647, 0}})
         end)
 
         it('Should add comments on uncommented lines to entire range', function()
           api_mock.nvim_buf_get_option.on_call_with(0, 'commentstring').returns('-- %s')
-          api_mock.nvim_buf_get_lines.on_call_with(0, 1, 3, false).returns({
+          api_mock.nvim_buf_get_lines.on_call_with(0, 0, 3, false).returns({
             "line1",
             "-- line2",
             "line3",
@@ -222,16 +226,18 @@ describe('ui', function()
 
           testModule.comment_toggle(1, 3)
 
-          assert.stub(api_mock.nvim_buf_set_lines).was_called_with(0, 1, 3, {
+          assert.stub(api_mock.nvim_buf_set_lines).was_called_with(0, 0, 3, false, {
             "-- line1",
             "-- line2",
             "-- line3",
           })
+          assert.stub(api_mock.nvim_call_function).was_called_with('setpos', {"'<", {0, 1, 1, 0}})
+          assert.stub(api_mock.nvim_call_function).was_called_with('setpos', {"'>", {0, 3, 2147483647, 0}})
         end)
 
         it('Should add left and right hand side comments to entire range', function()
           api_mock.nvim_buf_get_option.on_call_with(0, 'commentstring').returns('(*%s*)')
-          api_mock.nvim_buf_get_lines.on_call_with(0, 1, 3, false).returns({
+          api_mock.nvim_buf_get_lines.on_call_with(0, 0, 3, false).returns({
             "line1",
             "line2",
             "line3",
@@ -239,16 +245,18 @@ describe('ui', function()
 
           testModule.comment_toggle(1, 3)
 
-          assert.stub(api_mock.nvim_buf_set_lines).was_called_with(0, 1, 3, {
+          assert.stub(api_mock.nvim_buf_set_lines).was_called_with(0, 0, 3, false, {
             "(*line1*)",
             "(*line2*)",
             "(*line3*)",
           })
+          assert.stub(api_mock.nvim_call_function).was_called_with('setpos', {"'<", {0, 1, 1, 0}})
+          assert.stub(api_mock.nvim_call_function).was_called_with('setpos', {"'>", {0, 3, 2147483647, 0}})
         end)
 
         it('Should remove left and right hand side comments to entire range', function()
           api_mock.nvim_buf_get_option.on_call_with(0, 'commentstring').returns('(*%s*)')
-          api_mock.nvim_buf_get_lines.on_call_with(0, 1, 3, false).returns({
+          api_mock.nvim_buf_get_lines.on_call_with(0, 0, 3, false).returns({
             "(*line1*)",
             "(*line2*)",
             "(*line3*)",
@@ -256,11 +264,13 @@ describe('ui', function()
 
           testModule.comment_toggle(1, 3)
 
-          assert.stub(api_mock.nvim_buf_set_lines).was_called_with(0, 1, 3, {
+          assert.stub(api_mock.nvim_buf_set_lines).was_called_with(0, 0, 3, false, {
             "line1",
             "line2",
             "line3",
           })
+          assert.stub(api_mock.nvim_call_function).was_called_with('setpos', {"'<", {0, 1, 1, 0}})
+          assert.stub(api_mock.nvim_call_function).was_called_with('setpos', {"'>", {0, 3, 2147483647, 0}})
         end)
 
         it('Should not do anything if commentstring not supported', function()
