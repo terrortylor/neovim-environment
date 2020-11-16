@@ -23,8 +23,8 @@ M.mappings = {
   ["<leader>nn"]   = ":lua require('tmux').send_command_to_pane()<CR>",
 }
 
-local function capture_pane_number()
-  if not pane_number then
+function M.capture_pane_number()
+  if not pane_number or pane_number == '' then
     -- any way to prevent switching panes if pressed before numbers disappear
     os.execute('tmux display-panes')
 
@@ -41,7 +41,7 @@ function M.clear_pane_number()
 end
 
 local function capture_user_command()
-  if not user_command then
+  if not user_command or user_command == '' then
     user_command = api.nvim_call_function('input', {'Enter command to send: '})
   end
 end
@@ -52,7 +52,7 @@ end
 
 -- TODO move these to lib so can be mocked easily
 function M.execute_user_command(command)
-  if not pane_number or not command then
+  if not pane_number or pane_number == '' or not command or command == '' then
     print("Missing pane or command, not running")
     return
   end
@@ -69,27 +69,31 @@ function M.clear_user_command()
 end
 
 function M.send_command_to_pane()
-  capture_pane_number()
-  -- TODO should not run if pane not set
+  M.capture_pane_number()
   capture_user_command()
+
   M.execute_user_command(user_command)
 end
 
 function M.send_one_off_command_to_pane()
-  capture_pane_number()
+  M.capture_pane_number()
   -- TODO should not run if pane not set
-  local one_off_command = api.nvim_call_function('input', {'Enter command to send: '})
-  if one_off_command then
-    M.execute_user_command(one_off_command)
+  local one_off_command = api.nvim_call_function('input', {'Enter command: '})
+  if not pane_number or pane_number == '' then
+    print('No pane set')
   else
-    print('No command captured!')
+    if one_off_command then
+      M.execute_user_command(one_off_command)
+    else
+      print('No command captured!')
+    end
   end
 end
 
 -- Used to scroll a pane up/down
 -- @param up True/False, should scroll up
 function M.scroll(up)
-  capture_pane_number()
+  M.capture_pane_number()
   -- ensure in copy-mode
   os.execute('tmux if-shell -F -t "' .. pane_number .. '" "#{pane_in_mode}" "" "copy-mode"')
   -- run scroll command
@@ -112,11 +116,20 @@ function M.setup()
     "call luaeval('require(\"tmux\").send_command_to_pane()', expand('<args>'))"
   }
   api.nvim_command(table.concat(command, " "))
+
   command = {
     "command!",
     "-nargs=0",
     "TmuxSendOneOffCommandToPane",
     "call luaeval('require(\"tmux\").send_one_off_command_to_pane()', expand('<args>'))"
+  }
+  api.nvim_command(table.concat(command, " "))
+
+  command = {
+    "command!",
+    "-nargs=0",
+    "TmuxSetPane",
+    "call luaeval('require(\"tmux\").capture_pane_number()', expand('<args>'))"
   }
   api.nvim_command(table.concat(command, " "))
 
@@ -145,7 +158,6 @@ end
 -- export locals for test
 if _TEST then
   -- setup test alias for private elements using a modified name
-  M._capture_pane_number = capture_pane_number
   M._get_pane_number = get_pane_number
   M._capture_user_command = capture_user_command
   M._get_user_command = get_user_command

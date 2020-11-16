@@ -45,7 +45,7 @@ describe('tmux library', function()
         assert.are.equal(nil, testModule._get_pane_number())
 
         -- call capture function
-        testModule._capture_pane_number()
+        testModule.capture_pane_number()
 
         -- check prompt behaviour
         assert.stub(os.execute).was_called_with('tmux display-panes')
@@ -58,7 +58,7 @@ describe('tmux library', function()
         vim.api.nvim_call_function:revert()
         mock(vim.api, true)
         -- call capture function, not it's value is populated
-        testModule._capture_pane_number()
+        testModule.capture_pane_number()
 
         -- check prompt behaviour
         assert.stub(os.execute).was_not.called()
@@ -95,7 +95,7 @@ describe('tmux library', function()
         local m = mock(vim.api, true)
         m.nvim_call_function.on_call_with('input', {'Enter pane to send command too: '}).returns(2)
         m.nvim_call_function.on_call_with('input', {'Enter command to send: '}).returns('pwd')
-        testModule._capture_pane_number()
+        testModule.capture_pane_number()
         testModule._capture_user_command()
 
         -- call capture function
@@ -108,6 +108,7 @@ describe('tmux library', function()
 
         -- reset stubs
         os.execute:revert()
+        _G.print:revert()
       end)
     end)
 
@@ -140,16 +141,35 @@ describe('tmux library', function()
     end)
 
     describe('send_one_off_command_to_pane', function()
-      it('Should prompt for user input and send', function()
+      it('Should prompt for user input, but not send if pane not set', function()
         -- Setup stubbed values
         local m = mock(vim.api, true)
-        m.nvim_call_function.on_call_with('input', {'Enter command to send: '}).returns('pwd')
+        m.nvim_call_function.on_call_with('input', {'Enter pane to send command too: '})
+        m.nvim_call_function.on_call_with('input', {'Enter command: '}).returns('pwd')
+        stub(testModule, 'execute_user_command')
+        stub(os, 'execute')
+        testModule.clear_pane_number()
+
+        -- call capture function
+        testModule.send_one_off_command_to_pane()
+
+        assert.stub(m.nvim_call_function).was_called_with('input', {'Enter command: '})
+        assert.stub(testModule.execute_user_command).was_not_called_with('pwd')
+
+        mock.revert(m)
+      end)
+
+      it('Should prompt for user input and send command if pane set', function()
+        -- Setup stubbed values
+        local m = mock(vim.api, true)
+        m.nvim_call_function.on_call_with('input', {'Enter pane to send command too: '}).returns(2)
+        m.nvim_call_function.on_call_with('input', {'Enter command: '}).returns('pwd')
         stub(testModule, 'execute_user_command')
 
         -- call capture function
         testModule.send_one_off_command_to_pane()
 
-        assert.stub(m.nvim_call_function).was_called_with('input', {'Enter command to send: '})
+        assert.stub(m.nvim_call_function).was_called_with('input', {'Enter command: '})
         assert.stub(testModule.execute_user_command).was_called_with('pwd')
 
         mock.revert(m)
