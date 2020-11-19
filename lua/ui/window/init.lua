@@ -5,7 +5,8 @@ local M = {}
 
 local error_mofified = "E89: no write since last change"
 
--- Taken from: https://stackoverflow.com/questions/1444322/how-can-i-close-a-buffer-without-closing-the-window/44950143#44950143
+-- Taken from:
+-- https://stackoverflow.com/questions/1444322/how-can-i-close-a-buffer-without-closing-the-window/44950143#44950143
 function M.delete_buffer_keep_window()
   if api.nvim_buf_get_option(0, "modified") then
     log.error(error_mofified)

@@ -103,7 +103,6 @@ describe('ui', function()
           testModule.close_draw(999)
 
           assert.stub(api.nvim_win_close).was_not_called()
-          assert.equals(nil, actual)
         end)
 
         it('Should close draw if one open', function()

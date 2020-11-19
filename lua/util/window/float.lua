@@ -1,6 +1,6 @@
 local api = vim.api
 local M = {}
--- TODO vim.deepcopy() build in
+-- TODO vim.deepcopy() is built int, need to get tests running from within vim
 local table_utils = require('util.table')
 
 -- TODO pop up scrath terminal, that is repl for filetype
@@ -19,9 +19,6 @@ function M.close_windows(win, border_win)
       end
     end
   end
-
-  win = nil
-  border_win = nil
 end
 
 function M.gen_centered_float_opts(width_percent, height_percent)
@@ -62,7 +59,7 @@ function M.open_float(buf, has_border, title, opts)
 
     local border_lines = { '╔' .. center(title, opts.width, '═') .. '╗' }
     local middle_line = '║' .. string.rep(' ', opts.width) .. '║'
-    for i=1, opts.height do
+    for _=1, opts.height do
       table.insert(border_lines, middle_line)
     end
     table.insert(border_lines, '╚' .. string.rep('═', opts.width) .. '╝')

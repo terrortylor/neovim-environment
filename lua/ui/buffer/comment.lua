@@ -75,12 +75,12 @@ function M.comment_toggle(line_start, line_end)
   end
 
   for i,v in pairs(lines) do
-    local line = ''
+    local line
     if comment then
       line = comment_line_decorator(v, clean, left, right)
     else
       line = uncomment_line_decorator(v, left, right)
-    end 
+    end
     lines[i] = line
   end
 

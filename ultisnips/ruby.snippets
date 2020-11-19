@@ -1,0 +1,21 @@
+snippet it "it 'Should ...' do ... end" bA
+it 'Should ${1}' do
+	${0}
+end
+endsnippet
+
+snippet chefexpect "expect(chef_run)..." bA
+expect(chef_run).to ${1:create_resource}('${2:named_resource}').with(
+	${0}
+)
+endsnippet
+
+# TODO move to chef specific ruby snippets
+snippet directory "chef directory resource" bA
+directory ${1:'${2:name}'} do
+	owner ${3:'${4:root}'}
+	group ${5:'${6:root}'}
+	mode  ${7:0755}${8:
+	recursive ${9:true}}
+end
+endsnippet

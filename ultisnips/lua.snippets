@@ -24,15 +24,19 @@ ${0}
 return M
 endsnippet
 
+snippet print "print()" bA
+print(${0})
+endsnippet
+
 # TODO add file detect so _spec.lua is lua.spec and move to own filetype
 snippet desc "describe(string, func)" bA
-describe('${1:method_name}', function()
+describe("${1:method_name}", function()
 	${0}
 end)
 endsnippet
 
 snippet it "it(string, func)" bA
-it('${1:Should do something}', function()
+it("${1:Should do something}", function()
 	${0}
 end)
 endsnippet

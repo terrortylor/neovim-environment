@@ -39,24 +39,24 @@ describe('util', function()
         assert_message(m, 'ErrorMsg','ERROR: Some log message')
 
         mock.revert(m)
-        local m = mock(vim.api, true)
+        m = mock(vim.api, true)
         testModule.log_message('INFO', 'Some log message')
         assert_message(m, 'None','INFO: Some log message')
 
         _G.LOG_LEVEL = 'INFO'
 
         mock.revert(m)
-        local m = mock(vim.api, true)
+        m = mock(vim.api, true)
         testModule.log_message('ERROR', 'Some log message')
         assert_message(m, 'ErrorMsg','ERROR: Some log message')
 
         mock.revert(m)
-        local m = mock(vim.api, true)
+        m = mock(vim.api, true)
         testModule.log_message('INFO', 'Some log message')
         assert_message(m, 'None','INFO: Some log message')
 
         mock.revert(m)
-        local m = mock(vim.api, true)
+        m = mock(vim.api, true)
         testModule.log_message('DEBUG', 'Some log message')
         assert_message_not(m, 'None','DEBUG: Some log message')
       end)
@@ -71,13 +71,13 @@ describe('util', function()
       for err,hl in pairs(test_table) do
         it('Should print log message as desired level: ' .. err, function()
           _G.LOG_LEVEL = 'DEBUG'
-          -- TODO move ths to before block
-          mock.revert(m)
           local m = mock(vim.api, true)
 
           testModule.log_message(err, 'Some log message')
 
           assert_message(m, hl, err .. ': Some log message')
+
+          mock.revert(m)
         end)
       end
     end)

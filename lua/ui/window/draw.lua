@@ -7,7 +7,7 @@ local toggled_bufs = {}
 local function get_split_command(position, size)
   size = size or ""
   -- TODO use either props.size or half screen size, which ever is smaller
-  local command = ""
+  local command
   if position == 'top' then
     command = 'topleft'
   elseif position == 'bottom' then

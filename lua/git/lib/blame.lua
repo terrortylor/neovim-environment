@@ -86,6 +86,7 @@ function M.create_window(lines, row, col, lhs_mappings)
   }
 
   local win = api.nvim_open_win(buf, true, opts)
+  api.nvim_buf_set_option(buf, 'modifiable', false)
   window_id = win
 end
 

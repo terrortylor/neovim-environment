@@ -9,8 +9,8 @@ local M = {}
 
 function M.get_arglist()
   local arg_list = {}
-  local args = api.nvim_command_output("args")
-  args,_ = args:gsub("[%[%]]", "")
+  local raw_args = api.nvim_command_output("args")
+  local args,_ = raw_args:gsub("[%[%]]", "")
   for v in args:gmatch("%S+") do
     table.insert(arg_list, v)
   end

@@ -38,6 +38,7 @@ local function get_install_path(plugin)
 end
 
 -- TODO add tests
+-- TODO should I pass in the plugin?
 local function call_git(name, docs_path, args)
   -- print(vim.inspect(args))
   local handle

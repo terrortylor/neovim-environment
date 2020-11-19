@@ -1,3 +1,4 @@
+-- TODO is this required? could i just use the nvim_out_write and nvim_error_write
 local api = vim.api
 
 local M = {}

@@ -57,7 +57,6 @@ describe('ui', function()
           ['> %s'] = {'> ', ''},
           ['      *%s'] = {'      *', ''},
           ['"%s'] = {'"', ''},
-          ['(*%s*)'] = {'(*', '*)'},
         }
 
         for string,expected in pairs(commentstrings) do
@@ -112,7 +111,6 @@ describe('ui', function()
           ['> line'] = {'> ', ''},
           ['      *line'] = {'      *', ''},
           ['"line'] = {'"', ''},
-          ['(*line*)'] = {'(*', '*)'},
         }
 
         for expected,comment_parts in pairs(commentstrings) do
@@ -164,7 +162,6 @@ describe('ui', function()
           ['> line'] = {'> ', ''},
           ['      *line'] = {'      *', ''},
           ['"line'] = {'"', ''},
-          ['(*line*)'] = {'(*', '*)'},
         }
 
         for input,comment_parts in pairs(commentstrings) do
