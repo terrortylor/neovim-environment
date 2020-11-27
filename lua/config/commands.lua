@@ -16,6 +16,13 @@ local commands = {
   {
     "command!",
     "-nargs=0",
+    "SetProjectCWD",
+    "lua require('util.path').set_cwd_to_project_root()"
+  },
+  -- gron
+  {
+    "command!",
+    "-nargs=0",
     "Gron",
     "%!gron"
   },

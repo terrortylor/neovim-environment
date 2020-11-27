@@ -1,6 +1,8 @@
+local api = vim.api
+
 local M = {}
 
--- TODO add tests
+-- TODO remove this in favoure of just calling vim function
 function M.file_exists(filename)
     local file = io.open(filename, "r")
     if (file) then

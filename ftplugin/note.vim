@@ -1,6 +1,7 @@
-" Import markdown filetype settings as base
-runtime! ftplugin/markdown.vim
-
+" TODO migrate to lua/or ultisnips?
+" THIS IS NO LONGER USED
+" BUT WOULD LIKE TO MIGRATE THE FUNCTIONS FOR MARKDOWN/WIKI USE
+"
 " Assign formatted date to p register
 " Jump to 2nd line, insert date as markdown header
 " move down a line
@@ -11,16 +12,6 @@ function! StartNewDay()
   let @r = l:old_r
 endfunction
 command! -nargs=0 StartNewDay call StartNewDay()
-
-" TODO does vim-markdown break this... is it still required?
-" " Auto create TOC on buf write is a note
-" augroup notebufwritegroup
-"   autocmd!
-"   autocmd BufWrite *.md CreateTOC
-" augroup END
-
-" Add markdown snippets to note type
-UltiSnipsAddFiletypes note.markdown
 
 " Wrap Jira ticket number with link
 vnoremap <leader>cl :<c-u>call WrapJiraTicketIntoLink()<cr>
