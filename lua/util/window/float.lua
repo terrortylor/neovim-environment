@@ -1,7 +1,12 @@
+-- TODO add tests
 local api = vim.api
-local M = {}
 -- TODO vim.deepcopy() is built int, need to get tests running from within vim
 local table_utils = require('util.table')
+
+local M = {}
+
+-- map callback function to window to be run when closed
+M.callbacks = {}
 
 -- TODO pop up scrath terminal, that is repl for filetype
 
@@ -15,13 +20,19 @@ function M.close_windows(win, border_win)
   for _,v in pairs({border_win, win}) do
     if v then
       if api.nvim_win_is_valid(v) then
-        api.nvim_win_close(v, true)
+        api.nvim_win_close(v, true) 
+
+        local callback = M.callbacks[win]
+        if  callback then
+          callback()
+          M.callbacks[win] = nil
+        end
       end
     end
   end
 end
 
-function M.gen_centered_float_opts(width_percent, height_percent)
+function M.gen_centered_float_opts(width_percent, height_percent, style)
   local width = api.nvim_get_option("columns")
   local height = api.nvim_get_option("lines")
 
@@ -32,7 +43,6 @@ function M.gen_centered_float_opts(width_percent, height_percent)
   local row = math.ceil((height - win_height) / 2 - 1)
 
   local opts = {
-    style = "minimal",
     relative = "editor",
     width = win_width,
     height = win_height,
@@ -40,34 +50,39 @@ function M.gen_centered_float_opts(width_percent, height_percent)
     col = col
   }
 
+  if style then
+    opts['style'] = 'minimal'
+  end
+
   return opts
 end
 
-function M.open_float(buf, has_border, title, opts)
-  title = title or ""
+function M.open_float(title, has_border, buf, buf_opts, callback)
+  callback = callback or function() end
   local border_win, win
 
   if has_border then
     local border_buf = api.nvim_create_buf(false, true)
-    api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')
+    api.nvim_buf_set_option(border_buf, 'bufhidden', 'wipe')
 
-    local border_opts = table_utils.shallow_copy(opts)
+    local border_opts = table_utils.shallow_copy(buf_opts)
+    border_opts['style'] = 'minimal'
     border_opts.width = border_opts.width + 2
     border_opts.height = border_opts.height + 2
     border_opts.row = border_opts.row - 1
     border_opts.col = border_opts.col - 1
 
-    local border_lines = { '╔' .. center(title, opts.width, '═') .. '╗' }
-    local middle_line = '║' .. string.rep(' ', opts.width) .. '║'
-    for _=1, opts.height do
+    local border_lines = { '╔' .. center(title, buf_opts.width, '═') .. '╗' }
+    local middle_line = '║' .. string.rep(' ', buf_opts.width) .. '║'
+    for _=1, buf_opts.height do
       table.insert(border_lines, middle_line)
     end
-    table.insert(border_lines, '╚' .. string.rep('═', opts.width) .. '╝')
+    table.insert(border_lines, '╚' .. string.rep('═', buf_opts.width) .. '╝')
     api.nvim_buf_set_lines(border_buf, 0, -1, false, border_lines)
 
     border_win = api.nvim_open_win(border_buf, true, border_opts)
 
-    -- TODO not sure its gettig rid of the scratch buf, needs checking
+    -- Cleanup the border buffer
     local command = {
       "autocmd",
       "BufWipeout",
@@ -75,11 +90,11 @@ function M.open_float(buf, has_border, title, opts)
       "exe 'silent bwipeout! " .. border_buf
     }
     api.nvim_command(table.concat(command, " "))
-    -- api.nvim_command('autocmd BufWipeout <buffer> exe "silent bwipeout! "'..border_buf)
   end
 
 
-  win = api.nvim_open_win(buf, true, opts)
+  win = api.nvim_open_win(buf, true, buf_opts)
+  M.callbacks[win] = callback
 
   -- TODO pass in extra mapping
   -- for _, v in pairs(lhs_mappings) do

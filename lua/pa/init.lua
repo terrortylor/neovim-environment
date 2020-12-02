@@ -1,3 +1,5 @@
+-- TODO I don't like the location location/name of this, should
+-- be in ui somewhere not sure it's enough to be a plugin
 -- TODO add tests
 local api = vim.api
 local float = require('util.window.float')
@@ -5,7 +7,7 @@ local fs = require('util.filesystem')
 local log = require('util.log')
 local M = {}
 
-M.notes_path = "/home/alextylor/personnal-workspace/notes"
+M.notes_path = "/home/alextylor/personnal-workspace/notes/main"
 
 local function open_markdown_buf(filename)
   -- TODO use lua/util/buffer function
@@ -24,21 +26,21 @@ local function open_markdown_buf(filename)
   return buf
 end
 
-function center_float(title, filename)
+function open_markdown_centered_float(title, filename, style)
   local buf = open_markdown_buf(filename)
-  local opts = float.gen_centered_float_opts(0.8, 0.8)
-  float.open_float(buf, true, title, opts)
+  local opts = float.gen_centered_float_opts(0.8, 0.8, style)
+  float.open_float(title, true, buf, opts)
 end
 
 function M.tasks()
   local filepath = string.format('%s/%s', M.notes_path, 'tasks.md')
-  center_float(" Tasks ", filepath)
+  open_markdown_centered_float(" Tasks ", filepath, true)
 end
 
 function M.remindme(reminder)
   local filepath = string.format("%s/remindme/%s.md", M.notes_path, reminder)
   if fs.file_exists(filepath) then
-    center_float(string.format(" RemindMe: %s ", reminder), filepath)
+    open_markdown_centered_float(string.format(" RemindMe: %s ", reminder), filepath, true)
   else
     log.error("RemindMe - File not found: " .. filepath)
   end

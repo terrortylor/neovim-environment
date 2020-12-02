@@ -67,11 +67,14 @@ plug.install()
 
 -- Custom Plugins
 -- TODO setup is in init.lua... but then all dependencies are sourced
--- so maybe init.lua just set's up what is required to get going like autoload vs plugin directory
-require('git').setup()
-require('ui.buffer.comment').setup()
-require('tmux').setup()
-require('alternate').setup()
-require('pa').setup()
-require('snake').setup()
-require('restclient').setup()
+-- so maybe init.lua just set"s up what is required to get going like autoload vs plugin directory
+require("git").setup()
+require("ui.buffer.comment").setup()
+require("ui.arglist").setup()
+require("tmux").setup()
+require("alternate").setup()
+require("pa").setup()
+require("snake").setup()
+require("restclient").setup()
+require("wiki").setup()
+require("fzf").setup()

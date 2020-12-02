@@ -19,6 +19,16 @@ function M.dict_size(table)
   return count
 end
 
+-- TODO add tests
+function M.is_string_list_same(a, b)
+  for i,a_v in pairs(a) do
+    local b_v = b[i]
+    if not b_v then return false end
+    if  a_v ~= b_v then return false end
+  end
+  return true
+end
+
 --- Lifted straight from: http://lua-users.org/wiki/CopyTable
 function M.shallow_copy(orig)
     local orig_type = type(orig)
