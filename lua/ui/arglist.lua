@@ -6,6 +6,7 @@
 local api = vim.api
 local float = require('util.window.float')
 local is_string_list_same = require("util.table").is_string_list_same
+local buffer = require("util.buffer")
 
 local M = {}
 
@@ -39,7 +40,7 @@ function M.edit_args_in_buffer()
   -- if exists ensure it's up to date, update if not
   -- this gives ability to have history in edits as long as not set elsewhere
   if buf then
-    local buf_arg_list = api.nvim_buf_get_lines(buf, 0, api.nvim_buf_line_count(buf), false)
+    local buf_arg_list = buffer.get_all_lines(buf)
     if not is_string_list_same(arg_list, buf_arg_list) then
       api.nvim_buf_set_lines(buf, 0, api.nvim_buf_line_count(buf), false, arg_list)
     end
@@ -50,7 +51,7 @@ function M.edit_args_in_buffer()
 
   -- callback function to set the arglist with edited buf lines
   local callback = function()
-    local buf_arg_list = api.nvim_buf_get_lines(buf, 0, api.nvim_buf_line_count(buf), false)
+    local buf_arg_list = buffer.get_all_lines(buf)
     M.set_arglist(buf_arg_list)
   end
 
