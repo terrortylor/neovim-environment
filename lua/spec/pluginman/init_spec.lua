@@ -1,13 +1,20 @@
-local testModule
-
+-- luacheck: globals Plugin
 describe('pluginman', function()
   describe('init', function()
+    local testModule
+    local fs
+    local clone -- luacheck: ignore
+    local view -- luacheck: ignore
+
     setup(function()
       _G._TEST = true
       _G.vim = {
-        api = require('spec.vim_api_helper')
+        api = require("spec.vim_api_helper")
       }
       testModule = require('pluginman')
+      fs = mock(require("util.filesystem"), true)
+      clone = mock(require("pluginman.clone"), true)
+      view = mock(require("pluginman.view"), true)
     end)
 
     teardown(function()
@@ -37,6 +44,17 @@ describe('pluginman', function()
         plugins = testModule._plugins()
 
         assert.equals(1, #plugins)
+      end)
+    end)
+
+    describe("check_plugin_status", function()
+      it("Should mark plugin as installed if path install path exists", function()
+        local plugin = Plugin:new("base/path", {url = "a/path"})
+        fs.is_directory.on_call_with("base/path/site/pack/plugins/start/path").returns(true)
+
+        testModule.check_plugin_status(plugin)
+
+        assert.equal(true, plugin.installed)
       end)
     end)
   end)

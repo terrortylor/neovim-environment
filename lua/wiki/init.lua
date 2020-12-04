@@ -38,7 +38,8 @@ end
 -- TODO can be local
 -- TODO filesystem funcs here can be split out
 --- Get current buf path, add link to end check exists
---if not then remove directory form buf path, and add link to end check exists... althe way up to / or ideally root of proect i.e. .git dir
+-- if not then remove directory form buf path, and add link to end check exists... all
+-- the way up to / or ideally root of proect i.e. .git dir
 function M.work_out_link_path(link, extension)
   -- This should be passed as parameter
 --  local cwd = api.nvim_call_function("getcwd", {})
@@ -104,7 +105,8 @@ function M.follow_link()
     local dir_exists = api.nvim_call_function("isdirectory", {dir})
 
     if dir_exists == 0 then
-      local create = api.nvim_call_function("confirm", {"Directory path doesn't exist, would you like to create: " .. dir, "&Yes\n&No", 2})
+      local create = api.nvim_call_function("confirm",
+        {"Directory path doesn't exist, would you like to create: " .. dir, "&Yes\n&No", 2})
       if create > 1 then
         return
       end

@@ -29,7 +29,6 @@ end
 function M.update_result_buf(requests)
   M.clear_result_buf()
 
-  local results = {}
   for _,req in pairs(requests) do
     M.add_lines({
       '#######################',

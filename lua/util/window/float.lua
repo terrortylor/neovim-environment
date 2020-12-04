@@ -20,7 +20,7 @@ function M.close_windows(win, border_win)
   for _,v in pairs({border_win, win}) do
     if v then
       if api.nvim_win_is_valid(v) then
-        api.nvim_win_close(v, true) 
+        api.nvim_win_close(v, true)
 
         local callback = M.callbacks[win]
         if  callback then

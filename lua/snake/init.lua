@@ -135,7 +135,7 @@ function M.setup()
   }
   api.nvim_command(table.concat(command, " "))
 
-  local command = {
+  command = {
     "command!",
     "-nargs=0",
     "SnakeStop",

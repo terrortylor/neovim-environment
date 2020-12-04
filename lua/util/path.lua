@@ -1,5 +1,5 @@
 local api = vim.api
-local log require("util.log")
+local log = require("util.log")
 
 local M = {}
 

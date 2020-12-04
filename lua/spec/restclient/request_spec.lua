@@ -1,3 +1,4 @@
+-- luacheck: globals Request
 require('restclient.request')
 local ut = require('util.table')
 

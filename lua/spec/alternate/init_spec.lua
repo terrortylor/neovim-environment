@@ -16,11 +16,13 @@ describe('alternate', function()
   describe('get_alternate_file', function()
     local rules = {
       code = {
-        condition = "code$",
-        direction = "_test.code$",
-        transformers = {
-          [".code"] = "_test.code",
-          ["src/"] = "test/"
+        {
+          condition = "code$",
+          direction = "_test.code$",
+          transformers = {
+            {".code", "_test.code"},
+            {"src/", "test/"}
+          }
         }
       }
     }
@@ -96,18 +98,18 @@ describe('alternate', function()
   describe('transform_path', function()
     local transformers = {
       -- TODO add % before . busted throws error, differences in lua?
-      [".code"] = "_test.code",
-      ["src/"] =  "test/"
+      {".code", "_test.code"},
+      {"src/",  "test/"}
     }
 
     it('Should transfor path from file to alternate file', function()
-      local result = testModule._transform_path("src/package/core.code", transformers, 0)
+      local result = testModule._transform_path("src/package/core.code", transformers, true)
 
       assert.are.equal("test/package/core_test.code", result)
     end)
 
     it('Should transfor path from alternate file to file', function()
-      local result = testModule._transform_path("test/package/core_test.code", transformers, 1)
+      local result = testModule._transform_path("test/package/core_test.code", transformers, false)
 
       assert.are.equal("src/package/core.code", result)
     end)

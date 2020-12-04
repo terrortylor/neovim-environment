@@ -20,40 +20,46 @@ M.mappings = {
 -- transformers : used to transform a path between file and alternate file, and back again
 M.rules = {
   ["ruby.chef"] = {
-    condition = "/cookbooks/(.-)/recipes/",
-    -- TODO rename direction to alternate_matcher or something this that
-    direction = "_spec%.rb",
-    transformers = {
-      ["%.rb"] = "_spec%.rb",
-      ["/recipes/"] = "/spec/unit/recipes/"
+    {
+      condition = "/cookbooks/(.-)/recipes/",
+      -- TODO rename direction to alternate_matcher or something this that
+      direction = "_spec%.rb",
+      transformers = {
+        {"%.rb", "_spec%.rb"},
+        {"/recipes/", "/spec/unit/recipes/"}
+      }
     }
   },
   ["ruby"] = {
-    condition = ".*",
-    direction = "_spec%.rb",
-    transformers = {
-      ["%.rb"] = "_spec%.rb",
-      ["/lib/"] = "/spec/lib/"
+    {
+      condition = ".*",
+      direction = "_spec%.rb",
+      transformers = {
+        {"%.rb", "_spec%.rb"},
+        {"/lib/", "/spec/lib/"}
+      }
     }
   },
   ["lua"] = {
-    condition = "/lua/",
-    direction = "_spec.lua",
-    -- TODO be nice not to have to escape these? https://stackoverflow.com/questions/9790688/escaping-strings-for-gsub
-    transformers = {
-      ["%.lua"] = "_spec%.lua",
-      ["/lua/"] = "/lua/spec/"
-    }
+    {
+      condition = "/lua/",
+      direction = "_spec.lua",
+      -- TODO be nice not to have to escape these? https://stackoverflow.com/questions/9790688/escaping-strings-for-gsub
+      transformers = {
+        {"%.lua", "_spec%.lua"},
+        {"/lua/", "/lua/spec/"}
+      }
+    },
   }
 }
 
-local function transform_path(path, transformers, direction)
+local function transform_path(path, transformers, to_alternate)
   local new_path = path
-  for v, k in pairs(transformers) do
-    if direction == 0 then
-      new_path = new_path:gsub(v, k)
+  for _,pair in pairs(transformers) do
+    if to_alternate then
+      new_path = new_path:gsub(pair[1], pair[2])
     else
-      new_path = new_path:gsub(k, v)
+      new_path = new_path:gsub(pair[2], pair[1])
     end
   end
   return new_path
@@ -68,22 +74,31 @@ function M.get_alternate_file()
     return
   end
 
-  -- check condition is true and file has alternate
-  local path = api.nvim_call_function("expand", {"%:p"})
-  if not path:match(rules.condition) then
-    return
-  end
+  local match = false
+  local i = #rules
 
-  local alternate_file
-  -- check which direction transformation is to happen
-  if path:match(rules.direction) then
-    alternate_file = transform_path(path, rules.transformers, 1)
-  else
-    alternate_file = transform_path(path, rules.transformers, 0)
-  end
+  repeat
+    local rule = rules[1]
+    -- check condition is true and file has alternate
+    local path = api.nvim_call_function("expand", {"%:p"})
+    if path:match(rule.condition) then
 
-  -- TODO check file path exists, if not prompt to create
-  api.nvim_command("e " .. alternate_file)
+      local alternate_file
+      -- check which direction transformation is to happen
+      --
+      local to_alternate = true
+      if path:match(rule.direction) then
+        to_alternate = false
+      end
+      alternate_file = transform_path(path, rule.transformers, to_alternate)
+
+      -- TODO check file path exists, if not prompt to create
+      api.nvim_command("e " .. alternate_file)
+      match = true
+    end
+
+    i = i + 1
+  until(match or i > #rules)
 end
 
 -- Create commands and setup mappings

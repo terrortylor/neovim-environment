@@ -1,3 +1,4 @@
+-- luacheck: globals Request
 -- Meta class
 Request = {
   url = nil,
@@ -31,7 +32,7 @@ function Request:get_results()
   if self.result then
     local vals = vim.split(self.result, "\n")
     for _, d in pairs(vals) do
-      if d ~= "" then 
+      if d ~= "" then
         table.insert(result_lines, d)
       end
     end

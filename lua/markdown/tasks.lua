@@ -1,5 +1,6 @@
 -- Adds some support functionality for handling TODO checkboxes to markdown
--- It's dependant on having the formatoptions 'o' set to automatically handle
+-- It's dependant on having the formatoptions 'to' set to automatically handle
+-- preffered are: jtqlnro
 -- inserting a */- on a new line after o/O in normal mode.
 
 

@@ -70,7 +70,7 @@ describe('ui', function()
         local opts = {float = "opts"}
         float.gen_centered_float_opts.returns(opts)
         -- dummy mock func to test callback inners
-        float.open_float = function(one, two, three, four, callback) callback() end
+        float.open_float = function(_, _, _, _, callback) callback() end
         spy.on(float, "open_float")
 
         testModule.edit_args_in_buffer()
@@ -95,10 +95,10 @@ describe('ui', function()
         stub(testModule, "get_arglist").returns(edited_arg_list)
         stub(testModule, "set_arglist")
         buffer.get_all_lines.on_call_with(101).returns(edited_arg_list)
-        local opts = {float = "opts"}
+        opts = {float = "opts"}
         float.gen_centered_float_opts.returns(opts)
         -- dummy mock func to test callback inners
-        float.open_float = function(one, two, three, four, callback) callback() end
+        float.open_float = function(_, _, _, _, callback) callback() end
         spy.on(float, "open_float")
 
         testModule.edit_args_in_buffer()
@@ -120,10 +120,10 @@ describe('ui', function()
         stub(testModule, "get_arglist").returns(orig_arg_list)
         stub(testModule, "set_arglist")
         buffer.get_all_lines.on_call_with(101).returns(edited_arg_list)
-        local opts = {float = "opts"}
+        opts = {float = "opts"}
         float.gen_centered_float_opts.returns(opts)
         -- dummy mock func to test callback inners
-        float.open_float = function(one, two, three, four, callback) callback() end
+        float.open_float = function(_, _, _, _, callback) callback() end
         spy.on(float, "open_float")
 
         testModule.edit_args_in_buffer()

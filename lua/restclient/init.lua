@@ -1,5 +1,4 @@
 local api = vim.api
-local loop = vim.loop
 local util = require('util.config')
 local parser = require('restclient.parser')
 local view = require('restclient.view')
@@ -10,8 +9,6 @@ local M = {}
 
 local requests = nil
 local next_request_id = 1
--- TODO move to func
-local results = {}
 
 local function on_read_callback(err, data)
   local request
@@ -101,7 +98,7 @@ function M.run()
 end
 
 function M.setup()
-  command = {
+  local command = {
     'command!',
     '-nargs=0',
     'RestclientRunFile',

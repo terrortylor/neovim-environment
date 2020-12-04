@@ -20,6 +20,7 @@ function M.dict_size(table)
 end
 
 -- TODO add tests
+-- TODO should handle if nils
 function M.is_string_list_same(a, b)
   for i,a_v in pairs(a) do
     local b_v = b[i]

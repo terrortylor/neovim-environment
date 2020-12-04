@@ -55,6 +55,9 @@ function M.fzf_functions(current_buf_only)
     rg_path = api.nvim_call_function("expand", {"%"})
   else
     rg_path = api.nvim_call_function("getcwd", {})
+    -- TODO add filetype to end of path, but **/*.lua doesn't find lua file on current level,
+    -- has ot be at least one directory deep
+    -- can use `--type lua` but needs to be passed to func as extra param
   end
 
   local query = M.filetype_func_pattern[api.nvim_buf_get_option(0, "filetype")]
@@ -74,7 +77,7 @@ function M.setup()
   }
   api.nvim_command(table.concat(command, " "))
 
-  local command = {
+  command = {
     "command!",
     "-nargs=0",
     "-bang",
@@ -82,6 +85,16 @@ function M.setup()
     "lua require('fzf').fzf_functions('<bang>')"
   }
   api.nvim_command(table.concat(command, " "))
+
+  -- TODO
+--  local command = {
+--    "command!",
+--    "-nargs=0",
+--    "-bang",
+--    "TODOs",
+--    "lua require('fzf').fzf_todos('<bang>')"
+--  }
+--  api.nvim_command(table.concat(command, " "))
 end
 
 return M

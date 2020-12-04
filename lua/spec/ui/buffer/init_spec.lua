@@ -34,7 +34,6 @@ describe('ui', function()
       end)
 
       it('Should set empty line below current line', function()
-        local m = mock(vim.api, true)
         api.nvim_win_get_cursor.on_call_with(0).returns({6, 12})
 
         testModule.new_line_no_comment(false)

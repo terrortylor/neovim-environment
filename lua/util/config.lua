@@ -44,6 +44,7 @@ function M.create_autogroups(definitions)
     api.nvim_command('augroup '..group)
     api.nvim_command('autocmd!')
     for _, line in ipairs(definition) do
+      -- TODO is flatterning a table here overkill, why not just a line with spaces...?
       local command = table.concat(vim.tbl_flatten{'autocmd', line}, ' ')
       api.nvim_command(command)
     end

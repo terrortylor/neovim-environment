@@ -12,4 +12,26 @@ function M.file_exists(filename)
     return false
 end
 
+--- Wrapper to truthy and pretify
+--@param path string - directory path to check
+--@return boolean true if exists, false if not
+function M.is_directory(path)
+ if api.nvim_call_function('isdirectory', {path}) > 0 then
+   return true
+ else
+   return false
+ end
+end
+
+--- Wrapper to truthy and pretify
+--@param path string - directory path to check
+--@return boolean true if exists, false if not
+function M.is_file(path)
+ if api.nvim_call_function('filereadable', {path}) > 0 then
+   return true
+ else
+   return false
+ end
+end
+
 return M

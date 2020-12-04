@@ -1,3 +1,4 @@
+-- luacheck: globals Request
 local testModule
 
 describe('restclient', function()
@@ -27,7 +28,7 @@ describe('restclient', function()
 
 
         for url,actual in pairs(test_table) do
-          local result = testModule.parse_lines({url})
+          result = testModule.parse_lines({url})
 
           if actual then
             assert.same(url, result[1].url)
@@ -130,11 +131,11 @@ describe('restclient', function()
         local result = testModule.parse_lines(lines)
         assert.equal(false, result[1].skipSSL)
 
-        local lines = {
+        lines = {
           'goat.com',
           'skipSSL'
         }
-        local result = testModule.parse_lines(lines)
+        result = testModule.parse_lines(lines)
         assert.equal(true, result[1].skipSSL)
       end)
 
@@ -146,11 +147,11 @@ describe('restclient', function()
         local result = testModule.parse_lines(lines)
         assert.equal(nil, result[1].data_filename)
 
-        local lines = {
+        lines = {
           'goat.com',
           '@cheeselist'
         }
-        local result = testModule.parse_lines(lines)
+        result = testModule.parse_lines(lines)
         assert.equal('@cheeselist', result[1].data_filename)
       end)
     end)
