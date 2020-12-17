@@ -1,4 +1,5 @@
 local api = vim.api
+local log  = require("util.log")
 
 local M = {}
 
@@ -32,6 +33,21 @@ function M.is_file(path)
  else
    return false
  end
+end
+
+function M.delete(path)
+  if M.is_directory(path) then
+    log.error("Delete directory not supported")
+    return
+  end
+  if not M.is_file(path) then
+    log.error("File not found or not readable")
+    return
+  end
+  os.execute("rm " ..  path)
+  if M.is_file(path) then
+    log.error("File not deleted, still present on disk!")
+  end
 end
 
 return M

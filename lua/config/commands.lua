@@ -32,6 +32,14 @@ local commands = {
     "UnGron",
     "%!gron --ungron"
   },
+  -- some filesystem helpers
+  {
+    "command!",
+    "-nargs=1",
+    "-complete=buffer",
+    "DeleteBuffer",
+    "lua require('config.function.filesystem').delete_file('<args>')"
+  },
 }
 for _,v in pairs(commands) do
   api.nvim_command(table.concat(v, " "))
