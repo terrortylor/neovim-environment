@@ -14,7 +14,7 @@ describe('restclient', function()
 
     describe('parse_lines', function()
       it('Should match base url as expected', function()
-        local result = testModule.parse_lines({nil})
+        local result, _ = testModule.parse_lines({nil})
         assert.equal(0, #result)
 
         local test_table = {}
@@ -45,7 +45,7 @@ describe('restclient', function()
           "  # comment",
           "         # comment"
         }
-        local result = testModule.parse_lines(lines)
+        local result, _ = testModule.parse_lines(lines)
 
         assert.same('goats.com', result[1].url)
       end)
@@ -55,7 +55,7 @@ describe('restclient', function()
           "goats.com",
           "GET"
         }
-        local result = testModule.parse_lines(lines)
+        local result, _ = testModule.parse_lines(lines)
 
         assert.same(nil, result[1].verb)
         assert.same(nil, result[1].path)
@@ -66,7 +66,7 @@ describe('restclient', function()
           "goats.com",
           "GET /"
         }
-        local result = testModule.parse_lines(lines)
+        local result, _ = testModule.parse_lines(lines)
 
         assert.same('GET', result[1].verb)
         assert.same('/', result[1].path)
@@ -77,7 +77,7 @@ describe('restclient', function()
           "goats.com",
           "GET /goat-cheese_1"
         }
-        local result = testModule.parse_lines(lines)
+        local result, _ = testModule.parse_lines(lines)
 
         assert.same('GET', result[1].verb)
         assert.same('/goat-cheese_1', result[1].path)
@@ -89,7 +89,7 @@ describe('restclient', function()
           "goat=cheese",
           "blue=tasty"
         }
-        local result = testModule.parse_lines(lines)
+        local result, _ = testModule.parse_lines(lines)
 
         assert.same({goat = 'cheese', blue = 'tasty'}, result[1].data)
       end)
@@ -99,7 +99,7 @@ describe('restclient', function()
           "goats.com",
           "goat:cheese"
         }
-        local result = testModule.parse_lines(lines)
+        local result, _ = testModule.parse_lines(lines)
 
         assert.same({goat = 'cheese'}, result[1].data)
       end)
@@ -112,7 +112,7 @@ describe('restclient', function()
           "HEADER:X-GO: hummos",
         }
 
-        local result = testModule.parse_lines(lines)
+        local result, _ = testModule.parse_lines(lines)
 
         local expected = {
           Accept = 'application/json',
@@ -128,7 +128,7 @@ describe('restclient', function()
           'nothing good'
         }
 
-        local result = testModule.parse_lines(lines)
+        local result, _ = testModule.parse_lines(lines)
         assert.equal(false, result[1].skipSSL)
 
         lines = {
@@ -144,7 +144,7 @@ describe('restclient', function()
           'goat.com',
           'cheeselist'
         }
-        local result = testModule.parse_lines(lines)
+        local result, _ = testModule.parse_lines(lines)
         assert.equal(nil, result[1].data_filename)
 
         lines = {
@@ -153,6 +153,38 @@ describe('restclient', function()
         }
         result = testModule.parse_lines(lines)
         assert.equal('@cheeselist', result[1].data_filename)
+      end)
+
+      it('Should match variables key values with = seperator', function()
+        local lines = {
+          "var goats.com",
+          "var goat=cheese",
+          "var blue=tasty"
+        }
+        local _, variables = testModule.parse_lines(lines)
+
+        assert.same({goat = 'cheese', blue = 'tasty'}, variables)
+      end)
+
+      it("Should match restblock and vars", function()
+        local lines = {
+          "www.madeup.com",
+          "POST /a/path",
+          "query=param",
+          "another=queryparam",
+          "fromvar=@house@",
+          "",
+          "var var1=value",
+          "var var2=words"
+        }
+
+        local result, variables = testModule.parse_lines(lines)
+
+        assert.same('www.madeup.com', result[1].url)
+        assert.same('POST', result[1].verb)
+        assert.same('/a/path', result[1].path)
+        assert.same({query = 'param', another = 'queryparam', fromvar = "@house@"}, result[1].data)
+        assert.same({var1 = "value", var2 = "words"}, variables)
       end)
     end)
 

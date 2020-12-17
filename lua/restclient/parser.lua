@@ -4,10 +4,13 @@ local s_util = require'util.string'
 
 local M = {}
 
+-- TODO change scope to be in parse func
 local requests
+local variables = {}
 
 local function reset()
   requests = {}
+  variables = {}
 end
 
 local function add_request(request)
@@ -34,11 +37,16 @@ function M.parse_lines(buf_lines)
 -- TODO add json block support
 -- TODO special json headers
   for _,l in pairs(buf_lines) do
+    -- matches a comment
     if l:match('^%s*#') then
       goto skip_to_next_line
     -- matches if to use skip ssl flag
     elseif l:match('^skipSSL$') then
       req.skipSSL = true
+      -- match variable
+    elseif l:match("^var%s+(.*)[=:](.*)") then
+      local key, value = l:match("^var%s+(.*)[=:](.*)")
+      variables[key] = value
       -- matches url
     elseif is_url(l) then
       req.url = l
@@ -55,6 +63,7 @@ function M.parse_lines(buf_lines)
     elseif l:match('^(.*)[=:](.*)$') then
       local key,value = l:match('(.*)[=:](.*)')
       req:add_data(key, value)
+      -- match file for data
     elseif l:match('^%@') then
       req.data_filename = l
     elseif l:match('^%s*$') then
@@ -65,7 +74,7 @@ function M.parse_lines(buf_lines)
   end
   add_request(req)
 
-  return requests
+  return requests, variables
 end
 
 if _TEST then

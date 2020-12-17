@@ -77,8 +77,9 @@ describe('restclient', function()
       it('Should return empty string when nothing set', function()
         local testObj = Request:new(nil)
 
-        local data = testObj:get_data()
+        local success, data = testObj:get_data()
 
+        assert.equals(true, success)
         assert.equals('', data)
       end)
 
@@ -97,8 +98,9 @@ describe('restclient', function()
           booze = 'cruise',
         }
 
-        local data = testObj:get_data()
+        local success, data = testObj:get_data()
 
+        assert.equals(true, success)
         assert.equals('booze=cruise', data)
       end)
 

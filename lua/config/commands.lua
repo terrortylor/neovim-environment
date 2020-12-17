@@ -37,7 +37,7 @@ local commands = {
     "command!",
     "-nargs=1",
     "-complete=buffer",
-    "DeleteBuffer",
+    "DeleteFile",
     "lua require('config.function.filesystem').delete_file('<args>')"
   },
 }

@@ -2,7 +2,8 @@
 
 local NONE = 0
 local RUNNING = 1
-local DONE = 2
+local MISSING_DATA = 2
+local DONE = 3
 
 -- Meta class
 Request = {
@@ -25,8 +26,8 @@ function Request:new(o)
    self.__index = self
 
    -- Tables have to be initialised
-   self.data = {}
-   self.headers = {}
+   o.data = {}
+   o.headers = {}
    -- self.result = {}
    return o
 end
@@ -62,21 +63,45 @@ function Request:get_title()
   return verb .. " - " .. self.url
 end
 
-function Request:get_data()
+function Request:get_data(variables)
+  self.state = NONE
+  local complete_data = true
+
+  local var_sub = function(value)
+    local var = value:match("^@(.*)@$")
+    --    print("required variable: ", var)
+    if var then
+      if variables[var] then
+        return variables[var]
+      else
+        self.state = MISSING_DATA
+        complete_data = false
+      end
+    end
+    return value
+  end
+
   local data_string = ''
   if self.data_filename then
     return self.data_filename
   elseif self.data then
+--    print("building data string")
     -- data is key/value pairs
     for k,v in pairs(self.data) do
-      data_string = data_string .. string.format('%s=%s&', k, v)
+--      print("k", k, "v", v)
+      local key = var_sub(k)
+      local value = var_sub(v)
+      data_string = data_string .. string.format('%s=%s&', key, value)
+      if not complete_data then
+        return complete_data, nil
+      end
     end
     -- trim remaining &
     if data_string:match("&$") then
       data_string = data_string:sub(1, -2)
     end
   end
-  return data_string
+  return complete_data, data_string
 end
 
 function Request:get_url()
@@ -109,17 +134,30 @@ function Request:queued()
   return false
 end
 
+function Request:missing_data()
+  if self.state == MISSING_DATA then
+    return true
+  end
+  return false
+end
+
 -- function Request:add_result_line(line)
 --   table.insert(self.result, line)
 -- end
 
-function Request:get_curl()
+function Request:get_curl(variables)
   -- get all the parts
   local verb = 'GET'
   if self.verb then
     verb = self.verb
   end
-  local data = self:get_data()
+
+--  print("about to getdata")
+  local success, data = self:get_data(variables)
+  if not success then
+    return nil
+  end
+
   local url = self:get_url()
 
   -- start to build curl command
