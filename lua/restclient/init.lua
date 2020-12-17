@@ -8,36 +8,9 @@ local log = require('util.log')
 local M = {}
 
 local requests = nil
-local next_request_id = 1
 
-local function on_read_callback(err, data)
-  local request
-  if requests then
-    request = requests[next_request_id]
-    if request then
-      if err then
-        -- TODO handle err
-        request:add_result_line("ERROR")
-        if data then
-          request:add_result_line(data)
-        end
-      end
-      if data then
-        request.result = data
-        -- local vals = vim.split(data, "\n")
-        -- for _, d in pairs(vals) do
-        --   -- TODO continue not rquired here
-        --   if d == "" then goto continue end
-        --   request:add_result_line(d)
-        --   ::continue::
-        -- end
-      end
-    end
-  end
-end
-
-local function async_run_curl(run_next_callback)
-  local request = requests[next_request_id]
+function M.async_curl(request)
+  request:set_running()
   local curl_args = request:get_curl()
 
   local stdout = vim.loop.new_pipe(false)
@@ -45,6 +18,20 @@ local function async_run_curl(run_next_callback)
 
   log.debug("Running cUrl: curl " .. curl_args)
   -- log.debug(vim.inspect(vim.split(curl_args, ' ')))
+
+  local callback = function(err, data)
+    if err then
+      -- TODO handle err
+      request:add_result_line("ERROR")
+      if data then
+        request:add_result_line(data)
+      end
+    end
+    if data then
+      request.result = data
+    end
+    request:set_done()
+  end
 
   -- TODO move to func, request would benefit from being class
   local handle
@@ -60,22 +47,34 @@ local function async_run_curl(run_next_callback)
         handle:close()
 
         view.update_result_buf(requests)
-
-        next_request_id = next_request_id + 1
-        run_next_callback()
+        M.make_requests()
       end
     )
   )
-  vim.loop.read_start(stdout, on_read_callback)
-  vim.loop.read_start(stderr, on_read_callback)
+  vim.loop.read_start(stdout, callback)
+  vim.loop.read_start(stderr, callback)
 end
 
-function M.run_next()
-  if requests then
-    if requests[next_request_id] then
-      async_run_curl(M.run_next)
+function M.is_complete()
+  local is_complete = true
+  for _,req in pairs(requests) do
+    if req:queued() then
+      is_complete = false
+      break
     end
   end
+  return is_complete
+end
+
+function M.make_requests()
+  repeat
+    for i = 1, #requests do
+      local request = requests[i]
+      if request:queued() then
+        M.async_curl(request)
+      end
+    end
+  until(M.is_complete())
 end
 
 function M.run()
@@ -85,13 +84,11 @@ function M.run()
   if filetype == 'rest' then
     local buf_lines = api.nvim_buf_get_lines(buf, 0, api.nvim_buf_line_count(buf), false)
     requests = parser.parse_lines(buf_lines)
-    next_request_id = 1
 
     view.create_result_scratch_buf()
-
     draw.open_draw(view.result_buf)
 
-    M.run_next()
+    M.make_requests()
   else
     log.error('Must be filetype: rest')
   end

@@ -1,4 +1,9 @@
 -- luacheck: globals Request
+
+local NONE = 0
+local RUNNING = 1
+local DONE = 2
+
 -- Meta class
 Request = {
   url = nil,
@@ -9,7 +14,8 @@ Request = {
   result = nil,
   headers = nil,
   skipSSL = false,
-  response = nil
+  response = nil,
+  state = NONE
 }
 
 -- should these be set via getters?
@@ -83,6 +89,24 @@ function Request:get_url()
     end
   end
   return url
+end
+
+-- TODO add test
+function Request:set_running()
+  self.state = RUNNING
+end
+
+-- TODO add test
+function Request:set_done()
+  self.state = DONE
+end
+
+-- TODO add test
+function Request:queued()
+  if self.state == NONE then
+    return true
+  end
+  return false
 end
 
 -- function Request:add_result_line(line)
