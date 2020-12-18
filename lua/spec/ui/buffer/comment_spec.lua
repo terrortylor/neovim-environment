@@ -78,7 +78,7 @@ describe('ui', function()
         end)
       end)
 
-      describe('comment_line_decorator', function()
+      describe('comment_line', function()
         local commentstrings = {
           ['COMMENT line'] = {'COMMENT ', ''},
           ['{% comment %}line{% endcomment %}'] = {'{% comment %}', '{% endcomment %}'},
@@ -114,22 +114,27 @@ describe('ui', function()
         }
 
         for expected,comment_parts in pairs(commentstrings) do
-          it('Should comment line as expected: ' .. expected, function()
-            local actual = testModule._comment_line_decorator('line', false, comment_parts[1], comment_parts[2])
-
-            assert.equals(expected, actual)
-          end)
-
-          -- Just to check it doesn't add a comment it one exists
-          it('Should comment line as expected with clean first: ' .. expected, function()
-            local actual = testModule._comment_line_decorator(expected, true, comment_parts[1], comment_parts[2])
+          it('Should comment line as expected, with no padding: ' .. expected, function()
+            local actual = testModule._comment_line('line', "", comment_parts[1], comment_parts[2])
 
             assert.equals(expected, actual)
           end)
         end
+
+        it("Should add comment after any whitespace, with padding", function()
+            local actual = testModule._comment_line("  line", "  ",  "-- ", "")
+
+            assert.equals("  -- line", actual)
+        end)
+
+        it("Should add comment after any whitespace, with extra padding", function()
+            local actual = testModule._comment_line("    line", "  ",  "-- ", "")
+
+            assert.equals("  --   line", actual)
+        end)
       end)
 
-      describe('uncomment_line_decorator', function()
+      describe('uncomment_line', function()
         local commentstrings = {
           ['COMMENT line'] = {'COMMENT ', ''},
           ['{% comment %}line{% endcomment %}'] = {'{% comment %}', '{% endcomment %}'},
@@ -166,7 +171,7 @@ describe('ui', function()
 
         for input,comment_parts in pairs(commentstrings) do
           it('Should uncomment line as expected: ' .. input, function()
-            local actual = testModule._uncomment_line_decorator(input, comment_parts[1], comment_parts[2])
+            local actual = testModule._uncomment_line(input, comment_parts[1], comment_parts[2])
 
             assert.equals('line', actual)
           end)
@@ -225,7 +230,7 @@ describe('ui', function()
 
           assert.stub(api_mock.nvim_buf_set_lines).was_called_with(0, 0, 3, false, {
             "-- line1",
-            "-- line2",
+            "-- -- line2",
             "-- line3",
           })
           assert.stub(api_mock.nvim_call_function).was_called_with('setpos', {"'<", {0, 1, 1, 0}})

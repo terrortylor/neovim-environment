@@ -4,15 +4,6 @@ local api = vim.api
 -- this is a crued way to guard around that
 api.nvim_buf_set_option(0, "undofile", true)
 
--- Safe require... a little expensive though
-local function p_require(module) -- luacheck: ignore
-  local result, return_module = pcall(function() require(module) end)
-  if not result then
-    print("Unable to load config file: " .. module)
-  end
-  return return_module
-end
-
 -- TODO implement "gf" for lua
 local util = require("util.config")
 local plug = require("pluginman")
@@ -68,14 +59,22 @@ plug.install()
 -- Custom Plugins
 -- TODO setup is in init.lua... but then all dependencies are sourced
 -- so maybe init.lua just set"s up what is required to get going like autoload vs plugin directory
-require("pluginman").setup()
-require("git").setup()
-require("ui.buffer.comment").setup()
-require("ui.arglist").setup()
-require("tmux").setup()
-require("alternate").setup()
-require("pa").setup()
-require("snake").setup()
-require("restclient").setup()
-require("wiki").setup()
-require("fzf").setup()
+local plugins = {
+  "pluginman",
+  "git",
+  "ui.buffer.comment",
+  "ui.arglist",
+  "tmux",
+  "alternate",
+  "pa",
+  "snake",
+  "wiki",
+  "fzf",
+  "test"
+}
+
+for i =1, #plugins do
+  require(plugins[i]).setup()
+end
+
+require("config.plugin.httpclient")

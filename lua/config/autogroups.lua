@@ -8,7 +8,7 @@ local autogroups = {
   },
   vim_rc_auto_write = {
     -- FIXME call function that only runs update if file exists, i.e. not new
-    {"InsertLeave,TextChanged", "*", ":update"}
+    {"InsertLeave,TextChanged", "*", "lua require('config.function.filesystem').update_buffer()"}
   },
   remove_trailing_whitespace = {
     -- FIXME this moves the cursor, so need to set mark and jump back

@@ -65,11 +65,11 @@ end
 
 function Request:get_data(variables)
   self.state = NONE
+  -- TODO can remove coplete_data as tracked in state
   local complete_data = true
 
   local var_sub = function(value)
     local var = value:match("^@(.*)@$")
-    --    print("required variable: ", var)
     if var then
       if variables[var] then
         return variables[var]
@@ -88,7 +88,6 @@ function Request:get_data(variables)
 --    print("building data string")
     -- data is key/value pairs
     for k,v in pairs(self.data) do
---      print("k", k, "v", v)
       local key = var_sub(k)
       local value = var_sub(v)
       data_string = data_string .. string.format('%s=%s&', key, value)
@@ -145,6 +144,7 @@ end
 --   table.insert(self.result, line)
 -- end
 
+-- TODO spawn takes arguments, so is it worth building this as string?
 function Request:get_curl(variables)
   -- get all the parts
   local verb = 'GET'

@@ -16,12 +16,28 @@ elseif ${1:CONDITION} then
 end
 endsnippet
 
-snippet localm "local M .. return M" bA
-local M = {}
+snippet funm "function M.foo .. end" bA
+function M.${1:foo}(${2:bar})
+	${0}
+end
+endsnippet
 
+snippet rtnt "local <tbl> .. return <tbl>" bA
+local ${1:M} = {}
 ${0}
+return $1
+endsnippet
 
-return M
+snippet tbli	"table.insert(tbl, val)" bA
+table.insert(${1:tbl}${2:, 0}, ${3:val})
+endsnippet
+
+snippet deci	"n = n - 1" bA
+${1:i} = $1 - ${2:1}
+endsnippet
+
+snippet inci	"n = n + 1" bA
+${1:i} = $1 + ${2:1}
 endsnippet
 
 snippet print "print()" bA

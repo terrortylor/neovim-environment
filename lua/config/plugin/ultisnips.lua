@@ -5,8 +5,8 @@ local global_variables = {
   ["UltiSnipsEditSplit"]           = "vertical",
   -- TODO c-u isn't a great mapping as overrides builtin
   ["UltiSnipsListSnippets"]        = "<c-u>",
-  ["UltiSnipsJumpForwardTrigger"]  = '<TAB>',
-  ["UltiSnipsJumpBackwardTrigger"] = '<S-TAB>',
+  ["UltiSnipsJumpForwardTrigger"]  = '<tab>',
+  ["UltiSnipsJumpBackwardTrigger"] = '<s-tab>',
   ["UltiSnipsSnippetsDir"]         = "/home/alextylor/.config/nvim/ultisnips",
   ["UltiSnipsSnippetDirectories"]  = {"ultisnips"},
 }

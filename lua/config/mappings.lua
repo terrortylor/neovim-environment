@@ -93,9 +93,10 @@ local mappings = {
     ["<"]          = "<s-v><<ESC>",
     [">"]          = "<s-v>><ESC>",
 
-    -- smart lines
-    ["j"]          = {"(v:count? 'j' : 'gj')", {noremap = true, silent = true, expr = true}},
-    ["k"]          = {"(v:count? 'k' : 'gk')", {noremap = true, silent = true, expr = true}},
+    -- smart lines, these do break macro's quite often though...
+    -- TODO is it possible to checkif either recording a macro or running one first?
+    --["j"]          = {"(v:count? 'j' : 'gj')", {noremap = true, silent = true, expr = true}},
+    --["k"]          = {"(v:count? 'k' : 'gk')", {noremap = true, silent = true, expr = true}},
 
     -- Comment
     ["gc"]         = ":CommentToggle<cr>",

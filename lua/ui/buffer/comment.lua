@@ -1,3 +1,4 @@
+-- TODO add docs
 local log = require('util.log')
 local escape = require('util.string').escape
 
@@ -18,31 +19,33 @@ local function get_comment_wrapper()
   end
 end
 
-local function comment_line_decorator(l, clean, left, right)
+local function comment_line(l, indent, left, right)
   local line = l
-  if clean then
-    local esc_left = escape(left)
-    line = line:gsub('^' .. esc_left, '')
-    if right ~= '' then
-      local esc_right = escape(right)
-      line = line:gsub(esc_right .. '$', '')
-    end
+  local comment_pad = indent
+
+  -- most linters want padding to be formatted correctly
+  -- so remove comment padding from line
+  if comment_pad then
+    line = l:gsub("^" .. comment_pad, "")
+  else
+    comment_pad = ""
   end
+
   if right ~= '' then
     line = line .. right
   end
-  line = left .. line
+  line = comment_pad .. left .. line
   return line
 end
 
-local function uncomment_line_decorator(l, left, right)
+local function uncomment_line(l, left, right)
   local line = l
   if right ~= '' then
     local esc_right = escape(right)
     line = line:gsub(esc_right .. '$', '')
   end
   local esc_left = escape(left)
-  line = line:gsub('^' .. esc_left, '')
+  line = line:gsub(esc_left, '', 1)
 
   return line
 end
@@ -58,28 +61,35 @@ function M.comment_toggle(line_start, line_end)
     return
   end
 
-  local count = 0
+  -- check if any lines commented,
+  -- capture indent
   local esc_left = escape(left)
+  local commented_lines_counter = 0
+  local indent
   for _,v in pairs(lines) do
-    if v:find('^' .. esc_left) then
-      count = count + 1
+    if v:find('^%s*' .. esc_left) then
+      commented_lines_counter = commented_lines_counter + 1
+    end
+    -- TODO what if already commented line has smallest indent?
+    -- TODO no tests for this indent block
+
+    local line_indent = v:match("^%s+")
+    if line_indent and (not indent or string.len(line_indent) < string.len(indent)) then
+      indent = line_indent
     end
   end
 
   local comment = true
-  local clean = false
-  if count == #lines then
+  if commented_lines_counter == #lines then
     comment = false
-  elseif count > 0 then
-    clean = true
   end
 
   for i,v in pairs(lines) do
     local line
     if comment then
-      line = comment_line_decorator(v, clean, left, right)
+      line = comment_line(v, indent, left, right)
     else
-      line = uncomment_line_decorator(v, left, right)
+      line = uncomment_line(v, left, right)
     end
     lines[i] = line
   end
@@ -94,14 +104,15 @@ end
 
 -- TODO add tests
 -- TODO move to directory?
+-- TODO make repeatable
 function M.setup()
   api.nvim_command("command! -range CommentToggle lua require('ui.buffer.comment').comment_toggle(<line1>, <line2>)")
 end
 
 if _TEST then
   M._get_comment_wrapper = get_comment_wrapper
-  M._comment_line_decorator = comment_line_decorator
-  M._uncomment_line_decorator = uncomment_line_decorator
+  M._comment_line = comment_line
+  M._uncomment_line = uncomment_line
 end
 
 return M

@@ -33,7 +33,7 @@ local util = require("util.config")
 
 local M = {}
 
-M.commands = {
+local commands = {
   TmuxSendCommand        = "send_command_to_pane",
   TmuxSetCommand         = "set_instance_command",
   TmuxSendCommandOneShot = "send_one_off_command",
@@ -49,7 +49,7 @@ M.mappings = {
 
 -- Create commands and setup mappings
 function M.setup()
-  for k,v in pairs(M.commands) do
+  for k,v in pairs(commands) do
     local command = {
       "command!",
       "-nargs=?",

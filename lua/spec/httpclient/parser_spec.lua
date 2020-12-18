@@ -1,11 +1,11 @@
 -- luacheck: globals Request
 local testModule
 
-describe('restclient', function()
+describe('httpclient', function()
   describe('parser', function()
     setup(function()
       _G._TEST = true
-      testModule = require('restclient.parser')
+      testModule = require('httpclient.parser')
     end)
 
     teardown(function()

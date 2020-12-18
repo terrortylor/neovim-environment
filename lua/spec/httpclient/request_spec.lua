@@ -1,8 +1,8 @@
 -- luacheck: globals Request
-require('restclient.request')
+require('httpclient.request')
 local ut = require('util.table')
 
-describe('restclient', function()
+describe('httpclient', function()
   describe('request', function()
     setup(function()
       _G._TEST = true

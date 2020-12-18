@@ -1,5 +1,5 @@
 -- luacheck: globals Request
-require'restclient.request'
+require'httpclient.request'
 local s_util = require'util.string'
 
 local M = {}
@@ -44,8 +44,8 @@ function M.parse_lines(buf_lines)
     elseif l:match('^skipSSL$') then
       req.skipSSL = true
       -- match variable
-    elseif l:match("^var%s+(.*)[=:](.*)") then
-      local key, value = l:match("^var%s+(.*)[=:](.*)")
+    elseif l:match("^VAR%s+(.*)[=:](.*)") then
+      local key, value = l:match("^VAR%s+(.*)[=:](.*)")
       variables[key] = value
       -- matches url
     elseif is_url(l) then

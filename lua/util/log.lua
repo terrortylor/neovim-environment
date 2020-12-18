@@ -3,7 +3,7 @@ local api = vim.api
 
 local M = {}
 
-LOG_LEVEL = "ERROR"
+LOG_LEVEL = "INFO"
 
 local log_levels = {
   ERROR = { order = 0, hl = 'ErrorMsg' },

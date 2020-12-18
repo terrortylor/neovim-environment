@@ -7,5 +7,5 @@ lint:
 
 test:
 	@echo "Run tests..."
-	busted -C=lua -v
+	busted -m "./lua/?.lua;./lua/?/?.lua;./lua/?/init.lua" lua
 	@echo
