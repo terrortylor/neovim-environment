@@ -122,7 +122,7 @@ function M.stop()
   -- Cleanup
   snake:cleanup()
   food:close_window()
-  -- TODO restore keymappings
+  input.teardown_mappins()
   -- TODO Unload / wipe all sprite buffers
 end
 

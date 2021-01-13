@@ -7,7 +7,7 @@ local M = {}
 
 M.opts = {
   wikis = {
-    main = "~/personnal-workspace/notes/main"
+    main = "~/personnal-workspace/notes"
   },
   -- TODO doesn't take into account vim's iskeyword value
   link_pattern = "%[%[(%S*)%]%]",

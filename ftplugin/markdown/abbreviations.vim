@@ -1,4 +1,5 @@
 iabbrev <buffer> github GitHub
+iabbrev <buffer> ansible Ansible
 iabbrev <buffer> jenkins Jenkins
 iabbrev <buffer> google Google
 iabbrev <buffer> aws AWS
@@ -6,8 +7,8 @@ iabbrev <buffer> azure Azure
 iabbrev <buffer> cms CMS
 iabbrev <buffer> k8s K8s
 iabbrev <buffer> linux Linux
-iabbrev <buffer> olr OLR
-iabbrev <buffer> e2x E2X
 iabbrev <buffer> testevovle TestEvolve
 iabbrev <buffer> grafana Grafana
 iabbrev <buffer> influxdb InfluxDB
+iabbrev <buffer> javascript JavaScript
+iabbrev <buffer> typescript TypeScript

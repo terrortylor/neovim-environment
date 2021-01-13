@@ -32,6 +32,7 @@ plug.add("godlygeek/tabular")
 plug.add("plasticboy/vim-markdown")
 plug.add("justinmk/vim-sneak")
 
+-- TODO make optional, and have 0.5.0 checked and load alternative if so
 plug.add("preservim/nerdtree")
 require("config.plugin.nerdtree")
 
@@ -54,7 +55,17 @@ plug.add("jacoborus/tender.vim")
 plug.add("udalov/kotlin-vim")
 plug.add("machakann/vim-sandwich")
 plug.add("PProvost/vim-ps1")
+
+local has_lsp = api.nvim_call_function("has", {"nvim-0.5.0"})
+if has_lsp == 1 then
+  plug.add("neovim/nvim-lspconfig")
+end
+
 plug.install()
+
+if has_lsp == 1 then
+  require("config.lsp")
+end
 
 -- Custom Plugins
 -- TODO setup is in init.lua... but then all dependencies are sourced

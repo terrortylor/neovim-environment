@@ -59,6 +59,9 @@ local win_options = {
   -- Default folding to indent, open by default
   foldmethod     = "indent",
   foldenable     = false,
+
+  -- enable signcolumn to prevent jumping
+  signcolumn     = "yes",
 }
 
 util.set_win_options(win_options)

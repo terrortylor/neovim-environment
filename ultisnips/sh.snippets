@@ -5,74 +5,71 @@ endsnippet
 snippet caseswitch "Add case/switch statement"
 case $opt in
 a)
-  echo "a was matched"
-  ;;
+	echo "a was matched"
+	;;
 [1-8]*)
-  echo "in here"
-  ;;
+	echo "in here"
+	;;
 *)
-  echo "Unknown"
-  ;;
- esac
+	echo "Unknown"
+	;;
+esac
 endsnippet
 
 snippet forloop "Add a for loop" b
 for ${1:i} in ${2:\{1..10\}}; do
-  echo "$1 is \$\{$1\}"
+	echo "$1 is \$\{$1\}"
 done
 endsnippet
 
 snippet whilelineinfile "while read line from file" b
-  while read ${1:l}; do
-    echo "\$\{$1\}"
-  done <${2}
+	while read ${1:l}; do
+		echo "\$\{$1\}"
+	done <${2}
 endsnippet
 
-snippet ifthen "Adds an if/then statement" b
+snippet if "Adds an if block" bA
 if [ ${1:\$val -eq 1} ]; then
-  ${2:echo "yes boss"}
+	${2:echo "yes boss"}
 fi
 endsnippet
 
-snippet ifelse "Adds an if/then/else statement" b
-if [ ${1:\$val -eq 1} ]; then
-  ${2:echo "yes boss"}
+snippet else "Adds an else statement" bA
 else
-  ${2:echo "no boss"}
-fi
+	${1:echo "no boss"}
 endsnippet
 
-snippet ifempty "Add if statement for value empty" b
+snippet emptyvarif "Add if statement for value empty" b
 if [ -z ${1:\$val} ]; then
-  echo "Is empty"
+	echo "Is empty"
 else
-  echo "Is not empty"
+	echo "Is not empty"
 fi
 endsnippet
 
-snippet ifnumargs "Adds if statement to check number of args" b
+snippet numargsif "Adds if statement to check number of args" b
 if [ "\$#" -ne ${1:1} ]; then
-  echo "Illegal number of parameters, expected $1 got \$#"
-  echo -e "Usage:\n${FUNCNAME[0]} ${2:<SESSION>}"
-  return 1
+	echo "Illegal number of parameters, expected $1 got \$#"
+	echo -e "Usage:\n${FUNCNAME[0]} ${2:<SESSION>}"
+	return 1
 fi
 endsnippet
 
 snippet ifstringcontains "Adds if statement to check var contains string" b
 if [[ ${1:\${variable}} == *"${2:value}"* ]]; then
-  ${3:echo "It's there!"}
+	${3:echo "It's there!"}
 fi
 endsnippet
 
 
 snippet ifdirexists "Adds if statement to check if directory exitsts" b
 if [ ${1:!} -d ${2:"directory"} ]; then
-  ${3:echo "here"}
+	${3:echo "here"}
 fi
 endsnippet
 
 snippet ifexitcode "Adds if statement to check on the exit code" b
 if [[ "$?" -ne ${1:0} ]]; then
- ${2:echo "ooops"}
+	${2:echo "ooops"}
 fi
 endsnippet
