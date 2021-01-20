@@ -1,5 +1,5 @@
 -- TODO add tests
--- add highlighting
+-- status reporting wrong when installing plugin wiht no docs
 local api = vim.api
 local draw = require('ui.window.draw')
 
@@ -15,6 +15,7 @@ end
 function M.summary()
   if not summary_buf then
     summary_buf = api.nvim_create_buf(false, true)
+    api.nvim_buf_set_option(summary_buf, "filetype", "pluginsstatus")
   end
   draw.open_draw(summary_buf)
   local details = {"Plugin Summary:", ""}

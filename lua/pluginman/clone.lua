@@ -1,5 +1,6 @@
 local api = vim.api
 local fs = require("util.filesystem")
+local load = require("pluginman.load")
 
 local M = {}
 
@@ -36,6 +37,10 @@ local function clone(plugin, callback)
         plugin:set_docs(true)
       else
         plugin:set_docs(false)
+      end
+      if plugin.package == "start" then
+        print("path: " + plugin:get_install_path())
+        load.add_to_runtimepath(plugin:get_install_path())
       end
     else
       plugin:set_installed(false)

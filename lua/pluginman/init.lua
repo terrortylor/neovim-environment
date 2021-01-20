@@ -44,6 +44,7 @@ function M.install()
     local missing = M.check_plugin_status(plug)
     if missing then
       require_install = true
+      break
     end
   end
 

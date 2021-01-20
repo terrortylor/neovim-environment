@@ -22,9 +22,14 @@ function M.get_direction()
 end
 
 function M.setup_mappings()
-  -- FIXME to get going just set some mappings
   for k,v in pairs(control_mappings) do
     api.nvim_set_keymap("n", k, v, {noremap = true, silent = true})
+  end
+end
+
+function M.teardown_mappins()
+  for k,_ in pairs(control_mappings) do
+  api.nvim_command("nunmap " .. k)
   end
 end
 
