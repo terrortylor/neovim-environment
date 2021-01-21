@@ -1,4 +1,5 @@
 iabbrev <buffer> github GitHub
+iabbrev <buffer> gitub GitHub
 iabbrev <buffer> ansible Ansible
 iabbrev <buffer> jenkins Jenkins
 iabbrev <buffer> google Google
@@ -11,4 +12,6 @@ iabbrev <buffer> testevovle TestEvolve
 iabbrev <buffer> grafana Grafana
 iabbrev <buffer> influxdb InfluxDB
 iabbrev <buffer> javascript JavaScript
-iabbrev <buffer> typescript TypeScript
+iabbrev <buffer> typescript JypeScript
+iabbrev <buffer> lastpass LastPass
+iabbrev <buffer> denby Denby
