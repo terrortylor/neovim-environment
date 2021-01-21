@@ -52,12 +52,14 @@ function M.get_current()
 end
 
 local function parse_file()
-  local lines = api.nvim_buf_get_lines(buf, 0, api.nvim_buf_line_count(buf), false)
+  local lines = api.nvim_buf_get_lines(0, 0, api.nvim_buf_line_count(0), false)
   local requests
   requests,variables = parser.parse_lines(lines)
   return requests
 end
 
+-- FIXME currently broken when inspecting request with missing data
+-- FIXME check request with headers...
 function M.inspect_curl()
   local filetype = api.nvim_buf_get_option(0, 'filetype')
 
@@ -107,8 +109,6 @@ function M.run(current)
 
     M.config.update_status(M.config.progress_running_highlight, M.config.progress_complete_highlight, ...)
   end
-
-  local buf = api.nvim_win_get_buf(0)
 
   local requests
   if current then

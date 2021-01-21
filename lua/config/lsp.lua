@@ -29,7 +29,7 @@ local on_attach = function(client, bufnr)
   elseif client.resolved_capabilities.document_range_formatting then
     buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
   end
-  
+
   -- TODO not sure I like this feature
   ---- Set autocommands conditional on server_capabilities
   --if client.resolved_capabilities.document_highlight then
@@ -48,7 +48,7 @@ end
 
 require'lspconfig'.tsserver.setup{}
 
--- Use a loop to conveniently both setup defined servers 
+-- Use a loop to conveniently both setup defined servers
 -- and map buffer local keybindings when the language server attaches
 local servers = { "tsserver" }
 for _, lsp in ipairs(servers) do

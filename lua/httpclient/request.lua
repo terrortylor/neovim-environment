@@ -4,6 +4,7 @@ local NONE = 0
 local RUNNING = 1
 local MISSING_DATA = 2
 local DONE = 3
+local ERROR = 4
 
 -- Meta class
 Request = {
@@ -14,6 +15,7 @@ Request = {
   data_filename = nil,
   result = nil,
   headers = nil,
+  extract = nil,
   skipSSL = false,
   response = nil,
   state = NONE
@@ -28,6 +30,7 @@ function Request:new(o)
    -- Tables have to be initialised
    o.data = {}
    o.headers = {}
+   o.extract = {}
    -- self.result = {}
    return o
 end
@@ -49,6 +52,45 @@ end
 
 function Request:add_data(key, value)
   self.data[key] = value
+end
+
+function Request:add_extract(key, value)
+  self.extract[key] = value
+end
+
+function Request:get_extracted_values()
+  local t = {}
+
+  if not self.extract then
+    return
+  end
+
+  local json = vim.api.nvim_call_function("json_decode", {self.result})
+
+  local extract = function(path)
+    local chunk = "return function() return json." .. path .. " end"
+    local func, err = load(chunk, nil, "t", {json = json})
+    if func then
+      local ok, add = pcall(func)
+      if ok then
+        return add()
+      else
+        -- TODO better handling of this error
+        print("Execution error:", add)
+      end
+    else
+        -- TODO better handling of this error
+      print("Compilation error:", err)
+    end
+    return nil
+  end
+
+  for k,v in pairs(self.extract) do
+    local value = extract(v)
+    t[k] = value
+  end
+
+  return t
 end
 
 function Request:add_header(key, value)
@@ -121,30 +163,35 @@ function Request:set_running()
 end
 
 -- TODO add test
+function Request:is_running()
+  return self.state == RUNNING
+end
+
+-- TODO add test
 function Request:set_done()
   self.state = DONE
 end
 
 -- TODO add test
-function Request:queued()
-  if self.state == NONE then
-    return true
-  end
-  return false
+function Request:set_failed()
+  self.state = ERROR
 end
 
-function Request:missing_data()
-  if self.state == MISSING_DATA then
-    return true
-  end
-  return false
+-- TODO add test
+function Request:is_done()
+  return self.state == DONE
 end
 
--- function Request:add_result_line(line)
---   table.insert(self.result, line)
--- end
+-- TODO add test
+function Request:is_queued()
+  return self.state == NONE
+end
 
--- TODO spawn takes arguments, so is it worth building this as string?
+function Request:is_missing_data()
+  return self.state == MISSING_DATA
+end
+
+-- TODO spawn takes arguments, so is it worth building this as string? probably not!
 function Request:get_curl(variables)
   -- get all the parts
   local verb = 'GET'

@@ -25,7 +25,7 @@ require("config.commands")
 require("config.abbreviations")
 
 -- Download and load my plugin manager if not on the path
-local install_path = api.nvim_call_function("stdpath", {"data"}) .. "/site/pack/pluginman/start/nvim-pluginman"
+local install_path = api.nvim_call_function("stdpath", {"data"}) .. "/site/pack/myplugins/start/nvim-pluginman"
 if not fs.is_directory(install_path) then
   local execute = vim.api.nvim_command
   execute("!git clone https://github.com/terrortylor/nvim-pluginman " .. install_path)

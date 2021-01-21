@@ -44,9 +44,14 @@ function M.parse_lines(buf_lines)
     elseif l:match('^skipSSL$') then
       req.skipSSL = true
       -- match variable
-    elseif l:match("^VAR%s+(.*)[=:](.*)") then
-      local key, value = l:match("^VAR%s+(.*)[=:](.*)")
+      -- FIXME remove support for lower case
+    elseif l:match("^[vV][aA][rR]%s+(.*)[=:](.*)") then
+      local key, value = l:match("[vV][aA][rR]%s+(.*)[=:](.*)")
       variables[key] = value
+      -- FIXME remove support for lower case
+    elseif l:match("^[sS][eE][tT]%s+(.*)[=:](.*)") then
+      local key, value = l:match("^[sS][eE][tT]%s+(.*)[=:](.*)")
+      req:add_extract(key, value)
       -- matches url
     elseif is_url(l) then
       req.url = l

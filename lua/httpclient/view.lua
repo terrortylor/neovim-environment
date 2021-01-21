@@ -27,6 +27,7 @@ function M.add_lines(lines)
 end
 
 function M.update_result_buf(requests)
+  -- TODO is this required is add_lines workes out lines to replace first?
   M.clear_result_buf()
 
   for _,req in pairs(requests) do
@@ -42,7 +43,7 @@ function M.update_result_buf(requests)
   end
 end
 
-function M.show_status(hl_running, hl_complete, is_running, size, complete, missing_data, failed)
+function M.show_status(hl_running, hl_complete, is_running, requests)
   local print_status = function(hl, msg)
     api.nvim_command("echohl " .. hl)
     api.nvim_command("echo '" .. msg .. "'")
@@ -61,19 +62,34 @@ function M.show_status(hl_running, hl_complete, is_running, size, complete, miss
     hl = hl_complete
   end
 
-  status =  string.format("%s: %s of %s complete", state, complete, size)
+  local total = #requests
+  local running = 0
+  local complete = 0
+  local missing = 0
+  local failed = 0
 
-  if missing_data > 0 then
-    status = status .. string.format(", %s missing data", missing_data)
+  for i = 1, #requests do
+    if requests[i].is_done then complete = complete + 1
+    elseif requests[i].is_running() then running = running + 1
+    elseif requests[i].is_missing_data() then missing = missing + 1
+    elseif requests[i].is_failed() then failed = failed + 1
+    end
+  end
+
+  status =  string.format("%s: %s of %s complete", state, complete, total)
+
+  if missing > 0 then
+    status = status .. string.format(", %s missing data", missing)
   end
 
   if failed > 0 then
     status = status .. string.format(", %s failed", failed)
   end
+
   print_status(hl,status)
 end
 
--- TODO rename to create_http_result_buf
+-- TODO rename to create_result_buf
 function M.create_result_scratch_buf()
   if M.result_buf then
     M.clear_result_buf(true)

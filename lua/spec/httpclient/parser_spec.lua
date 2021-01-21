@@ -99,9 +99,22 @@ describe('httpclient', function()
           "goats.com",
           "goat:cheese"
         }
+
         local result, _ = testModule.parse_lines(lines)
 
         assert.same({goat = 'cheese'}, result[1].data)
+      end)
+
+      it('Should match set extract values with : seperator', function()
+        local lines = {
+          "set goats.com",
+          "set goat:cheese",
+          "SET blue:stuff",
+        }
+
+        local result, _ = testModule.parse_lines(lines)
+
+        assert.same({goat = 'cheese', blue = 'stuff'}, result[1].extract)
       end)
 
       it('Should match header', function()
