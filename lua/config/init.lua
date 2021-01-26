@@ -116,4 +116,3 @@ for i =1, #plugins do
   require(plugins[i]).setup()
 end
 
-require("config.plugin.httpclient")

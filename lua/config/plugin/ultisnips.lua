@@ -7,7 +7,6 @@ local global_variables = {
   ["UltiSnipsListSnippets"]        = "<c-u>",
   ["UltiSnipsJumpForwardTrigger"]  = '<tab>',
   ["UltiSnipsJumpBackwardTrigger"] = '<s-tab>',
-  ["UltiSnipsSnippetsDir"]         = "/home/alextylor/.config/nvim/ultisnips",
 }
 
 util.set_variables(global_variables)
