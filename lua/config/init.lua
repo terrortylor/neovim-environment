@@ -65,12 +65,12 @@ plug.add({
 
 plug.add("fatih/vim-go")
 
-plug.add({
-  url = "ludovicchabant/vim-gutentags",
-  post_handler = function()
-    require("config.plugin.gutentags")
-  end
-})
+  --plug.add({
+  --url = "ludovicchabant/vim-gutentags",
+  --post_handler = function()
+  --  require("config.plugin.gutentags")
+  --end
+  --})
 
 plug.add({
   url = "christoomey/vim-tmux-navigator",

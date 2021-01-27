@@ -1,8 +1,11 @@
 local nvim_lsp = require('lspconfig')
+local util = require('lspconfig/util')
+
 local on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
+  -- binds omnifunc copleteion to omni complete
   buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
   -- Mappings.
@@ -48,10 +51,31 @@ end
 
 require'lspconfig'.tsserver.setup{}
 
+require "lspconfig".efm.setup {
+  init_options = {documentFormatting = true},
+  filetypes = {"javascript", "typescript"},
+  root_dir = function(fname)
+    return util.root_pattern("tsconfig.json")(fname) or
+    util.root_pattern(".eslintrc.js", ".git")(fname);
+  end,
+  init_options = {documentFormatting = true},
+  settings = {
+    rootMarkers = {".eslintrc.js", ".git/"},
+    languages = {
+      typescript = {
+        {
+          lintCommand = "./node_modules/.bin/eslint -f unix --stdin --stdin-filename ${INPUT}",
+          lintIgnoreExitCode = true,
+          lintStdin = true
+        }
+      }
+    }
+  }
+}
+
 -- Use a loop to conveniently both setup defined servers
 -- and map buffer local keybindings when the language server attaches
 local servers = { "tsserver" }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup { on_attach = on_attach }
 end
-

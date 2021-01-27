@@ -12,6 +12,6 @@ iabbrev <buffer> testevovle TestEvolve
 iabbrev <buffer> grafana Grafana
 iabbrev <buffer> influxdb InfluxDB
 iabbrev <buffer> javascript JavaScript
-iabbrev <buffer> typescript JypeScript
+iabbrev <buffer> typescript TypeScript
 iabbrev <buffer> lastpass LastPass
 iabbrev <buffer> denby Denby
