@@ -49,28 +49,74 @@ local on_attach = function(client, bufnr)
   --end
 end
 
-require'lspconfig'.tsserver.setup{}
+  require'lspconfig'.tsserver.setup{}
+  
+  ---- NOTE: an efm config file prevents arror in log, only needs first line of: version:2
+  --local eslint = {
+  --  lintCommand = "./node_modules/.bin/eslint -f unix --stdin --stdin-filename ${INPUT}",
+  --  lintIgnoreExitCode = true,
+  --  lintStdin = true
+  --}
+  --
+  --require "lspconfig".efm.setup {
+  --  --cmd = {"efm-langserver", "-q"}, -- the `-q` prevents the  readng std in, printing stdout message
+  --  init_options = {documentFormatting = true},
+  --  filetypes = {"javascript", "typescript"},
+  --  root_dir = function(fname)
+  --    return util.root_pattern("tsconfig.json")(fname) or
+  --    util.root_pattern(".eslintrc.js", ".git")(fname);
+  --  end,
+  --  init_options = {documentFormatting = true},
+  --  settings = {
+  --    rootMarkers = {".eslintrc.js", ".git/"},
+  --    --logFile = "/home/alextylor/efm.log",
+  --    --logLevel =  1,
+  --    languages = {
+  --      typescript = {eslint}
+  --    }
+  --  }
+  --}
 
-require "lspconfig".efm.setup {
-  init_options = {documentFormatting = true},
-  filetypes = {"javascript", "typescript"},
-  root_dir = function(fname)
-    return util.root_pattern("tsconfig.json")(fname) or
-    util.root_pattern(".eslintrc.js", ".git")(fname);
-  end,
-  init_options = {documentFormatting = true},
-  settings = {
-    rootMarkers = {".eslintrc.js", ".git/"},
-    languages = {
-      typescript = {
-        {
-          lintCommand = "./node_modules/.bin/eslint -f unix --stdin --stdin-filename ${INPUT}",
-          lintIgnoreExitCode = true,
-          lintStdin = true
-        }
+require'lspconfig'.diagnosticls.setup{
+filetypes = {"javascript", "typescript"},
+root_dir = function(fname)
+  return util.root_pattern("tsconfig.json")(fname) or
+  util.root_pattern(".eslintrc.js", ".git")(fname);
+end,
+init_options = {
+  linters = {
+    eslint = {
+      command = "./node_modules/.bin/eslint",
+      rootPatterns = {".eslintrc.js", ".git"},
+      debounce = 100,
+      args = {
+        "--stdin",
+        "--stdin-filename",
+        "%filepath",
+        "--format",
+        "json"
+      },
+      sourceName = "eslint",
+      parseJson = {
+        errorsRoot = "[0].messages",
+        line = "line",
+        column = "column",
+        endLine = "endLine",
+        endColumn = "endColumn",
+        message = "[eslint] ${message} [${ruleId}]",
+        security = "severity"
+      },
+      securities = {
+        [2] = "error",
+        [1] = "warning"
       }
-    }
+    },
+  },
+  filetypes = {
+    javascript = "eslint",
+    typescript = "eslint"
   }
+}
 }
 
 -- Use a loop to conveniently both setup defined servers
