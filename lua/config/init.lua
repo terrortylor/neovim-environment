@@ -1,4 +1,5 @@
 local api = vim.api
+local has_nvim5 = api.nvim_call_function("has", {"nvim-0.5.0"})
 
 -- If error later in scripts then this may/may not be set,
 -- this is a crued way to guard around that
@@ -40,6 +41,13 @@ plug.add({url = "godlygeek/tabular", loaded = "opt"})
 plug.add("plasticboy/vim-markdown")
 plug.add("justinmk/vim-sneak")
 
+plug.add({
+  url = "takac/vim-hardtime",
+  post_handler = function()
+    --api.nvim_command("let g:hardtime_default_on = 1")
+  end
+})
+
 -- TODO make optional, and have 0.5.0 checked and load alternative if so
 plug.add({
   url = "preservim/nerdtree",
@@ -48,12 +56,29 @@ plug.add({
   end
 })
 
-plug.add({
+plug.add("AndrewRadev/switch.vim")
+
+if has_nvim5 == 1 then
+  -- TODO update plugin man to have depedencies so not loaded until they are
+  plug.add("nvim-lua/popup.nvim")
+  plug.add("nvim-lua/plenary.nvim")
+
+  plug.add({
+    url = "nvim-telescope/telescope.nvim",
+    post_handler = function()
+      require("config.plugin.telescope")
+    end
+  })
+
+  plug.add('nvim-telescope/telescope-github.nvim')
+else
+  plug.add({
   url = "junegunn/fzf.vim",
   post_handler = function()
     require("config.plugin.fzf")
   end
-})
+  })
+end
 
 -- TODO make optional, see init.vim so loads if python3
 plug.add({
@@ -79,14 +104,17 @@ plug.add({
   end
 })
 
-plug.add("jacoborus/tender.vim")
+plug.add({
+  url = "jacoborus/tender.vim",
+  post_handler = function()
+   vim.api.nvim_command("colorscheme tender")
+  end
+})
 plug.add("udalov/kotlin-vim")
 plug.add("machakann/vim-sandwich")
 plug.add("PProvost/vim-ps1")
 
-local has_lsp = api.nvim_call_function("has", {"nvim-0.5.0"})
-if has_lsp == 1 then
-
+if has_nvim5 == 1 then
   plug.add({ url = "neovim/nvim-lspconfig",
   post_handler = function()
     require("config.lsp")
@@ -108,7 +136,7 @@ local plugins = {
   "pa",
   "snake",
   "wiki",
-  "fzf",
+  --"fzf",
   "test"
 }
 

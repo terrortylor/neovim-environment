@@ -1,20 +1,3 @@
-" Highlights function block
-onoremap af :<c-u>execute "normal! ?^function\rv/^endfunction\r$"<cr>
-xnoremap af ?^function<cr>o/^endfunction<cr>$
-
-" echo's selection on line bellow
-xnoremap <leader>ev yoechom '<c-r>": ' . <c-r>"<esc>
-
-set foldmethod=expr
-set foldexpr=FoldVimFunctions(v:lnum)
-
-" Allow ':' to be classed as a word charecter
-set iskeyword+=:
-
-" Add consistency using gd over ctrl-]
-" NOTE this also overrides COC's mapping
-nnoremap gd <c-]>
-
 " Folds top level functions
 " including functions that are commented out
 function! FoldVimFunctions(line)

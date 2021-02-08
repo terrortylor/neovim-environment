@@ -28,8 +28,8 @@ ${0}
 return $1
 endsnippet
 
-snippet tbli	"table.insert(tbl, val)" bA
-table.insert(${1:tbl}${2:, 0}, ${3:val})
+snippet ti	"table.insert(tbl, val)" b
+table.insert(${1:tbl}, ${2:"${3:val}"${4}})${0}
 endsnippet
 
 snippet todo "-- TODO comment" bA

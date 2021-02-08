@@ -23,14 +23,20 @@ function M.rename_file(path)
 end
 
 --- Saves a buffer if the file path exists (directory path), if the file
--- exists all ready then updates
+-- exists all ready then updates, if the file has no name then do nothing
 function M.update_buffer()
-  local path = api.nvim_call_function("expand", {"%:p:h"})
-  if not filesystem.is_directory(path) then
-    log.error("Buffer directory doesn't exit, not saving")
-    return
+  local filename = api.nvim_call_function("expand", {"%"})
+  if filename ~= "" then
+    local path = api.nvim_call_function("expand", {"%:p:h"})
+    if path:match("term://") then
+      log.info("Terminal buffer, not saving")
+      return
+    elseif not filesystem.is_directory(path) then
+      log.error("Buffer directory doesn't exit, not saving")
+      return
+    end
+    api.nvim_command(":update")
   end
-  api.nvim_command(":update")
 end
 
 --- Creates a directory, linux only

@@ -1,4 +1,4 @@
-" TODO migrate to lua/or ultisnips?
+" TODO migrate to lua/or snippets?
 " THIS IS NO LONGER USED
 " BUT WOULD LIKE TO MIGRATE THE FUNCTIONS FOR MARKDOWN/WIKI USE
 "

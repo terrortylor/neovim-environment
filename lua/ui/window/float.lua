@@ -87,7 +87,7 @@ function M.open_float(title, has_border, buf, buf_opts, callback)
       "autocmd",
       "BufWipeout",
       "<buffer=" .. border_buf .."> ++once",
-      "exe 'silent bwipeout! " .. border_buf
+      "exe 'silent bwipeout! " .. border_buf .. "'"
     }
     api.nvim_command(table.concat(command, " "))
   end
@@ -96,7 +96,7 @@ function M.open_float(title, has_border, buf, buf_opts, callback)
   win = api.nvim_open_win(buf, true, buf_opts)
   M.callbacks[win] = callback
 
-  -- TODO pass in extra mapping
+  -- TODO pass in extra mapping, such as <sec> or <c-c>
   -- for _, v in pairs(lhs_mappings) do
   --   api.nvim_buf_set_keymap(buf, "n", v, "<CMD>lua require('git.lib.blame').close_window()<CR>", { noremap = true })
   -- end
@@ -106,18 +106,22 @@ function M.open_float(title, has_border, buf, buf_opts, callback)
       "autocmd",
       "WinLeave",
       "<buffer=" .. buf .."> ++once",
-      ":lua require('util.window.float').close_windows(" .. win .. ", " .. border_win .. ")"
+      ":lua require('ui.window.float').close_windows(" .. win .. ", " .. border_win .. ")"
     }
     api.nvim_command(table.concat(command, " "))
+    return {win, border_win}
   else
     local command = {
       "autocmd",
       "WinLeave",
       "<buffer=" .. buf .."> ++once",
-      ":lua require('util.window.float').close_windows(" .. win .. ")"
+      ":lua require('ui.window.float').close_windows(" .. win .. ")"
     }
     api.nvim_command(table.concat(command, " "))
+
+    return {win, nil}
   end
+
 end
 
 return M

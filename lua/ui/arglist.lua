@@ -1,10 +1,10 @@
--- if package.loaded['ui.arglist'] then package.loaded['ui.arglist'] = nil end
+--- Opens the arglist in a floating window, each arglist item is on it's own line
+-- when exiting the window the arglist is updated to the contents of the buffer.
+--
 -- TODO
--- popup buffer to display arg list, each item on new line
--- popup buffer to edit arg list like buffer
--- populate arg list from fzf finder
+-- * be nice to have an <esc> or <c-c> mapping to close and update as currently moving out of the window
 local api = vim.api
-local float = require('util.window.float')
+local float = require('ui.window.float')
 local is_string_list_same = require("util.table").is_string_list_same
 local buffer = require("util.buffer")
 

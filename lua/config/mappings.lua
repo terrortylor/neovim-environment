@@ -1,20 +1,17 @@
-local util = require('util.config')
 local log = require('util.log')
-local nresil = util.noremap_silent
 
 local mappings = {
   n = {
     -- Refactoring
     ["<leader>rw"] = {[[:%s/\C\<<c-r><c-w>\>//<left>]], {noremap = true}},
-    -- Search / highlights
-    -- Toggle highlight
-    ["<leader>/"]  = ":set hlsearch!<CR>",
-    -- Toggle case
-    ["<leader>tc"] = ":set ignorecase!<CR>",
-    -- Toggle line numbers
-    ["<leader>tn"] = ":set number!<CR>",
-    ["<leader>tr"] = ":set relativenumber!<CR>",
-    ["<F2>"]       = ":set paste!<CR>",
+
+    -- Toggles
+    ["<leader>/"]  = ":set hlsearch!<CR>", -- Toggle highlight
+    ["<leader>tc"]= ":set ignorecase!<CR>", -- Toggle case
+    ["<leader>tn"] = ":set number!<CR>", -- Toggle line numbers
+    ["<leader>tr"] = ":set relativenumber!<CR>", -- Toggle releative numbers
+    ["<leader>ts"] = ":set spell!<CR>", -- Toggle spelling
+    ["<F2>"]       = ":set paste!<CR>", -- Toggle paste mode
 
     -- Load vimrc in split
     -- TODO this should be my lua config now
@@ -64,9 +61,12 @@ local mappings = {
     ["[c"]         = ":cprevious<CR>",
     ["]c"]         = ":cnext<CR>",
 
+    -- Lazygit throw away terminal
+    ["<leader>lg"] = ":Lazygit<CR>",
+
     -- Insert new line without a comment
-    ["<leader>O"]  = ":lua require'ui.buffer'.new_line_no_comment(true)<CR>",
-    ["<leader>o"]  = ":lua require'ui.buffer'.new_line_no_comment(false)<CR>",
+    ["<leader>O"]  = "<CMD>lua require'ui.buffer'.new_line_no_comment(true)<CR>",
+    ["<leader>o"]  = "<CMD>lua require'ui.buffer'.new_line_no_comment(false)<CR>",
 
     -- Quick play macro
     -- TODO can this take a count?
@@ -83,9 +83,6 @@ local mappings = {
     -- Auto select first entry
     ["<leader>zz"] = "1z=",
 
-    ["<leader>ts"] = ":set spell!<CR>",
-
-
     -- Reselect last put
     ["gp"]         = "`[v`]",
 
@@ -98,8 +95,8 @@ local mappings = {
     --["j"]          = {"(v:count? 'j' : 'gj')", {noremap = true, silent = true, expr = true}},
     --["k"]          = {"(v:count? 'k' : 'gk')", {noremap = true, silent = true, expr = true}},
 
-    -- Comment
-    ["gc"]         = ":CommentToggle<cr>",
+    -- Ultisnips
+    ["<leader>ue"] = ":UltiSnipsEdit<CR>:set filetype=snippets<CR>",
   },
   v = {
     -- Indent Lines and reselect
@@ -109,9 +106,6 @@ local mappings = {
     -- replace default register contents with XXX in selection
     -- FIXME the double quote in the rhs breaks formatiing
     ["<leader>rw"] = {[[:s/\C\<<c-r>"\>//<left>]], {noremap = true}},
-
-    -- Comment
-    ["gc"]         = ":'<,'>CommentToggle<cr>",
   },
   i = {
     -- Exit insert mode
@@ -137,14 +131,17 @@ local mappings = {
   }
 }
 
+local opts = {noremap = true, silent = true}
+local function keymap(...) vim.api.nvim_set_keymap(...) end
+
 -- Silent maps
 for mode, maps in pairs(mappings) do
   for k, v in pairs(maps) do
     if type(v) == 'string' then
-    util.create_keymap(mode, k, v, nresil)
+    keymap(mode, k, v, opts)
     elseif type(v) == 'table' then
       if #v == 2 then
-        util.create_keymap(mode, k, v[1], v[2])
+        keymap(mode, k, v[1], v[2])
       else
         log.error("Mapping not run for lhs: " .. k .. " mode: " .. mode)
       end

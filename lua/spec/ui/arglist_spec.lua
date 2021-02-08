@@ -59,7 +59,7 @@ describe('ui', function()
 
     describe("edit_args_in_buffer", function()
       it("Should create buffer and set lines to current arglist", function()
-        local float= mock(require("util.window.float"), true)
+        local float= mock(require("ui.window.float"), true)
         local buffer= mock(require("util.buffer"), true)
         local orig_arg_list = {"arg1", "arg2"}
         local edited_arg_list = {"new/arg/list/line"}
@@ -90,7 +90,7 @@ describe('ui', function()
         -- now a buffer exists, then calling again should set same buffer
         -- where arglist and buffer are the same
         api = mock(vim.api, true)
-        float= mock(require("util.window.float"), true)
+        float= mock(require("ui.window.float"), true)
         buffer= mock(require("util.buffer"), true)
         stub(testModule, "get_arglist").returns(edited_arg_list)
         stub(testModule, "set_arglist")
@@ -115,7 +115,7 @@ describe('ui', function()
         -- now test where arg list has changed, so buffer arg list is not uptodate
         api = mock(vim.api, true)
         api.nvim_buf_line_count.returns(2)
-        float= mock(require("util.window.float"), true)
+        float= mock(require("ui.window.float"), true)
         buffer= mock(require("util.buffer"), true)
         stub(testModule, "get_arglist").returns(orig_arg_list)
         stub(testModule, "set_arglist")

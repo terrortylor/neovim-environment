@@ -8,7 +8,6 @@
 -- explore formatlistpat so wrapping works with
 -- add some way on handling functionality without o formatoption
 -- move plug mapping to here
-local util = require('util.config')
 local api = vim.api
 
 local M = {}
@@ -125,10 +124,13 @@ end
 
 -- TODO no tests
 function M.setup()
+  local opts = {noremap = true, silent = true}
+  local function keymap(...) vim.api.nvim_set_keymap(...) end
+
   -- maps
   for mode, maps in pairs(M.mappings) do
     for k, v in pairs(maps) do
-      util.create_keymap(mode, k, v)
+      keymap(mode, k, v, opts)
     end
   end
 end

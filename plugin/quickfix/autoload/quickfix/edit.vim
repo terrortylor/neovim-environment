@@ -12,6 +12,7 @@ function! quickfix#edit#SetModifiable() abort
 endfunction
 
 " Reloads the quickfix / location list edited buffer
+" TODO keep this
 function! quickfix#edit#QuickfixFromBuffer() abort
   if s:IsQuickfixOrLocationList()
     " Set errorformat to read buffer in with

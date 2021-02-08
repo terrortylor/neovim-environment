@@ -25,7 +25,6 @@
 -- * ability to get last command from pane and edit
 
 local api = vim.api
-local util = require("util.config")
 
 -- TODO Some extension ideas:
 -- Sanity check there is more than one pane to send too, if only two select other automatically?
@@ -59,9 +58,12 @@ function M.setup()
     api.nvim_command(table.concat(command, " "))
   end
 
+  local opts = {noremap = true, silent = true}
+  local function keymap(...) vim.api.nvim_set_keymap(...) end
+
   -- Create mappings
   for k, v in pairs(M.mappings) do
-    util.create_keymap("n", k, v, {noremap = true, silent = true})
+    keymap("n", k, v, opts)
   end
 end
 

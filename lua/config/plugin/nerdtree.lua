@@ -1,7 +1,9 @@
 local util = require('util.config')
-local nresil = util.noremap_silent
 
-util.create_keymap("n", "<leader>tt", ":<C-u>call NerdToggleFind()<CR>", nresil)
+local opts = {noremap = true, silent = true}
+local function keymap(...) vim.api.nvim_set_keymap(...) end
+
+keymap("n", "<leader>tt", ":<C-u>call NerdToggleFind()<CR>", opts)
 
 local autogroups = {
   nerdtree_auto_close_vim = {

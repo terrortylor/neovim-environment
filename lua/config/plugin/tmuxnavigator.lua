@@ -1,5 +1,4 @@
 local util = require("util.config")
-local nresil = util.noremap_silent
 
 local global_variables = {
   tmux_navigator_no_mappings         = 1,
@@ -16,6 +15,9 @@ local nav_maps = {
   ["<c-l>"] = ":TmuxNavigateRight<CR>",
 }
 
+local opts = {noremap = true, silent = true}
+local function keymap(...) vim.api.nvim_set_keymap(...) end
+
 for k, v in pairs(nav_maps) do
-  util.create_keymap("n", k, v, nresil)
+  keymap("n", k, v, opts)
 end

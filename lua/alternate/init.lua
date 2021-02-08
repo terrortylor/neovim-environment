@@ -4,8 +4,6 @@
 -- but could be to a header file, or compiled version of a template.
 
 local api = vim.api
-local util = require('util.config')
-local nresil = util.noremap_silent
 
 local M = {}
 
@@ -104,9 +102,12 @@ end
 -- Create commands and setup mappings
 -- TODO add test
 function M.setup()
+  local opts = {noremap = true, silent = true}
+  local function keymap(...) vim.api.nvim_set_keymap(...) end
+
   -- Create mappings
   for k, v in pairs(M.mappings) do
-    util.create_keymap("n", k, v, nresil)
+    keymap("n", k, v, opts)
   end
 end
 

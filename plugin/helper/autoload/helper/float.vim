@@ -34,37 +34,3 @@ function! helper#float#info(lines, on_cursor) abort
   endtry
   call nvim_win_close(l:win, v:true)
 endfunction
-
-" Displays a terminal in a centered popup window. The passed `cmd` runs and
-" once it finishes the terminal is destroyed.
-"
-" Arguments:
-"   cmd: command to run
-function! helper#float#SingleUseTerminal(cmd) abort
-  if a:cmd ==# ''
-    return
-  endif
-  let l:buf = nvim_create_buf(v:false, v:true)
-
-  let l:x_padding = 4
-  let l:y_padding = 2
-
-  let l:width = &columns - (l:x_padding * 2)
-  let l:height = &lines - (l:y_padding * 4)
-  let l:opts = {'relative': 'win', 'width': l:width, 'height': l:height, 'col': l:x_padding, 'row': l:y_padding, 'anchor': 'NW', 'style': 'minimal'}
-  let l:win = nvim_open_win(l:buf, v:true, l:opts)
-
-  call termopen(a:cmd, { 'on_exit': function('helper#float#TermExitCallBack') })
-  " Enter insert mode
-  " TODO if autocommand used to enter insert mode on terminal then this may
-  " need to be rethinked
-  normal! i
-endfunction
-
-" Used by the function 'helper#float#SingleUseTerminal' to simply call
-" bwipeout once the passed command exists
-function! helper#float#TermExitCallBack(job_id, code, event) abort
-  if a:code == 0
-    bwipeout!
-  endif
-endfunction

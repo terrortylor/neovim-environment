@@ -6,6 +6,11 @@ local api = vim.api
 
 local M = {}
 
+M.config = {
+  -- Linters preffer comment and line to hae a space in between
+  left_marker_padding = true
+}
+
 local function get_comment_wrapper()
   local cs = api.nvim_buf_get_option(0, 'commentstring')
 
@@ -13,6 +18,15 @@ local function get_comment_wrapper()
   if cs:find('%%s') then
    local left = cs:match('^(.*)%%s')
    local right = cs:match('^.*%%s(.*)')
+
+   -- left comment markers should have padding as linterers preffer
+   -- TODO config option
+   if  M.config.left_marker_padding then
+     if not left:match("%s$") then
+       left = left .. " "
+     end
+   end
+
    return left, right
   else
     log.debug('Commentstring not understood: ' .. cs)
@@ -48,6 +62,22 @@ local function uncomment_line(l, left, right)
   line = line:gsub(esc_left, '', 1)
 
   return line
+end
+
+function M.operator()
+  local mode = vim.api.nvim_call_function("visualmode", {})
+  local line1, line2
+  if not mode then
+    line1 = vim.api.nvim_win_get_cursor(0)[1]
+    line2 = line1
+  elseif mode == "V" then
+    line1 = vim.api.nvim_buf_get_mark(0, "<")[1]
+    line2 = vim.api.nvim_buf_get_mark(0, ">")[1]
+  else
+    line1 = vim.api.nvim_buf_get_mark(0, "[")[1]
+    line2 = vim.api.nvim_buf_get_mark(0, "]")[1]
+  end
+    M.comment_toggle(line1, line2)
 end
 
 function M.comment_toggle(line_start, line_end)

@@ -14,6 +14,10 @@ local autogroups = {
     -- FIXME this moves the cursor, so need to set mark and jump back
     {"BufWritePre", "*", [[%s/\s\+$//e]]}
   },
+  -- TODO move this auto comand to filetype file, so it's self contianed, then all from config/init.lua
+  lua_filetype_loading = {
+    {"VimEnter,FileType", "*", "lua require('config.filetype').load_filetype_config()"}
+  },
   return_to_last_edit_in_buffer = {
     {"BufReadPost", "*", "lua require('config.function.autocommands').move_to_last_edit()"}
   },

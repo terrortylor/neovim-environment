@@ -56,10 +56,6 @@ local win_options = {
   -- Selling
   spell          = false,
 
-  -- Default folding to indent, open by default
-  foldmethod     = "indent",
-  foldenable     = false,
-
   -- enable signcolumn to prevent jumping
   signcolumn     = "yes",
 }

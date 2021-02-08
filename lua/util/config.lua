@@ -3,8 +3,6 @@ local api = vim.api
 
 local M = {}
 
-M.noremap_silent = {noremap = true, silent = true}
-
 -- TODO remove once nvim 0.5
 function M.set_options(options)
   for k,v in pairs(options) do
@@ -31,12 +29,6 @@ function M.set_variables(variables)
   for k,v in pairs(variables) do
     api.nvim_set_var(k, v)
   end
-end
-
-function M.create_keymap(mode, lhs, rhs, opts)
-  -- change this from opts to ... and  loop on them to build up
-  opts = opts or {noremap = true}
-  api.nvim_set_keymap(mode, lhs, rhs, opts)
 end
 
 function M.create_autogroups(definitions)
