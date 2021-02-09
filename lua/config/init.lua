@@ -33,6 +33,14 @@ if not fs.is_directory(install_path) then
   execute "packadd nvim-pluginman"
 end
 
+plug.add({
+  url = "terrortylor/nvim-comment",
+  package = "myplugins",
+  post_handler = function()
+    require('nvim_comment').setup()
+  end
+})
+
 -- Plugins
 plug.add({url = "godlygeek/tabular", loaded = "opt"})
 -- tabular needs to be sourced before vim-markdown
@@ -129,7 +137,6 @@ plug.install()
 -- so maybe init.lua just set"s up what is required to get going like autoload vs plugin directory
 local plugins = {
   "git",
-  "ui.buffer.comment",
   "ui.arglist",
   "tmux",
   "alternate",

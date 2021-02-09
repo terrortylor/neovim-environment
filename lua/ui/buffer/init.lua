@@ -20,8 +20,8 @@ function M.prototype()
   local _,_ = pcall(function()
     -- Reselect, copy to a reg, move to end of selection, put and reselect
     api.nvim_command("normal! gv\"ay`>\"apgv")
-    -- Comment out using commentary
-    api.nvim_command("'<,'>Commentary")
+    -- Comment out using comment toggle: https://github.com/terrortylor/nvim-comment
+    api.nvim_command("'<,'>CommentToggle")
     -- move to start of selection and down and start of line
     api.nvim_command("normal! `>j0")
   end)
