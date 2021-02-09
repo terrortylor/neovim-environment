@@ -3,14 +3,13 @@ local util = require('lspconfig/util')
 
 vim.b.show_virtual_text = false
 
-local on_attach = function(client, bufnr)
-  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+local function set_omnifunc(bufnr)
   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-
-  -- binds omnifunc copleteion to omni complete
   buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+end
 
-  -- Mappings.
+local function set_mappings(client, bufnr)
+  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
   local opts = { noremap=true, silent=true }
   buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
   buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
@@ -35,60 +34,35 @@ local on_attach = function(client, bufnr)
   elseif client.resolved_capabilities.document_range_formatting then
     buf_set_keymap("n", "<space>fd", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
   end
+end
 
+local function set_highlights(client)
   -- TODO not sure I like this feature, unless updatetime is set to like 500~
   -- have to check other CursorHold autocommands
   -- Set autocommands conditional on server_capabilities
   if client.resolved_capabilities.document_highlight then
-    require('lspconfig').util.nvim_multiline_command [[
-      :hi LspReferenceRead cterm=bold ctermbg=red guibg=LightYellow
-      :hi LspReferenceText cterm=bold ctermbg=red guibg=LightYellow
-      :hi LspReferenceWrite cterm=bold ctermbg=red guibg=LightYellow
+    vim.api.nvim_exec([[
+      hi LspReferenceRead cterm=bold ctermbg=red guibg=LightYellow
+      hi LspReferenceText cterm=bold ctermbg=red guibg=LightYellow
+      hi LspReferenceWrite cterm=bold ctermbg=red guibg=LightYellow
       augroup lsp_document_highlight
         autocmd!
         autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
         autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
       augroup END
-    ]]
+    ]], false)
   end
 end
 
--- TODO would like virtual text and loclist to be configurable with func...
--- see help vim.lsp.diagnostic.on_publish_diagnostics()
-    vim.lsp.handlers["textDocument/publishDiagnostics"] = function(...)
-    vim.lsp.with(
-        vim.lsp.diagnostic.on_publish_diagnostics,
-        {
-          virtual_text = function(bufnr, client_id)
-            return vim.b.show_virtual_text
-          end,
-        }
-    )(...)
-    pcall(vim.lsp.diagnostic.set_loclist, {open_loclist = false})
-    end
-
-  --vim.lsp.handlers["textDocument/formatting"] = function(err, _, result, _, bufnr)
-  --print("her")
-  --if err ~= nil or result == nil then
-  --  print("here2")
-  --    return
-  --end
-  --if not vim.api.nvim_buf_get_option(bufnr, "modified") then
-  --  print("here3")
-  --  print(results)
-  --        vim.api.nvim_command("checktime")
-  --    --local view = vim.fn.winsaveview()
-  --    --vim.lsp.util.apply_text_edits(result, bufnr)
-  --    --vim.fn.winrestview(view)
-  --    --if bufnr == vim.api.nvim_get_current_buf() then
-  --    --  print("here4")
-  --    --    vim.api.nvim_command("noautocmd :update")
-  --    --end
-  --end
-  --end
-
 require'lspconfig'.tsserver.setup{
-  on_attach = on_attach
+  on_attach = function(client, bufnr)
+    set_omnifunc(bufnr)
+    set_mappings(client, bufnr)
+    set_highlights(client)
+
+    -- provided by efm and eslint
+    client.resolved_capabilities.document_formatting = false
+  end
 }
 
 require'lspconfig'.terraformls.setup{
@@ -96,91 +70,28 @@ require'lspconfig'.terraformls.setup{
   filetypes = {"tf", "terraform"}
 }
 
-require'lspconfig'.diagnosticls.setup{
+local eslint = {
+  lintCommand = "eslint_d -f unix --stdin --stdin-filename ${INPUT}",
+  lintStdin = true,
+  lintFormats = {"%f:%l:%c: %m"},
+  lintIgnoreExitCode = true,
+  formatCommand = "eslint_d --fix-to-stdout --stdin --stdin-filename=${INPUT}",
+  formatStdin = true
+}
+
+require "lspconfig".efm.setup {
+  init_options = {documentFormatting = true},
   filetypes = {"javascript", "typescript"},
   root_dir = function(fname)
     return util.root_pattern("tsconfig.json")(fname) or
     util.root_pattern(".eslintrc.js", ".git")(fname);
   end,
-  init_options = {
-    linters = {
-      eslint = {
-        command = "./node_modules/.bin/eslint",
-        rootPatterns = {".eslintrc.js", ".git"},
-        debounce = 100,
-        args = {
-          "--stdin",
-          "--stdin-filename",
-          "%filepath",
-          "--format",
-          "json"
-        },
-        sourceName = "eslint",
-        parseJson = {
-          errorsRoot = "[0].messages",
-          line = "line",
-          column = "column",
-          endLine = "endLine",
-          endColumn = "endColumn",
-          message = "[eslint] ${message} [${ruleId}]",
-          security = "severity"
-        },
-        securities = {
-          [2] = "error",
-          [1] = "warning"
-        }
-      },
-    },
-    formatters = {
-      eslintfmt = {
-        command = "./node_modules/.bin/eslint",
-        --args = {"--stdin", "--stdin-filename", "%filepath", "--fix"},
-        --args = {"--stdin", "--fix"},
-        --isStdout = false,
-        -- this works inthe back ground...
-        doesWriteToFile = true,
-        args = {"%filepath", "--fix"},
-        -- TODO test this requiredFiles
-        --requiredFiles = {".eslintrc.js"},
-        rootPatterns = {
-          ".prettierrc",
-          ".prettierrc.json",
-          ".prettierrc.toml",
-          ".prettierrc.json",
-          ".prettierrc.yml",
-          ".prettierrc.yaml",
-          ".prettierrc.json5",
-          ".prettierrc.js",
-          ".prettierrc.cjs",
-          "prettier.config.js",
-          "prettier.config.cjs", ".git"
-        }
-      },
-      --prettier = {
-      --  command = "./node_modules/.bin/prettier",
-      --  --args = {"--stdin-filename", "%filepath"},
-      --  args = {"--stdin", "--stdin-filename", "%filepath"},
-      --  rootPatterns = {
-      --    ".prettierrc",
-      --    ".prettierrc.json",
-      --    ".prettierrc.toml",
-      --    ".prettierrc.json",
-      --    ".prettierrc.yml",
-      --    ".prettierrc.yaml",
-      --    ".prettierrc.json5",
-      --    ".prettierrc.js",
-      --    ".prettierrc.cjs",
-      --    "prettier.config.js",
-      --    "prettier.config.cjs", ".git"
-      --  }
-      --}
-    },
-    filetypes = {
-      javascript = "eslint",
-      typescript = "eslint"
-    },
-    formatFiletypes = {
-      typescript = "eslintfmt"
+  init_options = {documentFormatting = true},
+  settings = {
+    rootMarkers = {".eslintrc.js", ".git/"},
+    languages = {
+      javascript = {eslint},
+      typescript = {eslint}
     }
   }
 }
