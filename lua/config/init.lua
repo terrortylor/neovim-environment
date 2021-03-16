@@ -59,6 +59,14 @@ end})
 --   package = "myplugins",
 -- })
 
+plug.add({
+  url = "terrortylor/nvim-comment",
+  package = "myplugins",
+  post_handler = function()
+    require('nvim_comment').setup()
+  end
+})
+
 -- Plugins
 plug.add({url = "godlygeek/tabular", loaded = "opt"})
 -- tabular needs to be sourced before vim-markdown
