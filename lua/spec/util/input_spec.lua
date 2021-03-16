@@ -1,23 +1,20 @@
-describe("util", function()
-  local testModule
-  local api
+local testModule
+local api
+local mock = require('luassert.mock')
 
+describe("util", function()
   describe("input", function()
-    setup(function()
-      _G._TEST = true
-      _G.vim = {
-        api = require("spec.vim_api_helper")
-      }
+    before_each(function()
       testModule = require("util.input")
+      api = mock(vim.api, true)
     end)
 
-    teardown(function()
+    after_each(function()
       mock.revert(api)
     end)
 
     describe("get_user_input", function()
       it("Should prompt with expect message", function()
-        api = mock(vim.api, true)
         api.nvim_call_function.on_call_with("input", {{prompt = "How many goats? "}}).returns("loads")
 
         local result = testModule.get_user_input("How many goats? ")
@@ -32,7 +29,6 @@ describe("util", function()
       end)
 
       it("Should prompt with expected message and default value", function()
-        api = mock(vim.api, true)
         api.nvim_call_function.on_call_with("input", {{prompt = "How many goats? ", default = "quite a lot"}})
           .returns("loads")
 

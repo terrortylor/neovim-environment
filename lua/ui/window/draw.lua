@@ -2,9 +2,9 @@ local api = vim.api
 
 local M = {}
 
-local toggled_bufs = {}
+M.toggled_bufs = {}
 
-local function get_split_command(position, size)
+function M.get_split_command(position, size)
   size = size or ""
   -- TODO use either props.size or half screen size, which ever is smaller
   local command
@@ -21,24 +21,24 @@ local function get_split_command(position, size)
 end
 
 function M.open_draw(buf, position, size)
-  local props = toggled_bufs[buf]
+  local props = M.toggled_bufs[buf]
   if not props then
     props = {
       position = position,
       size = size
     }
-    toggled_bufs[buf] = props
+    M.toggled_bufs[buf] = props
   end
 
   if not props.win then
-    api.nvim_command(get_split_command(position, size))
+    api.nvim_command(M.get_split_command(position, size))
     api.nvim_command('buffer ' .. buf)
     props.win = api.nvim_get_current_win()
   end
 end
 
 function M.close_draw(buf)
-  local props = toggled_bufs[buf]
+  local props = M.toggled_bufs[buf]
   if props and props.win then
     api.nvim_win_close(props.win, false)
     props.win = nil
@@ -47,7 +47,7 @@ end
 
 function M.toggle(buf, position, size)
   -- capture current location
-  local props = toggled_bufs[buf]
+  local props = M.toggled_bufs[buf]
   if props then
     if props.win then
       M.close_draw(buf)
@@ -58,11 +58,6 @@ function M.toggle(buf, position, size)
     M.open_draw(buf, position, size)
   end
   --restore current location
-end
-
-if _TEST then
-  M._toggled_bufs = toggled_bufs
-  M._get_split_command = get_split_command
 end
 
 return M

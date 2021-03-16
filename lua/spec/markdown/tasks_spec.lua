@@ -1,32 +1,30 @@
 local testModule
+local api
+local mock = require('luassert.mock')
+local stub = require('luassert.stub')
 
 describe('markdown', function()
   describe('tasks', function()
-    setup(function()
-      _G._TEST = true
-      _G.vim = {
-        api = require('spec.vim_api_helper')
-      }
+    before_each(function()
       testModule = require('markdown.tasks')
+      api = mock(vim.api, true)
     end)
 
-    teardown(function()
-      _G._TEST = nil
+    after_each(function()
+      mock.revert(api)
     end)
 
     describe('nvim_escaped_command', function()
       it('Should call expected API mehtods with expected arguments', function()
-        local m = mock(vim.api, true)
 
         testModule.nvim_escaped_command('goats')
-        assert.stub(m.nvim_command).was_called(1)
-        assert.stub(m.nvim_replace_termcodes).was_called(1)
-        assert.stub(m.nvim_replace_termcodes).was_called_with("goats", true, false, true)
-        mock.revert(m)
+        assert.stub(api.nvim_command).was_called(1)
+        assert.stub(api.nvim_replace_termcodes).was_called(1)
+        assert.stub(api.nvim_replace_termcodes).was_called_with("goats", true, false, true)
       end)
     end)
 
-    describe('_is_line_task_item', function()
+    describe('is_line_task_item', function()
       it('Should return the task marker/prefix or an empty string', function()
         local lines = {
           ['hello'] = false,
@@ -54,7 +52,7 @@ describe('markdown', function()
         }
 
         for line, expected in pairs(lines) do
-          local marker = testModule._is_line_task_item(line)
+          local marker = testModule.is_line_task_item(line)
           assert.are.equal(expected, marker)
         end
       end)
@@ -62,50 +60,41 @@ describe('markdown', function()
 
     describe('_buf_get_line_above_below', function()
       it('Should call API for line below', function()
-        local m = mock(vim.api, true)
-        m.nvim_win_get_cursor.returns({2, 0}) -- returns (row, col)
-        m.nvim_buf_get_lines.returns({'line below'})
+        api.nvim_win_get_cursor.returns({2, 0}) -- returns (row, col)
+        api.nvim_buf_get_lines.returns({'line below'})
 
         local result = testModule.buf_get_line_above_below(true)
         assert.are.equal('line below', result)
-        assert.stub(m.nvim_win_get_cursor).was_called(1)
-        assert.stub(m.nvim_win_get_cursor).was_called_with(0)
-        assert.stub(m.nvim_buf_get_lines).was_called(1)
-        assert.stub(m.nvim_buf_get_lines).was_called_with(0, 0, 1, false)
-
-        mock.revert(m)
+        assert.stub(api.nvim_win_get_cursor).was_called(1)
+        assert.stub(api.nvim_win_get_cursor).was_called_with(0)
+        assert.stub(api.nvim_buf_get_lines).was_called(1)
+        assert.stub(api.nvim_buf_get_lines).was_called_with(0, 0, 1, false)
       end)
 
       it('Should call API for line above', function()
         -- check going up
-        local m = mock(vim.api, true)
-        m.nvim_win_get_cursor.returns({2, 0}) -- returns (row, col)
-        m.nvim_buf_get_lines.returns({'line above'})
+        api.nvim_win_get_cursor.returns({2, 0}) -- returns (row, col)
+        api.nvim_buf_get_lines.returns({'line above'})
 
         local result = testModule.buf_get_line_above_below(false)
         assert.are.equal('line above', result)
-        assert.stub(m.nvim_win_get_cursor).was_called(1)
-        assert.stub(m.nvim_win_get_cursor).was_called_with(0)
-        assert.stub(m.nvim_buf_get_lines).was_called(1)
-        assert.stub(m.nvim_buf_get_lines).was_called_with(0, 2, 3, false)
-
-        mock.revert(m)
+        assert.stub(api.nvim_win_get_cursor).was_called(1)
+        assert.stub(api.nvim_win_get_cursor).was_called_with(0)
+        assert.stub(api.nvim_buf_get_lines).was_called(1)
+        assert.stub(api.nvim_buf_get_lines).was_called_with(0, 2, 3, false)
       end)
     end)
 
     describe("handle_carridge_return", function()
       it("Should carridge return if pumvisible", function()
-        local m = mock(vim.api, true)
-        m.nvim_call_function.on_call_with('pumvisible', {}).returns(1)
+        api.nvim_call_function.on_call_with('pumvisible', {}).returns(1)
 
         stub(testModule, "nvim_escaped_command")
 
         testModule.handle_carridge_return()
         assert.stub(testModule.nvim_escaped_command).was_called(1)
         assert.stub(testModule.nvim_escaped_command).was_called_with("normal! <CR>")
-        assert.stub(m.nvim_get_current_line).was_not_called()
-
-        mock.revert(m)
+        assert.stub(api.nvim_get_current_line).was_not_called()
       end)
 
       it("Should clear line and return carridge return if empty comment", function()
@@ -129,85 +118,72 @@ describe('markdown', function()
         }
 
         for _, line in pairs(lines) do
-          local m = mock(vim.api, true)
-          m.nvim_call_function.on_call_with('pumvisible', {}).returns(0)
-          m.nvim_get_current_line.returns(line)
+          api = mock(vim.api, true)
+          api.nvim_call_function.on_call_with('pumvisible', {}).returns(0)
+          api.nvim_get_current_line.returns(line)
 
           stub(testModule, "nvim_escaped_command")
 
           testModule.handle_carridge_return()
-          assert.stub(m.nvim_get_current_line).was_called(1)
-          assert.stub(m.nvim_set_current_line).was_called(1)
+          assert.stub(api.nvim_get_current_line).was_called(1)
+          assert.stub(api.nvim_set_current_line).was_called(1)
           assert.stub(testModule.nvim_escaped_command).was_called(1)
           assert.stub(testModule.nvim_escaped_command).was_called_with("normal! a<CR>")
 
-          mock.revert(m)
+          mock.revert(api)
         end
       end)
 
       it("Should start new line with empty task if current line non-empty task", function()
-        local m = mock(vim.api, true)
-        m.nvim_call_function.on_call_with('pumvisible', {}).returns(0)
-        m.nvim_get_current_line.returns("* [ ] Non-empty task line")
+        api.nvim_call_function.on_call_with('pumvisible', {}).returns(0)
+        api.nvim_get_current_line.returns("* [ ] Non-empty task line")
 
         stub(testModule, "nvim_escaped_command")
 
         testModule.handle_carridge_return()
-        assert.stub(m.nvim_get_current_line).was_called(1)
+        assert.stub(api.nvim_get_current_line).was_called(1)
         assert.stub(testModule.nvim_escaped_command).was_called(1)
         assert.stub(testModule.nvim_escaped_command).was_called_with("normal! a<CR>[ ] ")
-
-        mock.revert(m)
       end)
     end)
 
     describe("set_task_state", function()
       it("Should not update line if not task", function()
-        local m = mock(vim.api, true)
-        m.nvim_get_current_line.returns(" * note a task")
+        api.nvim_get_current_line.returns(" * note a task")
 
         testModule.set_task_state(" ")
-        assert.stub(m.nvim_get_current_line).was_called(1)
-        assert.stub(m.nvim_set_current_line).was_called(0)
-
-        mock.revert(m)
+        assert.stub(api.nvim_get_current_line).was_called(1)
+        assert.stub(api.nvim_set_current_line).was_called(0)
       end)
 
       it("Should update line if comment", function()
-        local m = mock(vim.api, true)
-        m.nvim_get_current_line.returns(" * [ ] a task")
+        api.nvim_get_current_line.returns(" * [ ] a task")
 
         testModule.set_task_state("x")
-        assert.stub(m.nvim_get_current_line).was_called(1)
-        assert.stub(m.nvim_set_current_line).was_called(1)
-        assert.stub(m.nvim_set_current_line).was_called_with(" * [x] a task")
-
-        mock.revert(m)
+        assert.stub(api.nvim_get_current_line).was_called(1)
+        assert.stub(api.nvim_set_current_line).was_called(1)
+        assert.stub(api.nvim_set_current_line).was_called_with(" * [x] a task")
       end)
 
       it("Should not update line if task but state not valid", function()
-        local m = mock(vim.api, true)
-        m.nvim_get_current_line.returns(" * [ ] valid task")
+        api.nvim_get_current_line.returns(" * [ ] valid task")
 
         testModule.set_task_state("g")
-        assert.stub(m.nvim_get_current_line).was_called(1)
-        assert.stub(m.nvim_set_current_line).was_called(0)
-
-        mock.revert(m)
+        assert.stub(api.nvim_get_current_line).was_called(1)
+        assert.stub(api.nvim_set_current_line).was_called(0)
       end)
 
       it("Should update line if task but state valid", function()
         local states = {" ", "x", "o"}
 
         for _, state in pairs(states) do
-          local m = mock(vim.api, true)
-          m.nvim_get_current_line.returns(" * [ ] valid task")
+          api = mock(vim.api, true)
+          api.nvim_get_current_line.returns(" * [ ] valid task")
 
           testModule.set_task_state(state)
-          assert.stub(m.nvim_get_current_line).was_called(1)
-          assert.stub(m.nvim_set_current_line).was_called(1)
-
-          mock.revert(m)
+          assert.stub(api.nvim_get_current_line).was_called(1)
+          assert.stub(api.nvim_set_current_line).was_called(1)
+          mock.revert(api)
         end
       end)
     end)

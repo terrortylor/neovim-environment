@@ -1,6 +1,6 @@
 " the nvim ruby ftplugin overrides gf: /usr/share/nvim/runtime/ftplugin/ruby.vim
 " so override it here
-nnoremap gf :wincmd f<CR>
+nnoremap <buffer> gf :wincmd f<CR>
 
 " Adds jump to recipe locally
 setlocal path+=.,**1/recipes

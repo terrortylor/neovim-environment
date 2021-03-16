@@ -43,15 +43,27 @@ M.rules = {
       condition = "/lua/",
       direction = "_spec.lua",
       -- TODO be nice not to have to escape these? https://stackoverflow.com/questions/9790688/escaping-strings-for-gsub
+      -- TODO user vim's built in escape func
       transformers = {
         {"%.lua", "_spec%.lua"},
         {"/lua/", "/lua/spec/"}
       }
     },
+  },
+  ["typescript"] = {
+    {
+      condition = "%.ts$",
+      direction = ".spec.ts",
+      -- TODO be nice not to have to escape these? https://stackoverflow.com/questions/9790688/escaping-strings-for-gsub
+      -- TODO user vim's built in escape func
+      transformers = {
+        {"%.ts", "%.spec%.ts"}
+      }
+    },
   }
 }
 
-local function transform_path(path, transformers, to_alternate)
+function M.transform_path(path, transformers, to_alternate)
   local new_path = path
   for _,pair in pairs(transformers) do
     if to_alternate then
@@ -88,7 +100,7 @@ function M.get_alternate_file()
       if path:match(rule.direction) then
         to_alternate = false
       end
-      alternate_file = transform_path(path, rule.transformers, to_alternate)
+      alternate_file = M.transform_path(path, rule.transformers, to_alternate)
 
       -- TODO check file path exists, if not prompt to create
       api.nvim_command("e " .. alternate_file)
@@ -109,11 +121,6 @@ function M.setup()
   for k, v in pairs(M.mappings) do
     keymap("n", k, v, opts)
   end
-end
-
--- export locals for test
-if _TEST then
-  M._transform_path = transform_path
 end
 
 return M

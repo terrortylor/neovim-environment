@@ -3,13 +3,13 @@ local log = require('util.log')
 local buf_util = require('util.buffer')
 local M = {}
 
-local error_mofified = "E89: no write since last change"
+M.error_modified = "E89: no write since last change"
 
 -- Taken from:
 -- https://stackoverflow.com/questions/1444322/how-can-i-close-a-buffer-without-closing-the-window/44950143#44950143
 function M.delete_buffer_keep_window()
   if api.nvim_buf_get_option(0, "modified") then
-    log.error(error_mofified)
+    log.error(M.error_modified)
   else
     local cur_win = api.nvim_get_current_win()
     local buf_to_delete = api.nvim_get_current_buf()
@@ -41,11 +41,6 @@ function M.change_buffer(window, buf_to_delete)
       end
     end
   end
-end
-
--- export locals for test
-if _TEST then
-  M._error_mofified = error_mofified
 end
 
 return M

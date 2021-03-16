@@ -15,6 +15,7 @@ require('telescope').setup{
 local mappings = {
   n = {
     ["<leader>ff"] = "<cmd>lua require('telescope.builtin').find_files()<CR>",
+    -- TODO add func so if no .git dir is found then open from CWD
     ["<c-p>"] = "<cmd>lua require('telescope.builtin').git_files()<CR>",
     ["<leader>fg"] = "<cmd>lua require('telescope.builtin').live_grep()<CR>",
     ["<leader><space>"] = "<cmd>lua require('telescope.builtin').buffers()<CR>",

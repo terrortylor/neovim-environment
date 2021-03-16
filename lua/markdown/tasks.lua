@@ -30,7 +30,7 @@ M.mappings = {
 
 -- Returns true/false depending on if the
 -- line is a listed task checkbox item
-local function is_line_task_item(line)
+function M.is_line_task_item(line)
   local marker = line:match('%s*[*-]%s%[[%sox]%]')
   if marker then
     return true
@@ -41,7 +41,7 @@ end
 
 function M.set_task_state(state)
     local line = api.nvim_get_current_line()
-    if is_line_task_item(line) then
+    if M.is_line_task_item(line) then
       if state:match("[%sxo]") then
         line = line:gsub("%[[%sox]%]", "[" .. state .. "]", 1)
         api.nvim_set_current_line(line)
@@ -61,7 +61,7 @@ function M.handle_carridge_return()
     -- and line is a list item
     local line = api.nvim_get_current_line()
     -- if is task item
-    if is_line_task_item(line) then
+    if M.is_line_task_item(line) then
       -- if empty clear line
       if line:match("^%s*[*-]%s?%[[%sox]%]%s?$") then
         api.nvim_set_current_line("")
@@ -111,15 +111,10 @@ function M.insert_empty_task_box(is_below)
 
   -- if line is not nil and line was a task checked item
   -- return new empty check box
-  if previous_line and is_line_task_item(previous_line) then
+  if previous_line and M.is_line_task_item(previous_line) then
     return '[ ] '
   end
   return ''
-end
-
--- export locals for test
-if _TEST then
-  M._is_line_task_item = is_line_task_item
 end
 
 -- TODO no tests

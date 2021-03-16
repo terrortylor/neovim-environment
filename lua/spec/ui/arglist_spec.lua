@@ -1,22 +1,13 @@
+local testModule = require('ui.arglist')
+local api
+local mock = require('luassert.mock')
+local spy = require('luassert.spy')
+local stub = require('luassert.stub')
+local match = require('luassert.match')
+
 describe('ui', function()
   describe('arglist', function()
-    local testModule
-    -- TODO update other tests so m is api
-    local api
 
-    setup(function()
-      _G._TEST = true
-      _G.vim = {
-        api = require('spec.vim_api_helper')
-      }
-      testModule = require('ui.arglist')
-    end)
-
-    teardown(function()
-      _G._TEST = nil
-    end)
-
-    -- TODO use before and after in other tests
     before_each(function()
       api = mock(vim.api, true)
     end)

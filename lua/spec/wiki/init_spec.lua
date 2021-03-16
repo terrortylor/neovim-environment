@@ -2,17 +2,9 @@ local testModule
 local test_pattern
 
 describe("wiki", function()
-  setup(function()
-    _G._TEST = true
-    _G.vim = {
-      api = require("spec.vim_api_helper")
-    }
+  before_each(function()
     testModule = require("wiki")
     test_pattern = testModule.opts.link_pattern
-  end)
-
-  teardown(function()
-    _G._TEST = nil
   end)
 
   describe("is_wiki_file", function()

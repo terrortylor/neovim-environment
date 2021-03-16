@@ -2,25 +2,20 @@ local testModule
 
 describe('tmux library', function()
   describe('instance_command', function()
-    setup(function()
-      _G._TEST = true
+    before_each(function()
       testModule = require('tmux.instance_command')
-    end)
-
-    teardown(function()
-      _G._TEST = nil
     end)
 
     describe("set_instance_command", function()
       it("Should add commands to expected instance's list of commands", function()
         testModule.set_instance_command("1", "test")
-        assert.same(testModule._instance_commands, {["1"] = {"test"}})
+        assert.same(testModule.instance_commands, {["1"] = {"test"}})
 
         testModule.set_instance_command("1", "stack")
-        assert.same(testModule._instance_commands, {["1"] = {"test", "stack"}})
+        assert.same(testModule.instance_commands, {["1"] = {"test", "stack"}})
 
         testModule.set_instance_command("2", "pwd")
-        assert.same(testModule._instance_commands, {["1"] = {"test", "stack"}, ["2"] = {"pwd"}})
+        assert.same(testModule.instance_commands, {["1"] = {"test", "stack"}, ["2"] = {"pwd"}})
       end)
     end)
 

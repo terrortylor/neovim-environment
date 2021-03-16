@@ -47,6 +47,12 @@ local commands = {
     "Mkdir",
     "lua require('config.function.filesystem').mkdir(<args>)"
   },
+  {
+    "command!",
+    "-nargs=0",
+    "IntelliJ",
+    "lua require('config.intellij-mappings')"
+  },
 }
 
 for _,v in pairs(commands) do

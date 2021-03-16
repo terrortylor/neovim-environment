@@ -1,21 +1,13 @@
 local testModule
+local stub = require('luassert.stub')
 
 describe("tmux library", function()
   describe("commands", function()
-    setup(function()
-      _G._TEST = true
-
-      _G.vim = {
-        api = require("spec.vim_api_helper")
-      }
+    before_each(function()
       testModule = require("tmux.commands")
     end)
 
-    teardown(function()
-      _G._TEST = nil
-    end)
-
-    describe("get_instance_pane", function()
+    describe("get_inttance_pane", function()
       it("Should prompt and return for pane if not set for instance", function()
         local input = require("tmux.input")
         stub(input, "get_pane").returns(5)
@@ -74,7 +66,7 @@ describe("tmux library", function()
         local log = require("util.log")
         stub(log, "error")
 
-        testModule._guarded_send_command(1, function() end)
+        testModule.guarded_send_command(1, function() end)
 
         assert.stub(testModule.get_instance_pane).was_called_with(1)
         assert.stub(log.error).was_called_with("Pane not set")
@@ -93,7 +85,7 @@ describe("tmux library", function()
         }
         stub(test, "func").returns(nil)
 
-        testModule._guarded_send_command(1, test.func)
+        testModule.guarded_send_command(1, test.func)
 
         assert.stub(testModule.get_instance_pane).was_called_with(1)
         assert.stub(test.func).was_called()
@@ -112,7 +104,7 @@ describe("tmux library", function()
         local dispatch = require("tmux.dispatch")
         stub(dispatch, 'execute')
 
-        testModule._guarded_send_command(1, test.func)
+        testModule.guarded_send_command(1, test.func)
 
         assert.stub(testModule.get_instance_pane).was_called_with(1)
         assert.stub(dispatch.execute).was_called_with(100, "brap")
@@ -126,13 +118,13 @@ describe("tmux library", function()
     describe("send_command_to_pane", function()
       local dispatch
 
-      setup(function()
+      before_each(function()
         stub(testModule, "get_instance_pane").on_call_with(1).returns(100)
         dispatch = require("tmux.dispatch")
         stub(dispatch, 'execute')
       end)
 
-      teardown(function()
+      after_each(function()
         testModule.get_instance_pane:revert()
         dispatch.execute:revert()
       end)
@@ -159,13 +151,13 @@ describe("tmux library", function()
     describe("set_instance_command", function()
       local dispatch
 
-      setup(function()
+      before_each(function()
         stub(testModule, "get_instance_pane").on_call_with(1).returns(100)
         dispatch = require("tmux.dispatch")
         stub(dispatch, 'execute')
       end)
 
-      teardown(function()
+      after_each(function()
         testModule.get_instance_pane:revert()
         dispatch.execute:revert()
       end)
@@ -231,7 +223,7 @@ describe("tmux library", function()
       local comstack
       local input
 
-      setup(function()
+      before_each(function()
         stub(testModule, "get_instance_pane").on_call_with(1).returns(100)
         dispatch = require("tmux.dispatch")
         stub(dispatch, 'execute')
@@ -241,7 +233,7 @@ describe("tmux library", function()
         stub(input, "get_user_input").returns("ls -al")
       end)
 
-      teardown(function()
+      after_each(function()
         testModule.get_instance_pane:revert()
         dispatch.execute:revert()
         comstack.set_instance_command:revert()
@@ -273,12 +265,12 @@ describe("tmux library", function()
     describe("scroll", function()
       local dispatch
 
-      setup(function()
+      before_each(function()
         dispatch = require("tmux.dispatch")
         stub(dispatch, "scroll")
       end)
 
-      teardown(function()
+      after_each(function()
         testModule.get_instance_pane:revert()
         dispatch.scroll:revert()
       end)

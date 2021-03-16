@@ -113,11 +113,8 @@ function M.go(line_start, line_end, close_mappings)
   end
 end
 
--- export locals for test
-if _TEST then
-  M._set_window_id = function(id)
+function M.set_window_id(id)
     window_id = id
-  end
 end
 
 return M

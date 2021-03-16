@@ -57,7 +57,7 @@ local win_options = {
   spell          = false,
 
   -- enable signcolumn to prevent jumping
-  signcolumn     = "yes",
+  signcolumn     = "yes:2",
 }
 
 util.set_win_options(win_options)

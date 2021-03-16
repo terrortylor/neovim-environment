@@ -1,22 +1,12 @@
+local testModule
+local api
+local mock = require('luassert.mock')
+
 describe('util', function()
   describe('filesystem', function()
-    local testModule
-    local api
-
-    setup(function()
-      _G._TEST = true
-      _G.vim = {
-        api = require('spec.vim_api_helper')
-      }
-      testModule = require('util.filesystem')
-    end)
-
-    teardown(function()
-      _G._TEST = nil
-    end)
-    -- TODO use before and after in other tests
 
     before_each(function()
+      testModule = require('util.filesystem')
       api = mock(vim.api, true)
     end)
 

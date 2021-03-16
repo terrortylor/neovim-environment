@@ -1,6 +1,6 @@
 local M = {}
 
-local instance_commands = {}
+M.instance_commands = {}
 
 --- Adds a command to a key=command (stack) map
 -- Adds commands to a mapped list, adds new map list if one doesn't exist
@@ -12,12 +12,12 @@ function M.set_instance_command(instance, command)
     instance = ""..instance..""
   end
 
-  local stack = instance_commands[instance]
+  local stack = M.instance_commands[instance]
   if stack then
     table.insert(stack, command)
   else
     stack = {command}
-    instance_commands[instance] = stack
+    M.instance_commands[instance] = stack
   end
 end
 
@@ -30,7 +30,7 @@ function M.get_instance_command(instance)
     instance = ""..instance..""
   end
 
-  local commands = instance_commands[instance]
+  local commands = M.instance_commands[instance]
   if not commands then
     return nil
   end
@@ -42,15 +42,11 @@ end
 -- @param instance string: instance number stack to get command from
 -- @returns table or nil: a table list of of commands or nil
 function M.get_instance_history(instance)
-  local commands = instance_commands[instance]
+  local commands = M.instance_commands[instance]
   if not commands then
     return nil
   end
   return commands
-end
-
-if _TEST then
-  M._instance_commands = instance_commands
 end
 
 return M

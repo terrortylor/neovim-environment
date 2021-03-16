@@ -1,20 +1,9 @@
+local testModule = require('ui.buffer')
+local api
+local mock = require('luassert.mock')
+
 describe('ui', function()
   describe('buffer', function()
-    local testModule
-    local api
-
-    setup(function()
-      _G._TEST = true
-      _G.vim = {
-        api = require('spec.vim_api_helper')
-      }
-      testModule = require('ui.buffer')
-    end)
-
-    teardown(function()
-      _G._TEST = nil
-    end)
-    -- TODO use before and after in other tests
 
     before_each(function()
       api = mock(vim.api, true)

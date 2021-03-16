@@ -1,24 +1,13 @@
+local testModule
+local api
+local mock = require('luassert.mock')
+
 describe('ui', function()
   describe('window', function()
     describe('draw', function()
-      local testModule
-      -- TODO update other tests so m is api
-      local api
 
-      setup(function()
-        _G._TEST = true
-        _G.vim = {
-          api = require('spec.vim_api_helper')
-        }
-        testModule = require('ui.window.draw')
-      end)
-
-      teardown(function()
-        _G._TEST = nil
-      end)
-
-      -- TODO use before and after in other tests
       before_each(function()
+        testModule = require('ui.window.draw')
         api = mock(vim.api, true)
       end)
 
@@ -26,27 +15,27 @@ describe('ui', function()
         mock.revert(api)
       end)
 
-      describe('_get_split_command', function()
+      describe('get_split_command', function()
         it('Should top side split command', function()
-          local actual = testModule._get_split_command('top')
+          local actual = testModule.get_split_command('top')
 
           assert.equal('topleft split', actual)
         end)
 
         it('Should bottom side split command', function()
-          local actual = testModule._get_split_command('bottom')
+          local actual = testModule.get_split_command('bottom')
 
           assert.equal('botright split', actual)
         end)
 
         it('Should left side split command', function()
-          local actual = testModule._get_split_command('left')
+          local actual = testModule.get_split_command('left')
 
           assert.equal('vertical topleft split', actual)
         end)
 
         it('Should return default right split command if right or anything else', function()
-          local actual = testModule._get_split_command('right')
+          local actual = testModule.get_split_command('right')
 
           assert.equal('vertical botright split', actual)
         end)
@@ -59,7 +48,7 @@ describe('ui', function()
           api.nvim_get_current_win.returns(101)
 
           testModule.open_draw(5, 'left', "")
-          local actual = testModule._toggled_bufs[5]
+          local actual = testModule.toggled_bufs[5]
 
           assert.stub(api.nvim_command).was_called_with('vertical topleft split')
           assert.stub(api.nvim_command).was_called_with('buffer 5')
@@ -70,7 +59,7 @@ describe('ui', function()
         end)
 
         it('Should do nothing is window already open', function()
-          local actual = testModule._toggled_bufs[5]
+          local actual = testModule.toggled_bufs[5]
           assert.equals(101, actual.win)
 
           testModule.open_draw(5, 'left', "")
@@ -87,7 +76,7 @@ describe('ui', function()
           api.nvim_get_current_win.returns(101)
 
           testModule.open_draw(2, 'left', "40")
-          local actual = testModule._toggled_bufs[2]
+          local actual = testModule.toggled_bufs[2]
 
           assert.stub(api.nvim_command).was_called_with('vertical topleft 40split')
           assert.stub(api.nvim_command).was_called_with('buffer 2')
@@ -113,7 +102,7 @@ describe('ui', function()
 
           assert.stub(api.nvim_win_close).was_called()
 
-          local actual = testModule._toggled_bufs[999]
+          local actual = testModule.toggled_bufs[999]
           assert.are_not.equals(nil, actual)
           assert.equals(nil, actual.win)
           assert.equals('40', actual.size)
@@ -123,12 +112,12 @@ describe('ui', function()
 
       describe('toggle', function()
         it('Should open and create props if not exists', function()
-          local actual = testModule._toggled_bufs[50]
+          local actual = testModule.toggled_bufs[50]
           assert.equals(nil, actual)
           api.nvim_get_current_win.returns(101)
 
           testModule.toggle(50, 'left')
-          actual = testModule._toggled_bufs[50]
+          actual = testModule.toggled_bufs[50]
           assert.are_not.equals(nil, actual)
           assert.equals(101, actual.win)
           assert.equals(nil, actual.size)
@@ -136,7 +125,7 @@ describe('ui', function()
         end)
 
         it('Should toggle close and toggle open', function()
-          local actual = testModule._toggled_bufs[50]
+          local actual = testModule.toggled_bufs[50]
           assert.are_not.equals(nil, actual)
           api.nvim_get_current_win.returns(200)
 
@@ -148,7 +137,7 @@ describe('ui', function()
 
           -- open with toggle
           testModule.toggle(50, 'left')
-          actual = testModule._toggled_bufs[50]
+          actual = testModule.toggled_bufs[50]
           assert.are_not.equals(nil, actual)
           assert.equals(200, actual.win)
           assert.equals(nil, actual.size)
@@ -156,20 +145,20 @@ describe('ui', function()
         end)
 
         it('Should toggle open and toggle close', function()
-          local actual = testModule._toggled_bufs[12]
+          local actual = testModule.toggled_bufs[12]
           assert.equals(nil, actual)
           api.nvim_get_current_win.returns(200)
 
           -- open with toggle
           testModule.toggle(12, 'left')
-          actual = testModule._toggled_bufs[12]
+          actual = testModule.toggled_bufs[12]
           assert.equals(200, actual.win)
           assert.equals(nil, actual.size)
           assert.equals('left', actual.position)
 
           -- close with toggle
           testModule.toggle(12, 'left')
-          actual = testModule._toggled_bufs[12]
+          actual = testModule.toggled_bufs[12]
           assert.are_not.equals(nil, actual)
           assert.equals(nil, actual.win)
           assert.equals(nil, actual.size)

@@ -2,7 +2,7 @@ local testModule
 
 describe('util', function()
   describe('table', function()
-    setup(function()
+    before_each(function()
       testModule = require('util.table')
     end)
 

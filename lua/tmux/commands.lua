@@ -28,7 +28,7 @@ function M.get_instance_pane(instance, clear_first)
   return pane
 end
 
-local function guarded_send_command(instance, func)
+function M.guarded_send_command(instance, func)
   instance = instance or "1"
 
   local pane = M.get_instance_pane(instance)
@@ -48,7 +48,7 @@ local function guarded_send_command(instance, func)
 end
 
 function M.send_command_to_pane(instance)
-  guarded_send_command(instance, function(func_inst)
+  M.guarded_send_command(instance, function(func_inst)
     local command = comstack.get_instance_command(func_inst)
 
     -- if command is nil then run last command (ctrl-p on command line)
@@ -63,7 +63,7 @@ function M.send_command_to_pane(instance)
 end
 
 function M.set_instance_command(instance)
-  guarded_send_command(instance, function(func_inst)
+  M.guarded_send_command(instance, function(func_inst)
     local command = input.get_user_input("Enter command: ")
 
     if not command then
@@ -78,7 +78,7 @@ function M.set_instance_command(instance)
 end
 
 function M.send_one_off_command(instance)
-  guarded_send_command(instance, function()
+  M.guarded_send_command(instance, function()
     local command = input.get_user_input(command_prompt)
     return command
   end)
@@ -99,7 +99,7 @@ end
 --end
 
 function M.edit_last_command(instance)
-  guarded_send_command(instance, function(func_inst)
+  M.guarded_send_command(instance, function(func_inst)
     local command = comstack.get_instance_command(func_inst)
     if not command then
       -- TODO capture command some how?
@@ -125,7 +125,4 @@ function M.scroll(up, instance)
   dispatch.scroll(pane, up)
 end
 
-if _TEST then
-  M._guarded_send_command = guarded_send_command
-end
 return M

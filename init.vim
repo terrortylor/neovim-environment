@@ -7,20 +7,20 @@ let g:vim_markdown_no_extensions_in_markdown = 1
 " Autosave when following links
 let g:vim_markdown_autowrite = 1
 
-function! QuickfixMappings() abort
-  nmap <leader>ce <Plug>(QuicklistCreateEditableBuffer)
-  nmap <leader>cs <Plug>(QuickfixCreateFromBuffer)
-  nmap <leader>ca <Plug>(QuickfixApplyLineChanges)
-
-  nnoremap [C :colder<cr>
-  nnoremap ]C :cnewer<cr>
-endfunction
-
-augroup quickfix_mappings
-  autocmd!
-  " autocmd BufReadPost quickfix nested :call QuickfixMappings()
-  autocmd WinEnter * if &buftype == 'quickfix' | call QuickfixMappings() | endif
-augroup END
+" function! QuickfixMappings() abort
+"   nmap <leader>ce <Plug>(QuicklistCreateEditableBuffer)
+"   nmap <leader>cs <Plug>(QuickfixCreateFromBuffer)
+"   nmap <leader>ca <Plug>(QuickfixApplyLineChanges)
+" 
+"   nnoremap [C :colder<cr>
+"   nnoremap ]C :cnewer<cr>
+" endfunction
+" 
+" augroup quickfix_mappings
+"   autocmd!
+"   " autocmd BufReadPost quickfix nested :call QuickfixMappings()
+"   autocmd WinEnter * if &buftype == 'quickfix' | call QuickfixMappings() | endif
+" augroup END
 
 " Custom global search within buffer, displays results in location list
 " just clears it self

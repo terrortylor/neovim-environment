@@ -3,3 +3,18 @@ if (${1:CONDITION}) {
 	${VISUAL}$0
 }
 endsnippet
+
+snippet it "it bla bla" bA
+it("${1}", ${2:async }() => {
+	${VISUAL}$0
+});
+endsnippet
+
+snippet cl "console.log(...)" b
+console.log(${1:\`${2}\`})
+endsnippet
+
+
+# snippet => "arrow" A
+# => {${1:	${2}}}${0}
+# endsnippet

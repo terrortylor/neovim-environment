@@ -1,23 +1,13 @@
+local testModule
+local api
+local mock = require('luassert.mock')
+local stub = require('luassert.stub')
+
 describe('ui', function()
   describe('window', function()
-    local testModule
-    -- TODO update other tests so m is api
-    local api
 
-    setup(function()
-      _G._TEST = true
-      _G.vim = {
-        api = require('spec.vim_api_helper')
-      }
-      testModule = require('ui.window')
-    end)
-
-    teardown(function()
-      _G._TEST = nil
-    end)
-
-    -- TODO use before and after in other tests
     before_each(function()
+      testModule = require('ui.window')
       api = mock(vim.api, true)
     end)
 
@@ -33,7 +23,7 @@ describe('ui', function()
 
         testModule.delete_buffer_keep_window()
 
-        assert.stub(log.error).was_called_with(testModule._error_mofified)
+        assert.stub(log.error).was_called_with(testModule.error_modified)
 
         log.error:revert()
       end)

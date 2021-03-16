@@ -1,8 +1,34 @@
 local M = {}
 
 local function is_empty(tbl)
-  for _,_ in pairs(tbl) do return false end
+  for _,_ in pairs(tbl) do return false end -- luacheck: ignore
   return true
+end
+
+local efm_priority_document_format
+function M.efm_priority_document_format()
+  if not efm_priority_document_format then
+    local clients = vim.lsp.buf_get_clients(0)
+    if #clients > 1 then
+      -- check if multiple clients, and if efm is setup
+      for _,c1 in pairs(clients) do
+        if c1.name == "efm" then
+          -- if efm then disable others
+          for _,c2 in pairs(clients) do
+            -- print(c2.name, c2.resolved_capabilities.document_formatting)
+            if c2.name ~= "efm" then c2.resolved_capabilities.document_formatting = false end
+          end
+          -- no need to contunue first loop
+          break
+        end
+      end
+    end
+  end
+  -- no need to do above check again
+  efm_priority_document_format = true
+  -- format the doc
+  -- TODO need a check to make sure actually has this func on one of the availble clients
+  vim.lsp.buf.formatting()
 end
 
 function M.get_line_diagnostics()
@@ -32,14 +58,21 @@ function M.show_line_diagnostics()
   -- Just show's the last line which is what is displayed anyhow, as last message takes precedence
   local diag = diag_msgs[#diag_msgs]
   if diag then
-    --print(diag)
+    print(diag)
   end
 end
 
+-- TODO work out how to toggle hover on and off
 function M.diagnostic_toggle_virtual_text()
- vim.b.show_virtual_text = not vim.b.show_virtual_text
- vim.cmd("normal! i\\<esc>")
- --vim.cmd("redraw")
+  local ok, result = pcall(vim.api.nvim_buf_get_var, 0, 'lsp_virtual_text_enabled')
+  -- No buffer local variable set, so just enable by default
+  if ok then
+    if result then
+      vim.b.lsp_virtual_text_enabled = false
+      return
+    end
+  end
+  vim.b.lsp_virtual_text_enabled = true
 end
 
 return M

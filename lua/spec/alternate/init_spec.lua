@@ -1,16 +1,17 @@
 local testModule
+local api
+local mock = require('luassert.mock')
+local stub = require('luassert.stub')
 
 describe('alternate', function()
-  setup(function()
-    _G._TEST = true
-    _G.vim = {
-      api = require('spec.vim_api_helper')
-    }
+
+  before_each(function()
     testModule = require('alternate')
+    api = mock(vim.api, true)
   end)
 
-  teardown(function()
-    _G._TEST = nil
+  after_each(function()
+    mock.revert(api)
   end)
 
   describe('get_alternate_file', function()
@@ -26,72 +27,67 @@ describe('alternate', function()
         }
       }
     }
-    testModule.rules = rules
 
     it('Should print message and return if filetype not found', function()
-      local m = mock(vim.api, true)
+      testModule.rules = rules
       stub(_G, 'print')
-      m.nvim_buf_get_option.on_call_with(0, 'filetype').returns('cats')
+      api.nvim_buf_get_option.on_call_with(0, 'filetype').returns('cats')
       testModule.get_alternate_file()
 
       assert.stub(_G.print).was_called_with('No alternate file rule found for filetype: cats')
-      assert.stub(m.nvim_command).was_not_called()
+      assert.stub(api.nvim_command).was_not_called()
 
       -- reset stubs
-      mock.revert(m)
       print:revert()
     end)
 
     it('Should return silently if condition not matched', function()
-      local m = mock(vim.api, true)
+      testModule.rules = rules
       stub(_G, 'print')
-      stub(testModule, '_transform_path')
-      m.nvim_buf_get_option.on_call_with(0, 'filetype').returns('code')
-      m.nvim_call_function.on_call_with("expand", {"%:p"}).returns('assets/file.jpeg')
+      stub(testModule, 'transform_path')
+      api.nvim_buf_get_option.on_call_with(0, 'filetype').returns('code')
+      api.nvim_call_function.on_call_with("expand", {"%:p"}).returns('assets/file.jpeg')
 
       testModule.get_alternate_file()
 
       assert.stub(_G.print).was_not_called_with('No alternate file rule found for filetype: cats')
       -- FIXME this doesn't work, need to extend table with metatable I thin
-      assert.stub(testModule._transform_path).was_not_called()
-      assert.stub(m.nvim_command).was_not_called()
+      assert.stub(testModule.transform_path).was_not_called()
+      assert.stub(api.nvim_command).was_not_called()
 
       -- reset stubs
-      mock.revert(m)
       print:revert()
-      testModule._transform_path:revert()
+      testModule.transform_path:revert()
     end)
 
     it('Should try to open expected alternate file', function()
-      local m = mock(vim.api, true)
-      -- stub(_G, 'print')
-      m.nvim_buf_get_option.on_call_with(0, 'filetype').returns('code')
-      m.nvim_call_function.on_call_with("expand", {"%:p"}).returns('src/module/funcs.code')
+      testModule.rules = rules
+      stub(_G, 'print')
+      api.nvim_buf_get_option.on_call_with(0, 'filetype').returns('code')
+      api.nvim_call_function.on_call_with("expand", {"%:p"}).returns('src/module/funcs.code')
 
       testModule.get_alternate_file()
 
-      -- assert.stub(_G.print).was_not_called_with('No alternate file rule found for filetype: cats')
-      assert.stub(m.nvim_command).was_called_with("e test/module/funcs_test.code")
+      assert.stub(_G.print).was_not_called_with('No alternate file rule found for filetype: cats')
+      assert.stub(api.nvim_command).was_called_with("e test/module/funcs_test.code")
 
       -- reset stubs
-      mock.revert(m)
-      -- print:revert()
+      print:revert()
     end)
 
     it('Should try to open expected file from alternate file', function()
-      local m = mock(vim.api, true)
-      -- stub(_G, 'print')
-      m.nvim_buf_get_option.on_call_with(0, 'filetype').returns('code')
-      m.nvim_call_function.on_call_with("expand", {"%:p"}).returns('test/module/funcs_test.code')
+      testModule.rules = rules
+      stub(_G, 'print')
+      api.nvim_buf_get_option.on_call_with(0, 'filetype').returns('code')
+      api.nvim_call_function.on_call_with("expand", {"%:p"}).returns('test/module/funcs_test.code')
 
       testModule.get_alternate_file()
 
-      -- assert.stub(_G.print).was_not_called_with('No alternate file rule found for filetype: cats')
-      assert.stub(m.nvim_command).was_called_with("e src/module/funcs.code")
+      assert.stub(_G.print).was_not_called_with('No alternate file rule found for filetype: cats')
+      assert.stub(api.nvim_command).was_called_with("e src/module/funcs.code")
 
       -- reset stubs
-      mock.revert(m)
-      -- print:revert()
+      print:revert()
     end)
   end)
 
@@ -103,13 +99,13 @@ describe('alternate', function()
     }
 
     it('Should transfor path from file to alternate file', function()
-      local result = testModule._transform_path("src/package/core.code", transformers, true)
+      local result = testModule.transform_path("src/package/core.code", transformers, true)
 
       assert.are.equal("test/package/core_test.code", result)
     end)
 
     it('Should transfor path from alternate file to file', function()
-      local result = testModule._transform_path("test/package/core_test.code", transformers, false)
+      local result = testModule.transform_path("test/package/core_test.code", transformers, false)
 
       assert.are.equal("src/package/core.code", result)
     end)

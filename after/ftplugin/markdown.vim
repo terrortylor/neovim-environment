@@ -5,5 +5,5 @@ setlocal spell spelllang=en_gb
 setlocal formatoptions+=o
 "setlocal formatoptions=jtqlnor
 
-nnoremap [h :lua require("ui.buffer.nav").find_next("?", "^#")<CR>
-nnoremap ]h :lua require("ui.buffer.nav").find_next("/", "^#")<CR>
+nnoremap <buffer> [h :lua require("ui.buffer.nav").find_next("?", "^#")<CR>
+nnoremap <buffer> ]h :lua require("ui.buffer.nav").find_next("/", "^#")<CR>

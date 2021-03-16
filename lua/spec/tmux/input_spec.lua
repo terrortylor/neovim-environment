@@ -1,17 +1,11 @@
 describe("tmux library", function()
   local testModule
   local input
+  local stub = require('luassert.stub')
 
   describe("input", function()
-    setup(function()
-      _G._TEST = true
-      _G.vim = {
-        api = require("spec.vim_api_helper")
-      }
+    before_each(function()
       testModule = require("tmux.input")
-    end)
-
-    teardown(function()
     end)
 
     describe("get_pane", function()

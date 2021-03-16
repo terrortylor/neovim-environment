@@ -14,7 +14,7 @@ endfunction
 command! -nargs=0 StartNewDay call StartNewDay()
 
 " Wrap Jira ticket number with link
-vnoremap <leader>cl :<c-u>call WrapJiraTicketIntoLink()<cr>
+vnoremap <buffer> <leader>cl :<c-u>call WrapJiraTicketIntoLink()<cr>
 function! WrapJiraTicketIntoLink() abort
   let l:old_m = @m
   let @m='gvygvc[0](https://oxygroup.atlassian.net/browse/0)'

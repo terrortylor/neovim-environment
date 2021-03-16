@@ -7,7 +7,5 @@ lint:
 
 test:
 	@echo "Run tests..."
-	# TODO add these to runtime: /usr/share/nvim/runtime/lua/vim/
-	# TODO use nvim's lua
-	busted -m "./lua/?.lua;./lua/?/?.lua;./lua/?/init.lua" lua
+	nvim --headless -c 'PlenaryBustedDirectory lua/spec/'
 	@echo

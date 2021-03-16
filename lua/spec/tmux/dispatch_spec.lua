@@ -1,8 +1,9 @@
 local testModule
+local stub = require('luassert.stub')
 
 describe('tmux library', function()
   describe('dispatc', function()
-    setup(function()
+    before_each(function()
       testModule = require('tmux.dispatch')
     end)
 

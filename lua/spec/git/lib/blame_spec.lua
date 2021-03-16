@@ -1,18 +1,20 @@
 local testModule
+local api
+local mock = require('luassert.mock')
+local stub = require('luassert.stub')
+local spy = require('luassert.spy')
 
 describe('git', function()
   describe('lib', function()
     describe('blame', function()
-      setup(function()
-        _G._TEST = true
-        _G.vim = {
-          api = require('spec.vim_api_helper')
-        }
+
+      before_each(function()
         testModule = require('git.lib.blame')
+        api = mock(vim.api, true)
       end)
 
-      teardown(function()
-        _G._TEST = nil
+      after_each(function()
+        mock.revert(api)
       end)
 
       describe('convert_and_format_result', function()
@@ -55,57 +57,47 @@ describe('git', function()
 
       describe('get_blame_results', function()
         it('Should create expected blame command', function()
-          local m = mock(vim.api, true)
-          m.nvim_command_output.returns("some result")
+          api.nvim_command_output.returns("some result")
 
           local result = testModule.get_blame_results('test.txt', 4, 6)
 
           assert.are.equal("some result", result)
-          assert.stub(m.nvim_command_output).was_called_with('!git blame -L 4,6 test.txt')
+          assert.stub(api.nvim_command_output).was_called_with('!git blame -L 4,6 test.txt')
         end)
       end)
 
       describe('close_window', function()
         it('Should not close window if id not set', function()
-          local m = mock(vim.api, true)
-
           testModule.close_window()
 
-          assert.stub(m.nvim_win_is_valid).was_not_called()
-          assert.stub(m.nvim_win_close).was_not_called()
+          assert.stub(api.nvim_win_is_valid).was_not_called()
+          assert.stub(api.nvim_win_close).was_not_called()
         end)
 
         it('Should close window if id exists and valid', function()
-          local m = mock(vim.api, true)
-          m.nvim_win_is_valid.returns(true)
+          api.nvim_win_is_valid.returns(true)
 
-          testModule._set_window_id(42)
+          testModule.set_window_id(42)
           testModule.close_window()
 
-          assert.stub(m.nvim_win_is_valid).was_called_with(42)
-          assert.stub(m.nvim_win_close).was_called_with(42, true)
-
-          mock.revert(m)
+          assert.stub(api.nvim_win_is_valid).was_called_with(42)
+          assert.stub(api.nvim_win_close).was_called_with(42, true)
         end)
 
         it('Should not close window if id exists but not valid', function()
-          local m = mock(vim.api, true)
-          m.nvim_win_is_valid.returns(false)
+          api.nvim_win_is_valid.returns(false)
 
-          testModule._set_window_id(42)
+          testModule.set_window_id(42)
           testModule.close_window()
 
-          assert.stub(m.nvim_win_is_valid).was_called_with(42)
-          assert.stub(m.nvim_win_close).was_not_called()
-
-          mock.revert(m)
+          assert.stub(api.nvim_win_is_valid).was_called_with(42)
+          assert.stub(api.nvim_win_close).was_not_called()
         end)
       end)
 
       describe('create_window', function()
         it('Should create window with expected values, and mappings', function()
-          local m = mock(vim.api, true)
-          m.nvim_create_buf.returns(101)
+          api.nvim_create_buf.returns(101)
           local m_getn = stub(table, 'getn')
           m_getn.returns(2)
 
@@ -121,11 +113,11 @@ describe('git', function()
           testModule.create_window(lines, 5, 4, mappings)
 
           -- buffer created with expected lines
-          assert.stub(m.nvim_buf_set_lines).was_called_with(101, 0, -1, true, lines)
+          assert.stub(api.nvim_buf_set_lines).was_called_with(101, 0, -1, true, lines)
           -- mappings created to close window with
-          assert.stub(m.nvim_buf_set_keymap).was_called_with(101, "n", "<ESC>",
+          assert.stub(api.nvim_buf_set_keymap).was_called_with(101, "n", "<ESC>",
             "<CMD>lua require('git.lib.blame').close_window()<CR>", { noremap = true })
-          assert.stub(m.nvim_buf_set_keymap).was_called_with(101, "n", "<CR>",
+          assert.stub(api.nvim_buf_set_keymap).was_called_with(101, "n", "<CR>",
             "<CMD>lua require('git.lib.blame').close_window()<CR>", { noremap = true })
 
           local opts = {
@@ -138,23 +130,21 @@ describe('git', function()
             bufpos = {5, 4}, -- passed parameters
             focusable = false
           }
-          assert.stub(m.nvim_open_win).was_called_with(101, true, opts)
+          assert.stub(api.nvim_open_win).was_called_with(101, true, opts)
         end)
       end)
 
       describe('go', function()
         it('Should not call create_window if window already exists', function()
-          local m = mock(vim.api, true)
-          testModule._set_window_id(1)
+          testModule.set_window_id(1)
 
 	        testModule.go(1, 3, {"<ESC>", "<C-x>"})
 
-	        assert.stub(m.nvim_call_function).was_not_called()
+	        assert.stub(api.nvim_call_function).was_not_called()
         end)
 
         it('Should call create_window with expected values', function()
-          local m = mock(vim.api, true)
-          testModule._set_window_id(nil)
+          testModule.set_window_id(nil)
           local blame_lines = [[
           c21aa714 (dave.smith 2020-09-03 14:40:48 +0100 1) some line
           c21aa714 (dave.smith 2020-09-03 14:40:48 +0100 2) some other line
@@ -163,8 +153,8 @@ describe('git', function()
           stub(testModule, "get_blame_results").returns(blame_lines)
           stub(testModule, "create_window")
           spy.on(testModule, "convert_and_format_result")
-          m.nvim_call_function.on_call_with("expand", {"%:p"}).returns("/some/file.txt")
-          m.nvim_win_get_cursor.returns({3,5})
+          api.nvim_call_function.on_call_with("expand", {"%:p"}).returns("/some/file.txt")
+          api.nvim_win_get_cursor.returns({3,5})
 
 
           testModule.go(1, 3, {"<ESC>", "<C-x>"})
@@ -173,16 +163,13 @@ describe('git', function()
           assert.stub(testModule.get_blame_results).was_called_with("/some/file.txt", 1, 3)
           assert.stub(testModule.convert_and_format_result).was_called_with(blame_lines)
           assert.stub(testModule.create_window).was_called_with(buf_lines, 1, 5, {"<ESC>", "<C-x>"})
-
-          mock.revert(m)
         end)
 
         it('Should not call create_window if no blame results returned', function()
-          local m = mock(vim.api, true)
-          testModule._set_window_id(nil)
+          testModule.set_window_id(nil)
           stub(testModule, "get_blame_results").returns(nil)
           spy.on(testModule, "convert_and_format_result")
-          m.nvim_call_function.on_call_with("expand", {"%:p"}).returns("/some/file.txt")
+          api.nvim_call_function.on_call_with("expand", {"%:p"}).returns("/some/file.txt")
           stub(_G, 'print')
 
 
@@ -192,7 +179,6 @@ describe('git', function()
           assert.stub(testModule.convert_and_format_result).was_called_with(nil)
           assert.stub(_G.print).was_called_with("GitBlame: File not tracked")
 
-          mock.revert(m)
           _G.print:revert()
         end)
       end)

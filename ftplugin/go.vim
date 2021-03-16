@@ -5,27 +5,27 @@
 let g:go_list_type = "quickfix"
 
 " Run all tests
-nmap <leader>gt <Plug>(go-test)
+nmap <buffer> <leader>gt <Plug>(go-test)
 
 " Run the test currently in
-nnoremap <leader>gft :GoTestFunc<CR>
+nnoremap <buffer> <leader>gft :GoTestFunc<CR>
 
 " Toggles test coverage on and off
-nmap <leader>gct <Plug>(go-coverage-toggle)
+nmap <buffer> <leader>gct <Plug>(go-coverage-toggle)
 
-nnoremap <leader>gb :<C-u>call <SID>build_go_files()<CR>
+nnoremap <buffer> <leader>gb :<C-u>call <SID>build_go_files()<CR>
 
 " Rename variable/word
-nmap <leader>gr <Plug>(go-rename)
+nmap <buffer> <leader>gr <Plug>(go-rename)
 
 " Runs the program, note this is synchronous
-nmap <leader>ge <Plug>(go-run)
+nmap <buffer> <leader>ge <Plug>(go-run)
 
 " Toggle between file and test file
-nnoremap <leader>ga :<C-u>GoAlternate!<CR>
+nnoremap <buffer> <leader>ga :<C-u>GoAlternate!<CR>
 
 " Show function signature and return type on status line
-nmap <Leader>gfi <Plug>(go-info)
+nmap <buffer> <Leader>gfi <Plug>(go-info)
 
 " Lifted straight out of https://github.com/fatih/vim-go/wiki/Tutorial
 " run :GoBuild or :GoTestCompile based on the go file
