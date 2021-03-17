@@ -7,5 +7,5 @@ lint:
 
 test:
 	@echo "Run tests..."
-	nvim --headless -c 'PlenaryBustedDirectory lua/spec/'
+	nvim --headless --noplugin -u lua/spec/minimal_init.vim -c 'PlenaryBustedDirectory lua/spec/'
 	@echo

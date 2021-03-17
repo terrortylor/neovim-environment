@@ -1,4 +1,4 @@
 set rtp+=.
-runtime plugin/plenary.vim
+set rtp+=../plenary.nvim/
 
-nnoremap ,,x :luafile %<CR>
+runtime plugin/plenary.vim
