@@ -10,8 +10,6 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Prepare
-        run: |
-          # sudo apt-get update
-          sudo apt-get lua-check
+        run: sudo apt-get lua-check
       - name: Lint
         run: make lint
