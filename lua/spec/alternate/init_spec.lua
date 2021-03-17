@@ -69,7 +69,7 @@ describe('alternate', function()
       testModule.get_alternate_file()
 
       assert.stub(_G.print).was_not_called_with('No alternate file rule found for filetype: cats')
-      assert.stub(api.nvim_command).was_called_with("e test/odule/funcs_test.code")
+      assert.stub(api.nvim_command).was_called_with("e test/module/funcs_test.code")
 
       -- reset stubs
       print:revert()
