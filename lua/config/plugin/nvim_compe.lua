@@ -16,9 +16,13 @@ require'compe'.setup {
     ultisnips = {
       priority = 2000
     };
-    nvim_lsp = true;
+    nvim_lsp = {
+      priority = 1900
+    };
+    path = {
+      priority = 1800
+    };
     buffer = true;
-    path = true;
     nvim_lua = {
       priority = 1100,
       filetypes = {"lua"}

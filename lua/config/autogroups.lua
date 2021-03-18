@@ -21,6 +21,9 @@ local autogroups = {
   return_to_last_edit_in_buffer = {
     {"BufReadPost", "*", "lua require('config.function.autocommands').move_to_last_edit()"}
   },
+  highlight_yank = {
+    {"TextYankPost", "*", "silent! lua require'vim.highlight'.on_yank({ higroup='IncSearch', timeout=300 })"}
+  }
 }
 
 util.create_autogroups(autogroups)

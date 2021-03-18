@@ -4,6 +4,12 @@ if (${1:CONDITION}) {
 }
 endsnippet
 
+snippet describe "describe bla bla" bA
+describe("${1}", ${2:async }() => {
+	${VISUAL}$0
+});
+endsnippet
+
 snippet it "it bla bla" bA
 it("${1}", ${2:async }() => {
 	${VISUAL}$0
