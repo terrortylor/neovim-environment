@@ -12,7 +12,6 @@ unit:
 
 integration:
 	@echo "Run integration tests..."
-	# nvim --headless --noplugin -c 'packadd plenary.nvim' -c "PlenaryBustedDirectory tests"
 	nvim --headless -c "PlenaryBustedDirectory tests"
 	@echo
 
