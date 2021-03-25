@@ -1,3 +1,4 @@
+local log = require('util.log')
 -- FIXME no tests
 local api = vim.api
 
@@ -10,6 +11,7 @@ function M.set_options(options)
   end
 end
 
+-- TODO remove once nvim 0.5
 function M.set_buf_options(options, buffer)
   buffer = buffer or 0
   for k,v in pairs(options) do
@@ -17,6 +19,7 @@ function M.set_buf_options(options, buffer)
   end
 end
 
+-- TODO remove once nvim 0.5
 function M.set_win_options(options, window)
   window = window or 0
   for k,v in pairs(options) do
@@ -28,6 +31,25 @@ end
 function M.set_variables(variables)
   for k,v in pairs(variables) do
     api.nvim_set_var(k, v)
+  end
+end
+
+function M.create_mappings(mappings, opts)
+  opts = opts or {noremap = true, silent = true}
+  local function keymap(...) vim.api.nvim_set_keymap(...) end
+
+  for mode, maps in pairs(mappings) do
+    for k, v in pairs(maps) do
+      if type(v) == 'string' then
+        keymap(mode, k, v, opts)
+      elseif type(v) == 'table' then
+        if #v == 2 then
+          keymap(mode, k, v[1], v[2])
+        else
+          log.error("Mapping not run for lhs: " .. k .. " mode: " .. mode)
+        end
+      end
+    end
   end
 end
 

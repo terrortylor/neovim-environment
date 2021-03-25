@@ -1,4 +1,5 @@
 local util = require('lspconfig/util')
+local create_mappings = require("util.config").create_mappings
 
 vim.b.show_virtual_text = false
 
@@ -8,33 +9,37 @@ local function set_omnifunc(bufnr)
 end
 
 local function set_mappings(client, bufnr)
-  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-  local opts = { noremap=true, silent=true }
-  buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-  buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
-  buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
-  buf_set_keymap('n', 'ca', '<Cmd>Telescope lsp_code_actions<CR>', opts)
-  buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-  buf_set_keymap('n', '<space>gs', '<cmd>Telescope lsp_document_symbols<CR>', opts)
-  buf_set_keymap('n', 'gk', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-  buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-  buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
-  buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
-  buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-  buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-  buf_set_keymap('n', 'gr', '<Cmd>Telescope lsp_references<CR>', opts)
-  buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
-  buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
-  buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
-  buf_set_keymap('n', '<space>cl', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
-  buf_set_keymap('n', '<space>th', '<cmd>lua require("config.lsp.funcs").diagnostic_toggle_virtual_text()<CR>', opts)
+
+  local mappings = {
+    n = {
+      ['gD'] = '<Cmd>lua vim.lsp.buf.declaration()<CR>',
+      ['gd'] = '<Cmd>lua vim.lsp.buf.definition()<CR>',
+      ['K'] = '<Cmd>lua vim.lsp.buf.hover()<CR>',
+      ['ca'] = '<Cmd>Telescope lsp_code_actions<CR>',
+      ['gi'] = '<cmd>lua vim.lsp.buf.implementation()<CR>',
+      ['<space>gs'] = '<cmd>Telescope lsp_document_symbols<CR>',
+      ['gk'] = '<cmd>lua vim.lsp.buf.signature_help()<CR>',
+      ['<space>wa'] = '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>',
+      ['<space>wr'] = '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>',
+      ['<space>wl'] = '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>',
+      ['<space>D'] = '<cmd>lua vim.lsp.buf.type_definition()<CR>',
+      ['<space>rn'] = '<cmd>lua vim.lsp.buf.rename()<CR>',
+      ['gr'] = '<Cmd>Telescope lsp_references<CR>',
+      ['<space>e'] = '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>',
+      ['[d'] = '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>',
+      [']d'] = '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>',
+      ['<space>cl'] = '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>',
+      ['<space>th'] = '<cmd>lua require("config.lsp.funcs").diagnostic_toggle_virtual_text()<CR>',
+    }
+  }
 
   -- Set some keybinds conditional on server capabilities
-  if client.resolved_capabilities.document_formatting then
-    buf_set_keymap("n", "<space>fd", "<cmd>lua require('config.lsp.funcs').efm_priority_document_format()<CR>", opts)
-  elseif client.resolved_capabilities.document_range_formatting then
-    buf_set_keymap("n", "<space>fd", "<cmd>lua require('config.lsp.funcs').efm_priority_document_format()<CR>", opts)
+  if client.resolved_capabilities.document_formatting or
+    client.resolved_capabilities.document_range_formatting then
+    mappings.n["<space>fd"] = "<cmd>lua require('config.lsp.funcs').efm_priority_document_format()<CR>"
   end
+
+  create_mappings(mappings)
 end
 
 local function set_highlights(client)

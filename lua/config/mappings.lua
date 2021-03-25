@@ -1,6 +1,4 @@
-local log = require('util.log')
-
-local mappings = {
+require('util.config').create_mappings({
   n = {
     -- Refactoring
     ["<leader>rw"] = {[[:%s/\C\<<c-r><c-w>\>//<left>]], {noremap = true}},
@@ -108,12 +106,19 @@ local mappings = {
     ["<leader>rw"] = {[[:s/\C\<<c-r>"\>//<left>]], {noremap = true}},
   },
   i = {
+    -- nvim-compe
+    ["<C-Space>"] = {"compe#complete()", {silent = true, expr = true}},
+    ["<CR>"]      = {"compe#confirm('<CR>')", {silent = true, expr = true}},
+    ["<C-e>"]     = {"compe#close('<C-e>')", {silent = true, expr = true}},
+    ["<C-f>"]     = {"compe#scroll({ 'delta': +4 })", {silent = true, expr = true}},
+    ["<C-d>"]     = {"compe#scroll({ 'delta': -4 })", {silent = true, expr = true}},
+
     -- Exit insert mode
     ["jj"]         = "<ESC>",
 
     -- Spelling
     -- Fix last incorrect word in insert mode: https://stackoverflow.com/a/16481737
-    ["<c-f>"]      = "<c-g>u<Esc>[s1z=`]a<c-g>u",
+    -- ["<c-f>"]      = "<c-g>u<Esc>[s1z=`]a<c-g>u",
 
     -- Disbale pageup/down in insert mode, keep hittin by mistake
     ["<PageUp>"]   = "",
@@ -129,22 +134,5 @@ local mappings = {
     ["<leader><ESC>"] = "<C-\\><C-n>",
     ["<leader>jj"]    = "<C-\\><C-n>",
   }
-}
+})
 
-local opts = {noremap = true, silent = true}
-local function keymap(...) vim.api.nvim_set_keymap(...) end
-
--- Silent maps
-for mode, maps in pairs(mappings) do
-  for k, v in pairs(maps) do
-    if type(v) == 'string' then
-    keymap(mode, k, v, opts)
-    elseif type(v) == 'table' then
-      if #v == 2 then
-        keymap(mode, k, v[1], v[2])
-      else
-        log.error("Mapping not run for lhs: " .. k .. " mode: " .. mode)
-      end
-    end
-  end
-end

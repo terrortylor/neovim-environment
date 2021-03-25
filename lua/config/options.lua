@@ -43,7 +43,8 @@ local global_options = {
   tags           = "./.git/tags;/",
 
   -- Completion Options
-  completeopt    = "menuone,preview,noselect,noinsert",
+  -- completeopt    = "menuone,preview,noselect,noinsert",
+  completeopt    = "menuone,noselect",
 }
 
 util.set_options(global_options)

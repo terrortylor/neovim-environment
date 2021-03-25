@@ -40,29 +40,6 @@ vnoremap <leader>fb y:FindInBuffer <c-r>"<cr>
 "" window, path can be added
 "nnoremap <leader>fp y:SimpleGrep
 
-" Open NERDTree at current file location, close if open
-" Takes into account in a buffer is loaded or not
-function! NerdToggleFind()
-  if exists("g:NERDTree")
-    " If no buffer has been loaded
-    if @% == ""
-      NERDTreeToggle
-    else
-      " if nerdtree is open
-      if g:NERDTree.IsOpen()
-        " if nerdtree focused then close
-        if bufwinnr(t:NERDTreeBufName) == winnr()
-          NERDTreeToggle
-        else
-          NERDTreeFind
-        endif
-      else
-        NERDTreeFind
-      endif
-    endif
-  endif
-endfunction
-
 " Opens first non empty list, location list is local to window
 nnoremap <leader>cl :call quickfix#window#OpenList()<CR>
 " Close all quicklist windows
