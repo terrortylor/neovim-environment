@@ -62,17 +62,13 @@ function M.show_line_diagnostics()
   end
 end
 
--- TODO work out how to toggle hover on and off
+-- Called from mappig to toggle virtual text on and off for a given buffer
+-- https://www.reddit.com/r/neovim/comments/m7ne92/how_to_redraw_lsp_diagnostics/
 function M.diagnostic_toggle_virtual_text()
-  local ok, result = pcall(vim.api.nvim_buf_get_var, 0, 'lsp_virtual_text_enabled')
-  -- No buffer local variable set, so just enable by default
-  if ok then
-    if result then
-      vim.b.lsp_virtual_text_enabled = false
-      return
-    end
-  end
-  vim.b.lsp_virtual_text_enabled = true
+  local virtual_text = vim.b.lsp_virtual_text_enabled
+  virtual_text = not virtual_text
+  vim.b.lsp_virtual_text_enabled = virtual_text
+  vim.lsp.diagnostic.display(vim.lsp.diagnostic.get(0, 1), 0, 1, {virtual_text = virtual_text})
 end
 
 return M

@@ -3,13 +3,13 @@ local create_mappings = require("util.config").create_mappings
 
 vim.b.show_virtual_text = false
 
+-- TODO can get rid of this as using compe
 local function set_omnifunc(bufnr)
   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
   buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 end
 
 local function set_mappings(client, bufnr)
-
   local mappings = {
     n = {
       ['gD'] = '<Cmd>lua vim.lsp.buf.declaration()<CR>',

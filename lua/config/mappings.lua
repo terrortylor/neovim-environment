@@ -106,13 +106,6 @@ require('util.config').create_mappings({
     ["<leader>rw"] = {[[:s/\C\<<c-r>"\>//<left>]], {noremap = true}},
   },
   i = {
-    -- nvim-compe
-    ["<C-Space>"] = {"compe#complete()", {silent = true, expr = true}},
-    ["<CR>"]      = {"compe#confirm('<CR>')", {silent = true, expr = true}},
-    ["<C-e>"]     = {"compe#close('<C-e>')", {silent = true, expr = true}},
-    ["<C-f>"]     = {"compe#scroll({ 'delta': +4 })", {silent = true, expr = true}},
-    ["<C-d>"]     = {"compe#scroll({ 'delta': -4 })", {silent = true, expr = true}},
-
     -- Exit insert mode
     ["jj"]         = "<ESC>",
 
