@@ -15,9 +15,19 @@ plug.add({
 
     vim.g.nvim_tree_show_icons = {
       git = 0,
-      folders = 0,
+      folders = 1,
       icons = 0
     }
+
+    vim.g.nvim_tree_icons = {
+      folder = {
+        default =    "ᐅ",
+        open =       "ᐁ",
+        empty =      "ᐅ",
+        empty_open = "ᐅ",
+        symlink =    "ᐅ",
+       }
+      }
     vim.g.nvim_tree_auto_close = 1
     vim.g.nvim_tree_follow = 1
     vim.g.nvim_tree_quit_on_open = 1

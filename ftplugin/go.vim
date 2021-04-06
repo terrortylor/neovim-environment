@@ -4,6 +4,12 @@
 " Always use quickfix
 let g:go_list_type = "quickfix"
 
+" Disbale goto as use built in
+let g:go_def_mapping_enabled = 0
+
+" disable docs as use built in lsp
+let g:go_doc_keywordprg_enabled = 0
+
 " Run all tests
 nmap <buffer> <leader>gt <Plug>(go-test)
 
@@ -15,17 +21,17 @@ nmap <buffer> <leader>gct <Plug>(go-coverage-toggle)
 
 nnoremap <buffer> <leader>gb :<C-u>call <SID>build_go_files()<CR>
 
-" Rename variable/word
-nmap <buffer> <leader>gr <Plug>(go-rename)
-
-" Runs the program, note this is synchronous
-nmap <buffer> <leader>ge <Plug>(go-run)
-
-" Toggle between file and test file
-nnoremap <buffer> <leader>ga :<C-u>GoAlternate!<CR>
-
-" Show function signature and return type on status line
-nmap <buffer> <Leader>gfi <Plug>(go-info)
+" " Rename variable/word
+" nmap <buffer> <leader>gr <Plug>(go-rename)
+" 
+" " Runs the program, note this is synchronous
+" nmap <buffer> <leader>ge <Plug>(go-run)
+" 
+" " Toggle between file and test file
+" nnoremap <buffer> <leader>ga :<C-u>GoAlternate!<CR>
+" 
+" " Show function signature and return type on status line
+" nmap <buffer> <Leader>gfi <Plug>(go-info)
 
 " Lifted straight out of https://github.com/fatih/vim-go/wiki/Tutorial
 " run :GoBuild or :GoTestCompile based on the go file

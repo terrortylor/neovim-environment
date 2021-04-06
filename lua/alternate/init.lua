@@ -50,6 +50,17 @@ M.rules = {
       }
     },
   },
+  ["go"] = {
+    {
+      condition = ".*",
+      direction = "_test.go",
+      -- TODO be nice not to have to escape these? https://stackoverflow.com/questions/9790688/escaping-strings-for-gsub
+      -- TODO user vim's built in escape func
+      transformers = {
+        {"%.go", "_test%.go"},
+      }
+    },
+  },
   ["typescript"] = {
     {
       condition = "%.ts$",

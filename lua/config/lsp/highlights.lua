@@ -45,6 +45,8 @@ local function lsp_highlights()
   -- Set to same as PMenu, PMenu is the autocomplete/wildcard
   -- These are the float windows like diagnstic and hover
   set_highlight("NormalFloat", " guifg=" .. c.pearl .. " guibg=" .. c.blue4)
+  -- fixes the weird line break wrong colour blocks
+  set_highlight("mkdLineBreak", " guifg=" .. c.pearl .. " guibg=" .. c.blue4)
 
   vim.api.nvim_exec([[
     sign define LspDiagnosticsSignError text=E texthl=LspDiagnosticsSignError linehl= numhl=

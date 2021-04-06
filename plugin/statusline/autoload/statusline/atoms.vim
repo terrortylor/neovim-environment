@@ -151,21 +151,3 @@ function! statusline#atoms#mode(active) abort
     return repeat(' ', s:mode_max_length + 4)
   endif
 endfunction
-
-function! statusline#atoms#coc_diagnostics() abort
-  if !exists('b:coc_diagnostic_info')
-    return ''
-  endif
-  let l:info = b:coc_diagnostic_info
-  let l:atom='%#AtomColon#E: ' . '%#AtomText#' . l:info.error . ' '
-  let l:atom.='%#AtomColon#W: ' . '%#AtomText#' . l:info.warning
-  return s:WrapWithBrackets(' ' . l:atom . ' ')
-endfunction
-
-function! statusline#atoms#coc_function() abort
-  let l:func = get(b:, 'coc_current_function', '')
-  if strlen(l:func) == 0
-    return ''
-  endif
-  return s:WrapWithBrackets('%#AtomText#' . l:func)
-endfunction

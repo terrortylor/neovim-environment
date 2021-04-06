@@ -20,9 +20,3 @@ augroup statusline_update
   autocmd!
   autocmd VimEnter,WinEnter,BufWinEnter * call statusline#update()
 augroup END
-
-augroup statusline_coc_update
-  autocmd!
-  autocmd User CocStatusChange,CocDiagnosticChange call statusline#update()
-augroup END
-

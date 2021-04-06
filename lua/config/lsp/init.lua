@@ -1,14 +1,6 @@
 local util = require('lspconfig/util')
 local create_mappings = require("util.config").create_mappings
 
-vim.b.show_virtual_text = false
-
--- TODO can get rid of this as using compe
-local function set_omnifunc(bufnr)
-  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
-end
-
 local function set_mappings(client, bufnr)
   local mappings = {
     n = {
@@ -18,7 +10,7 @@ local function set_mappings(client, bufnr)
       ['ca'] = '<Cmd>Telescope lsp_code_actions<CR>',
       ['gi'] = '<cmd>lua vim.lsp.buf.implementation()<CR>',
       ['<space>gs'] = '<cmd>Telescope lsp_document_symbols<CR>',
-      ['gk'] = '<cmd>lua vim.lsp.buf.signature_help()<CR>',
+      ['gK'] = '<cmd>lua vim.lsp.buf.signature_help()<CR>',
       ['<space>wa'] = '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>',
       ['<space>wr'] = '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>',
       ['<space>wl'] = '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>',
@@ -42,6 +34,13 @@ local function set_mappings(client, bufnr)
   create_mappings(mappings)
 end
 
+-- TODO can get rid of this as using compe
+-- TODO add check so if nvim_compe is not loaded then load this
+local function set_omnifunc(bufnr)
+  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+end
+
 local function set_highlights(client)
   -- TODO not sure I like this feature, unless updatetime is set to like 500~
   -- have to check other CursorHold autocommands
@@ -57,32 +56,25 @@ local function set_highlights(client)
   end
 end
 
-local check_if_lsp_highights_enabled = function(bufnr, _)
-  local ok, result = pcall(vim.api.nvim_buf_get_var, bufnr, 'lsp_virtual_text_enabled')
-  -- No buffer local variable set, so just enable by default
-  if not ok then
-    return false
-  end
-
-  return result
-end
-
 vim.lsp.handlers["textDocument/publishDiagnostics"] =
 vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
   underline = true,
   signs = true,
   update_in_insert = false,
-  virtual_text = check_if_lsp_highights_enabled
+  virtual_text = false
 })
 
-require'lspconfig'.tsserver.setup{
-  on_attach = function(client, bufnr)
+local function onAttach(client, bufnr)
     require('config.lsp.highlights')
-    set_omnifunc(bufnr)
+    -- set_omnifunc(bufnr)
     set_mappings(client, bufnr)
     set_highlights(client)
   end
-}
+
+-- GO111MODULE=on go get golang.org/x/tools/gopls@latest
+require'lspconfig'.gopls.setup{on_attach = onAttach}
+
+require'lspconfig'.tsserver.setup{on_attach = onAttach}
 
 -- require'lspconfig'.terraformls.setup{
 --   on_attach = on_attach,

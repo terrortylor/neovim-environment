@@ -1,9 +1,9 @@
 local api = vim.api
-local has_nvim5 = api.nvim_call_function("has", {"nvim-0.5.0"})
 
 -- If error later in scripts then this may/may not be set,
 -- this is a crued way to guard around that
-api.nvim_buf_set_option(0, "undofile", true)
+-- api.nvim_buf_set_option(0, "undofile", true)
+vim.bo.undofile = true
 
 -- TODO implement "gf" for lua
 local util = require("util.config")
@@ -58,8 +58,10 @@ plug.add({
   end
 })
 
-plug.add("AndrewRadev/switch.vim")
+-- plug.add("AndrewRadev/switch.vim")
 
+-- require("config.plugin.statusline")
+-- require("config.plugin.galaxyline")
 require("config.plugin.nvim-tree")
 require("config.plugin.telescope")
 
@@ -89,7 +91,6 @@ plug.add({
   end
 })
 
--- if has_nvim5 == 1 then
   plug.add({
     url = "norcalli/nvim-colorizer.lua",
     loaded = "opt",
@@ -99,7 +100,7 @@ plug.add({
     end
   })
 
-  plug.add("tjdevries/colorbuddy.nvim")
+--   plug.add("tjdevries/colorbuddy.nvim")
 
   -- plug.add({
   --   url = "terrortylor/nvim-tender",
@@ -110,15 +111,12 @@ plug.add({
   --   end
   -- })
 
--- else
   plug.add({
     url = "jacoborus/tender.vim",
     post_handler = function()
       vim.api.nvim_command("colorscheme tender")
     end
   })
--- end
-
 
 require("config.plugin.gitsigns")
 -- plug.add("udalov/kotlin-vim")

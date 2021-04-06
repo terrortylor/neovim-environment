@@ -30,7 +30,6 @@ function! statusline#build(winnr) abort
       let l:statusline.=statusline#atoms#filename()
       let l:statusline.=statusline#atoms#modified(a:winnr)
       let l:statusline.=statusline#atoms#readonly(a:winnr)
-      let l:statusline.=statusline#atoms#coc_function()
     else
       let l:statusline.=statusline#atoms#non_modifiable(l:type)
       let l:statusline.=' '
@@ -46,7 +45,6 @@ function! statusline#build(winnr) abort
 
     " If not quickfix or help etc then show all the gubbins
     if l:type ==# ''
-      let l:statusline.=statusline#atoms#coc_diagnostics()
       let l:statusline.=statusline#atoms#case_sensitivity()
       let l:statusline.=' '
       let l:statusline.=statusline#atoms#filetype(a:winnr)
