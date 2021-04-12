@@ -34,6 +34,7 @@ end
 local plug = require("pluginman")
 
 require("config.plugin.nvim-comment")
+require("config.plugin.nvim-httpclient")
 require("config.plugin.nvim-testing")
 
 -- plug.add({
@@ -124,6 +125,7 @@ require("config.plugin.gitsigns")
 -- plug.add("PProvost/vim-ps1")
 
 require("config.plugin.lsp")
+require("config.plugin.vim-test")
 
 plug.install()
 
@@ -133,12 +135,12 @@ plug.install()
 local plugins = {
   "git",
   "ui.arglist",
+  "ui.tabline",
   "tmux",
   "alternate",
   "pa",
   "snake",
   "wiki",
-  "test"
 }
 
 for i =1, #plugins do

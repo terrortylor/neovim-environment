@@ -1,5 +1,12 @@
 local M = {}
 
+local levels = {
+  errors = 'Error',
+  warnings = 'Warning',
+  info = 'Information',
+  hints = 'Hint'
+}
+
 local function is_empty(tbl)
   for _,_ in pairs(tbl) do return false end -- luacheck: ignore
   return true
@@ -29,6 +36,32 @@ function M.efm_priority_document_format()
   -- format the doc
   -- TODO need a check to make sure actually has this func on one of the availble clients
   vim.lsp.buf.formatting()
+end
+
+function M.get_buf_diagnostic_count(bufnr)
+  local result = {}
+
+  for k, level in pairs(levels) do
+    result[k] = vim.lsp.diagnostic.get_count(bufnr, level)
+  end
+
+  return result
+end
+
+function M.get_all_diagnostic_count()
+  local result = {}
+
+  local buffers = vim.api.nvim_list_bufs()
+  for _,b in pairs(buffers) do
+    if vim.api.nvim_buf_is_loaded(b) then
+      for k, level in pairs(levels) do
+        local count = result[k] or 0
+        result[k] = count + vim.lsp.diagnostic.get_count(b, level)
+      end
+    end
+  end
+
+  return result
 end
 
 function M.get_line_diagnostics()

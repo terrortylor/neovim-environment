@@ -45,10 +45,10 @@ function! statusline#build(winnr) abort
 
     " If not quickfix or help etc then show all the gubbins
     if l:type ==# ''
-      let l:statusline.=statusline#atoms#case_sensitivity()
-      let l:statusline.=' '
-      let l:statusline.=statusline#atoms#filetype(a:winnr)
-      let l:statusline.=' '
+      " let l:statusline.=statusline#atoms#case_sensitivity()
+      " let l:statusline.=' '
+      " let l:statusline.=statusline#atoms#filetype(a:winnr)
+      " let l:statusline.=' '
     endif
     let l:statusline.=statusline#atoms#location()
   else

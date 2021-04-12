@@ -1,14 +1,9 @@
 local c = require('config.colours').c
-
-local function set_highlight(hl, style)
-  -- TODO ensure style has ' ' prefix?
-  print(string.format( "highlight %s %s", hl, style))
-  vim.api.nvim_exec(string.format("highlight %s %s", hl, style), false)
-end
-
-local function guifg(colour)
-  return string.format(" guifg=%s", colour)
-end
+local hl = require('util.highlights')
+local set_highlight = hl.set_highlight
+local guifg = hl.guifg
+local guifg = hl.guifg
+local guibg = hl.guibg
 
 local function lsp_highlights()
   local c_error = c.red1
@@ -44,9 +39,9 @@ local function lsp_highlights()
 
   -- Set to same as PMenu, PMenu is the autocomplete/wildcard
   -- These are the float windows like diagnstic and hover
-  set_highlight("NormalFloat", " guifg=" .. c.pearl .. " guibg=" .. c.blue4)
+  set_highlight("NormalFloat", {guifg(c.pearl), guibg(c.blue4)})
   -- fixes the weird line break wrong colour blocks
-  set_highlight("mkdLineBreak", " guifg=" .. c.pearl .. " guibg=" .. c.blue4)
+  set_highlight("mkdLineBreak", {guifg(c.pearl), guibg(c.blue4)})
 
   vim.api.nvim_exec([[
     sign define LspDiagnosticsSignError text=E texthl=LspDiagnosticsSignError linehl= numhl=
