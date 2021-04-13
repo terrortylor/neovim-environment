@@ -4,22 +4,22 @@ local set_highlight = hl.set_highlight
 local fg = hl.guifg
 local bg = hl.guibg
 local lsp_funcs = require('config.lsp.funcs')
+local util = require('util.config')
 
-  local left_tabline = {}
-  local left_width = 0
-  local right_tabline = {}
-  local right_width = 0
+local left_tabline = {}
+local left_width = 0
+local right_tabline = {}
+local right_width = 0
 
 local M = {}
 
-local function setup_highlights()
-  set_highlight("TabLine", {fg(c.yellow1), bg(c.grey3)})
-  set_highlight("TabLineSel", {fg(c.yellow1), bg(c.gb)})
-  set_highlight("TabLineFill", {fg(c.shadow), bg(c.shadow)})
-  -- set_highlight("TabLineDiagError", {fg(c.red1), bg(c.shadow)})
-  -- set_highlight("TabLineDiagWarn", {fg(c.blue4), bg(c.shadow)})
-end
-   
+local ignore_filetypes = {
+  "qf",
+  "help",
+  "TelescopePrompt",
+  "NvimTree"
+}
+
 local function add_left(hl, text)
   table.insert(left_tabline, "%#" .. hl .."#")
   left_width = left_width + string.len(text)
@@ -64,13 +64,30 @@ end
 local function diagnostics()
   -- TODO only show if lsp active
   local total_diagnostics = lsp_funcs.get_all_diagnostic_count()
-  add_right("LspDiagnosticsSignError", " E: " .. total_diagnostics.errors)
-  add_right("LspDiagnosticsSignWarning", " W: " .. total_diagnostics.warnings)
+  add_right("TabLineDiagError", " E: ")
+  add_right("TabLine", total_diagnostics.errors)
+  add_right("TabLineDiagWarn", " W: ")
+  add_right("TabLine", total_diagnostics.warnings)
 end
 
 local function filetype()
   local filetype = vim.api.nvim_buf_get_option(0, "filetype")
-  add_right("TabLineSel", "[" .. string.upper(filetype) .. "]")
+  if filetype == "" then
+    return
+  end
+
+  local skip = false
+  for _,ft in pairs(ignore_filetypes) do
+    if ft == filetype then
+      skip = true
+      break
+    end
+  end
+
+  if not skip then
+    add_right("TabLineAtomHeader", "FT: ")
+    add_right("TabLine", filetype)
+  end
 end
 
 local function tabline()
@@ -96,13 +113,26 @@ local function tabline()
 end
 
 function M.setup()
-  setup_highlights()
+  util.create_autogroups({
+    tabline_highlights = {
+      {"ColorScheme", "*", "lua require('ui.tabline').highlighting()"}
+    }
+  })
 
   function _G.my_tabline()
     return tabline()
   end
 
   vim.o.tabline = "%!v:lua.my_tabline()"
+end
+
+function M.highlighting()
+  set_highlight("TabLine", {fg(c.blue2), bg(c.shadow)})
+  set_highlight("TabLineSel", {fg(c.green1), bg(c.bg)})
+  set_highlight("TabLineFill", {fg(c.shadow), bg(c.shadow)})
+  set_highlight("TabLineAtomHeader", {fg(c.green1), bg(c.shadow)})
+  set_highlight("TabLineDiagError", {fg(c.red1), bg(c.shadow)})
+  set_highlight("TabLineDiagWarn", {fg(c.yellow3), bg(c.shadow)})
 end
 
 return M

@@ -2,7 +2,6 @@ local c = require('config.colours').c
 local hl = require('util.highlights')
 local set_highlight = hl.set_highlight
 local guifg = hl.guifg
-local guifg = hl.guifg
 local guibg = hl.guibg
 
 local function lsp_highlights()

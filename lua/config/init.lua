@@ -33,6 +33,25 @@ if not fs.is_directory(install_path) then
 end
 local plug = require("pluginman")
 
+--   plug.add("tjdevries/colorbuddy.nvim")
+
+  -- plug.add({
+  --   url = "terrortylor/nvim-tender",
+  --   package = "myplugins",
+  --   post_handler = function()
+  --     -- require('nvim-tender')
+  --    -- vim.api.nvim_command("colorscheme nvim-tender")
+  --   end
+  -- })
+
+  plug.add({
+    url = "jacoborus/tender.vim",
+    post_handler = function()
+      vim.api.nvim_command("colorscheme tender")
+    end
+  })
+
+
 require("config.plugin.nvim-comment")
 require("config.plugin.nvim-httpclient")
 require("config.plugin.nvim-testing")
@@ -64,7 +83,7 @@ plug.add({
 -- require("config.plugin.statusline")
 -- require("config.plugin.galaxyline")
 require("config.plugin.nvim-tree")
-require("config.plugin.telescope")
+require("config.plugin.telescope").setup()
 
 -- TODO make optional, see init.vim so loads if python3
 plug.add({
@@ -98,24 +117,6 @@ plug.add({
     post_handler = function()
       vim.api.nvim_command("packadd nvim-colorizer.lua")
       require'colorizer'.setup()
-    end
-  })
-
---   plug.add("tjdevries/colorbuddy.nvim")
-
-  -- plug.add({
-  --   url = "terrortylor/nvim-tender",
-  --   package = "myplugins",
-  --   post_handler = function()
-  --     -- require('nvim-tender')
-  --    -- vim.api.nvim_command("colorscheme nvim-tender")
-  --   end
-  -- })
-
-  plug.add({
-    url = "jacoborus/tender.vim",
-    post_handler = function()
-      vim.api.nvim_command("colorscheme tender")
     end
   })
 
