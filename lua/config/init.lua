@@ -126,6 +126,8 @@ require("config.plugin.gitsigns")
 -- plug.add("PProvost/vim-ps1")
 
 require("config.plugin.lsp")
+require("config.plugin.treesitter")
+
 require("config.plugin.vim-test")
 
 plug.install()

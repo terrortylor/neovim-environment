@@ -62,12 +62,13 @@ local function tab_markers()
 end
 
 local function diagnostics()
-  -- TODO only show if lsp active
-  local total_diagnostics = lsp_funcs.get_all_diagnostic_count()
-  add_right("TabLineDiagError", " E: ")
-  add_right("TabLine", total_diagnostics.errors)
-  add_right("TabLineDiagWarn", " W: ")
-  add_right("TabLine", total_diagnostics.warnings)
+  if #vim.lsp.buf_get_clients(0) > 0 then
+    local total_diagnostics = lsp_funcs.get_all_diagnostic_count()
+    add_right("TabLineDiagError", " E: ")
+    add_right("TabLine", total_diagnostics.errors)
+    add_right("TabLineDiagWarn", " W: ")
+    add_right("TabLine", total_diagnostics.warnings)
+  end
 end
 
 local function filetype()

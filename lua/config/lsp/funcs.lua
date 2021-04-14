@@ -38,6 +38,50 @@ function M.efm_priority_document_format()
   vim.lsp.buf.formatting()
 end
 
+-- Lifted from:
+-- https://github.com/jose-elias-alvarez/nvim-lsp-ts-utils/blob/main/lua/nvim-lsp-ts-utils.lua
+function M.fix_first_code_action()
+  local params = vim.lsp.util.make_range_params()
+  params.context = {
+    diagnostics = vim.lsp.diagnostic.get_line_diagnostics()
+  }
+
+  vim.lsp.buf_request(0, "textDocument/codeAction", params,
+  function(_, _, responses)
+    if not responses or not responses[1] then
+      print("No code actions available")
+      return
+    end
+
+    vim.lsp.buf.execute_command(responses[1])
+  end)
+end
+
+-- -- https://www.reddit.com/r/neovim/comments/iil3jt/nvimlsp_how_to_display_all_diagnostics_for_entire/
+-- -- populate quickfix list with diagnostics
+-- local method = "textDocument/publishDiagnostics"
+-- local default_callback = vim.lsp.handlers[method]
+-- 
+-- vim.lsp.handlers[method] = function(err, method, result, client_id)
+--   default_callback(err, method, result, client_id)
+--   if result and result.diagnostics then
+--     local item_list = {}
+--     for _, v in ipairs(result.diagnostics) do
+--       local fname = result.uri
+--       table.insert(item_list, { filename = fname, lnum = v.range.start.line + 1, col = v.range.start.character + 1; text = v.message; })
+--     end
+--     local old_items = vim.fn.getqflist()
+--     for _, old_item in ipairs(old_items) do
+--       local bufnr = vim.uri_to_bufnr(result.uri)
+--       if vim.uri_from_bufnr(old_item.bufnr) ~= result.uri then
+--         table.insert(item_list, old_item)
+--       end
+--     end
+--     vim.fn.setqflist({}, ' ', { title = 'LSP'; items = item_list; })
+--   end
+-- end
+-- 
+
 function M.get_buf_diagnostic_count(bufnr)
   local result = {}
 
@@ -64,36 +108,36 @@ function M.get_all_diagnostic_count()
   return result
 end
 
-function M.get_line_diagnostics()
-  local tbl = {}
-  local line_nr = vim.api.nvim_win_get_cursor(0)[1] - 1
-  local buf_nr = vim.api.nvim_get_current_buf()
-  local clients = vim.lsp.buf_get_clients(0)
-
-  for _,client in pairs(clients) do
-    local id = client.id
-    local name = client.name
-    local diag = vim.lsp.diagnostic.get_line_diagnostics(buf_nr, line_nr, {}, id)
-    if not is_empty(diag) then
-      table.insert(tbl, "Source: " .. name)
-      table.insert(tbl, "Message:")
-      table.insert(tbl, diag[1].message)
-    end
-  end
-  return tbl
-end
-
--- This is just testing, it's basically a a shit verson of vim.lsp.diagnostic.show_line_diagnostics()
-function M.show_line_diagnostics()
-  local diag_msgs = M.get_line_diagnostics()
-  print(vim.inspect(diag_msgs))
-
-  -- Just show's the last line which is what is displayed anyhow, as last message takes precedence
-  local diag = diag_msgs[#diag_msgs]
-  if diag then
-    print(diag)
-  end
-end
+-- function M.get_line_diagnostics()
+--   local tbl = {}
+--   local line_nr = vim.api.nvim_win_get_cursor(0)[1] - 1
+--   local buf_nr = vim.api.nvim_get_current_buf()
+--   local clients = vim.lsp.buf_get_clients(0)
+-- 
+--   for _,client in pairs(clients) do
+--     local id = client.id
+--     local name = client.name
+--     local diag = vim.lsp.diagnostic.get_line_diagnostics(buf_nr, line_nr, {}, id)
+--     if not is_empty(diag) then
+--       table.insert(tbl, "Source: " .. name)
+--       table.insert(tbl, "Message:")
+--       table.insert(tbl, diag[1].message)
+--     end
+--   end
+--   return tbl
+-- end
+-- 
+-- -- This is just testing, it's basically a a shit verson of vim.lsp.diagnostic.show_line_diagnostics()
+-- function M.show_line_diagnostics()
+--   local diag_msgs = M.get_line_diagnostics()
+--   print(vim.inspect(diag_msgs))
+-- 
+--   -- Just show's the last line which is what is displayed anyhow, as last message takes precedence
+--   local diag = diag_msgs[#diag_msgs]
+--   if diag then
+--     print(diag)
+--   end
+-- end
 
 -- Called from mappig to toggle virtual text on and off for a given buffer
 -- https://www.reddit.com/r/neovim/comments/m7ne92/how_to_redraw_lsp_diagnostics/
