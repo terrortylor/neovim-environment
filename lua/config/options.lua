@@ -12,6 +12,9 @@ wildignore = wildignore .. "tags,*.session"
 -- TODO when 0.5 upate to use lua-vim-options
 -- TODO move setting to sperate file once 'gf' implemented
 local global_options = {
+  -- better diff
+  diffopt        = "internal,filler,algorithm:patience,indent-heuristic",
+
   -- wildignore
   wildmode       = "full",
   wildignorecase = true,

@@ -66,11 +66,14 @@ vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
 })
 
 local function onAttach(client, bufnr)
-    require('config.lsp.highlights')
-    -- set_omnifunc(bufnr)
-    set_mappings(client, bufnr)
-    set_highlights(client)
-  end
+  require('config.lsp.highlights')
+  -- set_omnifunc(bufnr)
+  set_mappings(client, bufnr)
+  set_highlights(client)
+end
+
+-- npm i -g bash-language-server
+require'lspconfig'.bashls.setup{}
 
 -- GO111MODULE=on go get golang.org/x/tools/gopls@latest
 require'lspconfig'.gopls.setup{on_attach = onAttach}

@@ -40,10 +40,19 @@ plug.add({
       };
     }
 
+    -- if lexima loaded then setup correct mappings
+    -- lexima must be loaded before compe!
+    local crMap = "compe#confirm('<CR>')"
+    if  vim.g.loaded_lexima == 1 then
+      vim.g.lexima_no_default_rules = true
+      vim.cmd("call lexima#set_default_rules()")
+      crMap = "compe#confirm(lexima#expand('<LT>CR>', 'i'))"
+    end
+
     require('util.config').create_mappings({
       i = {
         ["<C-Space>"] = {"compe#complete()", {silent = true, expr = true}},
-        ["<CR>"]      = {"compe#confirm('<CR>')", {silent = true, expr = true}},
+        ["<CR>"]      = {crMap, {silent = true, expr = true}},
         ["<C-e>"]     = {"compe#close('<C-e>')", {silent = true, expr = true}},
         ["<C-f>"]     = {"compe#scroll({ 'delta': +4 })", {silent = true, expr = true}},
         ["<C-d>"]     = {"compe#scroll({ 'delta': -4 })", {silent = true, expr = true}},
