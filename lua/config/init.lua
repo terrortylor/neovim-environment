@@ -129,6 +129,7 @@ require("config.plugin.lsp")
 require("config.plugin.treesitter")
 
 require("config.plugin.vim-test")
+require("config.colour-overrides").setup()
 
 plug.install()
 
@@ -146,7 +147,7 @@ local plugins = {
   "wiki",
 }
 
-for i =1, #plugins do
+for i = 1, #plugins do
   require(plugins[i]).setup()
 end
 

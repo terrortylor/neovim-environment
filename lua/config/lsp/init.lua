@@ -9,7 +9,7 @@ local function set_mappings(client, bufnr)
       ['K'] = '<Cmd>lua vim.lsp.buf.hover()<CR>',
       ['ca'] = '<Cmd>Telescope lsp_code_actions<CR>',
       ['cf'] = '<Cmd>lua require("config.lsp.funcs").fix_first_code_action()<CR>',
-      ['gi'] = '<cmd>lua vim.lsp.buf.implementation()<CR>',
+      ['gI'] = '<cmd>lua vim.lsp.buf.implementation()<CR>',
       ['<space>gs'] = '<cmd>Telescope lsp_document_symbols<CR>',
       ['gK'] = '<cmd>lua vim.lsp.buf.signature_help()<CR>',
       ['<space>wa'] = '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>',
@@ -21,7 +21,6 @@ local function set_mappings(client, bufnr)
       ['<space>e'] = '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>',
       ['[d'] = '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>',
       [']d'] = '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>',
-      ['<space>cl'] = '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>',
       ['<space>th'] = '<cmd>lua require("config.lsp.funcs").diagnostic_toggle_virtual_text()<CR>',
     }
   }

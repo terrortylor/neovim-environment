@@ -3,8 +3,9 @@ local M = {}
 local levels = {
   errors = 'Error',
   warnings = 'Warning',
-  info = 'Information',
-  hints = 'Hint'
+  -- Currently only displaying Errors and Warning in tabline
+  -- info = 'Information',
+  -- hints = 'Hint'
 }
 
 local function is_empty(tbl)
@@ -61,7 +62,6 @@ end
 -- -- populate quickfix list with diagnostics
 -- local method = "textDocument/publishDiagnostics"
 -- local default_callback = vim.lsp.handlers[method]
--- 
 -- vim.lsp.handlers[method] = function(err, method, result, client_id)
 --   default_callback(err, method, result, client_id)
 --   if result and result.diagnostics then
@@ -80,7 +80,46 @@ end
 --     vim.fn.setqflist({}, ' ', { title = 'LSP'; items = item_list; })
 --   end
 -- end
--- 
+
+local all_diagnostics_to_qf = function()
+  local diagnostics = vim.lsp.diagnostic.get_all()
+  local qflist = {}
+  for bufnr, diagnostic in pairs(diagnostics) do
+    for _, d in ipairs(diagnostic) do
+      --  1 = Error, 2 = Warning, 3 = Information, 4 = Hint
+      if d.severity == 1 then
+        d.bufnr = bufnr
+        d.lnum = d.range.start.line + 1
+        d.col = d.range.start.character + 1
+        d.text = d.message
+        table.insert(qflist, d)
+      end
+    end
+  end
+  return qflist
+end
+
+
+
+-- Modified from: https://github.com/neovim/nvim-lspconfig/issues/69
+local method = "textDocument/publishDiagnostics"
+local last_quickfix = {}
+local default_handler = vim.lsp.handlers[method]
+vim.lsp.handlers[method] = function(err, method, result, client_id, bufnr, config)
+  default_handler(err, method, result, client_id, bufnr, config)
+  -- TODO have method to disable/toggle this behaviour
+  local qflist = all_diagnostics_to_qf()
+  if #last_quickfix ~= #qflist or not vim.deep_equal(last_quickfix, qflist) then
+    last_quickfix = qflist
+    vim.lsp.util.set_qflist(qflist)
+  end
+end
+
+-- TODO what to do here? is the handler override above too heavy handed?
+-- function M.set_quickfixlist_all_diagnoistics()
+--   local qflist = all_diagnostics_to_qf()
+--   vim.lsp.util.set_qflist(qflist)
+-- end
 
 function M.get_buf_diagnostic_count(bufnr)
   local result = {}
@@ -108,38 +147,7 @@ function M.get_all_diagnostic_count()
   return result
 end
 
--- function M.get_line_diagnostics()
---   local tbl = {}
---   local line_nr = vim.api.nvim_win_get_cursor(0)[1] - 1
---   local buf_nr = vim.api.nvim_get_current_buf()
---   local clients = vim.lsp.buf_get_clients(0)
--- 
---   for _,client in pairs(clients) do
---     local id = client.id
---     local name = client.name
---     local diag = vim.lsp.diagnostic.get_line_diagnostics(buf_nr, line_nr, {}, id)
---     if not is_empty(diag) then
---       table.insert(tbl, "Source: " .. name)
---       table.insert(tbl, "Message:")
---       table.insert(tbl, diag[1].message)
---     end
---   end
---   return tbl
--- end
--- 
--- -- This is just testing, it's basically a a shit verson of vim.lsp.diagnostic.show_line_diagnostics()
--- function M.show_line_diagnostics()
---   local diag_msgs = M.get_line_diagnostics()
---   print(vim.inspect(diag_msgs))
--- 
---   -- Just show's the last line which is what is displayed anyhow, as last message takes precedence
---   local diag = diag_msgs[#diag_msgs]
---   if diag then
---     print(diag)
---   end
--- end
-
--- Called from mappig to toggle virtual text on and off for a given buffer
+-- Called from mapping to toggle virtual text on and off for a given buffer
 -- https://www.reddit.com/r/neovim/comments/m7ne92/how_to_redraw_lsp_diagnostics/
 function M.diagnostic_toggle_virtual_text()
   local virtual_text = vim.b.lsp_virtual_text_enabled
