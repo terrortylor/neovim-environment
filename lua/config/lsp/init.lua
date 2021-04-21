@@ -1,5 +1,6 @@
 local util = require('lspconfig/util')
 local create_mappings = require("util.config").create_mappings
+local lsp_funcs = require("config.lsp.funcs")
 
 local function set_mappings(client, bufnr)
   local mappings = {
@@ -63,6 +64,8 @@ vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
   update_in_insert = false,
   virtual_text = false
 })
+-- limit sign diagnostics to 1 per line
+lsp_funcs.limit_diagnostic_sign_column()
 
 local function onAttach(client, bufnr)
   require('config.lsp.highlights')

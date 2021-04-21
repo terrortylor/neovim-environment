@@ -101,25 +101,64 @@ end
 
 
 
--- Modified from: https://github.com/neovim/nvim-lspconfig/issues/69
-local method = "textDocument/publishDiagnostics"
-local last_quickfix = {}
-local default_handler = vim.lsp.handlers[method]
-vim.lsp.handlers[method] = function(err, method, result, client_id, bufnr, config)
-  default_handler(err, method, result, client_id, bufnr, config)
-  -- TODO have method to disable/toggle this behaviour
-  local qflist = all_diagnostics_to_qf()
-  if #last_quickfix ~= #qflist or not vim.deep_equal(last_quickfix, qflist) then
-    last_quickfix = qflist
-    vim.lsp.util.set_qflist(qflist)
-  end
-end
+-- -- Modified from: https://github.com/neovim/nvim-lspconfig/issues/69
+-- local method = "textDocument/publishDiagnostics"
+-- local last_quickfix = {}
+-- local default_handler = vim.lsp.handlers[method]
+-- vim.lsp.handlers[method] = function(err, method, result, client_id, bufnr, config)
+--   default_handler(err, method, result, client_id, bufnr, config)
+--   -- TODO have method to disable/toggle this behaviour
+--   local qflist = all_diagnostics_to_qf()
+--   if #last_quickfix ~= #qflist or not vim.deep_equal(last_quickfix, qflist) then
+--     last_quickfix = qflist
+--     vim.lsp.util.set_qflist(qflist)
+--   end
+-- end
 
 -- TODO what to do here? is the handler override above too heavy handed?
 -- function M.set_quickfixlist_all_diagnoistics()
 --   local qflist = all_diagnostics_to_qf()
 --   vim.lsp.util.set_qflist(qflist)
 -- end
+
+-- Limits a single diagnostic sign per line, showing the worst for that line
+function M.limit_diagnostic_sign_column()
+  local orig_set_signs = vim.lsp.diagnostic.set_signs
+
+  local set_signs_limited = function(diagnostics, bufnr, client_id, sign_ns, opts)
+    if not diagnostics then
+      diagnostics = diagnostic_cache[bufnr][client_id]
+    end
+
+    if not diagnostics then
+      return
+    end
+
+    -- Work out max severity diagnostic per line
+    local max_severity_per_line = {}
+    for _,d in pairs(diagnostics) do
+      if max_severity_per_line[d.range.start.line] then
+        local current_d = max_severity_per_line[d.range.start.line]
+        if d.severity < current_d.severity then
+          max_severity_per_line[d.range.start.line] = d
+        end
+      else
+        max_severity_per_line[d.range.start.line] = d
+      end
+    end
+
+    -- map to list
+    local filtered_diagnostics = {}
+    for i,v in pairs(max_severity_per_line) do
+      table.insert(filtered_diagnostics, v)
+    end
+
+    -- call original function
+    orig_set_signs(filtered_diagnostics, bufnr, client_id, sign_ns, opts)
+  end
+
+  vim.lsp.diagnostic.set_signs = set_signs_limited
+end
 
 function M.get_buf_diagnostic_count(bufnr)
   local result = {}
