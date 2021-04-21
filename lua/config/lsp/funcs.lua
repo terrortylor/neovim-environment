@@ -126,6 +126,9 @@ function M.limit_diagnostic_sign_column()
   local orig_set_signs = vim.lsp.diagnostic.set_signs
 
   local set_signs_limited = function(diagnostics, bufnr, client_id, sign_ns, opts)
+    opts = opts or {}
+    opts.priority = 100
+
     if not diagnostics then
       diagnostics = diagnostic_cache[bufnr][client_id]
     end
