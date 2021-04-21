@@ -120,7 +120,7 @@ plug.add({
     end
   })
 
-require("config.plugin.gitsigns")
+require("config.plugin.gitsigns").setup()
 -- plug.add("udalov/kotlin-vim")
 -- plug.add("machakann/vim-sandwich")
 -- plug.add("PProvost/vim-ps1")

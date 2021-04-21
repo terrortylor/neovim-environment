@@ -28,8 +28,10 @@ plug.add({
         ultisnips = {
           priority = 2000
         };
-        nvim_lsp = true;
-        buffer = true;
+        nvim_lsp = {
+          priority = 1400,
+          filetypes = {"lua"}
+        };
         path = true;
         nvim_lua = {
           priority = 1100,

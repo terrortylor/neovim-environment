@@ -13,7 +13,7 @@ require('util.config').create_mappings({
 
     -- Load vimrc in split
     -- TODO this should be my lua config now
-    ["<leader>ev"] = ":vsplit $MYVIMRC<CR>",
+    -- [g<leader>ev"] = ":vsplit $MYVIMRC<CR>",
 
     -- Window Resizing
     -- TODO can these take a count?
