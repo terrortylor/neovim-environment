@@ -8,6 +8,26 @@ local util = require('util.config')
 
 local M = {}
 
+function M.dropdown_code_actions()
+  local min_width = 100 -- columns
+  local preffered_width = 0.4 -- percentage
+  local columns = vim.api.nvim_get_option("columns")
+
+  if (columns * preffered_width) < min_width then
+    width = 100
+  else
+    width = preffered_width
+  end
+
+  require('telescope.builtin.lsp').code_actions({
+    sorting_strategy = "ascending",
+    layout_strategy = "center",
+    width = width,
+    results_height = 12,
+    results_title = false,
+  }) 
+end
+
 function M.setup()
   -- TODO update plugin man to have depedencies so not loaded until they are
   plug.add("nvim-lua/popup.nvim")
@@ -26,19 +46,6 @@ function M.setup()
         }
       })
 
-      local actions = require('telescope.actions')
-      require('telescope').setup{
-        defaults = {
-          mappings = {
-            i = {
-              ["<c-j>"] = actions.move_selection_next,
-              ["<c-k>"] = actions.move_selection_previous,
-              ["<esc>"] = actions.close
-            }
-          }
-        }
-      }
-
       local mappings = {
         n = {
           ["<leader>ff"] = "<cmd>lua require('telescope.builtin').find_files()<CR>",
@@ -50,6 +57,19 @@ function M.setup()
         }
       }
       create_mappings(mappings)
+
+      local actions = require('telescope.actions')
+      require('telescope').setup{
+        defaults = {
+          mappings = {
+            i = {
+              ["<esc>"] = actions.close, -- TODO this isn't working
+              ["<c-j>"] = actions.move_selection_next,
+              ["<c-k>"] = actions.move_selection_previous,
+            }
+          }
+        }
+      }
     end
   })
 

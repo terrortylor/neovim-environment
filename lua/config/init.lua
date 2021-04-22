@@ -82,7 +82,7 @@ plug.add({
 
 -- require("config.plugin.statusline")
 -- require("config.plugin.galaxyline")
-require("config.plugin.nvim-tree")
+require("config.plugin.nvim-tree").setup()
 require("config.plugin.telescope").setup()
 
 -- TODO make optional, see init.vim so loads if python3
@@ -125,8 +125,11 @@ require("config.plugin.gitsigns").setup()
 -- plug.add("machakann/vim-sandwich")
 -- plug.add("PProvost/vim-ps1")
 
+-- Auto Pairs
+plug.add("cohama/lexima.vim")
+
 require("config.plugin.lsp")
-require("config.plugin.treesitter")
+-- require("config.plugin.treesitter")
 
 require("config.plugin.vim-test")
 require("config.colour-overrides").setup()

@@ -27,6 +27,9 @@ function M.highlighting()
   set_highlight("qfSeparator", fg(c.yellow2))
   set_highlight("qfLineNr", fg(c.green3))
   set_highlight("qfError", fg(c.blue2))
+
+  -- Search
+  set_highlight("Search", {fg(c.bg), bg(c.green1)})
 end
 
 return M

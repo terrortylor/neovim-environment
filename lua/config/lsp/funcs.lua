@@ -138,26 +138,21 @@ function M.limit_diagnostic_sign_column()
     end
 
     -- Work out max severity diagnostic per line
-    local max_severity_per_line = {}
-    for _,d in pairs(diagnostics) do
-      if max_severity_per_line[d.range.start.line] then
-        local current_d = max_severity_per_line[d.range.start.line]
+    local max_diagnostics = {}
+    local check_severity = function(d)
+      if max_diagnostics[d.range.start.line] then
+        local current_d = max_diagnostics[d.range.start.line]
         if d.severity < current_d.severity then
-          max_severity_per_line[d.range.start.line] = d
+          max_diagnostics[d.range.start.line] = d
         end
       else
-        max_severity_per_line[d.range.start.line] = d
+        max_diagnostics[d.range.start.line] = d
       end
     end
-
-    -- map to list
-    local filtered_diagnostics = {}
-    for i,v in pairs(max_severity_per_line) do
-      table.insert(filtered_diagnostics, v)
-    end
+    vim.tbl_map(check_severity, diagnostics)
 
     -- call original function
-    orig_set_signs(filtered_diagnostics, bufnr, client_id, sign_ns, opts)
+    orig_set_signs(vim.tbl_values(max_diagnostics), bufnr, client_id, sign_ns, opts)
   end
 
   vim.lsp.diagnostic.set_signs = set_signs_limited

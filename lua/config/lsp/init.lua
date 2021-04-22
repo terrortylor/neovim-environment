@@ -8,7 +8,7 @@ local function set_mappings(client, bufnr)
       ['gD'] = '<Cmd>lua vim.lsp.buf.declaration()<CR>',
       ['gd'] = '<Cmd>lua vim.lsp.buf.definition()<CR>',
       ['K'] = '<Cmd>lua vim.lsp.buf.hover()<CR>',
-      ['ca'] = '<Cmd>Telescope lsp_code_actions<CR>',
+      ['ca'] = '<Cmd>lua require("config.plugin.telescope").dropdown_code_actions()<CR>',
       ['cf'] = '<Cmd>lua require("config.lsp.funcs").fix_first_code_action()<CR>',
       ['gI'] = '<cmd>lua vim.lsp.buf.implementation()<CR>',
       ['<space>gs'] = '<cmd>Telescope lsp_document_symbols<CR>',

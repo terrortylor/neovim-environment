@@ -1,6 +1,5 @@
 local api = vim.api
 local util = require("util.config")
-local escape = require("util.string").escape
 local path_elements = require("util.path").path_elements
 
 local M = {}
@@ -73,7 +72,7 @@ function M.is_wiki_file(paths)
 
   for _,v in pairs(paths) do
     local wiki_path = api.nvim_call_function("expand", {v})
-    if file_path:find(escape(wiki_path)) then
+    if file_path:find(vim.pesc(wiki_path)) then
       return true
     end
   end

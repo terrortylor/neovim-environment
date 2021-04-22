@@ -1,5 +1,4 @@
 local api = vim.api
-local us = require('util.string')
 local log = require('util.log')
 local M = {}
 
@@ -40,7 +39,7 @@ end
 -- @param curpos  The location of the 'cursor' that we want to find the closet matching char too
 -- @return column Column of closest match
 function M.char_closest_location(line, char, curpos)
-  local echar = us.escape(char)
+  local echar = vim.pesc(char)
 
   -- To find the closet match before cursor we have get string before and reverse to find once
   -- as there could be mulitple matches before hand
