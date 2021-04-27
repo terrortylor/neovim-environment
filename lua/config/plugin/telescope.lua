@@ -34,6 +34,33 @@ function M.dropdown_code_actions()
   })
 end
 
+function M.todo_picker()
+  local conf = require('telescope.config').values
+  local make_entry = require('telescope.make_entry')
+  local finders = require('telescope.finders')
+  local pickers = require('telescope.pickers')
+
+
+  local vimgrep_arguments = conf.vimgrep_arguments
+  local search = "TODO"
+
+  local args = vim.tbl_flatten {
+    vimgrep_arguments,
+    search,
+  }
+  -- print(vim.inspect(args))
+
+  table.insert(args, '.')
+
+  local opts = {entry_maker = make_entry.gen_from_vimgrep({})}
+  pickers.new(opts, {
+    prompt_title = 'TODOs',
+    finder = finders.new_oneshot_job(args, opts),
+    previewer = conf.grep_previewer(opts),
+    sorter = conf.generic_sorter(opts),
+  }):find()
+end
+
 function M.setup()
   -- TODO update plugin man to have depedencies so not loaded until they are
   plug.add("nvim-lua/popup.nvim")
@@ -56,10 +83,12 @@ function M.setup()
         n = {
           ["<leader>ff"] = "<cmd>lua require('telescope.builtin').find_files()<CR>",
           -- TODO add func so if no .git dir is found then open from CWD
+          -- https://github.com/nvim-telescope/telescope.nvim/wiki/Configuration-Recipes#falling-back-to-find_files-if-git_files-cant-find-a-git-directory
           ["<c-p>"] = "<cmd>lua require('telescope.builtin').git_files()<CR>",
           ["<leader>fg"] = "<cmd>lua require('telescope.builtin').live_grep()<CR>",
           ["<leader><space>"] = "<cmd>lua require('telescope.builtin').buffers()<CR>",
-          ["<leader>fh"] = "<cmd>lua require('telescope.builtin').help_tags()<CR>"
+          ["<leader>fh"] = "<cmd>lua require('telescope.builtin').help_tags()<CR>",
+          ["<leader>ft"] = "<cmd>lua require('config.plugin.telescope').todo_picker()<CR>",
         }
       }
       create_mappings(mappings)

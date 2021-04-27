@@ -1,8 +1,7 @@
 require('util.config').create_mappings({
   n = {
     -- Find in buffer
-    -- TODO not running, but adding mapping manually works
-    ["<leader>fb"] = ":FindInBuffer<space>",
+    ["<leader>fb"] = {":FindInBuffer<space>", {noremap = true}},
 
     -- Refactoring
     ["<leader>rw"] = {[[:%s/\C\<<c-r><c-w>\>//<left>]], {noremap = true}},
@@ -16,8 +15,7 @@ require('util.config').create_mappings({
     ["<F2>"]       = ":set paste!<CR>", -- Toggle paste mode
 
     -- Load vimrc in split
-    -- TODO this should be my lua config now
-    -- [g<leader>ev"] = ":vsplit $MYVIMRC<CR>",
+    ["<leader>ev"] = ":vsplit $MYVIMRC<CR>",
 
     -- Window Resizing
     -- TODO can these take a count?
