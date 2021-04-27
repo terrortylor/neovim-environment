@@ -3,8 +3,6 @@ local c = require('config.colours').c
 local hl = require('util.highlights')
 local set_highlight = hl.set_highlight
 local fg = hl.guifg
-local bg = hl.guibg
-local lsp_funcs = require('config.lsp.funcs')
 local util = require('util.config')
 
 local M = {}
@@ -54,7 +52,7 @@ function M.setup()
         watch_index = {
           interval = 1000
         },
-        sign_priority = 1,
+        -- sign_priority = 15,
         status_formatter = nil, -- Use default
         -- TODO make this an option on plugin?
         util.create_autogroups({

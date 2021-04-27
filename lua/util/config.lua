@@ -34,9 +34,15 @@ function M.set_variables(variables)
   end
 end
 
-function M.create_mappings(mappings, opts)
+function M.create_mappings(mappings, opts, buffer)
   opts = opts or {noremap = true, silent = true}
-  local function keymap(...) vim.api.nvim_set_keymap(...) end
+  local function keymap(...)
+    if buffer then
+      vim.api.nvim_buf_set_keymap(buffer, ...)
+    else
+      vim.api.nvim_set_keymap(...)
+    end
+  end
 
   for mode, maps in pairs(mappings) do
     for k, v in pairs(maps) do

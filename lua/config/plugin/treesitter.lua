@@ -8,7 +8,7 @@ plug.add({
       highlight = {
         enable = true,
       },
-    } 
+    }
   end
 })
 

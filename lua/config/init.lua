@@ -69,7 +69,8 @@ require("config.plugin.nvim-testing")
 
 -- TODO make optional
 plug.add("plasticboy/vim-markdown")
-plug.add("justinmk/vim-sneak")
+
+require("config.plugin.vim-sneak").setup()
 
 plug.add({
   url = "takac/vim-hardtime",
@@ -93,7 +94,7 @@ plug.add({
   end
 })
 
-plug.add("fatih/vim-go")
+-- plug.add("fatih/vim-go")
 
   --plug.add({
   --url = "ludovicchabant/vim-gutentags",
@@ -120,13 +121,15 @@ plug.add({
     end
   })
 
-require("config.plugin.gitsigns").setup()
--- plug.add("udalov/kotlin-vim")
+  require("config.plugin.gitsigns").setup()
+  -- plug.add("udalov/kotlin-vim")
 -- plug.add("machakann/vim-sandwich")
 -- plug.add("PProvost/vim-ps1")
 
 -- Auto Pairs
-plug.add("cohama/lexima.vim")
+-- plug.add("cohama/lexima.vim")
+-- TODO handle for both cases? whats the effect of disabelling in lexima
+vim.g.lexima_map_escape = ""
 
 require("config.plugin.lsp")
 -- require("config.plugin.treesitter")

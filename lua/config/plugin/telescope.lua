@@ -16,13 +16,11 @@ local thin_border_chars= {
 }
 
 function M.dropdown_code_actions()
-  local min_width = 100 -- columns
   local preffered_width = 0.4 -- percentage
   local columns = vim.api.nvim_get_option("columns")
+  local width = 100 -- default min width columns
 
-  if (columns * preffered_width) < min_width then
-    width = 100
-  else
+  if width < (columns * preffered_width) then
     width = preffered_width
   end
 
@@ -33,7 +31,7 @@ function M.dropdown_code_actions()
     width = width,
     results_height = 12,
     results_title = false,
-  }) 
+  })
 end
 
 function M.setup()

@@ -1,6 +1,6 @@
 local util = require('lspconfig/util')
 local create_mappings = require("util.config").create_mappings
-local lsp_funcs = require("config.lsp.funcs")
+-- local lsp_funcs = require("config.lsp.funcs")
 
 local function set_mappings(client, bufnr)
   local mappings = {
@@ -42,14 +42,15 @@ local function set_mappings(client, bufnr)
     mappings.n["<space>fd"] = "<cmd>lua require('config.lsp.funcs').efm_priority_document_format()<CR>"
   end
 
-  create_mappings(mappings)
+  create_mappings(mappings, nil, bufnr)
 end
 
--- TODO can get rid of this as using compe
--- TODO add check so if nvim_compe is not loaded then load this
+-- only sets omnifunc if compe not loaded
 local function set_omnifunc(bufnr)
-  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+  if not vim.g.loaded_compe then
+    local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+    buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+  end
 end
 
 local function set_highlights(client)
@@ -75,11 +76,11 @@ vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
   virtual_text = false
 })
 -- limit sign diagnostics to 1 per line
-lsp_funcs.limit_diagnostic_sign_column()
+-- lsp_funcs.limit_diagnostic_sign_column()
 
 local function onAttach(client, bufnr)
   require('config.lsp.highlights')
-  -- set_omnifunc(bufnr)
+  set_omnifunc(bufnr)
   set_mappings(client, bufnr)
   set_highlights(client)
 end

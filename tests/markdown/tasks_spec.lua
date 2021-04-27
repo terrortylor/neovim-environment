@@ -63,7 +63,7 @@ describe("todo_lists", function()
     vim.api.nvim_win_set_cursor(0, {2,0})
     vim.api.nvim_feedkeys(" ms", "x", false)
 
-    result = get_lines() 
+    result = get_lines()
     assert.are.same(expected_started, result)
   end)
 

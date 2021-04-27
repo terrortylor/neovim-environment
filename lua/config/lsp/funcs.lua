@@ -8,11 +8,6 @@ local levels = {
   -- hints = 'Hint'
 }
 
-local function is_empty(tbl)
-  for _,_ in pairs(tbl) do return false end -- luacheck: ignore
-  return true
-end
-
 local efm_priority_document_format
 function M.efm_priority_document_format()
   if not efm_priority_document_format then
@@ -58,30 +53,7 @@ function M.fix_first_code_action()
   end)
 end
 
--- -- https://www.reddit.com/r/neovim/comments/iil3jt/nvimlsp_how_to_display_all_diagnostics_for_entire/
--- -- populate quickfix list with diagnostics
--- local method = "textDocument/publishDiagnostics"
--- local default_callback = vim.lsp.handlers[method]
--- vim.lsp.handlers[method] = function(err, method, result, client_id)
---   default_callback(err, method, result, client_id)
---   if result and result.diagnostics then
---     local item_list = {}
---     for _, v in ipairs(result.diagnostics) do
---       local fname = result.uri
---       table.insert(item_list, { filename = fname, lnum = v.range.start.line + 1, col = v.range.start.character + 1; text = v.message; })
---     end
---     local old_items = vim.fn.getqflist()
---     for _, old_item in ipairs(old_items) do
---       local bufnr = vim.uri_to_bufnr(result.uri)
---       if vim.uri_from_bufnr(old_item.bufnr) ~= result.uri then
---         table.insert(item_list, old_item)
---       end
---     end
---     vim.fn.setqflist({}, ' ', { title = 'LSP'; items = item_list; })
---   end
--- end
-
-local all_diagnostics_to_qf = function()
+local all_diagnostics_to_qf = function() -- luacheck: ignore
   local diagnostics = vim.lsp.diagnostic.get_all()
   local qflist = {}
   for bufnr, diagnostic in pairs(diagnostics) do
@@ -122,27 +94,33 @@ end
 -- end
 
 -- Limits a single diagnostic sign per line, showing the worst for that line
+-- TODO fix, this was workig but now seems to do a sign column per client
 function M.limit_diagnostic_sign_column()
   local orig_set_signs = vim.lsp.diagnostic.set_signs
 
   local set_signs_limited = function(diagnostics, bufnr, client_id, sign_ns, opts)
+    print("in here", client_id, sign_ns)
     opts = opts or {}
-    opts.priority = 100
+    -- opts.priority = 1
 
-    if not diagnostics then
-      diagnostics = diagnostic_cache[bufnr][client_id]
-    end
+--     if not diagnostics then
+--       diagnostics = diagnostic_cache[bufnr][client_id]
+--     end
 
     if not diagnostics then
       return
     end
 
+    print("has diagnostics")
+    print(vim.inspect(diagnostics[1]))
     -- Work out max severity diagnostic per line
     local max_diagnostics = {}
     local check_severity = function(d)
+      print("d", d.range.start.line, d.severity)
       if max_diagnostics[d.range.start.line] then
         local current_d = max_diagnostics[d.range.start.line]
         if d.severity < current_d.severity then
+          print("found severity")
           max_diagnostics[d.range.start.line] = d
         end
       else
