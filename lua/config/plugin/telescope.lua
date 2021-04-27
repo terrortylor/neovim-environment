@@ -8,6 +8,13 @@ local util = require('util.config')
 
 local M = {}
 
+local thin_border_chars= {
+  { '─', '│', '─', '│', '┌', '┐', '┘', '└'},
+  prompt = {"─", "│", " ", "│", '┌', '┐', "│", "│"},
+  results = {"─", "│", "─", "│", "├", "┤", "┘", "└"},
+  preview = { '─', '│', '─', '│', '┌', '┐', '┘', '└'},
+}
+
 function M.dropdown_code_actions()
   local min_width = 100 -- columns
   local preffered_width = 0.4 -- percentage
@@ -20,6 +27,7 @@ function M.dropdown_code_actions()
   end
 
   require('telescope.builtin.lsp').code_actions({
+    borderchars = thin_border_chars,
     sorting_strategy = "ascending",
     layout_strategy = "center",
     width = width,

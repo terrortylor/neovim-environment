@@ -87,13 +87,14 @@ describe('markdown.tasks', function()
   describe("handle_carridge_return", function()
     it("Should carridge return if pumvisible", function()
       api.nvim_call_function.on_call_with('pumvisible', {}).returns(1)
+      api.nvim_get_current_line.returns("* [ ] Non-empty task line")
 
       stub(testModule, "nvim_escaped_command")
 
       testModule.handle_carridge_return()
       assert.stub(testModule.nvim_escaped_command).was_called(1)
       assert.stub(testModule.nvim_escaped_command).was_called_with("normal! <CR>")
-      assert.stub(api.nvim_get_current_line).was_not_called()
+      assert.stub(api.nvim_get_current_line).was_called(1)
     end)
 
     it("Should clear line and return carridge return if empty comment", function()
@@ -119,7 +120,8 @@ describe('markdown.tasks', function()
       for _, line in pairs(lines) do
         api = mock(vim.api, true)
         api.nvim_call_function.on_call_with('pumvisible', {}).returns(0)
-        api.nvim_get_current_line.returns(line)
+      api.nvim_get_current_line.returns(line)
+        api.nvim_win_get_cursor.returns({line, 4})
 
         stub(testModule, "nvim_escaped_command")
 
@@ -127,7 +129,7 @@ describe('markdown.tasks', function()
         assert.stub(api.nvim_get_current_line).was_called(1)
         assert.stub(api.nvim_set_current_line).was_called(1)
         assert.stub(testModule.nvim_escaped_command).was_called(1)
-        assert.stub(testModule.nvim_escaped_command).was_called_with("normal! a<CR>")
+        assert.stub(testModule.nvim_escaped_command).was_called_with("normal! i<CR>")
 
         mock.revert(api)
       end
@@ -136,6 +138,7 @@ describe('markdown.tasks', function()
     it("Should start new line with empty task if current line non-empty task", function()
       api.nvim_call_function.on_call_with('pumvisible', {}).returns(0)
       api.nvim_get_current_line.returns("* [ ] Non-empty task line")
+      api.nvim_win_get_cursor.returns({1, 4})
 
       stub(testModule, "nvim_escaped_command")
 

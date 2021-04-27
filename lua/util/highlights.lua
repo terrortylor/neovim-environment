@@ -2,7 +2,7 @@ local M = {}
 
 function M.set_highlight(hl, style)
   if type(style) == "table" then
-    style = table.concat(style, " ") 
+    style = table.concat(style, " ")
   end
   -- print(string.format( "highlight %s %s", hl, style))
   vim.api.nvim_exec(string.format("highlight %s %s", hl, style), false)

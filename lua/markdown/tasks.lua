@@ -12,6 +12,7 @@ local api = vim.api
 
 local M = {}
 
+-- TODO add buffer scope to these mappings
 M.mappings = {
   n = {
     -- handle new line o/O
@@ -54,12 +55,12 @@ end
 -- if list item or task is non empty then <CR> and insert task notaion
 -- FIXME doesn't take into account wrapped lines
 function M.handle_carridge_return()
-  local action = "a<CR>"
+  local action = "i<CR>"
+    local line = api.nvim_get_current_line()
 
   -- if not in pumvisible
   if api.nvim_call_function('pumvisible', {}) == 0 then
     -- and line is a list item
-    local line = api.nvim_get_current_line()
     -- if is task item
     if M.is_line_task_item(line) then
       -- if empty clear line
@@ -72,12 +73,18 @@ function M.handle_carridge_return()
     -- if empty comment then clear line
     elseif line:match("^%s*[*-]%s*$") then
       api.nvim_set_current_line("")
+    else
+      -- check if cursor at end of line
+      local _, col = unpack(api.nvim_win_get_cursor(0))
+      if (col+1) >= line:len() then
+        action = "a<CR>"
+      end
     end
   else
     action = "<CR>"
   end
 
-  -- action = "<cr>what"
+
   M.nvim_escaped_command("normal! " .. action)
 end
 

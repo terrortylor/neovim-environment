@@ -55,6 +55,7 @@ function M.remindme_complete()
   return tbl
 end
 
+-- TODO add mapping so q in normal mode closes window
 function M.remindme(reminder)
   local filepath = string.format("%s/remindme/%s.md", M.notes_path, reminder)
   if fs.file_exists(filepath) then

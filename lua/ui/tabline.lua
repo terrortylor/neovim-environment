@@ -1,8 +1,8 @@
 local c = require('config.colours').c
-local hl = require('util.highlights')
-local set_highlight = hl.set_highlight
-local fg = hl.guifg
-local bg = hl.guibg
+local highlights = require('util.highlights')
+local set_highlight = highlights.set_highlight
+local fg = highlights.guifg
+local bg = highlights.guibg
 local lsp_funcs = require('config.lsp.funcs')
 local util = require('util.config')
 
@@ -32,12 +32,7 @@ local function add_right(hl, text)
   table.insert(right_tabline, text)
 end
 
-local function right_tl(text)
-  right_width = right_width + string.len(text)
-  table.insert(right_tabline, text)
-end
-
-local function tab_markers()
+local function show_tab_markers()
   local num_tabs = vim.fn.tabpagenr('$')
   local curent_tab = vim.fn.tabpagenr()
 
@@ -51,8 +46,8 @@ local function tab_markers()
 
     -- TODO make this toggalable
     -- show active window buf name
-    local tabwinnr = vim.fn.tabpagewinnr(t)
-    local tab_bufs = vim.fn.tabpagebuflist(t)
+    -- local tabwinnr = vim.fn.tabpagewinnr(t)
+    -- local tab_bufs = vim.fn.tabpagebuflist(t)
     -- TODO not path + filename, just filename
     -- table.insert(sl, vim.fn.bufname(tab_bufs[tabwinnr]))
     -- left_tl(" ")
@@ -61,7 +56,7 @@ local function tab_markers()
   end
 end
 
-local function diagnostics()
+local function show_diagnostics()
   if #vim.lsp.buf_get_clients(0) > 0 then
     local total_diagnostics = lsp_funcs.get_all_diagnostic_count()
     add_right("TabLineDiagError", " E: ")
@@ -71,7 +66,7 @@ local function diagnostics()
   end
 end
 
-local function filetype()
+local function show_filetype()
   local filetype = vim.api.nvim_buf_get_option(0, "filetype")
   if filetype == "" then
     return
@@ -99,11 +94,11 @@ local function tabline()
   right_width = 0
 
   -- left
-  tab_markers()
+  show_tab_markers()
 
   -- right
-  filetype()
-  diagnostics()
+  show_filetype()
+  show_diagnostics()
 
   -- put together and with padding
   local lhs = table.concat(left_tabline)

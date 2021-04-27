@@ -30,7 +30,7 @@ plug.add({
         };
         nvim_lsp = {
           priority = 1400,
-          filetypes = {"javascript", "typescripts", "lua"}
+          filetypes = {"javascript", "typescript", "lua"}
         };
         buffer = {
           priority = 1300,
