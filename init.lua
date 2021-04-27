@@ -69,6 +69,12 @@ require("config.plugin.nvim-testing")
 
 -- TODO make optional
 plug.add("plasticboy/vim-markdown")
+-- This is for plasticboy/vim-markdown
+-- Don't require .md extension
+vim.g.vim_markdown_no_extensions_in_markdown = 1
+
+-- Autosave when following links
+vim.g.vim_markdown_autowrite = 1
 
 require("config.plugin.vim-sneak").setup()
 

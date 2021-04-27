@@ -1,5 +1,9 @@
 require('util.config').create_mappings({
   n = {
+    -- Find in buffer
+    -- TODO not running, but adding mapping manually works
+    ["<leader>fb"] = ":FindInBuffer<space>",
+
     -- Refactoring
     ["<leader>rw"] = {[[:%s/\C\<<c-r><c-w>\>//<left>]], {noremap = true}},
 
@@ -56,6 +60,10 @@ require('util.config').create_mappings({
     ["]a"]         = ":next<CR>",
 
     -- Quickfix
+    -- Opens first non empty list, location list is local to window
+    ["<leader>cl"] = ":call quickfix#window#OpenList()<CR>",
+    -- Close all quicklist windows
+    ["<leader>cc"] = ":call quickfix#window#CloseAll()<CR>",
     ["[c"]         = ":cprevious<CR>",
     ["]c"]         = ":cnext<CR>",
 
@@ -97,6 +105,9 @@ require('util.config').create_mappings({
     ["<leader>ue"] = ":UltiSnipsEdit<CR>:set filetype=snippets<CR>",
   },
   v = {
+    -- Find in buffer
+    ["<leader>fb"] = 'y:FindInBuffer <c-r>"<cr>',
+
     -- Indent Lines and reselect
     ["<"]          = "<gv",
     [">"]          = ">gv",
