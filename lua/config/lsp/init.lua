@@ -12,6 +12,7 @@ local function set_mappings(client, bufnr)
       ['gd'] = '<Cmd>lua vim.lsp.buf.definition()<CR>',
       ['gvd'] = '<Cmd>vsplit <BAR> lua vim.lsp.buf.definition()<CR>',
       ['ghd'] = '<Cmd>split <BAR> lua vim.lsp.buf.definition()<CR>',
+    -- TODO save and restore mark?
       ['gtd'] = 'mt<Cmd>tabnew % <CR> `t <Cmd> lua vim.lsp.buf.definition()<CR>',
       ['K'] = '<Cmd>lua vim.lsp.buf.hover()<CR>',
       ['ca'] = '<Cmd>lua require("config.plugin.telescope").dropdown_code_actions()<CR>',

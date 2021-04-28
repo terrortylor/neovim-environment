@@ -5,6 +5,7 @@ local fg = highlights.guifg
 local bg = highlights.guibg
 local lsp_funcs = require('config.lsp.funcs')
 local util = require('util.config')
+local get_user_input = require('util.input').get_user_input
 
 local left_tabline = {}
 local left_width = 0
@@ -12,6 +13,7 @@ local right_tabline = {}
 local right_width = 0
 
 local M = {}
+local tab_names = {}
 
 local ignore_filetypes = {
   "qf",
@@ -36,23 +38,32 @@ local function show_tab_markers()
   local num_tabs = vim.fn.tabpagenr('$')
   local curent_tab = vim.fn.tabpagenr()
 
-  for t = 1, num_tabs, 1 do
-    -- handle if tab is selected, and tab number
-    if t == curent_tab then
-      add_left("TabLineSel", "["..t.."] ")
-    else
-      add_left("TabLine", " " .. t .. "  ")
+  if num_tabs > 1 then
+    for t = 1, num_tabs do
+      -- handle if tab is selected, and tab number
+      local highlight
+      if t == curent_tab then
+
+        highlight = "TabLineSel"
+        add_left(highlight, " ["..t.."] ")
+      else
+        highlight = "TabLine"
+        add_left(highlight, "  " .. t .. "  ")
+      end
+
+      local tab_name = tab_names[t]
+      if tab_name then
+        add_left(highlight, tab_name)
+      else
+        -- show active window buf name
+        local tabwinnr = vim.fn.tabpagewinnr(t)
+        local tab_bufs = vim.fn.tabpagebuflist(t)
+        add_left(highlight, vim.fn.pathshorten(vim.fn.bufname(tab_bufs[tabwinnr])))
+      end
+
+      add_left(highlight, " ")
+      add_left("TabLineFill", "")
     end
-
-    -- TODO make this toggalable
-    -- show active window buf name
-    -- local tabwinnr = vim.fn.tabpagewinnr(t)
-    -- local tab_bufs = vim.fn.tabpagebuflist(t)
-    -- TODO not path + filename, just filename
-    -- table.insert(sl, vim.fn.bufname(tab_bufs[tabwinnr]))
-    -- left_tl(" ")
-
-    add_left("TabLineFill", "")
   end
 end
 
@@ -86,7 +97,7 @@ local function show_filetype()
   end
 end
 
-local function tabline()
+function M.tabline()
   -- reset tabline vars
   left_tabline = {}
   left_width = 0
@@ -115,14 +126,25 @@ function M.setup()
     }
   })
 
-  function _G.my_tabline()
-    return tabline()
-  end
+  vim.o.tabline = "%!luaeval('require(\"ui.tabline\").tabline()')"
 
-  vim.o.tabline = "%!v:lua.my_tabline()"
+  local command = {
+    "command!",
+    "-nargs=0",
+    "TabSetName",
+    "lua require('ui.tabline').set_tab_name()"
+  }
+  vim.api.nvim_command(table.concat(command, " "))
+end
+
+function M.set_tab_name()
+  local name = get_user_input("Tabname: ", "")
+  tab_names[vim.fn.tabpagenr()] = name
+  vim.cmd("redrawtabline")
 end
 
 function M.highlighting()
+  -- TODO this is same as current line marker, and looks a bit shit, better backgroud colour required
   set_highlight("TabLine", {fg(c.blue2), bg(c.shadow)})
   set_highlight("TabLineSel", {fg(c.green1), bg(c.bg)})
   set_highlight("TabLineFill", {fg(c.shadow), bg(c.shadow)})
