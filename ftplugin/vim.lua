@@ -1,5 +1,4 @@
 vim.wo.foldmethod = "expr"
-vim.wo.foldenable = false
 vim.wo.foldexpr = "FoldVimFunctions(v:lnum)"
 vim.bo.iskeyword = vim.bo.iskeyword .. ",:"
 

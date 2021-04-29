@@ -56,6 +56,8 @@ local function show_tab_markers()
         add_left(highlight, tab_name)
       else
         -- show active window buf name
+        -- TODO this show's entire path, but i want from CWD
+        -- see statusline... but still gros
         local tabwinnr = vim.fn.tabpagewinnr(t)
         local tab_bufs = vim.fn.tabpagebuflist(t)
         add_left(highlight, vim.fn.pathshorten(vim.fn.bufname(tab_bufs[tabwinnr])))
@@ -145,12 +147,12 @@ end
 
 function M.highlighting()
   -- TODO this is same as current line marker, and looks a bit shit, better backgroud colour required
-  set_highlight("TabLine", {fg(c.blue2), bg(c.shadow)})
-  set_highlight("TabLineSel", {fg(c.green1), bg(c.bg)})
-  set_highlight("TabLineFill", {fg(c.shadow), bg(c.shadow)})
-  set_highlight("TabLineAtomHeader", {fg(c.green1), bg(c.shadow)})
-  set_highlight("TabLineDiagError", {fg(c.red1), bg(c.shadow)})
-  set_highlight("TabLineDiagWarn", {fg(c.yellow3), bg(c.shadow)})
+  set_highlight("TabLine", {fg(c.blue2), bg(c.purple)})
+  set_highlight("TabLineSel", {fg(c.green1), bg(c.purple)})
+  set_highlight("TabLineFill", {fg(c.shadow), bg(c.purple)})
+  set_highlight("TabLineAtomHeader", {fg(c.green1), bg(c.purple)})
+  set_highlight("TabLineDiagError", {fg(c.red1), bg(c.purple)})
+  set_highlight("TabLineDiagWarn", {fg(c.yellow3), bg(c.purple)})
 end
 
 return M

@@ -96,9 +96,10 @@ require('util.config').create_mappings({
     [">"]          = "<s-v>><ESC>",
 
     -- smart lines, these do break macro's quite often though...
-    -- TODO is it possible to checkif either recording a macro or running one first?
-    --["j"]          = {"(v:count? 'j' : 'gj')", {noremap = true, silent = true, expr = true}},
-    --["k"]          = {"(v:count? 'k' : 'gk')", {noremap = true, silent = true, expr = true}},
+    -- standard behaviour if in recording a macro
+    -- TODO neds testing, if recoring a marcro or in a macro should default to j/k not magic gj/gk
+    ["j"]          = {"(v:count? 'j' : (reg_recording() == '' ? 'gj' : (reg_executing() == '' ? 'gj' : 'k')))", {noremap = true, silent = true, expr = true}},
+    ["k"]          = {"(v:count? 'k' : (reg_recording() == '' ? 'gk' : (reg_executing() == '' ? 'gk' : 'k')))", {noremap = true, silent = true, expr = true}},
 
     -- Ultisnips
     ["<leader>ue"] = ":UltiSnipsEdit<CR>:set filetype=snippets<CR>",

@@ -29,10 +29,11 @@ function M.load_filetype_config()
     return
   end
 
-  local vim_config_path = api.nvim_eval("expand('$MYVIMRC')")
-  vim_config_path = vim_config_path:gsub("/init.vim$", "")
-  -- TODO cleanup line below if happy with path
-  --local ftfile_path = string.format("%s/lua/filetype/%s.lua", vim_config_path, filetype)
+  -- TODO must be a nicer way that this, but XDG_CONFIG_HOME isn't always set
+  local vim_config_path = os.getenv("XDG_CONFIG_HOME")
+  if not vim_config_path then
+    vim_config_path = api.nvim_eval("expand('$MYVIMRC')"):gsub("/init.lua$", "")
+  end
   local ftfile_path = string.format("%s/ftplugin/%s.lua", vim_config_path, filetype)
   log.debug("Filetype to be loaded: " .. ftfile_path)
   if file_check(ftfile_path) then

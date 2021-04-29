@@ -62,6 +62,9 @@ local win_options = {
 
   -- enable signcolumn to prevent jumping
   signcolumn     = "yes:2",
+
+  -- disable autofolding
+  foldenable = false
 }
 
 util.set_win_options(win_options)

@@ -152,6 +152,7 @@ local plugins = {
   "git",
   "ui.arglist",
   "ui.tabline",
+  "ui.statusline",
   "tmux",
   "alternate",
   "pa",

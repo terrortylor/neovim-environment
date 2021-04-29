@@ -17,7 +17,7 @@ end
 
 function M.highlighting()
   -- Vertical window edge
-  set_highlight("VertSplit", fg(c.shadow))
+  set_highlight("VertSplit", fg(c.purple))
   set_highlight("LineNr", fg(c.yellow2))
   set_highlight("EndOfBuffer", fg(c.bg))
 
