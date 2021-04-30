@@ -3,9 +3,7 @@ local highlights = require('util.highlights')
 local set_highlight = highlights.set_highlight
 local fg = highlights.guifg
 local bg = highlights.guibg
-local lsp_funcs = require('config.lsp.funcs')
 local util = require('util.config')
-local get_user_input = require('util.input').get_user_input
 
 local M = {}
 
@@ -28,7 +26,6 @@ function M.statusline(active)
     sl = sl .. "%#" .. hl .. active_hl .."#" .. text
   end
 
-  local width = vim.api.nvim_win_get_width(0)
   local filetype = vim.api.nvim_buf_get_option(0, "filetype")
 
   for _,ft in pairs(ignore_filetypes) do

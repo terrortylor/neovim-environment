@@ -15,11 +15,13 @@ local right_width = 0
 local M = {}
 local tab_names = {}
 
+-- TODO this is duplicated in statusline
 local ignore_filetypes = {
   "qf",
   "help",
   "TelescopePrompt",
-  "NvimTree"
+  "NvimTree",
+  "lspinfo"
 }
 
 local function add_left(hl, text)

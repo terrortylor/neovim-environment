@@ -35,10 +35,12 @@ plug.add({
         buffer = {
           priority = 1300,
         };
-        path = true;
         nvim_lua = {
           priority = 1100,
           filetypes = {"lua"}
+        };
+        path = {
+          priority = 1000,
         };
         spell = true;
         tags = true;

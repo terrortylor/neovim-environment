@@ -6,6 +6,8 @@ plug.add({
   -- TODO make opt and main defaults
   branch = "main",
   post_handler = function()
-    require('nvim_comment').setup()
+    require('nvim_comment').setup({
+      comment_empty = false
+    })
   end
 })

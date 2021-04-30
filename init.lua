@@ -87,8 +87,6 @@ plug.add({
 
 -- plug.add("AndrewRadev/switch.vim")
 
--- require("config.plugin.statusline")
--- require("config.plugin.galaxyline")
 require("config.plugin.nvim-tree").setup()
 require("config.plugin.telescope").setup()
 

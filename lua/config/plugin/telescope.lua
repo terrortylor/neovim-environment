@@ -83,7 +83,8 @@ function M.setup()
         n = {
           ["<leader>ff"] = "<cmd>lua require('telescope.builtin').find_files()<CR>",
           -- TODO add func so if no .git dir is found then open from CWD
-          -- https://github.com/nvim-telescope/telescope.nvim/wiki/Configuration-Recipes#falling-back-to-find_files-if-git_files-cant-find-a-git-directory
+          -- luacheck: ignore
+          -- https://github.com/nvim-telescope/telescope.nvim/wiki/Configuration-Recipes#falling-back-to-find_files-if-git_files-cant-find-a-git-directory 
           ["<c-p>"] = "<cmd>lua require('telescope.builtin').git_files()<CR>",
           ["<leader>fg"] = "<cmd>lua require('telescope.builtin').live_grep()<CR>",
           ["<leader><space>"] = "<cmd>lua require('telescope.builtin').buffers()<CR>",

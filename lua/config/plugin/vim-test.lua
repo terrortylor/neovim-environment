@@ -1,13 +1,14 @@
 local plug = require("pluginman")
 
--- function _G.my_strategy(cmd)
---   print("called my strategy: ", cmd)
--- end
+function _G.my_strategy(cmd)
+  print("called my strategy: ", cmd)
+end
 
 plug.add({
   url = "vim-test/vim-test",
   post_handler = function()
     vim.api.nvim_set_var("test#strategy", "neovim")
+    -- vim.g["test#custom_strategies"] = {custom = function() print("test") end}
     -- vim.api.nvim_set_var("test#custom_strategies", {custom = v:lua.my_strategy()})
     -- vim.api.nvim_set_var("test#custom_strategies", {custom = require('config.plugin.vim-test-strategy').my_strategy})
     -- vim.api.nvim_set_var("test#strategy", "custom")
