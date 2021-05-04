@@ -6,7 +6,8 @@ local util = require('util.config')
 
 local wildignore = "*.bmp,*.gif,*.ico,*.jpg,*.png,*.ico"
 wildignore = wildignore .. "*.pdf,*.psd"
-wildignore = wildignore .. "node_modules/*,bower_components/*"
+wildignore = wildignore .. "*/node_modules/*,bower_components/*"
+wildignore = wildignore .. '*/target/*,*/dist/*,*/build/*'
 wildignore = wildignore .. "tags,*.session"
 
 -- TODO when 0.5 upate to use lua-vim-options
