@@ -10,6 +10,8 @@ local M = {}
 -- Define settings
 M.mappings = {
   ["<leader>ga"]   = ":<C-u>lua require('alternate').get_alternate_file()<CR>",
+  ["<leader>gga"]   = ":<C-u>vsplit <BAR> lua require('alternate').get_alternate_file()<CR>",
+  ["<leader>gha"]   = ":<C-u>split <BAR> lua require('alternate').get_alternate_file()<CR>",
 }
 
 --- Rules are defined for filetypes:
@@ -21,9 +23,9 @@ M.rules = {
     {
       condition = "/cookbooks/(.-)/recipes/",
       -- TODO rename direction to alternate_matcher or something this that
-      direction = "_spec%.rb",
+      direction = "_spec.rb",
       transformers = {
-        {"%.rb", "_spec%.rb"},
+        {".rb", "_spec.rb"},
         {"/recipes/", "/spec/unit/recipes/"}
       }
     }
@@ -31,9 +33,9 @@ M.rules = {
   ["ruby"] = {
     {
       condition = ".*",
-      direction = "_spec%.rb",
+      direction = "_spec.rb",
       transformers = {
-        {"%.rb", "_spec%.rb"},
+        {".rb", "_spec.rb"},
         {"/lib/", "/spec/lib/"}
       }
     }
@@ -42,11 +44,9 @@ M.rules = {
     {
       condition = "/lua/",
       direction = "_spec.lua",
-      -- TODO be nice not to have to escape these? https://stackoverflow.com/questions/9790688/escaping-strings-for-gsub
-      -- TODO user vim's built in escape func
       transformers = {
-        {"%.lua", "_spec%.lua"},
-        {"/lua/", "/lua/spec/"}
+        {"/lua/", "/lua/spec/"},
+        {".lua", "_spec.lua"}
       }
     },
   },
@@ -54,33 +54,30 @@ M.rules = {
     {
       condition = ".*",
       direction = "_test.go",
-      -- TODO be nice not to have to escape these? https://stackoverflow.com/questions/9790688/escaping-strings-for-gsub
-      -- TODO user vim's built in escape func
       transformers = {
-        {"%.go", "_test%.go"},
+        {".go", "_test.go"},
       }
     },
   },
   ["typescript"] = {
     {
-      condition = "%.ts$",
+      condition = ".ts$",
       direction = ".spec.ts",
-      -- TODO be nice not to have to escape these? https://stackoverflow.com/questions/9790688/escaping-strings-for-gsub
-      -- TODO user vim's built in escape func
       transformers = {
-        {"%.ts", "%.spec%.ts"}
+        {".ts", ".spec.ts"}
       }
     },
   }
 }
 
 function M.transform_path(path, transformers, to_alternate)
+  print("path", path)
   local new_path = path
   for _,pair in pairs(transformers) do
     if to_alternate then
-      new_path = new_path:gsub(pair[1], pair[2])
+      new_path = new_path:gsub(vim.pesc(pair[1]), pair[2])
     else
-      new_path = new_path:gsub(pair[2], pair[1])
+      new_path = new_path:gsub(vim.pesc(pair[2]), pair[1])
     end
   end
   return new_path
