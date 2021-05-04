@@ -7,10 +7,10 @@ local function set_mappings(client, bufnr)
     n = {
       -- TODO have a func to prefix vsplit/splt/tabnew wrapper
       ['gD'] = '<Cmd>lua vim.lsp.buf.declaration()<CR>',
-      ['gvD'] = '<Cmd>vsplit <BAR> lua vim.lsp.buf.declaration()<CR>',
+      ['ggD'] = '<Cmd>vsplit <BAR> lua vim.lsp.buf.declaration()<CR>',
       ['ghD'] = '<Cmd>split <BAR> lua vim.lsp.buf.declaration()<CR>',
       ['gd'] = '<Cmd>lua vim.lsp.buf.definition()<CR>',
-      ['gvd'] = '<Cmd>vsplit <BAR> lua vim.lsp.buf.definition()<CR>',
+      ['ggd'] = '<Cmd>vsplit <BAR> lua vim.lsp.buf.definition()<CR>',
       ['ghd'] = '<Cmd>split <BAR> lua vim.lsp.buf.definition()<CR>',
     -- TODO save and restore mark?
       ['gtd'] = 'mt<Cmd>tabnew % <CR> `t <Cmd> lua vim.lsp.buf.definition()<CR>',
@@ -18,7 +18,7 @@ local function set_mappings(client, bufnr)
       ['ca'] = '<Cmd>lua require("config.plugin.telescope").dropdown_code_actions()<CR>',
       ['cf'] = '<Cmd>lua require("config.lsp.funcs").fix_first_code_action()<CR>',
       ['gI'] = '<cmd>lua vim.lsp.buf.implementation()<CR>',
-      ['gvI'] = '<cmd>vsplit <BAR> lua vim.lsp.buf.implementation()<CR>',
+      ['ggI'] = '<cmd>vsplit <BAR> lua vim.lsp.buf.implementation()<CR>',
       ['ghI'] = '<cmd>split <BAR> lua vim.lsp.buf.implementation()<CR>',
       ['<space>gs'] = '<cmd>Telescope lsp_document_symbols<CR>',
       ['gK'] = '<cmd>lua vim.lsp.buf.signature_help()<CR>',
