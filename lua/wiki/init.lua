@@ -34,12 +34,11 @@ function M.get_link_text(link_pattern, word)
   return link
 end
 
--- TODO can be local
 -- TODO filesystem funcs here can be split out
 --- Get current buf path, add link to end check exists
 -- if not then remove directory form buf path, and add link to end check exists... all
 -- the way up to / or ideally root of proect i.e. .git dir
-function M.work_out_link_path(link, extension)
+local function work_out_link_path(link, extension)
   -- This should be passed as parameter
 --  local cwd = api.nvim_call_function("getcwd", {})
   local cwd = api.nvim_call_function("expand", {"%:p:h"})
@@ -96,7 +95,7 @@ function M.follow_link()
   end
 
   local link = M.get_link_text(M.opts.link_pattern, cword)
-  local exists, path = M.work_out_link_path(link, M.opts.extension)
+  local exists, path = work_out_link_path(link, M.opts.extension)
   print(exists, path)
 
   if not exists then
