@@ -57,7 +57,7 @@ function M.setup()
         -- TODO make this an option on plugin?
         util.create_autogroups({
           gitsigns_highlights = {
-            {"colorscheme", "*", "lua require('config.plugin.gitsigns').highlighting()"}
+            {"colorscheme", "*", "lua require('plugins.gitsigns').highlighting()"}
           }
         })
 

@@ -57,12 +57,14 @@ local function show_tab_markers()
       if tab_name then
         add_left(highlight, tab_name)
       else
+        -- TODO if active window filetype is in the ignore_filetypes then look for the next available window
+
         -- show active window buf name
-        -- TODO this show's entire path, but i want from CWD
-        -- see statusline... but still gros
         local tabwinnr = vim.fn.tabpagewinnr(t)
         local tab_bufs = vim.fn.tabpagebuflist(t)
-        add_left(highlight, vim.fn.pathshorten(vim.fn.bufname(tab_bufs[tabwinnr])))
+        -- add_left(highlight, vim.fn.pathshorten(vim.fn.bufname(tab_bufs[tabwinnr])))
+        -- Show just the filename, not path
+        add_left(highlight, vim.fn.bufname(tab_bufs[tabwinnr]):match("[^/]*.$"))
       end
 
       add_left(highlight, " ")
@@ -124,13 +126,28 @@ function M.tabline()
 end
 
 function M.setup()
+  local tabline = "%!luaeval('require(\"ui.tabline\").tabline()')"
   util.create_autogroups({
     tabline_highlights = {
       {"ColorScheme", "*", "lua require('ui.tabline').highlighting()"}
-    }
+    },
+    -- TODO whis breaks but is required as telescope fucks clears tabline
+    -- set_tabline = {
+      -- {"BufNew", "*", "set tabline=" .. tabline .. ""},
+    --   {"BufEnter", "*", tabline},
+    --   {"BufWipeout", "*", tabline},
+    --   {"BufWinEnter", "*", tabline},
+    --   {"BufWinLeave", "*", tabline},
+    --   {"BufWritePost", "*", tabline},
+    --   {"SessionLoadPost", "*", tabline},
+    --   {"OptionSet", "*", tabline},
+    --   {"VimResized", "*", tabline},
+    --   {"WinEnter", "*", tabline},
+    --   {"WinLeave", "*", tabline}
+    -- }
   })
 
-  vim.o.tabline = "%!luaeval('require(\"ui.tabline\").tabline()')"
+  vim.o.tabline = tabline
 
   local command = {
     "command!",

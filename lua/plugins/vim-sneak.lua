@@ -22,7 +22,7 @@ function M.setup()
     post_handler = function()
       util.create_autogroups({
         sneak_highlights = {
-          {"colorscheme", "*", "lua require('config.plugin.vim-sneak').highlighting()"}
+          {"colorscheme", "*", "lua require('plugins.vim-sneak').highlighting()"}
         }
       })
     end

@@ -61,3 +61,18 @@ it("${1:Should do something}", function()
 end)
 endsnippet
 
+snippet filetype_macro_func "lua function to fun a macro"
+function _G.${1:function_name}()
+	-- backup register to put macro in
+	local old_reg = vim.fn.getreg("a")
+	local old_reg_type = vim.fn.getregtype("a")
+
+	local macro = [[${1:ggohello}]]
+
+	vim.fn.setreg("a", macro, old_reg_type)
+	-- call with keeppatterns so not to change search history
+	vim.cmd("keeppatterns normal @a")
+
+	vim.fn.setreg("a", old_reg, old_reg_type)
+end
+endsnippet

@@ -59,6 +59,7 @@ function M.handle_carridge_return()
     local line = api.nvim_get_current_line()
 
   -- if not in pumvisible
+  -- TODO pumvisible isn't checked here, need to move out
   if api.nvim_call_function('pumvisible', {}) == 0 then
     -- and line is a list item
     -- if is task item

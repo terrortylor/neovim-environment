@@ -7,18 +7,18 @@ local function set_mappings(client, bufnr)
     n = {
       -- TODO have a func to prefix vsplit/splt/tabnew wrapper
       ['gD'] = '<Cmd>lua vim.lsp.buf.declaration()<CR>',
-      ['ggD'] = '<Cmd>vsplit <BAR> lua vim.lsp.buf.declaration()<CR>',
+      ['gsD'] = '<Cmd>vsplit <BAR> lua vim.lsp.buf.declaration()<CR>',
       ['ghD'] = '<Cmd>split <BAR> lua vim.lsp.buf.declaration()<CR>',
       ['gd'] = '<Cmd>lua vim.lsp.buf.definition()<CR>',
-      ['ggd'] = '<Cmd>vsplit <BAR> lua vim.lsp.buf.definition()<CR>',
+      ['gsd'] = '<Cmd>vsplit <BAR> lua vim.lsp.buf.definition()<CR>',
       ['ghd'] = '<Cmd>split <BAR> lua vim.lsp.buf.definition()<CR>',
     -- TODO save and restore mark?
       ['gtd'] = 'mt<Cmd>tabnew % <CR> `t <Cmd> lua vim.lsp.buf.definition()<CR>',
       ['K'] = '<Cmd>lua vim.lsp.buf.hover()<CR>',
-      ['ca'] = '<Cmd>lua require("config.plugin.telescope").dropdown_code_actions()<CR>',
+      ['ca'] = '<Cmd>lua require("plugins.telescope").dropdown_code_actions()<CR>',
       ['cf'] = '<Cmd>lua require("config.lsp.funcs").fix_first_code_action()<CR>',
       ['gI'] = '<cmd>lua vim.lsp.buf.implementation()<CR>',
-      ['ggI'] = '<cmd>vsplit <BAR> lua vim.lsp.buf.implementation()<CR>',
+      ['gsI'] = '<cmd>vsplit <BAR> lua vim.lsp.buf.implementation()<CR>',
       ['ghI'] = '<cmd>split <BAR> lua vim.lsp.buf.implementation()<CR>',
       ['<space>gs'] = '<cmd>Telescope lsp_document_symbols<CR>',
       ['gK'] = '<cmd>lua vim.lsp.buf.signature_help()<CR>',
@@ -109,11 +109,13 @@ local eslint = {
 }
 
 require "lspconfig".efm.setup {
+  -- cmd = {"efm-langserver", "-logfile", "/home/alextylor/efm.log"},
   init_options = {documentFormatting = true},
   filetypes = {"javascript", "typescript"},
   root_dir = function(fname)
     return util.root_pattern("tsconfig.json")(fname) or
-    util.root_pattern(".eslintrc.js", ".git")(fname);
+    util.root_pattern(".eslintrc.js")(fname);
+    -- util.root_pattern(".eslintrc.js", ".git")(fname);
   end,
   settings = {
     rootMarkers = {".eslintrc.js", ".git/"},
@@ -122,4 +124,49 @@ require "lspconfig".efm.setup {
       typescript = {eslint}
     }
   }
+}
+
+local system_name
+if vim.fn.has("mac") == 1 then
+  system_name = "macOS"
+elseif vim.fn.has("unix") == 1 then
+  system_name = "Linux"
+elseif vim.fn.has('win32') == 1 then
+  system_name = "Windows"
+else
+  print("Unsupported system for sumneko")
+end
+
+-- set the path to the sumneko installation; if you previously installed via the now deprecated :LspInstall, use
+local sumneko_root_path = vim.fn.stdpath('cache')..'/lua-language-server'
+local sumneko_binary = sumneko_root_path.."/bin/"..system_name.."/lua-language-server"
+
+require'lspconfig'.sumneko_lua.setup {
+  on_attach = onAttach,
+  cmd = {sumneko_binary, "-E", sumneko_root_path .. "/main.lua"};
+  settings = {
+    Lua = {
+      runtime = {
+        -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+        version = 'LuaJIT',
+        -- Setup your lua path
+        path = vim.split(package.path, ';'),
+      },
+      diagnostics = {
+        -- Get the language server to recognize the `vim` global
+        globals = {'vim'},
+      },
+      workspace = {
+        -- Make the server aware of Neovim runtime files
+        library = {
+          [vim.fn.expand('$VIMRUNTIME/lua')] = true,
+          [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
+        },
+      },
+      -- Do not send telemetry data containing a randomized but unique identifier
+      telemetry = {
+        enable = false,
+      },
+    },
+  },
 }

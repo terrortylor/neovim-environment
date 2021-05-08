@@ -10,7 +10,7 @@ local M = {}
 -- Define settings
 M.mappings = {
   ["<leader>ga"]   = ":<C-u>lua require('alternate').get_alternate_file()<CR>",
-  ["<leader>gga"]   = ":<C-u>vsplit <BAR> lua require('alternate').get_alternate_file()<CR>",
+  ["<leader>gsa"]   = ":<C-u>vsplit <BAR> lua require('alternate').get_alternate_file()<CR>",
   ["<leader>gha"]   = ":<C-u>split <BAR> lua require('alternate').get_alternate_file()<CR>",
 }
 
@@ -65,6 +65,24 @@ M.rules = {
       direction = ".spec.ts",
       transformers = {
         {".ts", ".spec.ts"}
+      }
+    },
+  },
+  ["javascript"] = {
+    {
+      condition = ".js$",
+      direction = ".spec.js",
+      transformers = {
+        {".js", ".spec.js"}
+      }
+    },
+  },
+  ["javascriptreact"] = {
+    {
+      condition = ".jsx$",
+      direction = ".spec.jsx",
+      transformers = {
+        {".jsx", ".spec.jsx"}
       }
     },
   }

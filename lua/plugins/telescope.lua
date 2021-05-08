@@ -75,7 +75,7 @@ function M.setup()
 
       util.create_autogroups({
         telescope_highlights = {
-          {"ColorScheme", "*", "lua require('config.plugin.telescope').highlighting()"}
+          {"ColorScheme", "*", "lua require('plugins.telescope').highlighting()"}
         }
       })
 
@@ -84,12 +84,12 @@ function M.setup()
           ["<leader>ff"] = "<cmd>lua require('telescope.builtin').find_files()<CR>",
           -- TODO add func so if no .git dir is found then open from CWD
           -- luacheck: ignore
-          -- https://github.com/nvim-telescope/telescope.nvim/wiki/Configuration-Recipes#falling-back-to-find_files-if-git_files-cant-find-a-git-directory 
+          -- https://github.com/nvim-telescope/telescope.nvim/wiki/Configuration-Recipes#falling-back-to-find_files-if-git_files-cant-find-a-git-directory
           ["<c-p>"] = "<cmd>lua require('telescope.builtin').git_files()<CR>",
           ["<leader>fg"] = "<cmd>lua require('telescope.builtin').live_grep()<CR>",
           ["<leader><space>"] = "<cmd>lua require('telescope.builtin').buffers()<CR>",
           ["<leader>fh"] = "<cmd>lua require('telescope.builtin').help_tags()<CR>",
-          ["<leader>ft"] = "<cmd>lua require('config.plugin.telescope').todo_picker()<CR>",
+          ["<leader>ft"] = "<cmd>lua require('plugins.telescope').todo_picker()<CR>",
         }
       }
       create_mappings(mappings)
