@@ -3,6 +3,8 @@ local api = vim.api
 -- If error later in scripts then this may/may not be set,
 -- this is a crued way to guard around that
 -- api.nvim_buf_set_option(0, "undofile", true)
+-- viml set option sets global and local: https://github.com/nanotee/nvim-lua-guide#using-meta-accessors
+vim.o.undofile = true
 vim.bo.undofile = true
 
 -- TODO implement "gf" for lua

@@ -1,17 +1,15 @@
--- TODO look at some pcall wrapping so everthing doesn't break if single error
-local api = vim.api
-
--- TODO implement 'gf' for lua
-local util = require('util.config')
-
 local wildignore = "*.bmp,*.gif,*.ico,*.jpg,*.png,*.ico"
 wildignore = wildignore .. "*.pdf,*.psd"
 wildignore = wildignore .. "*/node_modules/*,bower_components/*"
 wildignore = wildignore .. '*/target/*,*/dist/*,*/build/*'
 wildignore = wildignore .. "tags,*.session"
 
--- TODO when 0.5 upate to use lua-vim-options
--- TODO move setting to sperate file once 'gf' implemented
+local function set_options(options)
+  for k,v in pairs(options) do
+    vim.o[k] = v
+  end
+end
+
 local global_options = {
   -- better diff
   diffopt        = "internal,filler,algorithm:patience,indent-heuristic",
@@ -51,7 +49,15 @@ local global_options = {
   completeopt    = "menuone,noselect",
 }
 
-util.set_options(global_options)
+set_options(global_options)
+
+-- viml set option sets global and local: https://github.com/nanotee/nvim-lua-guide#using-meta-accessors
+local function set_win_options(options)
+  for k,v in pairs(options) do
+    vim.o[k] = v
+    vim.wo[k] = v
+  end
+end
 
 local win_options = {
   -- Visual
@@ -68,13 +74,17 @@ local win_options = {
   foldenable = false
 }
 
-util.set_win_options(win_options)
+set_win_options(win_options)
+
+-- viml set option sets global and local: https://github.com/nanotee/nvim-lua-guide#using-meta-accessors
+local function set_buf_options(options)
+  for k,v in pairs(options) do
+    vim.o[k] = v
+    vim.bo[k] = v
+  end
+end
 
 local buf_options = {
-  -- persistent undo
-  -- TODO move persistent undo out and top of file so if any issues loading config this can be relied on
-  undofile      = true,
-
   -- Indentation
   tabstop       = 2,
   softtabstop   = 0,
@@ -85,15 +95,13 @@ local buf_options = {
   spelllang      = "en_gb",
 }
 
--- viml set option sets global and local: https://github.com/nanotee/nvim-lua-guide#using-meta-accessors
-util.set_buf_options(buf_options)
-util.set_options(buf_options)
+set_buf_options(buf_options)
 
 -- Force syntax highlighting to sync from start of file
 -- as syntax highlighting gets messed up when scrolling larger files
-api.nvim_command("syn sync fromstart")
-api.nvim_command("syn sync minlines=20")
+vim.cmd("syn sync fromstart")
+vim.cmd("syn sync minlines=20")
 
-if api.nvim_call_function("executable", {"rg"}) > 0 then
-  api.nvim_set_option("grepprg", "rg --vimgrep --no-heading --smart-case")
+if vim.fn.executable("rg") > 0 then
+  vim.o.grepprg = "rg --vimgrep --no-heading --smart-case"
 end

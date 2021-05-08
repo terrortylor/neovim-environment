@@ -64,7 +64,12 @@ local function show_tab_markers()
         local tab_bufs = vim.fn.tabpagebuflist(t)
         -- add_left(highlight, vim.fn.pathshorten(vim.fn.bufname(tab_bufs[tabwinnr])))
         -- Show just the filename, not path
-        add_left(highlight, vim.fn.bufname(tab_bufs[tabwinnr]):match("[^/]*.$"))
+        local filename = vim.fn.bufname(tab_bufs[tabwinnr])
+        if not filename or filename == "" then
+          add_left(highlight, "New File")
+        else
+          add_left(highlight, filename:match("[^/]*.$"))
+        end
       end
 
       add_left(highlight, " ")
