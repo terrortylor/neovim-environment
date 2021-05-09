@@ -11,7 +11,6 @@ end
 -- TODO this is duplicated move to helper func
 function M.load_lines(lines)
   local buf = vim.api.nvim_create_buf(false, true)
-  vim.api.nvim_buf_set_option(buf, 'filetype', 'markdown')
   vim.cmd("sbuffer " .. buf)
 
   vim.api.nvim_buf_set_lines(0, 0, -1, true, M.multiline_to_table(lines))

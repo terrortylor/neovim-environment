@@ -19,6 +19,7 @@ describe("todo_lists", function()
   - [ ] item 3
 ]]
     utils.load_lines(lines)
+    vim.api.nvim_buf_set_option(0 ,'filetype', 'markdown')
 
     vim.api.nvim_win_set_cursor(0, {2,0})
     vim.api.nvim_feedkeys(" md", "x", false)
@@ -41,6 +42,7 @@ describe("todo_lists", function()
   - [ ] item 3
 ]]
     utils.load_lines(lines)
+    vim.api.nvim_buf_set_option(0 ,'filetype', 'markdown')
 
     vim.api.nvim_win_set_cursor(0, {2,0})
     vim.api.nvim_feedkeys("onew item", "x", false)
@@ -57,6 +59,7 @@ describe("todo_lists", function()
   - [ ] item 3
 ]]
     utils.load_lines(lines)
+    vim.api.nvim_buf_set_option(0 ,'filetype', 'markdown')
 
     vim.api.nvim_win_set_cursor(0, {2,0})
     vim.api.nvim_feedkeys("Onew item", "x", false)
@@ -85,6 +88,7 @@ describe("handle_carridge_return", function()
   a normal line
 ]]
     utils.load_lines(lines)
+    vim.api.nvim_buf_set_option(0 ,'filetype', 'markdown')
 
     vim.api.nvim_win_set_cursor(0, {1,0})
     utils.send_keys("oit<C-X><C-N><CR>")
@@ -102,6 +106,7 @@ describe("handle_carridge_return", function()
   a normal line
 ]]
     utils.load_lines(lines)
+    vim.api.nvim_buf_set_option(0 ,'filetype', 'markdown')
 
     vim.api.nvim_win_set_cursor(0, {1,0})
     utils.send_keys("A<cr>")
@@ -119,6 +124,7 @@ describe("handle_carridge_return", function()
   a normal line
 ]]
     utils.load_lines(lines)
+    vim.api.nvim_buf_set_option(0 ,'filetype', 'markdown')
 
     vim.api.nvim_win_set_cursor(0, {2,0})
     utils.send_keys("A<CR>")
@@ -137,6 +143,7 @@ describe("handle_carridge_return", function()
 
 ]]
     utils.load_lines(lines)
+    vim.api.nvim_buf_set_option(0 ,'filetype', 'markdown')
 
     vim.api.nvim_win_set_cursor(0, {4,0})
     utils.send_keys("A<CR>")
@@ -153,6 +160,7 @@ describe("handle_carridge_return", function()
   mal line
 ]]
     utils.load_lines(lines)
+    vim.api.nvim_buf_set_option(0 ,'filetype', 'markdown')
 
     vim.api.nvim_win_set_cursor(0, {4,7})
     utils.send_keys("i<CR>")
