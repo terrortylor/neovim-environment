@@ -55,7 +55,7 @@ function M.update()
   if snake:collision(next_x_pos, next_y_pos) then
     M.stop()
     -- TODO print error so clearer... or new window
-    api.nvim_command("echo 'Bad luck'")
+    vim.cmd("echo 'Bad luck'")
   else
     local has_eaten = false
     if next_x_pos == food.x
@@ -133,7 +133,7 @@ function M.setup()
     "Snake",
     "lua require('snake').start()"
   }
-  api.nvim_command(table.concat(command, " "))
+  vim.cmd(table.concat(command, " "))
 
   command = {
     "command!",
@@ -141,7 +141,7 @@ function M.setup()
     "SnakeStop",
     "lua require('snake').stop()"
   }
-  api.nvim_command(table.concat(command, " "))
+  vim.cmd(table.concat(command, " "))
 end
 
 return M

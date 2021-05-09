@@ -20,7 +20,7 @@ function M.delete_buffer_keep_window()
     end
 
     api.nvim_set_current_win(cur_win)
-    api.nvim_command("bdelete " .. buf_to_delete)
+    vim.cmd("bdelete " .. buf_to_delete)
   end
 end
 
@@ -31,13 +31,13 @@ function M.change_buffer(window, buf_to_delete)
     local alt_id = buf_util.get_buf_id('#')
 
     if alt_id > 0 and api.nvim_buf_is_loaded(alt_id) then
-      api.nvim_command("buffer #")
+      vim.cmd("buffer #")
     else
-      api.nvim_command("bnext")
+      vim.cmd("bnext")
       -- bnext can not do anything, so this checks if buffer is still the same
       -- and if so then just create a new buf
       if api.nvim_win_get_buf(window) == buf_to_delete then
-        api.nvim_command("enew")
+        vim.cmd("enew")
       end
     end
   end

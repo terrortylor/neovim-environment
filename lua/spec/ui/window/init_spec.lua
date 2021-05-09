@@ -28,6 +28,7 @@ describe('ui.wndow', function()
     end)
 
     it('Should call change_buffer for each window and delete current buf', function()
+      stub(vim, "cmd")
       api.nvim_buf_get_option.on_call_with(0, 'modified').returns(false)
       -- set current window
       api.nvim_get_current_win.returns(50)
@@ -41,7 +42,7 @@ describe('ui.wndow', function()
       assert.stub(testModule.change_buffer).was_called_with(100, 1)
       assert.stub(testModule.change_buffer).was_called_with(50, 1)
       assert.stub(api.nvim_set_current_win).was_called_with(50)
-      assert.stub(api.nvim_command).was_called_with("bdelete " .. 1)
+      assert.stub(vim.cmd).was_called_with("bdelete " .. 1)
 
       testModule.change_buffer:revert()
     end)
@@ -49,6 +50,7 @@ describe('ui.wndow', function()
 
   describe('change_buffer', function()
     it('Should load alternate file if exists', function()
+      stub(vim, "cmd")
       api.nvim_win_get_buf.on_call_with(5).returns(1)
       local buf_util = require('util.buffer')
       stub(buf_util, 'get_buf_id').returns(199)
@@ -57,12 +59,13 @@ describe('ui.wndow', function()
       testModule.change_buffer(5, 1)
 
       assert.stub(api.nvim_set_current_win(5))
-      assert.stub(api.nvim_command).was_called_with("buffer #")
+      assert.stub(vim.cmd).was_called_with("buffer #")
 
       buf_util.get_buf_id:revert()
     end)
 
     it('Should call bnext if no alternative', function()
+      stub(vim, "cmd")
       -- TODO how to chain return values?
       api.nvim_win_get_buf.on_call_with(5).returns(1).returns(3)
       local buf_util = require('util.buffer')
@@ -72,10 +75,10 @@ describe('ui.wndow', function()
       testModule.change_buffer(5, 1)
 
       assert.stub(api.nvim_set_current_win(5))
-      assert.stub(api.nvim_command).was_called_with("bnext")
-      assert.stub(api.nvim_command).was_called_with("enew")
+      assert.stub(vim.cmd).was_called_with("bnext")
+      assert.stub(vim.cmd).was_called_with("enew")
       -- TODO once worked out chain returns on spy have sperate test for:
-      -- assert.stub(api.nvim_command).was_not_called_with("enew")
+      -- assert.stub(vim.api).was_not_called_with("enew")
 
       buf_util.get_buf_id:revert()
     end)

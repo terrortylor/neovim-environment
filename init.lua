@@ -29,9 +29,8 @@ require("config.abbreviations")
 local install_path = api.nvim_call_function("stdpath", {"data"}) .. "/site/pack/myplugins/start/nvim-pluginman"
 local fs = require("util.filesystem")
 if not fs.is_directory(install_path) then
-  local execute = vim.api.nvim_command
-  execute("!git clone https://github.com/terrortylor/nvim-pluginman " .. install_path)
-  execute "packadd nvim-pluginman"
+  vim.cmd("!git clone https://github.com/terrortylor/nvim-pluginman " .. install_path)
+  vim.cmd("packadd nvim-pluginman")
 end
 local plug = require("pluginman")
 

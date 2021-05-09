@@ -8,8 +8,8 @@ function M.exit(lines)
   --  aip.nvim_call_function("setqflist", {{}, "r", {title = "TestRunner Results", lines = lines, efm = errfmt}})
   if #lines > 0 then
     api.nvim_call_function("setqflist", {{}, "r", {title = "TestRunner Results", lines = lines}})
-    api.nvim_command("doautocmd QuickFixCmdPost")
-    api.nvim_command("cwindow")
+    vim.cmd("doautocmd QuickFixCmdPost")
+    vim.cmd("cwindow")
   end
 end
 

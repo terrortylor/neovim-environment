@@ -12,7 +12,7 @@ function M.get_user_input(prompt, default)
   local val = api.nvim_call_function("input", {opts})
   api.nvim_call_function("inputrestore", {})
   -- clear the command line
-  api.nvim_command("normal :<ESC>")
+  vim.cmd("normal :<ESC>")
 
   if val == '' then
     return nil

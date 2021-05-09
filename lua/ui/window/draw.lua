@@ -31,8 +31,8 @@ function M.open_draw(buf, position, size)
   end
 
   if not props.win then
-    api.nvim_command(M.get_split_command(position, size))
-    api.nvim_command('buffer ' .. buf)
+    vim.cmd(M.get_split_command(position, size))
+    vim.cmd('buffer ' .. buf)
     props.win = api.nvim_get_current_win()
   end
 end

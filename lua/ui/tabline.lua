@@ -160,7 +160,7 @@ function M.setup()
     "TabSetName",
     "lua require('ui.tabline').set_tab_name()"
   }
-  vim.api.nvim_command(table.concat(command, " "))
+  vim.cmd(table.concat(command, " "))
 end
 
 function M.set_tab_name()

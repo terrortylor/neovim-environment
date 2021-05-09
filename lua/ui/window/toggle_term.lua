@@ -35,7 +35,7 @@ function M.open(n, command, title)
     vim.fn.termopen(command, {on_exit = close_lazygit})
   end
 
-  vim.api.nvim_command("startinsert!")
+  vim.cmd("startinsert!")
 end
 
 return M

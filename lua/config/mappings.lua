@@ -1,6 +1,7 @@
 require('util.config').create_mappings({
   n = {
     -- Find in buffer
+    -- TODO rewrite in lua?
     ["<leader>fb"] = {":FindInBuffer<space>", {noremap = true}},
 
     -- Refactoring

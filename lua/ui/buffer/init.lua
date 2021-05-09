@@ -19,11 +19,11 @@ function M.prototype()
   -- as calling external plugin
   local _,_ = pcall(function()
     -- Reselect, copy to a reg, move to end of selection, put and reselect
-    api.nvim_command("normal! gv\"ay`>\"apgv")
+    vim.cmd("normal! gv\"ay`>\"apgv")
     -- Comment out using comment toggle: https://github.com/terrortylor/nvim-comment
-    api.nvim_command("'<,'>CommentToggle")
+    vim.cmd("'<,'>CommentToggle")
     -- move to start of selection and down and start of line
-    api.nvim_command("normal! `>j0")
+    vim.cmd("normal! `>j0")
   end)
 
   -- lua seems to remain in visual mode

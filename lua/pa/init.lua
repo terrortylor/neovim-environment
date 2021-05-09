@@ -84,7 +84,7 @@ function M.setup()
     },
   }
   for _,v in pairs(commands) do
-    api.nvim_command(table.concat(v, " "))
+    vim.cmd(table.concat(v, " "))
   end
 end
 

@@ -31,11 +31,12 @@ describe('alternate', function()
     it('Should print message and return if filetype not found', function()
       testModule.rules = rules
       stub(_G, 'print')
+      stub(vim, "cmd")
       api.nvim_buf_get_option.on_call_with(0, 'filetype').returns('cats')
       testModule.get_alternate_file()
 
       assert.stub(_G.print).was_called_with('No alternate file rule found for filetype: cats')
-      assert.stub(api.nvim_command).was_not_called()
+      assert.stub(vim.cmd).was_not_called()
 
       -- reset stubs
       print:revert()
@@ -44,6 +45,7 @@ describe('alternate', function()
     it('Should return silently if condition not matched', function()
       testModule.rules = rules
       stub(_G, 'print')
+      stub(vim, "cmd")
       stub(testModule, 'transform_path')
       api.nvim_buf_get_option.on_call_with(0, 'filetype').returns('code')
       api.nvim_call_function.on_call_with("expand", {"%:p"}).returns('assets/file.jpeg')
@@ -53,7 +55,7 @@ describe('alternate', function()
       assert.stub(_G.print).was_not_called_with('No alternate file rule found for filetype: cats')
       -- FIXME this doesn't work, need to extend table with metatable I thin
       assert.stub(testModule.transform_path).was_not_called()
-      assert.stub(api.nvim_command).was_not_called()
+      assert.stub(vim.cmd).was_not_called()
 
       -- reset stubs
       print:revert()
@@ -63,13 +65,14 @@ describe('alternate', function()
     it('Should try to open expected alternate file', function()
       testModule.rules = rules
       stub(_G, 'print')
+      stub(vim, "cmd")
       api.nvim_buf_get_option.on_call_with(0, 'filetype').returns('code')
       api.nvim_call_function.on_call_with("expand", {"%:p"}).returns('src/module/funcs.code')
 
       testModule.get_alternate_file()
 
       assert.stub(_G.print).was_not_called_with('No alternate file rule found for filetype: cats')
-      assert.stub(api.nvim_command).was_called_with("e test/module/funcs_test.code")
+      assert.stub(vim.cmd).was_called_with("e test/module/funcs_test.code")
 
       -- reset stubs
       print:revert()
@@ -78,13 +81,14 @@ describe('alternate', function()
     it('Should try to open expected file from alternate file', function()
       testModule.rules = rules
       stub(_G, 'print')
+      stub(vim, "cmd")
       api.nvim_buf_get_option.on_call_with(0, 'filetype').returns('code')
       api.nvim_call_function.on_call_with("expand", {"%:p"}).returns('test/module/funcs_test.code')
 
       testModule.get_alternate_file()
 
       assert.stub(_G.print).was_not_called_with('No alternate file rule found for filetype: cats')
-      assert.stub(api.nvim_command).was_called_with("e src/module/funcs.code")
+      assert.stub(vim.cmd).was_called_with("e src/module/funcs.code")
 
       -- reset stubs
       print:revert()

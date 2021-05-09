@@ -24,8 +24,6 @@
 -- * view instance commands in popup window for selection
 -- * ability to get last command from pane and edit
 
-local api = vim.api
-
 -- TODO Some extension ideas:
 -- Sanity check there is more than one pane to send too, if only two select other automatically?
 -- change instance pane command
@@ -55,7 +53,7 @@ function M.setup()
       k,
       "lua require('tmux.commands')." .. v .. "(<args>)"
     }
-    api.nvim_command(table.concat(command, " "))
+    vim.cmd(table.concat(command, " "))
   end
 
   local opts = {noremap = true, silent = true}

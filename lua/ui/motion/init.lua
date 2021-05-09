@@ -110,9 +110,9 @@ function M.select_object(isaround, lchar, rchar)
 
     if isleft then
       ft = ft:upper()
-      api.nvim_command('normal! v' .. ft .. lchar)
+      vim.cmd('normal! v' .. ft .. lchar)
     else
-      api.nvim_command('normal! v' .. ft .. rchar)
+      vim.cmd('normal! v' .. ft .. rchar)
     end
 
   else

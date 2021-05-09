@@ -129,7 +129,7 @@ function M.get_alternate_file()
       alternate_file = M.transform_path(path, rule.transformers, to_alternate)
 
       -- TODO check file path exists, if not prompt to create
-      api.nvim_command("e " .. alternate_file)
+      vim.cmd("e " .. alternate_file)
       match = true
     end
 

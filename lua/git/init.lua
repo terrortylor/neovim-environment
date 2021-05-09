@@ -1,4 +1,3 @@
-local api = vim.api
 local blame = require('git.lib.blame')
 
 local M = {}
@@ -18,7 +17,7 @@ end
 
 --- Used to setup the plugin, sets up commands etc
 function M.setup()
-  api.nvim_command("command! -range GitBlame lua require('git').blame(<line1>, <line2>)")
+  vim.cmd("command! -range GitBlame lua require('git').blame(<line1>, <line2>)")
 end
 
 return M

@@ -4,21 +4,23 @@ local api = vim.api
 
 local M = {}
 
+-- TODO don't really use this
 --- Wipes a buffer and then deletes the file from disk
 -- @param path string the buffer to remove, this is the path in :ls
 --                    if empty then it uses the buffer value
 function M.delete_file(path)
   path = path or api.nvim_call_function("expand", {"%:p"})
-  api.nvim_command("bwipeout! " .. path)
+  vim.cmd("bwipeout! " .. path)
   filesystem.delete(path)
 end
 
+-- TODO defo not used, ned to finish
 --- Renames a file on disk, then reloads the file in to the buffer list
 -- @param path string the buffer to rename, this is the path in :ls
 --                     if empty it uses the buffer value
 function M.rename_file(path)
   path = path or api.nvim_call_function("expand", {"%:p"})
-  api.nvim_command("bwipeout! " .. path)
+  vim.cmd("bwipeout! " .. path)
   filesystem.delete(path)
 end
 
@@ -35,7 +37,7 @@ function M.update_buffer()
       log.error("Buffer directory doesn't exit, not saving")
       return
     end
-    api.nvim_command(":update")
+    vim.cmd(":update")
   end
 end
 

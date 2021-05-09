@@ -91,7 +91,7 @@ end
 
 -- TODO refactor into helper module
 function M.nvim_escaped_command(command)
-  vim.api.nvim_command(vim.api.nvim_replace_termcodes(command, true, false, true))
+  vim.cmd(vim.api.nvim_replace_termcodes(command, true, false, true))
 end
 
 function M.buf_get_line_above_below(is_below)

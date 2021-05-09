@@ -29,7 +29,7 @@ end
 
 function M.teardown_mappins()
   for k,_ in pairs(control_mappings) do
-  api.nvim_command("nunmap " .. k)
+    vim.api.nvim_del_keymap("n", k)
   end
 end
 

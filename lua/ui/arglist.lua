@@ -28,9 +28,9 @@ function M.set_arglist(arg_list)
   -- Only empty list if not already empty
   local args = api.nvim_command_output("args")
   if args and args ~= "" then
-    api.nvim_command("argdelete *")
+    vim.cmd("argdelete *")
   end
-  api.nvim_command(string.format("%s %s", "argadd", flat_args))
+  vim.cmd(string.format("%s %s", "argadd", flat_args))
 end
 
 function M.edit_args_in_buffer()
@@ -66,7 +66,7 @@ function M.setup()
     "EditArgList",
     "lua require('ui.arglist').edit_args_in_buffer()"
   }
-  api.nvim_command(table.concat(command, " "))
+  vim.cmd(table.concat(command, " "))
 end
 
 return M

@@ -1,6 +1,7 @@
 local testModule
 local api
 local mock = require('luassert.mock')
+local stub = require('luassert.stub')
 
 describe('ui.window.draw', function()
 
@@ -43,13 +44,14 @@ describe('ui.window.draw', function()
 
   describe('open_draw', function()
     it('Should open draw with expected split command and then open target buffer', function()
+      stub(vim, "cmd")
       api.nvim_get_current_win.returns(101)
 
       testModule.open_draw(5, 'left', "")
       local actual = testModule.toggled_bufs[5]
 
-      assert.stub(api.nvim_command).was_called_with('vertical topleft split')
-      assert.stub(api.nvim_command).was_called_with('buffer 5')
+      assert.stub(vim.cmd).was_called_with('vertical topleft split')
+      assert.stub(vim.cmd).was_called_with('buffer 5')
       assert.are_not.equals(nil, actual)
       assert.equals(101, actual.win)
       assert.equals('', actual.size)
@@ -57,13 +59,14 @@ describe('ui.window.draw', function()
     end)
 
     it('Should do nothing is window already open', function()
+      stub(vim, "cmd")
       local actual = testModule.toggled_bufs[5]
       assert.equals(101, actual.win)
 
       testModule.open_draw(5, 'left', "")
 
-      assert.stub(api.nvim_command).was_not_called()
-      assert.stub(api.nvim_command).was_not_called()
+      assert.stub(vim.cmd).was_not_called()
+      assert.stub(vim.cmd).was_not_called()
       assert.are_not.equals(nil, actual)
       assert.equals(101, actual.win)
       assert.equals('', actual.size)
@@ -71,13 +74,14 @@ describe('ui.window.draw', function()
     end)
 
     it('Should open draw with set size', function()
+      stub(vim, "cmd")
       api.nvim_get_current_win.returns(101)
 
       testModule.open_draw(2, 'left', "40")
       local actual = testModule.toggled_bufs[2]
 
-      assert.stub(api.nvim_command).was_called_with('vertical topleft 40split')
-      assert.stub(api.nvim_command).was_called_with('buffer 2')
+      assert.stub(vim.cmd).was_called_with('vertical topleft 40split')
+      assert.stub(vim.cmd).was_called_with('buffer 2')
       assert.are_not.equals(nil, actual)
       assert.equals(101, actual.win)
       assert.equals('40', actual.size)

@@ -85,7 +85,7 @@ function M.setup()
       k,
       "lua require('test').run('"..v.."')"
     }
-    api.nvim_command(table.concat(command, " "))
+    vim.cmd(table.concat(command, " "))
   end
 end
 

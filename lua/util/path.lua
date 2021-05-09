@@ -71,7 +71,7 @@ function M.set_cwd_to_project_root()
     return
   end
 
-  api.nvim_command("cd " .. root)
+  vim.cmd("cd " .. root)
 end
 
 return M

@@ -95,6 +95,7 @@ describe('git.lib.blame', function()
 
   describe('create_window', function()
     it('Should create window with expected values, and mappings', function()
+      stub(vim, "cmd")
       api.nvim_create_buf.returns(101)
       local m_getn = stub(table, 'getn')
       m_getn.returns(2)

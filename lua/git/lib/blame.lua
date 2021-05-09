@@ -72,7 +72,7 @@ function M.create_window(lines, row, col, lhs_mappings)
   for _, v in pairs(lhs_mappings) do
     api.nvim_buf_set_keymap(buf, "n", v, "<CMD>lua require('git.lib.blame').close_window()<CR>", { noremap = true })
   end
-  api.nvim_command("autocmd WinLeave <buffer=" .. buf .."> ++once :lua require('git.lib.blame').close_window()")
+  vim.cmd("autocmd WinLeave <buffer=" .. buf .."> ++once :lua require('git.lib.blame').close_window()")
 
   local opts = {
     style = "minimal",

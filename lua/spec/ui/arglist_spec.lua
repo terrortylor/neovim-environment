@@ -28,22 +28,24 @@ describe('ui.arglist', function()
 
   describe('set_arglist', function()
     it('Should set the arglist from table, delete if args already', function()
+      stub(vim, "cmd")
       local args = {"file/path/test.md", "current/file.txt"}
 
       testModule.set_arglist(args)
 
-      assert.stub(api.nvim_command).was_not_called_with("argdelete *")
-      assert.stub(api.nvim_command).was_called_with("argadd file/path/test.md current/file.txt")
+      assert.stub(vim.cmd).was_not_called_with("argdelete *")
+      assert.stub(vim.cmd).was_called_with("argadd file/path/test.md current/file.txt")
     end)
 
     it('Should set the arglist from table, delete if args already', function()
+      stub(vim, "cmd")
       api.nvim_command_output.on_call_with('args').returns("file/path/test.md")
       local args = {"file/path/test.md", "current/file.txt"}
 
       testModule.set_arglist(args)
 
-      assert.stub(api.nvim_command).was_called_with("argdelete *")
-      assert.stub(api.nvim_command).was_called_with("argadd file/path/test.md current/file.txt")
+      assert.stub(vim.cmd).was_called_with("argdelete *")
+      assert.stub(vim.cmd).was_called_with("argadd file/path/test.md current/file.txt")
     end)
   end)
 

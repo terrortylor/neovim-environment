@@ -30,13 +30,14 @@ describe('config.filetype', function()
 
     it('Should open filetype file if filetype set', function()
       -- Setup stubbed values
+      stub(vim, "cmd")
       api.nvim_buf_get_option.on_call_with(0, "filetype").returns("lua")
       api.nvim_eval.on_call_with("expand('$MYVIMRC')").returns("/home/user/.config/nvim/init.vim")
 
       testModule.open_ftplugin_file()
 
       assert.stub(api.nvim_eval).was_called()
-      assert.stub(api.nvim_command).was_called_with("edit /home/user/.config/nvim/ftplugin/lua.lua")
+      assert.stub(vim.cmd).was_called_with("edit /home/user/.config/nvim/ftplugin/lua.lua")
     end)
   end)
 end)

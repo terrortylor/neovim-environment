@@ -15,9 +15,10 @@ describe('markdown.tasks', function()
 
   describe('nvim_escaped_command', function()
     it('Should call expected API mehtods with expected arguments', function()
+      stub(vim, "cmd")
 
       testModule.nvim_escaped_command('goats')
-      assert.stub(api.nvim_command).was_called(1)
+      assert.stub(vim.cmd).was_called(1)
       assert.stub(api.nvim_replace_termcodes).was_called(1)
       assert.stub(api.nvim_replace_termcodes).was_called_with("goats", true, false, true)
     end)

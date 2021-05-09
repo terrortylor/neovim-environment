@@ -113,7 +113,7 @@ function M.follow_link()
     os.execute("mkdir -p " .. dir)
   end
 
-  api.nvim_command("edit " .. path)
+  vim.cmd("edit " .. path)
 end
 
 function M.setup()

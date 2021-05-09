@@ -89,7 +89,7 @@ function M.open_float(title, has_border, buf, buf_opts, callback)
       "<buffer=" .. border_buf .."> ++once",
       "exe 'silent bwipeout! " .. border_buf .. "'"
     }
-    api.nvim_command(table.concat(command, " "))
+    vim.cmd(table.concat(command, " "))
   end
 
 
@@ -108,7 +108,7 @@ function M.open_float(title, has_border, buf, buf_opts, callback)
       "<buffer=" .. buf .."> ++once",
       ":lua require('ui.window.float').close_windows(" .. win .. ", " .. border_win .. ")"
     }
-    api.nvim_command(table.concat(command, " "))
+    vim.cmd(table.concat(command, " "))
     return {win, border_win}
   else
     local command = {
@@ -117,7 +117,7 @@ function M.open_float(title, has_border, buf, buf_opts, callback)
       "<buffer=" .. buf .."> ++once",
       ":lua require('ui.window.float').close_windows(" .. win .. ")"
     }
-    api.nvim_command(table.concat(command, " "))
+    vim.cmd(table.concat(command, " "))
 
     return {win, nil}
   end

@@ -56,7 +56,7 @@ local commands = {
 }
 
 for _,v in pairs(commands) do
-  api.nvim_command(table.concat(v, " "))
+  vim.cmd(table.concat(v, " "))
 end
 
 
@@ -81,7 +81,7 @@ if api.nvim_call_function("executable", {"gron"}) > 0 then
   }
 
   for _,v in pairs(gron_commands) do
-    api.nvim_command(table.concat(v, " "))
+    vim.cmd(table.concat(v, " "))
   end
 else
   log.error("gron not found on command line, no Gron commands created")
