@@ -4,7 +4,7 @@ plug.add({
   url = "nvim-treesitter/nvim-treesitter",
   post_handler = function()
     require'nvim-treesitter.configs'.setup {
-      ensure_installed = {"javascript", "typescript", "lua"},
+      ensure_installed = {"javascript", "typescript", "lua", "go"},
       highlight = {
         enable = true,
       },

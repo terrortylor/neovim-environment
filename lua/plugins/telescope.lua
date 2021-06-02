@@ -90,6 +90,7 @@ function M.setup()
           ["<leader><space>"] = "<cmd>lua require('telescope.builtin').buffers()<CR>",
           ["<leader>fh"] = "<cmd>lua require('telescope.builtin').help_tags()<CR>",
           ["<leader>ft"] = "<cmd>lua require('plugins.telescope').todo_picker()<CR>",
+          ["<leader>fs"] = "<cmd>lua require('telescope.builtin.lsp').dynamic_workspace_symbols()<CR>",
         }
       }
       create_mappings(mappings)

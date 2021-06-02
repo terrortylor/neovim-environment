@@ -99,6 +99,7 @@ require'lspconfig'.tsserver.setup{on_attach = onAttach}
 --   filetypes = {"tf", "terraform"}
 -- }
 
+-- eslint via efm
 local eslint = {
   lintCommand = "eslint_d -f unix --stdin --stdin-filename ${INPUT}",
   lintStdin = true,
@@ -111,7 +112,7 @@ local eslint = {
 require "lspconfig".efm.setup {
   -- cmd = {"efm-langserver", "-logfile", "/home/alextylor/efm.log"},
   init_options = {documentFormatting = true},
-  filetypes = {"javascript", "typescript"},
+  filetypes = {"javascript", "typescript", "javascriptreact", "typescriptreact"},
   root_dir = function(fname)
     return util.root_pattern("tsconfig.json")(fname) or
     util.root_pattern(".eslintrc.js")(fname);
@@ -121,11 +122,14 @@ require "lspconfig".efm.setup {
     rootMarkers = {".eslintrc.js", ".git/"},
     languages = {
       javascript = {eslint},
-      typescript = {eslint}
+      typescript = {eslint},
+      javascriptreact = {eslint},
+      typescriptreact = {eslint},
     }
   }
 }
 
+-- sumneko
 local system_name
 if vim.fn.has("mac") == 1 then
   system_name = "macOS"
@@ -154,7 +158,7 @@ require'lspconfig'.sumneko_lua.setup {
       },
       diagnostics = {
         -- Get the language server to recognize the `vim` global
-        globals = {'vim'},
+        globals = {'vim', 'describe', 'before_each', 'after_each', 'it'},
       },
       workspace = {
         -- Make the server aware of Neovim runtime files

@@ -60,7 +60,7 @@ vim.g.vim_markdown_autowrite = 1
 -- require("plugins.vim-markdown")
 
 -- quick navigation around buffer
-require("plugins.vim-sneak").setup()
+require("plugins.hop").setup()
 
 -- trying to break some bad habbits
 -- require("plugins.vim-hardtime").setup()

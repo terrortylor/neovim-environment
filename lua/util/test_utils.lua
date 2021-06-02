@@ -1,5 +1,7 @@
 local M = {}
 
+-- This could be vim.split but actually then the input and expected
+-- need to manage different end empty line, this is to readable tests
 function M.multiline_to_table(s)
     local t = {}
     for l in s:gmatch('(.-)\n') do
@@ -34,7 +36,6 @@ function M.buf_as_multiline()
   return s
 end
 
--- TODO this is duplicated move to helper func
 function M.send_keys(keys)
   -- TODO can we use nvim_input here?
   vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(keys, true, false, true), "x", false)
