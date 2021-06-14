@@ -8,7 +8,7 @@ require('util.config').create_mappings({
     ["<leader>rw"] = {[[:%s/\C\<<c-r><c-w>\>//<left>]], {noremap = true}},
 
     -- Toggles
-    ["<leader>/"]  = ":set hlsearch!<CR>", -- Toggle highlight
+    ["g/"]  = ":set hlsearch!<CR>", -- Toggle highlight
     ["<leader>tc"]= ":set ignorecase!<CR>", -- Toggle case
     ["<leader>tn"] = ":set number!<CR>", -- Toggle line numbers
     ["<leader>tr"] = ":set relativenumber!<CR>", -- Toggle releative numbers

@@ -33,6 +33,7 @@ if not fs.is_directory(install_path) then
   vim.cmd("packadd nvim-pluginman")
 end
 local plug = require("pluginman")
+plug.setup()
 
 -- colour shceme
 require("plugins.tender")

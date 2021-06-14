@@ -3,15 +3,8 @@ local c = require('config.colours').c
 local hl = require('util.highlights')
 local set_highlight = hl.set_highlight
 local fg = hl.guifg
-local util = require('util.config')
 
 local M = {}
-
-function M.highlighting()
-  set_highlight("GitGutterAdd", fg(c.green2))
-  set_highlight("GitGutterChange", fg(c.blue3))
-  set_highlight("GitGutterDelete", fg(c.red2))
-end
 
 function M.setup()
   plug.add({
@@ -54,14 +47,12 @@ function M.setup()
         },
         -- sign_priority = 15,
         status_formatter = nil, -- Use default
-        -- TODO make this an option on plugin?
-        util.create_autogroups({
-          gitsigns_highlights = {
-            {"colorscheme", "*", "lua require('plugins.gitsigns').highlighting()"}
-          }
-        })
-
       }
+    end,
+    highlight_handler = function()
+      set_highlight("GitGutterAdd", fg(c.green2))
+      set_highlight("GitGutterChange", fg(c.blue3))
+      set_highlight("GitGutterDelete", fg(c.red2))
     end
   })
 end

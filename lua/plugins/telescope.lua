@@ -4,7 +4,6 @@ local c = require('config.colours').c
 local hl = require('util.highlights')
 local set_highlight = hl.set_highlight
 local fg = hl.guifg
-local util = require('util.config')
 
 local M = {}
 
@@ -73,12 +72,6 @@ function M.setup()
     url = "nvim-telescope/telescope.nvim",
     post_handler = function()
 
-      util.create_autogroups({
-        telescope_highlights = {
-          {"ColorScheme", "*", "lua require('plugins.telescope').highlighting()"}
-        }
-      })
-
       local mappings = {
         n = {
           ["<leader>ff"] = "<cmd>lua require('telescope.builtin').find_files()<CR>",
@@ -91,6 +84,8 @@ function M.setup()
           ["<leader>fh"] = "<cmd>lua require('telescope.builtin').help_tags()<CR>",
           ["<leader>ft"] = "<cmd>lua require('plugins.telescope').todo_picker()<CR>",
           ["<leader>fs"] = "<cmd>lua require('telescope.builtin.lsp').dynamic_workspace_symbols()<CR>",
+          -- todo nice to filter this only to errors
+          ["<leader>fe"] = "<cmd>Telescope lsp_workspace_diagnostics<CR>",
         }
       }
       create_mappings(mappings)
@@ -107,30 +102,31 @@ function M.setup()
           }
         }
       }
+    end,
+    highlight_handler = function ()
+
+      set_highlight("TelescopeSelection", fg(c.blue1))
+      set_highlight("TelescopeSelectionCaret", fg(c.green2))
+      set_highlight("TelescopeMultiSelection", fg(c.blue1))
+      set_highlight("TelescopeNormal", fg(c.gandalf))
+
+      set_highlight("TelescopeBorder", fg(c.yellow2))
+      set_highlight("TelescopePromptBorder", fg(c.green2))
+      set_highlight("TelescopeResultsBorder", fg(c.yellow1))
+      set_highlight("TelescopePreviewBorder", fg(c.yellow1))
+
+      set_highlight("TelescopeMatching", fg(c.green2))
+      set_highlight("TelescopePromptPrefix", fg(c.red1))
+
     end
+
+
   })
 
   -- adds github pull integration into telescope
   -- Requires:
   -- * nvim-telescope/telescope.nvim
   plug.add('nvim-telescope/telescope-github.nvim')
-end
-
-function M.highlighting()
-
-  set_highlight("TelescopeSelection", fg(c.blue1))
-  set_highlight("TelescopeSelectionCaret", fg(c.green2))
-  set_highlight("TelescopeMultiSelection", fg(c.blue1))
-  set_highlight("TelescopeNormal", fg(c.gandalf))
-
-  set_highlight("TelescopeBorder", fg(c.yellow2))
-  set_highlight("TelescopePromptBorder", fg(c.green2))
-  set_highlight("TelescopeResultsBorder", fg(c.yellow1))
-  set_highlight("TelescopePreviewBorder", fg(c.yellow1))
-
-  set_highlight("TelescopeMatching", fg(c.green2))
-  set_highlight("TelescopePromptPrefix", fg(c.red1))
-
 end
 
 return M
