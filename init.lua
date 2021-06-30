@@ -10,13 +10,9 @@ vim.bo.undofile = true
 -- TODO implement "gf" for lua
 local util = require("util.config")
 
-api.nvim_set_var("mapleader", " ")
+vim.g.mapleader = " "
 
-local global_variables = {
-  markdown_fenced_languages = {"bash=sh", "sh", "ruby"}
-}
-
-util.set_variables(global_variables)
+vim.g.markdown_fenced_languages = {"bash=sh", "sh", "ruby"}
 
 -- Configurations
 require("config.options")
@@ -105,7 +101,7 @@ require("plugins.gitsigns").setup()
 vim.g.lexima_map_escape = ""
 
 require("plugins.lsp")
--- require("plugins.treesitter")
+require("plugins.treesitter")
 
 -- run tests in a project at various levels
 require("plugins.vim-test")

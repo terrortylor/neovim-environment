@@ -4,13 +4,6 @@ local api = vim.api
 
 local M = {}
 
--- TODO remove once nvim 0.5
-function M.set_variables(variables)
-  for k,v in pairs(variables) do
-    api.nvim_set_var(k, v)
-  end
-end
-
 function M.create_mappings(mappings, opts, buffer)
   opts = opts or {noremap = true, silent = true}
   local function keymap(...)

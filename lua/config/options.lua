@@ -1,101 +1,58 @@
-local wildignore = "*.bmp,*.gif,*.ico,*.jpg,*.png,*.ico"
-wildignore = wildignore .. "*.pdf,*.psd"
-wildignore = wildignore .. "*/node_modules/*,bower_components/*"
-wildignore = wildignore .. '*/target/*,*/dist/*,*/build/*'
-wildignore = wildignore .. "tags,*.session"
+local o = vim.opt
 
-local function set_options(options)
-  for k,v in pairs(options) do
-    vim.o[k] = v
-  end
-end
+o.diffopt = "internal,filler,algorithm:patience,indent-heuristic" -- better diffing
 
-local global_options = {
-  -- better diff
-  diffopt        = "internal,filler,algorithm:patience,indent-heuristic",
-
-  -- wildignore
-  wildmode       = "full",
-  wildignorecase = true,
-  wildignore     = wildignore,
-
-  -- leader timeout
-  timeoutlen     = 1500,
-
-  -- Allow switching buffers without writing changes
-  hidden         = true,
-  autowriteall   = true,
-
-  -- Some default window behaviour
-  scrolloff      = 5,
-  splitright     = true,
-  splitbelow     = true,
-
-  -- Visual
-  termguicolors  = true,
-  showtabline    = 2,
-
-  -- Searching
-  ignorecase     = true,
-  showmatch      = true,
-  inccommand     = "nosplit",
-  gdefault       = true,
-
-  -- Tags (navigation)
-  tags           = "./.git/tags;/",
-
-  -- Completion Options
-  -- completeopt    = "menuone,preview,noselect,noinsert",
-  completeopt    = "menuone,noselect",
+-- wildignore
+o.wildmode = "full"
+o.wildignorecase = true
+o.wildignore = {
+  "*.bmp",
+  "*.gif",
+  "*.ico",
+  "*.jpg",
+  "*.png",
+  "*.ico",
+  "*.pdf",
+  "*.psd",
+  "*/node_modules/*",
+  "bower_components/*",
+  "*/target/*",
+  "*/dist/*",
+  "*/build/*",
+  "tags",
+  "*.session"
 }
 
-set_options(global_options)
+o.timeoutlen = 1500 -- leader timeout
 
--- viml set option sets global and local: https://github.com/nanotee/nvim-lua-guide#using-meta-accessors
-local function set_win_options(options)
-  for k,v in pairs(options) do
-    vim.o[k] = v
-    vim.wo[k] = v
-  end
-end
+o.hidden = true -- Allow switching buffers without writing changes
+o.autowriteall = true -- autowrite on a handleful of actions
 
-local win_options = {
-  -- Visual
-  cursorline     = true,
-  number         = true,
+o.scrolloff = 5 -- start scrolling 5 lines from top/bottom
+o.splitright = true -- default vertical split to right
+o.splitbelow = true -- defualt horizontal split to bottom
 
-  -- Selling
-  spell          = false,
+o.termguicolors = true -- use terminal gui colours
+o.showtabline = 2 -- force always show tab line
+o.cursorline = true -- highlight line cursor is on
+o.number = true -- show line numbers
+o.signcolumn = "yes:2" -- show sign column, set width to two
+o.foldenable = false -- disbale autofolding
 
-  -- enable signcolumn to prevent jumping
-  signcolumn     = "yes:2",
+o.ignorecase = true -- ignore case when searching
+o.showmatch = true -- visually show matches as typing
+o.inccommand = "nosplit" -- show effects of comand as you type
+o.gdefault = true -- uses g flag on substitute by default
 
-  -- disable autofolding
-  foldenable = false
-}
+o.tags = "./.git/tags;/" -- location to look for tag files
 
-set_win_options(win_options)
+o.spell = false -- turn of spell checking
+o.spelllang = "en_gb" -- default spelling locale
 
--- viml set option sets global and local: https://github.com/nanotee/nvim-lua-guide#using-meta-accessors
-local function set_buf_options(options)
-  for k,v in pairs(options) do
-    vim.o[k] = v
-    vim.bo[k] = v
-  end
-end
-
-local buf_options = {
-  -- Indentation
-  tabstop       = 2,
-  softtabstop   = 0,
-  expandtab     = true,
-  shiftwidth    = 2,
-
-  -- Selling
-  spelllang      = "en_gb",
-}
-
-set_buf_options(buf_options)
+o.tabstop = 2 -- number of spaces a tab is worth
+o.softtabstop = 0
+o.expandtab = true -- use spaces rather than tabs
+o.shiftwidth = 2 -- number of spaces to use for indent
 
 -- Force syntax highlighting to sync from start of file
 -- as syntax highlighting gets messed up when scrolling larger files

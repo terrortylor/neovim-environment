@@ -4,13 +4,9 @@ local util = require("util.config")
 plug.add({
   url = "christoomey/vim-tmux-navigator",
   post_handler = function()
-    local global_variables = {
-      tmux_navigator_no_mappings         = 1,
-      tmux_navigator_disable_when_zoomed = 1,
-      tmux_navigator_save_on_switch      = 2,
-    }
-
-    util.set_variables(global_variables)
+	vim.g.tmux_navigator_no_mappings = 1
+	vim.g.tmux_navigator_disable_when_zoomed = 1
+	vim.g.tmux_navigator_save_on_switch = 2
 
     local nav_maps = {
       ["<c-h>"] = ":TmuxNavigateLeft<CR>",

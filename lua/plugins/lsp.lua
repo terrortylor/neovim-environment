@@ -62,8 +62,9 @@ plug.add({
         ["<C-Space>"] = {"compe#complete()", {silent = true, expr = true}},
         ["<CR>"]      = {crMap, {silent = true, expr = true}},
         ["<C-e>"]     = {"compe#close('<C-e>')", {silent = true, expr = true}},
-        ["<C-f>"]     = {"compe#scroll({ 'delta': +4 })", {silent = true, expr = true}},
-        ["<C-d>"]     = {"compe#scroll({ 'delta': -4 })", {silent = true, expr = true}},
+        -- ["<C-f>"]     = {"compe#scroll({ 'delta': +4 })", {silent = true, expr = true}},
+        -- This overwrites <c-d> for indenting back one, which is useful
+        -- ["<C-d>"]     = {"compe#scroll({ 'delta': -4 })", {silent = true, expr = true}},
       },
     })
 

@@ -19,7 +19,7 @@ describe("todo_lists", function()
   - [ ] item 3
 ]]
     utils.load_lines(lines)
-    vim.api.nvim_buf_set_option(0 ,'filetype', 'markdown')
+    vim.bo.filetype = 'markdown'
 
     vim.api.nvim_win_set_cursor(0, {2,0})
     vim.api.nvim_feedkeys(" md", "x", false)
@@ -42,7 +42,7 @@ describe("todo_lists", function()
   - [ ] item 3
 ]]
     utils.load_lines(lines)
-    vim.api.nvim_buf_set_option(0 ,'filetype', 'markdown')
+    vim.bo.filetype = 'markdown'
 
     vim.api.nvim_win_set_cursor(0, {2,0})
     vim.api.nvim_feedkeys("onew item", "x", false)
@@ -59,7 +59,7 @@ describe("todo_lists", function()
   - [ ] item 3
 ]]
     utils.load_lines(lines)
-    vim.api.nvim_buf_set_option(0 ,'filetype', 'markdown')
+    vim.bo.filetype = 'markdown'
 
     vim.api.nvim_win_set_cursor(0, {2,0})
     vim.api.nvim_feedkeys("Onew item", "x", false)
@@ -70,27 +70,28 @@ describe("todo_lists", function()
 end)
 
 describe("handle_carridge_return", function()
+  -- the word itchy is here to ensure that c-x c-n doesn't select the first match in a later test
   -- luacheck: ignore
   local lines = [[
   - [ ] item 1
   - [ ] 
   - [ ] item 3
-  a normal line
+  a normal line itchy
 ]]
 
   it("Should return <CR> if pumvisible", function()
     local expected_lines = [[
   - [ ] item 1
-  - [ ] it
-  - [ ] 
+  - [ ] item
   - [ ] 
   - [ ] item 3
-  a normal line
+  a normal line itchy
 ]]
     utils.load_lines(lines)
-    vim.api.nvim_buf_set_option(0 ,'filetype', 'markdown')
+    vim.bo.filetype = 'markdown'
 
     vim.api.nvim_win_set_cursor(0, {1,0})
+    -- TODO this needs to be handled in code, or outside off!
     utils.send_keys("oit<C-X><C-N><CR>")
 
     local result = utils.buf_as_multiline()
@@ -103,10 +104,10 @@ describe("handle_carridge_return", function()
   - [ ] 
   - [ ] 
   - [ ] item 3
-  a normal line
+  a normal line itchy
 ]]
     utils.load_lines(lines)
-    vim.api.nvim_buf_set_option(0 ,'filetype', 'markdown')
+    vim.bo.filetype = 'markdown'
 
     vim.api.nvim_win_set_cursor(0, {1,0})
     utils.send_keys("A<cr>")
@@ -121,10 +122,10 @@ describe("handle_carridge_return", function()
 
 
   - [ ] item 3
-  a normal line
+  a normal line itchy
 ]]
     utils.load_lines(lines)
-    vim.api.nvim_buf_set_option(0 ,'filetype', 'markdown')
+    vim.bo.filetype = 'markdown'
 
     vim.api.nvim_win_set_cursor(0, {2,0})
     utils.send_keys("A<CR>")
@@ -139,11 +140,11 @@ describe("handle_carridge_return", function()
   - [ ] item 1
   - [ ] 
   - [ ] item 3
-  a normal line
+  a normal line itchy
 
 ]]
     utils.load_lines(lines)
-    vim.api.nvim_buf_set_option(0 ,'filetype', 'markdown')
+    vim.bo.filetype = 'markdown'
 
     vim.api.nvim_win_set_cursor(0, {4,0})
     utils.send_keys("A<CR>")
@@ -157,10 +158,10 @@ describe("handle_carridge_return", function()
   - [ ] 
   - [ ] item 3
   a nor
-  mal line
+  mal line itchy
 ]]
     utils.load_lines(lines)
-    vim.api.nvim_buf_set_option(0 ,'filetype', 'markdown')
+    vim.bo.filetype = 'markdown'
 
     vim.api.nvim_win_set_cursor(0, {4,7})
     utils.send_keys("i<CR>")

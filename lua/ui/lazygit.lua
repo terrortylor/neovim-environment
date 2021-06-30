@@ -52,8 +52,6 @@ local function open()
       is_open = nil
     end
 
-    -- TODO Why does the nvim 0.5 way work?
-    --vim.api.nvim_call_function("termopen", {"lazygit", {on_exit = close_lazygit}})
     vim.fn.termopen("lazygit", {on_exit = close_lazygit})
     vim.cmd("startinsert!")
   end

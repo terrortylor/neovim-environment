@@ -1,12 +1,8 @@
 local util = require('util.config')
 
-local global_variables = {
-  ["UltiSnipsExpandTrigger"]       = "<tab>",
-  ["UltiSnipsEditSplit"]           = "vertical",
-  -- TODO c-u isn't a great mapping as overrides builtin
-  ["UltiSnipsListSnippets"]        = "<c-u>",
-  ["UltiSnipsJumpForwardTrigger"]  = '<tab>',
-  ["UltiSnipsJumpBackwardTrigger"] = '<s-tab>',
-}
-
-util.set_variables(global_variables)
+vim.g.UltiSnipsExpandTrigger = "<tab>"
+vim.g.UltiSnipsEditSplit = "vertical"
+ -- TODO c-u isn't a great mapping as overrides builtin
+vim.g.UltiSnipsListSnippets = "<c-u>"
+vim.g.UltiSnipsJumpForwardTrigger = '<tab>'
+vim.g.UltiSnipsJumpBackwardTrigger = '<s-tab>'

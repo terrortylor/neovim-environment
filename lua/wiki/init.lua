@@ -83,7 +83,7 @@ end
 function M.set_filetype_if_path_matches()
   if M.is_wiki_file(M.opts.wikis) then
     -- TODO set this to just wiki and import markdown in ultisnips somehow?
-    api.nvim_buf_set_option(0, "filetype", "wiki.markdown")
+    vim.bo.filetype = "wiki.markdown"
   end
 end
 

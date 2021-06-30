@@ -23,7 +23,7 @@ render() {
 ]]
 
     utils.load_lines(input)
-    vim.api.nvim_buf_set_option(0 ,'filetype', 'javascriptreact')
+    vim.bo.filetype = 'javascriptreact'
 
     -- put cursor on new_state_value
     vim.api.nvim_win_set_cursor(0, {5,10})
