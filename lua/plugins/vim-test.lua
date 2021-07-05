@@ -22,6 +22,7 @@ plug.add({
         ["gtf"]     = "<cmd>TestFile<CR>",
         ["gts"]     = "<cmd>TestSuite<CR>",
         ["gtl"]     = "<cmd>TestLast<CR>",
+        ["gtt"]     = "<cmd>TestLast<CR>", -- this is just faster
         ["gtn"]     = "<cmd>TestNearest<CR>",
       },
     })
