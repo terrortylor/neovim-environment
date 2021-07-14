@@ -6,16 +6,12 @@ local autogroups = {
     {"WinEnter", "*", "setlocal cursorline"},
     {"WinLeave", "*", "setlocal nocursorline"}
   },
-  vim_rc_auto_write = {
-    -- FIXME call function that only runs update if file exists, i.e. not new
-    {"InsertLeave,TextChanged", "*", "lua require('config.function.filesystem').update_buffer()"}
-  },
   remove_trailing_whitespace = {
     -- FIXME this moves the cursor, so need to set mark and jump back
     {"BufWritePre", "*", [[%s/\s\+$//e]]}
   },
   return_to_last_edit_in_buffer = {
-    {"BufReadPost", "*", "lua require('config.function.autocommands').move_to_last_edit()"}
+    {"BufReadPost", "*", "lua require('ui.buffer').move_to_last_edit()"}
   },
 }
 

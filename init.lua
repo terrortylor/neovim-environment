@@ -122,6 +122,7 @@ local plugins = {
   "pa",
   "snake",
   "wiki",
+  "util.auto_update",
 }
 
 for i = 1, #plugins do
