@@ -50,6 +50,12 @@ local commands = {
   {
     "command!",
     "-nargs=0",
+    "SetCWDToBuffer",
+    "cd %:p:h"
+  },
+  {
+    "command!",
+    "-nargs=0",
     "IntelliJ",
     "lua require('config.intellij-mappings')"
   },

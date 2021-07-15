@@ -1,15 +1,10 @@
 local plug = require("pluginman")
 
 plug.add({
-  url = "neovim/nvim-lspconfig",
-  post_handler = function()
-    require("config.lsp")
-  end
-})
-
-plug.add({
   url = "hrsh7th/nvim-compe",
   post_handler = function()
+    vim.o.completeopt = "menuone,noselect"
+
     require'compe'.setup {
       enabled = true;
       autocomplete = true;
@@ -22,7 +17,14 @@ plug.add({
       max_abbr_width = 100;
       max_kind_width = 100;
       max_menu_width = 100;
-      documentation = true;
+      documentation = {
+        border = { '┌', '─', '┐', '│', '┘', '─', '└', '│',},
+        winhighlight = "NormalFloat:NormalFloat,FloatBorder:FloatBorder",
+        max_width = 120,
+        min_width = 60,
+        max_height = math.floor(vim.o.lines * 0.5),
+        min_height = 5,
+      };
 
       source = {
         ultisnips = {
@@ -62,21 +64,8 @@ plug.add({
         ["<C-Space>"] = {"compe#complete()", {silent = true, expr = true}},
         ["<CR>"]      = {crMap, {silent = true, expr = true}},
         ["<C-e>"]     = {"compe#close('<C-e>')", {silent = true, expr = true}},
-        -- ["<C-f>"]     = {"compe#scroll({ 'delta': +4 })", {silent = true, expr = true}},
-        -- This overwrites <c-d> for indenting back one, which is useful
-        -- ["<C-d>"]     = {"compe#scroll({ 'delta': -4 })", {silent = true, expr = true}},
       },
     })
 
   end
 })
-
-plug.add({
-  url = "kosayoda/nvim-lightbulb",
-  post_handler  = function()
-    require'nvim-lightbulb'.update_lightbulb {}
-    vim.cmd [[autocmd CursorHold,CursorHoldI * lua require'nvim-lightbulb'.update_lightbulb()]]
-    vim.api.nvim_set_option("updatetime", 500)
-  end
-})
-

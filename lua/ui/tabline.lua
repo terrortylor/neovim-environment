@@ -3,7 +3,7 @@ local highlights = require('util.highlights')
 local set_highlight = highlights.set_highlight
 local fg = highlights.guifg
 local bg = highlights.guibg
-local lsp_funcs = require('config.lsp.funcs')
+local lsp_funcs = require('util.lsp')
 local util = require('util.config')
 local get_user_input = require('util.input').get_user_input
 

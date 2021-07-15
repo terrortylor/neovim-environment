@@ -1,19 +1,30 @@
 local plug = require("pluginman")
 local create_mappings = require("util.config").create_mappings
 
+
 local M = {}
 
--- TODO finish this magic off!
+-- Opens nvim if closed, finding current buffer
+-- If nvim open and current window then close
+-- If nvim open and not current window then find current but and jump too
 function M.toggle_nvim()
-  local width = vim.api.nvim_get_option("columns")
-  local shift = math.floor(width / 3)
-  if shift < 30 then
-    shift = 30
+  local tree = require("nvim-tree")
+  local view = require("nvim-tree.view")
+  if view.win_open() then
+    if  view.get_winnr() == vim.api.nvim_get_current_win() then
+      view.close()
+      return
+    end
+  else
+    -- TODO have a max windth perhaps?
+    local width = vim.api.nvim_get_option("columns")
+    local shift = math.floor(width / 3)
+    if shift < 30 then
+      shift = 30
+    end
+    view.width = shift
   end
-  require'nvim-tree.view'.View.width = shift
-
-  -- if open then go to window, else open it
-  vim.cmd("NvimTreeToggle")
+  tree.find_file(true)
 end
 
 function M.setup()
@@ -45,7 +56,7 @@ function M.setup()
     post_handler  = function()
       create_mappings({
         n = {
-          ["<c-n>"] = "<cmd>lua require('plugins.nvim-tree').toggle_nvim()<CR>",
+          ["<c-n>"] = "<cmd>lua require('config.plugins.nvim-tree').toggle_nvim()<CR>",
         }
       })
     end

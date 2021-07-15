@@ -82,7 +82,7 @@ function M.setup()
           ["<leader>fg"] = "<cmd>lua require('telescope.builtin').live_grep()<CR>",
           ["<leader><space>"] = "<cmd>lua require('telescope.builtin').buffers()<CR>",
           ["<leader>fh"] = "<cmd>lua require('telescope.builtin').help_tags()<CR>",
-          ["<leader>ft"] = "<cmd>lua require('plugins.telescope').todo_picker()<CR>",
+          ["<leader>ft"] = "<cmd>lua require('config.plugins.telescope').todo_picker()<CR>",
           ["<leader>fs"] = "<cmd>lua require('telescope.builtin.lsp').dynamic_workspace_symbols()<CR>",
           -- todo nice to filter this only to errors
           ["<leader>fe"] = "<cmd>Telescope lsp_workspace_diagnostics<CR>",
