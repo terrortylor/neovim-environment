@@ -50,7 +50,7 @@ describe('ui.arglist', function()
   end)
 
   describe("edit_args_in_buffer", function()
-    it("Should create buffer and set lines to current arglist", function()
+    it(function()
       local float= mock(require("ui.window.float"), true)
       local buffer= mock(require("util.buffer"), true)
       local orig_arg_list = {"arg1", "arg2"}
@@ -59,10 +59,10 @@ describe('ui.arglist', function()
       stub(testModule, "set_arglist")
       api.nvim_create_buf.returns(101)
       buffer.get_all_lines.on_call_with(101).returns(edited_arg_list)
-      local opts = {float = "opts"}
+      local opts = {float = "opts", border = "double"}
       float.gen_centered_float_opts.returns(opts)
       -- dummy mock func to test callback inners
-      float.open_float = function(_, _, _, _, callback) callback() end
+      float.open_float = function(_, _, callback) callback() end
       spy.on(float, "open_float")
 
       testModule.edit_args_in_buffer()
@@ -72,7 +72,7 @@ describe('ui.arglist', function()
       assert.stub(api.nvim_buf_set_lines).was_called_with(101, 0, 0, false, orig_arg_list)
       -- test creates popup window
       assert.stub(float.gen_centered_float_opts).was_called_with(0.8, 0.8, true)
-      assert.stub(float.open_float).was_called_with(" Edit arg list ", true, 101, opts, match.is_function())
+      assert.stub(float.open_float).was_called_with(101, opts, match.is_function())
       -- test edited arg list is updated, happens in callback
       assert.stub(testModule.set_arglist).was_called_with(edited_arg_list)
       mock.revert(float)
@@ -90,7 +90,7 @@ describe('ui.arglist', function()
       opts = {float = "opts"}
       float.gen_centered_float_opts.returns(opts)
       -- dummy mock func to test callback inners
-      float.open_float = function(_, _, _, _, callback) callback() end
+      float.open_float = function(_, _, callback) callback() end
       spy.on(float, "open_float")
 
       testModule.edit_args_in_buffer()
@@ -115,7 +115,7 @@ describe('ui.arglist', function()
       opts = {float = "opts"}
       float.gen_centered_float_opts.returns(opts)
       -- dummy mock func to test callback inners
-      float.open_float = function(_, _, _, _, callback) callback() end
+      float.open_float = function(_, _, callback) callback() end
       spy.on(float, "open_float")
 
       testModule.edit_args_in_buffer()
@@ -124,6 +124,6 @@ describe('ui.arglist', function()
       assert.stub(api.nvim_buf_set_lines).was_called_with(101, 0, 2, false, orig_arg_list)
       -- test call back func called though
       assert.stub(testModule.set_arglist).was_called_with(edited_arg_list)
-    end)
+    end, "Should create buffer and set lines to current arglist")
   end)
 end)
