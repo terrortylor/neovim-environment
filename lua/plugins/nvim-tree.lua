@@ -1,5 +1,4 @@
 local plug = require("pluginman")
-local create_mappings = require("util.config").create_mappings
 
 
 local M = {}
@@ -54,9 +53,11 @@ function M.setup()
   plug.add({
     url = "kyazdani42/nvim-tree.lua",
     post_handler  = function()
+      local create_mappings = require("util.config").create_mappings
+
       create_mappings({
         n = {
-          ["<c-n>"] = "<cmd>lua require('config.plugins.nvim-tree').toggle_nvim()<CR>",
+          ["<c-n>"] = "<cmd>lua require('plugins.nvim-tree').toggle_nvim()<CR>",
         }
       })
     end

@@ -13,23 +13,4 @@ require("config.autogroups")
 require("config.mappings")
 require("config.commands")
 require("config.abbreviations")
-require("config.external-plugins")
-
--- Custom Plugins
-local plugins = {
-  "git",
-  "ui.arglist",
-  "ui.tabline",
-  "ui.statusline",
-  "tmux",
-  "alternate",
-  "pa",
-  "snake",
-  "wiki",
-  "util.auto_update",
-}
-
-for i = 1, #plugins do
-  require(plugins[i]).setup()
-end
-
+require("config.plugins")

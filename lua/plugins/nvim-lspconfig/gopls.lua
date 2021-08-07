@@ -1,4 +1,4 @@
-local common = require('config.plugins.nvim-lspconfig.common')
+local common = require('plugins.nvim-lspconfig.common')
 
 -- GO111MODULE=on go get golang.org/x/tools/gopls@latest
 require'lspconfig'.gopls.setup{

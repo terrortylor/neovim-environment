@@ -57,4 +57,4 @@ local function open()
   end
 end
 
-return open()
+return {open = open}

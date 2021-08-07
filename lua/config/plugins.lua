@@ -68,44 +68,59 @@ vim.g.vim_markdown_no_extensions_in_markdown = 1
 
 -- Autosave when following links
 vim.g.vim_markdown_autowrite = 1
--- require("config.plugins.vim-markdown")
+-- require("plugins.vim-markdown")
 
 -- quick navigation around buffer
-require("config.plugins.hop").setup()
+require("plugins.hop").setup()
 
 -- trying to break some bad habbits
--- require("config.plugins.vim-hardtime").setup()
+-- require("plugins.vim-hardtime").setup()
 
 -- plug.add("AndrewRadev/switch.vim")
 
-require("config.plugins.nvim-tree").setup()
-require("config.plugins.telescope").setup()
+require("plugins.nvim-tree").setup()
+require("plugins.telescope").setup()
 
 -- TODO make optional, see init.vim so loads if python3
 plug.add({
   url = "SirVer/ultisnips",
   post_handler = function()
-    require("config.plugins.ultisnips")
+    require("plugins.ultisnips")
   end
 })
 
 -- plug.add("fatih/vim-go")
+plug.add({
+  url = "ray-x/go.nvim",
+  post_handler = function ()
+    -- Import on save
+    require('util.config').create_autogroups({
+      go_format_imports_on_save = {
+        {"BufWritePre", "*", ":silent! lua require('go.format').goimport()"}
+      },
+    })
+
+    require 'go'.setup({
+      goimport = 'gopls',
+    })
+  end
+})
 
   --plug.add({
   --url = "ludovicchabant/vim-gutentags",
   --post_handler = function()
-  --  require("config.plugins.gutentags")
+  --  require("plugins.gutentags")
   --end
   --})
 
 -- tmux/vim seamless window/pane navigation
-require("config.plugins.tmuxnavigator")
+require("plugins.tmuxnavigator")
 
 -- add syntax colour to colours and colour codes in buffers
-require("config.plugins.nvim-colorizer")
+require("plugins.nvim-colorizer")
 
 -- add git line status to signs column
-require("config.plugins.gitsigns").setup()
+require("plugins.gitsigns").setup()
 
 -- plug.add("machakann/vim-sandwich")
 
@@ -115,19 +130,40 @@ require("config.plugins.gitsigns").setup()
 -- vim.g.lexima_map_escape = ""
 
 -- LSP Configurations and setup entry point
-require("config.plugins.nvim-lspconfig")
+require("plugins.nvim-lspconfig")
 
 -- Completion
-require("config.plugins.nvim-compe")
-require("config.plugins.nvim-lightbulb")
+require("plugins.nvim-compe")
+require("plugins.nvim-lightbulb")
+-- signature help
+plug.add("ray-x/lsp_signature.nvim")
 
-require("config.plugins.treesitter")
+require("plugins.treesitter")
 
 -- run tests in a project at various levels
-require("config.plugins.vim-test")
+-- require("plugins.vim-test")
 
 -- setup custom colour overrides
 require("config.colour-overrides").setup()
 
 plug.install()
 
+-- Custom Plugins
+local plugins = {
+  "git",
+  "ui.arglist",
+  "ui.tabline",
+  "ui.statusline",
+  "tmux",
+  "alternate",
+  "generator",
+  "pa",
+  "test-runner",
+  "snake",
+  "wiki",
+  "util.auto_update",
+}
+
+for i,p in pairs(plugins) do
+  require(p).setup()
+end

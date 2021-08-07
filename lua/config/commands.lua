@@ -12,7 +12,7 @@ local commands = {
     "command!",
     "-nargs=0",
     "Lazygit",
-    "lua require('ui.lazygit')"
+    "lua require('ui.lazygit').open()"
   },
   {
     "command!",

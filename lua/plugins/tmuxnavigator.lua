@@ -1,5 +1,4 @@
 local plug = require("pluginman")
-local util = require("util.config")
 
 plug.add({
   url = "christoomey/vim-tmux-navigator",

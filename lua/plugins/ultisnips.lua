@@ -1,5 +1,3 @@
-local util = require('util.config')
-
 vim.g.UltiSnipsExpandTrigger = "<tab>"
 vim.g.UltiSnipsEditSplit = "vertical"
  -- TODO c-u isn't a great mapping as overrides builtin

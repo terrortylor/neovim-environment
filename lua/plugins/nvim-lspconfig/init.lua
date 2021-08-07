@@ -9,11 +9,11 @@ local guibg = hl.guibg
 plug.add({
   url = "neovim/nvim-lspconfig",
   post_handler = function()
-    require("config.plugins.nvim-lspconfig.sumneko")
-    require("config.plugins.nvim-lspconfig.tsserver")
-    require("config.plugins.nvim-lspconfig.gopls")
-    require("config.plugins.nvim-lspconfig.bashls")
-    require("config.plugins.nvim-lspconfig.efm")
+    require("plugins.nvim-lspconfig.sumneko")
+    require("plugins.nvim-lspconfig.tsserver")
+    require("plugins.nvim-lspconfig.gopls")
+    require("plugins.nvim-lspconfig.bashls")
+    require("plugins.nvim-lspconfig.efm")
   end,
   highlight_handler = function()
     local c_error = c.red1

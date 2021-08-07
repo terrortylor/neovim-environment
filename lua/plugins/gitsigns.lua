@@ -1,8 +1,4 @@
 local plug = require("pluginman")
-local c = require('config.colours').c
-local hl = require('util.highlights')
-local set_highlight = hl.set_highlight
-local fg = hl.guifg
 
 local M = {}
 
@@ -50,6 +46,11 @@ function M.setup()
       }
     end,
     highlight_handler = function()
+      local c = require('config.colours').c
+      local hl = require('util.highlights')
+      local set_highlight = hl.set_highlight
+      local fg = hl.guifg
+
       set_highlight("GitGutterAdd", fg(c.green2))
       set_highlight("GitGutterChange", fg(c.blue3))
       set_highlight("GitGutterDelete", fg(c.red2))

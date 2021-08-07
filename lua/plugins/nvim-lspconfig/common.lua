@@ -18,20 +18,20 @@ local function set_mappings(client, bufnr)
   local mappings = {
     n = {
       -- TODO have a func to prefix vsplit/splt/tabnew wrapper
-      ['gD'] = '<Cmd>lua vim.lsp.buf.declaration()<CR>',
-      ['gsD'] = '<Cmd>vsplit <BAR> lua vim.lsp.buf.declaration()<CR>',
-      ['ghD'] = '<Cmd>split <BAR> lua vim.lsp.buf.declaration()<CR>',
+      ['gD'] = '<Cmd>Telescope lsp_definitions<CR>',
+      ['gsD'] = '<Cmd>vsplit <BAR> Telescope lsp_definitions<CR>', -- overkill but i like these mappings
+      ['ghD'] = '<Cmd>split <BAR> Telescope lsp_definitions<CR>', -- overkill but i like these mappings
       ['gd'] = '<Cmd>lua vim.lsp.buf.definition()<CR>',
       ['gsd'] = '<Cmd>vsplit <BAR> lua vim.lsp.buf.definition()<CR>',
       ['ghd'] = '<Cmd>split <BAR> lua vim.lsp.buf.definition()<CR>',
     -- TODO save and restore mark?
       ['gtd'] = 'mt<Cmd>tabnew % <CR> `t <Cmd> lua vim.lsp.buf.definition()<CR>',
       ['K'] = '<Cmd>lua vim.lsp.buf.hover()<CR>',
-      ['ca'] = '<Cmd>lua require("config.plugins.telescope").dropdown_code_actions()<CR>',
+      ['ca'] = '<Cmd>lua require("plugins.telescope").dropdown_code_actions()<CR>',
       ['cf'] = '<Cmd>lua require("util.lsp").fix_first_code_action()<CR>',
-      ['gI'] = '<cmd>lua vim.lsp.buf.implementation()<CR>',
-      ['gsI'] = '<cmd>vsplit <BAR> lua vim.lsp.buf.implementation()<CR>',
-      ['ghI'] = '<cmd>split <BAR> lua vim.lsp.buf.implementation()<CR>',
+      ['gI'] = '<cmd>Telescope lsp_implementations<CR>',
+      -- ['gsI'] = '<cmd>vsplit <BAR> lua vim.lsp.buf.implementation()<CR>',
+      -- ['ghI'] = '<cmd>split <BAR> lua vim.lsp.buf.implementation()<CR>',
       ['<space>gs'] = '<cmd>Telescope lsp_document_symbols<CR>',
       ['gK'] = '<cmd>lua vim.lsp.buf.signature_help()<CR>',
       -- ['<space>wa'] = '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>',
@@ -43,6 +43,7 @@ local function set_mappings(client, bufnr)
       ['<space>rn'] = '<cmd>lua vim.lsp.buf.rename()<CR>',
       ['gr'] = '<Cmd>Telescope lsp_references<CR>',
       ['<space>e'] = '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>',
+      ['<space>ge'] = '<cmd>Telescope lsp_workspace_diagnostics<CR>',
       ['[d'] = '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>',
       [']d'] = '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>',
       ['<space>th'] = '<cmd>lua require("util.lsp").diagnostic_toggle_virtual_text()<CR>',
@@ -113,6 +114,8 @@ function M.on_attach(client, bufnr)
     update_in_insert = false,
     virtual_text = false
   })
+
+  require "lsp_signature".on_attach()
 end
 
 return M

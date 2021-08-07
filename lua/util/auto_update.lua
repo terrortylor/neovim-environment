@@ -37,18 +37,20 @@ function M.update_buffer()
         return
       end
 
-      local skip = false
+      -- sometimes it's nice to override stuff :P
+      local readonly = vim.api.nvim_buf_get_option(0, "readonly")
+      if readonly then
+        return
+      end
+
       local filetype = vim.api.nvim_buf_get_option(0, "filetype")
       for _,ft in pairs(M.opts.blacklist_filetypes) do
         if ft == filetype then
-          skip = true
-          break
+          return
         end
       end
 
-      if not skip then
-        vim.cmd(":update")
-      end
+      vim.cmd(":update")
     end
   end
 end
