@@ -6,7 +6,10 @@
 -- * Last - the last stategy run
 local api = vim.api
 local log = require("util.log")
-local runner = require("test.runner")
+local runner = require("test-runner.runner")
+local view = require('test-runner.view')
+local draw = require('ui.window.draw')
+
 local M = {}
 
 M.filetype = {
@@ -14,9 +17,18 @@ M.filetype = {
     {
       rule = "/lua/",
       command = "busted",
-      args = {"-m", "./lua/?.lua;./lua/?/?.lua;./lua/?/init.lua"}
+      args = {"-m", "./lua/?.lua;./lua/?/?.lua;./lua/?/init.lua"},
+      errorformat = "",
     }
-  }
+  },
+  typescript = {
+    {
+      rule = "",
+      command = "yarn",
+      args = {"test"},
+      errorformat = [[%.%#\ at\ %.%#\ (%f:%l:%c),%-G%.%#]],
+    }
+  },
 }
 
 local commands = {
@@ -29,7 +41,7 @@ local commands = {
 local last_run
 
 local function get_filetype_module(filetype)
-  local result, ft_args = pcall(require, "test.filetypes." .. filetype)
+  local result, ft_args = pcall(require, "test-runner.filetypes." .. filetype)
   if not result then
     log.error("No filetype ft_args found")
     return nil
@@ -64,6 +76,7 @@ function M.run(strategy)
        if not last_run then
          log.error("No tests run yet")
        end
+       -- TODO should checkig command hasn't changed be overkill
        args = last_run
      else
        log.error("Unsupported strategy")
@@ -71,7 +84,11 @@ function M.run(strategy)
      end
      last_run = args
 
-     runner.run(config.command, args)
+     view.create_result_scratch_buf()
+     draw.open_draw(view.result_buf)
+
+     runner.run(config.command, args, configs.errorformat, view.schedule_add_lines)
+
      return
    end
  end
@@ -83,10 +100,19 @@ function M.setup()
       "command!",
       "-nargs=0",
       k,
-      "lua require('test').run('"..v.."')"
+      "lua require('test-runner').run('"..v.."')"
     }
     vim.cmd(table.concat(command, " "))
   end
+  require('util.config').create_mappings({
+    n = {
+      ["gtf"]     = "<cmd>TestFile<CR>",
+      ["gts"]     = "<cmd>TestSuite<CR>",
+      ["gtl"]     = "<cmd>TestLast<CR>",
+      ["gtt"]     = "<cmd>TestLast<CR>", -- this is just faster
+      ["gtn"]     = "<cmd>TestNearest<CR>",
+    }
+  })
 end
 
 return M
