@@ -10,9 +10,10 @@ plug.setup()
 
 -- colour shceme
 plug.add({
-  url = "jacoborus/tender.vim",
+  url = "terrortylor/zephyr-nvim",
+  branch = "main",
   post_handler = function()
-    vim.cmd("colorscheme tender")
+    vim.cmd("colorscheme zephyr")
   end
 })
 

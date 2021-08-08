@@ -162,28 +162,6 @@ function M.setup()
         }
       }
     end,
-    highlight_handler = function ()
-      local c = require('config.colours').c
-      local hl = require('util.highlights')
-      local set_highlight = hl.set_highlight
-      local fg = hl.guifg
-
-      set_highlight("TelescopeSelection", fg(c.blue1))
-      set_highlight("TelescopeSelectionCaret", fg(c.green2))
-      set_highlight("TelescopeMultiSelection", fg(c.blue1))
-      set_highlight("TelescopeNormal", fg(c.gandalf))
-
-      set_highlight("TelescopeBorder", fg(c.yellow2))
-      set_highlight("TelescopePromptBorder", fg(c.green2))
-      set_highlight("TelescopeResultsBorder", fg(c.yellow1))
-      set_highlight("TelescopePreviewBorder", fg(c.yellow1))
-
-      set_highlight("TelescopeMatching", fg(c.green2))
-      set_highlight("TelescopePromptPrefix", fg(c.red1))
-
-    end
-
-
   })
 
   -- adds github pull integration into telescope
