@@ -13,4 +13,36 @@ require("config.autogroups")
 require("config.mappings")
 require("config.commands")
 require("config.abbreviations")
+
+local execute = vim.api.nvim_command
+local fn = vim.fn
+
+local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
+
+if fn.empty(fn.glob(install_path)) > 0 then
+  fn.system({'git', 'clone', 'https://github.com/wbthomason/packer.nvim', install_path})
+  execute 'packadd packer.nvim'
+end
+
 require("config.plugins")
+
+-- Custom Plugins
+local plugins = {
+  "git",
+  "ui.arglist",
+  "ui.tabline",
+  "ui.statusline",
+  "tmux",
+  "alternate",
+  "generator",
+  "pa",
+  "test-runner",
+  "snake",
+  "wiki",
+  "util.auto_update",
+}
+
+for i,p in pairs(plugins) do
+  require(p).setup()
+end
+

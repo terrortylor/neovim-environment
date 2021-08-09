@@ -1,19 +1,8 @@
-local plug = require("pluginman")
-
 local M = {}
 
 function M.setup()
-  plug.add({
-    url = "lewis6991/gitsigns.nvim",
-    branch = "main",
-    post_handler = function()
       require('gitsigns').setup {
         signs = {
-          -- add          = {hl = 'GitGutterAdd'   , text = '+'},
-          -- change       = {hl = 'GitGutterChange', text = '~'},
-          -- delete       = {hl = 'GitGutterDelete', text = '_'},
-          -- topdelete    = {hl = 'GitGutterDelete', text = '‾'},
-          -- changedelete = {hl = 'GitGutterChange', text = '~'},
           add          = {hl = 'GitGutterAdd'   , text = '▍'},
           change       = {hl = 'GitGutterChange', text = '▍'},
           delete       = {hl = 'GitGutterDelete', text = '▂'},
@@ -35,6 +24,7 @@ function M.setup()
           ['n <leader>hp'] = '<cmd>lua require"gitsigns".preview_hunk()<CR>',
 
           -- Text objects
+          -- TODO check these are working
           ['o ih'] = ':<C-U>lua require"gitsigns".text_object()<CR>',
           ['x ih'] = ':<C-U>lua require"gitsigns".text_object()<CR>'
         },
@@ -44,18 +34,6 @@ function M.setup()
         -- sign_priority = 15,
         status_formatter = nil, -- Use default
       }
-    end,
-    highlight_handler = function()
-      local c = require('config.colours').c
-      local hl = require('util.highlights')
-      local set_highlight = hl.set_highlight
-      local fg = hl.guifg
-
-      set_highlight("GitGutterAdd", fg(c.green2))
-      set_highlight("GitGutterChange", fg(c.blue3))
-      set_highlight("GitGutterDelete", fg(c.red2))
-    end
-  })
 end
 
 return M

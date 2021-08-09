@@ -1,6 +1,3 @@
-local plug = require("pluginman")
-
-
 local M = {}
 
 -- Opens nvim if closed, finding current buffer
@@ -27,7 +24,6 @@ function M.toggle_nvim()
 end
 
 function M.setup()
-  -- These need to be set before the plugin in loaded
   vim.g.nvim_tree_show_icons = {
     git = 0,
     folders = 1,
@@ -50,17 +46,12 @@ function M.setup()
   vim.g.nvim_tree_disable_window_picker = 1
   -- vim.g.nvim_tree_width_allow_resize = 1
 
-  plug.add({
-    url = "kyazdani42/nvim-tree.lua",
-    post_handler  = function()
-      local create_mappings = require("util.config").create_mappings
+  local create_mappings = require("util.config").create_mappings
 
-      create_mappings({
-        n = {
-          ["<c-n>"] = "<cmd>lua require('plugins.nvim-tree').toggle_nvim()<CR>",
-        }
-      })
-    end
+  create_mappings({
+    n = {
+      ["<c-n>"] = "<cmd>lua require('plugins.nvim-tree').toggle_nvim()<CR>",
+    }
   })
 end
 

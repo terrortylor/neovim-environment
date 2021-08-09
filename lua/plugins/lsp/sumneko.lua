@@ -1,4 +1,4 @@
-local common = require('plugins.nvim-lspconfig.common')
+local common = require('plugins.lsp.common')
 -- sumneko
 local system_name
 if vim.fn.has("mac") == 1 then

@@ -1,5 +1,3 @@
-local plug = require("pluginman")
-
 local M = {}
 
 local thin_border_chars= {
@@ -119,55 +117,38 @@ function M.todo_picker()
 end
 
 function M.setup()
-  -- TODO update plugin man to have depedencies so not loaded until they are
-  plug.add("nvim-lua/popup.nvim")
-  plug.add("nvim-lua/plenary.nvim")
+  local create_mappings = require("util.config").create_mappings
 
-  -- Requires:
-  -- * nvim-lua/popup.nvim
-  -- * nvim-lua/plenary.vim
-  plug.add({
-    url = "nvim-telescope/telescope.nvim",
-    post_handler = function()
-      local create_mappings = require("util.config").create_mappings
+  local mappings = {
+    n = {
+      ["<leader>ff"] = "<cmd>lua require('telescope.builtin').find_files()<CR>",
+      -- TODO add func so if no .git dir is found then open from CWD
+      -- luacheck: ignore
+      -- https://github.com/nvim-telescope/telescope.nvim/wiki/Configuration-Recipes#falling-back-to-find_files-if-git_files-cant-find-a-git-directory
+      ["<c-p>"] = "<cmd>lua require('telescope.builtin').git_files()<CR>",
+      ["<leader>fg"] = "<cmd>lua require('telescope.builtin').live_grep()<CR>",
+      ["<leader><space>"] = "<cmd>lua require('telescope.builtin').buffers()<CR>",
+      ["<leader>fh"] = "<cmd>lua require('telescope.builtin').help_tags()<CR>",
+      ["<leader>ft"] = "<cmd>lua require('plugins.telescope').todo_picker()<CR>",
+      ["<leader>fs"] = "<cmd>lua require('telescope.builtin.lsp').dynamic_workspace_symbols()<CR>",
+      -- todo nice to filter this only to errors
+      ["<leader>fe"] = "<cmd>Telescope lsp_workspace_diagnostics<CR>",
+    }
+  }
+  create_mappings(mappings)
 
-      local mappings = {
-        n = {
-          ["<leader>ff"] = "<cmd>lua require('telescope.builtin').find_files()<CR>",
-          -- TODO add func so if no .git dir is found then open from CWD
-          -- luacheck: ignore
-          -- https://github.com/nvim-telescope/telescope.nvim/wiki/Configuration-Recipes#falling-back-to-find_files-if-git_files-cant-find-a-git-directory
-          ["<c-p>"] = "<cmd>lua require('telescope.builtin').git_files()<CR>",
-          ["<leader>fg"] = "<cmd>lua require('telescope.builtin').live_grep()<CR>",
-          ["<leader><space>"] = "<cmd>lua require('telescope.builtin').buffers()<CR>",
-          ["<leader>fh"] = "<cmd>lua require('telescope.builtin').help_tags()<CR>",
-          ["<leader>ft"] = "<cmd>lua require('plugins.telescope').todo_picker()<CR>",
-          ["<leader>fs"] = "<cmd>lua require('telescope.builtin.lsp').dynamic_workspace_symbols()<CR>",
-          -- todo nice to filter this only to errors
-          ["<leader>fe"] = "<cmd>Telescope lsp_workspace_diagnostics<CR>",
+  local actions = require('telescope.actions')
+  require('telescope').setup{
+    defaults = {
+      mappings = {
+        i = {
+          ["<esc>"] = actions.close, -- TODO this isn't working
+          ["<c-j>"] = actions.move_selection_next,
+          ["<c-k>"] = actions.move_selection_previous,
         }
       }
-      create_mappings(mappings)
-
-      local actions = require('telescope.actions')
-      require('telescope').setup{
-        defaults = {
-          mappings = {
-            i = {
-              ["<esc>"] = actions.close, -- TODO this isn't working
-              ["<c-j>"] = actions.move_selection_next,
-              ["<c-k>"] = actions.move_selection_previous,
-            }
-          }
-        }
-      }
-    end,
-  })
-
-  -- adds github pull integration into telescope
-  -- Requires:
-  -- * nvim-telescope/telescope.nvim
-  plug.add('nvim-telescope/telescope-github.nvim')
+    }
+  }
 end
 
 return M

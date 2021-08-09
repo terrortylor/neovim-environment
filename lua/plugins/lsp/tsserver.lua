@@ -1,4 +1,4 @@
-local common = require('plugins.nvim-lspconfig.common')
+local common = require('plugins.lsp.common')
 
 require'lspconfig'.tsserver.setup{
   on_attach = common.on_attach,

@@ -1,170 +1,225 @@
--- Download and load my plugin manager if not on the path
-local install_path = vim.api.nvim_call_function("stdpath", {"data"}) .. "/site/pack/myplugins/start/nvim-pluginman"
-local fs = require("util.filesystem")
-if not fs.is_directory(install_path) then
-  vim.cmd("!git clone https://github.com/terrortylor/nvim-pluginman " .. install_path)
-  vim.cmd("packadd nvim-pluginman")
-end
-local plug = require("pluginman")
-plug.setup()
+return require('packer').startup(function()
+  use 'wbthomason/packer.nvim'
 
--- colour shceme
-plug.add({
-  url = "terrortylor/zephyr-nvim",
-  branch = "main",
-  post_handler = function()
-    vim.cmd("colorscheme zephyr")
-  end
-})
+  -- colour scheme
+  use { "terrortylor/zephyr-nvim", config = function() vim.cmd("colorscheme zephyr") end }
 
--- comment toggler
-plug.add({
-  url = "terrortylor/nvim-comment",
-  package = "myplugins",
-  -- TODO make opt and main defaults
-  branch = "main",
-  post_handler = function()
-    require('nvim_comment').setup({
-      comment_empty = false
-    })
-  end
-})
+  -- toggle comments
+  use {
+    "terrortylor/nvim-comment",
+    config = function()
+      require('nvim_comment').setup({
+        comment_empty = false
+      })
+    end
+  }
 
--- http client
-plug.add({
-  url = "terrortylor/nvim-httpclient",
-  package = "myplugins",
-  -- TODO make opt and main defaults
-  branch = "main",
-  post_handler = function()
-    require('nvim-httpclient').setup()
-  end
-})
+  -- navigation
+  use {
+    {
+      -- tmux/vim magic!
+      "christoomey/vim-tmux-navigator",
+      config = function()
+        -- vim.g.tmux_navigator_no_mappings = 1
+        vim.g.tmux_navigator_disable_when_zoomed = 1
+        vim.g.tmux_navigator_save_on_switch = 2
 
+      end
+    },
+    -- quickly jump to locations in the visible buffer
+    {
+      "phaazon/hop.nvim",
+      config = function()
+        require'hop'.setup {
+          keys = 'etovxqpdygfblzhckisuran',
+        }
 
--- plugins for testing neovim
--- Used for testing, has luasert embeded and doesn't require luarocks
--- TODO these should only be loaded if file ends in _spec.lua
--- but requires getting running `PlenaryBustedDirectory` working first with minimal `.vim` file
-plug.add("nvim-lua/plenary.nvim")
+        vim.api.nvim_set_keymap("n", "<leader>fj", ":HopWord<CR>", {noremap = true, silent = true})
+      end
+    },
+    {
+      "kyazdani42/nvim-tree.lua",
+      config = [[require("plugins.nvim-tree").setup()]]
+    }
+  }
 
--- Uses conceal to get terminal colours, used by plenary.nvim
-plug.add({
-  url = "norcalli/nvim-terminal.lua",
-  post_handler = function()
-    require'terminal'.setup()
-  end
-})
+  -- neovim general library, dependancy for many plugins, also a neovim lua test runner :)
+  -- nvim-terminal provides colour code conceal for nicer output
+  use { "nvim-lua/plenary.nvim", requires = {"norcalli/nvim-terminal.lua"}, config = function()
+    require("terminal").setup()
+  end}
 
--- plug.add({url = "godlygeek/tabular", loaded = "opt"})
--- tabular needs to be sourced before vim-markdown
--- according to the repository site
-
-vim.g.markdown_fenced_languages = {"bash=sh", "sh", "ruby"}
-
-plug.add("plasticboy/vim-markdown")
--- This is for plasticboy/vim-markdown
--- Don't require .md extension
-vim.g.vim_markdown_no_extensions_in_markdown = 1
-
--- Autosave when following links
-vim.g.vim_markdown_autowrite = 1
--- require("plugins.vim-markdown")
-
--- quick navigation around buffer
-require("plugins.hop").setup()
-
--- trying to break some bad habbits
--- require("plugins.vim-hardtime").setup()
-
--- plug.add("AndrewRadev/switch.vim")
-
-require("plugins.nvim-tree").setup()
-require("plugins.telescope").setup()
-
--- TODO make optional, see init.vim so loads if python3
-plug.add({
-  url = "SirVer/ultisnips",
-  post_handler = function()
-    require("plugins.ultisnips")
-  end
-})
-
--- plug.add("fatih/vim-go")
-plug.add({
-  url = "ray-x/go.nvim",
-  post_handler = function ()
-    -- Import on save
-    require('util.config').create_autogroups({
-      go_format_imports_on_save = {
-        {"BufWritePre", "*", ":silent! lua require('go.format').goimport()"}
+  -- telescope
+  use {
+    {
+      "nvim-telescope/telescope.nvim",
+      requires = {
+        "nvim-lua/popup.nvim",
+        "nvim-lua/plenary.nvim"
       },
-    })
+      config = [[require("plugins.telescope").setup()]]
+    },
+    {
+      -- adds github pull integration into telescope
+      "nvim-telescope/telescope-github.nvim",
+      requires = {
+        "nvim-telescope/telescope.nvim"
+      },
+    }
+  }
 
-    require('go').setup({
-      goimport = 'gopls',
-    })
-  end
-})
+  -- treesitter
+  use {
+    {
+      "nvim-treesitter/nvim-treesitter",
+      config = function()
+        require'nvim-treesitter.configs'.setup {
+          ensure_installed = {"javascript", "typescript", "lua", "go"},
+          highlight = {
+            enable = true,
+          },
+          query_linter = {
+            enable = true,
+            use_virtual_text = true,
+            lint_events = {"BufWrite", "CursorHold"},
+          },
+        }
+      end
+    },
+    {
+      "nvim-treesitter/playground",
+      opt = true,
+      cmd = {"TSPlaygroundToggle"},
+      requires = {
+        "nvim-treesitter/nvim-treesitter",
+      }
+    }
+  }
 
-  --plug.add({
-  --url = "ludovicchabant/vim-gutentags",
-  --post_handler = function()
-  --  require("plugins.gutentags")
-  --end
-  --})
+  -- snipets
+  use {
+    "SirVer/ultisnips",
+    config = function()
+      vim.g.UltiSnipsExpandTrigger = "<tab>"
+      vim.g.UltiSnipsEditSplit = "vertical"
+      -- TODO c-u isn't a great mapping as overrides builtin
+      vim.g.UltiSnipsListSnippets = "<c-u>"
+      vim.g.UltiSnipsJumpForwardTrigger = '<tab>'
+      vim.g.UltiSnipsJumpBackwardTrigger = '<s-tab>'
+    end
+  }
 
--- tmux/vim seamless window/pane navigation
-require("plugins.tmuxnavigator")
+  -- add some colour to colors and colour codes in buffers
+  use {
+    "norcalli/nvim-colorizer.lua",
+    opt = true,
+    cmd = {"ColorizerAttachToBuffer", "ColorizerDetachFromBuffer",
+    "ColorizerReloadAllBuffers", "ColorizerToggle"},
+    config = function()
+      require'colorizer'.setup()
+    end
+  }
 
--- add syntax colour to colours and colour codes in buffers
-require("plugins.nvim-colorizer")
+  -- visual sugar
+  use {
+    -- git signs
+    {
+      "lewis6991/gitsigns.nvim",
+      config = [[require("plugins.gitsigns").setup()]],
+    },
+    -- show lightbulb when code action
+    {
+      "kosayoda/nvim-lightbulb",
+      config  = function()
+        require'nvim-lightbulb'.update_lightbulb {}
 
--- add git line status to signs column
-require("plugins.gitsigns").setup()
+        require('util.config').create_autogroups({
+          return_to_last_edit_in_buffer = {
+            {"CursorHold,CursorHoldI", "*", "lua require'nvim-lightbulb'.update_lightbulb()"}
+          }})
 
--- plug.add("machakann/vim-sandwich")
+        vim.api.nvim_set_option("updatetime", 500)
+      end
+    },
+    -- function signiture help in insert mode
+    {
+      "ray-x/lsp_signature.nvim"
+    }
+  }
 
--- Auto Pairs
--- plug.add("cohama/lexima.vim")
--- TODO handle for both cases? whats the effect of disabelling in lexima
--- vim.g.lexima_map_escape = ""
+  -- language server
+  use {
+    "neovim/nvim-lspconfig",
+    config = function()
+      require("plugins.lsp.sumneko")
+      require("plugins.lsp.tsserver")
+      require("plugins.lsp.gopls")
+      require("plugins.lsp.bashls")
+      require("plugins.lsp.efm")
+    end
+  }
 
--- LSP Configurations and setup entry point
-require("plugins.nvim-lspconfig")
+  -- completion
+  use {
+    "hrsh7th/nvim-compe",
+    config = [[require("plugins.nvim-compe").setup()]],
+  }
 
--- Completion
-require("plugins.nvim-compe")
-require("plugins.nvim-lightbulb")
--- signature help
-plug.add("ray-x/lsp_signature.nvim")
+end)
 
-require("plugins.treesitter")
+-- -- http client
+-- plug.add({
+--   url = "terrortylor/nvim-httpclient",
+--   package = "myplugins",
+--   -- TODO make opt and main defaults
+--   branch = "main",
+--   post_handler = function()
+--     require('nvim-httpclient').setup()
+--   end
+-- })
 
--- run tests in a project at various levels
--- require("plugins.vim-test")
 
--- setup custom colour overrides
-require("config.colour-overrides").setup()
+-- -- plug.add({url = "godlygeek/tabular", loaded = "opt"})
+-- -- tabular needs to be sourced before vim-markdown
+-- -- according to the repository site
 
-plug.install()
+-- vim.g.markdown_fenced_languages = {"bash=sh", "sh", "ruby"}
 
--- Custom Plugins
-local plugins = {
-  "git",
-  "ui.arglist",
-  "ui.tabline",
-  "ui.statusline",
-  "tmux",
-  "alternate",
-  "generator",
-  "pa",
-  "test-runner",
-  "snake",
-  "wiki",
-  "util.auto_update",
-}
+-- plug.add("plasticboy/vim-markdown")
+-- -- This is for plasticboy/vim-markdown
+-- -- Don't require .md extension
+-- vim.g.vim_markdown_no_extensions_in_markdown = 1
 
-for i,p in pairs(plugins) do
-  require(p).setup()
-end
+-- -- Autosave when following links
+-- vim.g.vim_markdown_autowrite = 1
+-- -- require("plugins.vim-markdown")
+
+-- -- trying to break some bad habbits
+-- -- require("plugins.vim-hardtime").setup()
+
+-- -- plug.add("AndrewRadev/switch.vim")
+
+-- -- plug.add("fatih/vim-go")
+-- plug.add({
+--   url = "ray-x/go.nvim",
+--   post_handler = function ()
+--     -- Import on save
+--     require('util.config').create_autogroups({
+--       go_format_imports_on_save = {
+--         {"BufWritePre", "*", ":silent! lua require('go.format').goimport()"}
+--       },
+--     })
+
+--     require('go').setup({
+--       goimport = 'gopls',
+--     })
+--   end
+-- })
+
+-- -- plug.add("machakann/vim-sandwich")
+
+-- -- run tests in a project at various levels
+-- -- require("plugins.vim-test")
+
+-- -- setup custom colour overrides
+-- require("config.colour-overrides").setup()
