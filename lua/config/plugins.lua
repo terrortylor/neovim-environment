@@ -101,7 +101,7 @@ plug.add({
       },
     })
 
-    require 'go'.setup({
+    require('go').setup({
       goimport = 'gopls',
     })
   end
