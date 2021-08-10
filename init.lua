@@ -34,10 +34,10 @@ local plugins = {
   "ui.statusline",
   "tmux",
   "alternate",
-  "generator",
+  -- "generator",
   "pa",
   "test-runner",
-  "snake",
+  -- "snake",
   "wiki",
   "util.auto_update",
 }

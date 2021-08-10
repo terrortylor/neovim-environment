@@ -126,6 +126,7 @@ function M.insert_empty_task_box(is_below)
 end
 
 -- TODO no tests
+-- TODO use utils func?
 function M.setup()
   local opts = {noremap = true, silent = true}
   local function keymap(...) vim.api.nvim_set_keymap(...) end
