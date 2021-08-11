@@ -50,6 +50,8 @@ function M.update_buffer()
         end
       end
 
+      -- check if modified then run aucommand?
+    -- vim.cmd("doautocmd BufWritePre")
       vim.cmd(":update")
     end
   end

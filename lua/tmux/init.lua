@@ -51,10 +51,13 @@ function M.setup()
       "command!",
       "-nargs=?",
       k,
-      "lua require('tmux.commands')." .. v .. "(<args>)"
+      "lua require('tmux.commands')." .. v .. "(<f-args>)"
     }
     vim.cmd(table.concat(command, " "))
   end
+
+  vim.cmd [[command! -nargs=+ TmuxSeedPane lua require('tmux.commands').seed_instance_pane(<f-args>)]]
+  vim.cmd [[command! -nargs=+ TmuxSeedCommand lua require('tmux.commands').seed_instance_command(<f-args>)]]
 
   local opts = {noremap = true, silent = true}
   local function keymap(...) vim.api.nvim_set_keymap(...) end
