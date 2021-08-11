@@ -7,14 +7,11 @@ local sprites = require'snake.lib.sprites'
 local api = vim.api
 local M = {}
 
--- Stores sprite  buffers used to paint snake / food
-sprites.create_sprite("body", "X")
-sprites.create_sprite("food", "$")
-
 local timer
 local speed = 100
-local snake = Snake:new(nil, sprites.get_sprite("body"))
-local food = Cell:new(nil, 0, 0, sprites.get_sprite("food"))
+local snake
+local food 
+
 -- Stores window with / height
 local canvas = {}
 
@@ -99,6 +96,12 @@ function M.new_food()
 end
 
 function M.start()
+  -- Stores sprite  buffers used to paint snake / food
+  sprites.create_sprite("body", "X")
+  sprites.create_sprite("food", "$")
+
+  snake = Snake:new(nil, sprites.get_sprite("body"))
+  food = Cell:new(nil, 0, 0, sprites.get_sprite("food"))
   -- setup/capture canvas size
   local current_win_id = api.nvim_tabpage_get_win(0)
   canvas.width = api.nvim_win_get_width(current_win_id)

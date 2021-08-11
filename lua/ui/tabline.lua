@@ -3,7 +3,7 @@ local highlights = require('util.highlights')
 local set_highlight = highlights.set_highlight
 local fg = highlights.guifg
 local bg = highlights.guibg
-local lsp_funcs = require('config.lsp.funcs')
+local lsp_funcs = require('util.lsp')
 local util = require('util.config')
 local get_user_input = require('util.input').get_user_input
 
@@ -16,6 +16,7 @@ local M = {}
 local tab_names = {}
 
 -- TODO this is duplicated in statusline
+-- TODO this should not be hard codded?
 local ignore_filetypes = {
   "qf",
   "help",
@@ -78,6 +79,12 @@ local function show_tab_markers()
   end
 end
 
+local function show_auto_update()
+  if not vim.g.enable_auto_update then
+    add_right("TabLineAutoUpdate", "[AU - Off] ")
+  end
+end
+
 local function show_diagnostics()
   if #vim.lsp.buf_get_clients(0) > 0 then
     local total_diagnostics = lsp_funcs.get_all_diagnostic_count()
@@ -119,6 +126,7 @@ function M.tabline()
   show_tab_markers()
 
   -- right
+  show_auto_update()
   show_filetype()
   show_diagnostics()
 
@@ -175,6 +183,7 @@ function M.highlighting()
   set_highlight("TabLineSel", {fg(c.green1), bg(c.purple)})
   set_highlight("TabLineFill", {fg(c.shadow), bg(c.purple)})
   set_highlight("TabLineAtomHeader", {fg(c.green1), bg(c.purple)})
+  set_highlight("TabLineAutoUpdate", {fg(c.green1), bg(c.purple)})
   set_highlight("TabLineDiagError", {fg(c.red1), bg(c.purple)})
   set_highlight("TabLineDiagWarn", {fg(c.yellow3), bg(c.purple)})
 end

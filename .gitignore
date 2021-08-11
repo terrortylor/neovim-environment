@@ -1,3 +1,4 @@
 .netrwhist
 .netrwhist
 neovim-source
+plugin/packer_compiled.lua

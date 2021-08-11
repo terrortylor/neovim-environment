@@ -12,7 +12,7 @@ local commands = {
     "command!",
     "-nargs=0",
     "Lazygit",
-    "lua require('ui.lazygit')"
+    "lua require('ui.lazygit').open()"
   },
   {
     "command!",
@@ -46,6 +46,12 @@ local commands = {
     "-complete=dir",
     "Mkdir",
     "lua require('config.function.filesystem').mkdir(<args>)"
+  },
+  {
+    "command!",
+    "-nargs=0",
+    "SetCWDToBuffer",
+    "cd %:p:h"
   },
   {
     "command!",

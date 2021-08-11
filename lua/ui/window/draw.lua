@@ -45,6 +45,7 @@ function M.close_draw(buf)
   end
 end
 
+-- TODO works by keeping track but actually needs to check if open/close
 function M.toggle(buf, position, size)
   -- capture current location
   local props = M.toggled_bufs[buf]

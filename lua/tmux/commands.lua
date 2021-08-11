@@ -1,4 +1,5 @@
 local input = require("tmux.input")
+local userInput = require("util.input")
 local comstack = require("tmux.instance_command")
 local dispatch = require("tmux.dispatch")
 local log = require("util.log")
@@ -9,6 +10,17 @@ local command_prompt = "Command: "
 local instance_pane = {}
 
 local M = {}
+
+-- This is a helper func to be called when starting vim only, for seeding
+function M.seed_instance_pane(instance, pane)
+  if not instance or not pane then return end
+  instance_pane[instance] = pane
+end
+
+function M.seed_instance_command(instance, ...)
+  local args = {...}
+  comstack.set_instance_command(instance, table.concat(args, " "))
+end
 
 function M.get_instance_pane(instance, clear_first)
   if clear_first == nil then clear_first = false end
@@ -64,7 +76,7 @@ end
 
 function M.set_instance_command(instance)
   M.guarded_send_command(instance, function(func_inst)
-    local command = input.get_user_input("Enter command: ")
+    local command = userInput.get_user_input("Enter command: ")
 
     if not command then
       log.error("Command empty, not setting instance")
@@ -79,7 +91,7 @@ end
 
 function M.send_one_off_command(instance)
   M.guarded_send_command(instance, function()
-    local command = input.get_user_input(command_prompt)
+    local command = userInput.get_user_input(command_prompt)
     return command
   end)
 end
@@ -106,7 +118,7 @@ function M.edit_last_command(instance)
       command = ""
     end
 
-    local edited_command = input.get_user_input(command_prompt, command)
+    local edited_command = userInput.get_user_input(command_prompt, command)
     comstack.set_instance_command(func_inst, edited_command)
 
     return edited_command

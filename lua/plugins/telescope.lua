@@ -1,10 +1,3 @@
-local plug = require("pluginman")
-local create_mappings = require("util.config").create_mappings
-local c = require('config.colours').c
-local hl = require('util.highlights')
-local set_highlight = hl.set_highlight
-local fg = hl.guifg
-
 local M = {}
 
 local thin_border_chars= {
@@ -31,6 +24,69 @@ function M.dropdown_code_actions()
     results_height = 12,
     results_title = false,
   })
+end
+
+-- TODO get lsp doucment symbols, filter out methods
+function M.lsp_document_methods(opts)
+  local pickers = require('telescope.pickers')
+  local utils = require('telescope.utils')
+  local finders = require('telescope.finders')
+  local previewers = require('telescope.previewers')
+  local sorters = require('telescope.sorters')
+
+
+  local params = vim.lsp.util.make_position_params()
+  local results_lsp, err = vim.lsp.buf_request_sync(0, "textDocument/documentSymbol", params)
+  if err then
+    vim.api.nvim_err_writeln("Error when finding document symbols: " .. err)
+    return
+  end
+  local locations = {}
+  local filtered = {}
+  -- print(vim.inspect(results_lsp[1].result))
+  for _, server_results in pairs(results_lsp[1].result) do
+    if server_results.kind == 12 then
+      print(server_results.name)
+      table.insert(filtered, server_results)
+    end
+    vim.list_extend(locations, vim.lsp.util.symbols_to_items(filtered, 0) or {})
+  end
+
+  local results = utils.quickfix_items_to_entries(locations)
+
+  if vim.tbl_isempty(results) then
+    return
+  end
+
+  print("length", #results, vim.inspect(results))
+
+  local make_entry = require('telescope.make_entry')
+
+  local conf = require('telescope.config').values
+--   pickers.new(opts, {
+--     prompt    = 'LSP Document Symbols Methods',
+--     finder    = finders.new_table({results = results,
+--           entry_maker = opts.entry_maker or make_entry.gen_from_lsp_symbols(opts)
+
+--   }),
+--     previewer = previewers.qflist,
+--     sorter = conf.generic_sorter(opts),
+--     -- sorter    = sorters.get_norcalli_sorter(),
+--   }):find()
+  opts.ignore_filename = opts.ignore_filename or true
+  pickers.new(opts, {
+    prompt_title = 'LSP Document Symbols',
+    finder    = finders.new_table {
+      results = locations,
+      entry_maker = opts.entry_maker or make_entry.gen_from_lsp_symbols(opts)
+    },
+    previewer = conf.qflist_previewer(opts),
+    sorter = conf.prefilter_sorter{
+      tag = "symbol_type",
+      sorter = conf.generic_sorter(opts)
+    }
+  }):find()
+
 end
 
 function M.todo_picker()
@@ -61,72 +117,38 @@ function M.todo_picker()
 end
 
 function M.setup()
-  -- TODO update plugin man to have depedencies so not loaded until they are
-  plug.add("nvim-lua/popup.nvim")
-  plug.add("nvim-lua/plenary.nvim")
+  local create_mappings = require("util.config").create_mappings
 
-  -- Requires:
-  -- * nvim-lua/popup.nvim
-  -- * nvim-lua/plenary.vim
-  plug.add({
-    url = "nvim-telescope/telescope.nvim",
-    post_handler = function()
+  local mappings = {
+    n = {
+      ["<leader>ff"] = "<cmd>lua require('telescope.builtin').find_files()<CR>",
+      -- TODO add func so if no .git dir is found then open from CWD
+      -- luacheck: ignore
+      -- https://github.com/nvim-telescope/telescope.nvim/wiki/Configuration-Recipes#falling-back-to-find_files-if-git_files-cant-find-a-git-directory
+      ["<c-p>"] = "<cmd>lua require('telescope.builtin').git_files()<CR>",
+      ["<leader>fg"] = "<cmd>lua require('telescope.builtin').live_grep()<CR>",
+      ["<leader><space>"] = "<cmd>lua require('telescope.builtin').buffers()<CR>",
+      ["<leader>fh"] = "<cmd>lua require('telescope.builtin').help_tags()<CR>",
+      ["<leader>ft"] = "<cmd>lua require('plugins.telescope').todo_picker()<CR>",
+      ["<leader>fs"] = "<cmd>lua require('telescope.builtin.lsp').dynamic_workspace_symbols()<CR>",
+      -- todo nice to filter this only to errors
+      ["<leader>fe"] = "<cmd>Telescope lsp_workspace_diagnostics<CR>",
+    }
+  }
+  create_mappings(mappings)
 
-      local mappings = {
-        n = {
-          ["<leader>ff"] = "<cmd>lua require('telescope.builtin').find_files()<CR>",
-          -- TODO add func so if no .git dir is found then open from CWD
-          -- luacheck: ignore
-          -- https://github.com/nvim-telescope/telescope.nvim/wiki/Configuration-Recipes#falling-back-to-find_files-if-git_files-cant-find-a-git-directory
-          ["<c-p>"] = "<cmd>lua require('telescope.builtin').git_files()<CR>",
-          ["<leader>fg"] = "<cmd>lua require('telescope.builtin').live_grep()<CR>",
-          ["<leader><space>"] = "<cmd>lua require('telescope.builtin').buffers()<CR>",
-          ["<leader>fh"] = "<cmd>lua require('telescope.builtin').help_tags()<CR>",
-          ["<leader>ft"] = "<cmd>lua require('plugins.telescope').todo_picker()<CR>",
-          ["<leader>fs"] = "<cmd>lua require('telescope.builtin.lsp').dynamic_workspace_symbols()<CR>",
-          -- todo nice to filter this only to errors
-          ["<leader>fe"] = "<cmd>Telescope lsp_workspace_diagnostics<CR>",
+  local actions = require('telescope.actions')
+  require('telescope').setup{
+    defaults = {
+      mappings = {
+        i = {
+          ["<esc>"] = actions.close, -- TODO this isn't working
+          ["<c-j>"] = actions.move_selection_next,
+          ["<c-k>"] = actions.move_selection_previous,
         }
       }
-      create_mappings(mappings)
-
-      local actions = require('telescope.actions')
-      require('telescope').setup{
-        defaults = {
-          mappings = {
-            i = {
-              ["<esc>"] = actions.close, -- TODO this isn't working
-              ["<c-j>"] = actions.move_selection_next,
-              ["<c-k>"] = actions.move_selection_previous,
-            }
-          }
-        }
-      }
-    end,
-    highlight_handler = function ()
-
-      set_highlight("TelescopeSelection", fg(c.blue1))
-      set_highlight("TelescopeSelectionCaret", fg(c.green2))
-      set_highlight("TelescopeMultiSelection", fg(c.blue1))
-      set_highlight("TelescopeNormal", fg(c.gandalf))
-
-      set_highlight("TelescopeBorder", fg(c.yellow2))
-      set_highlight("TelescopePromptBorder", fg(c.green2))
-      set_highlight("TelescopeResultsBorder", fg(c.yellow1))
-      set_highlight("TelescopePreviewBorder", fg(c.yellow1))
-
-      set_highlight("TelescopeMatching", fg(c.green2))
-      set_highlight("TelescopePromptPrefix", fg(c.red1))
-
-    end
-
-
-  })
-
-  -- adds github pull integration into telescope
-  -- Requires:
-  -- * nvim-telescope/telescope.nvim
-  plug.add('nvim-telescope/telescope-github.nvim')
+    }
+  }
 end
 
 return M

@@ -30,7 +30,9 @@ require('util.config').create_mappings({
     -- Easier alternate file (not custom 'alternate file')
     ["<leader>a"]  = "<c-^>",
     -- Open file under cursor in vertical split
-    ["gf"]         = ":vertical wincmd f<CR>",
+    ["gsf"]         = ":vertical wincmd f<CR>",
+    ["ghf"]         = ":wincmd f<CR>",
+    ["gtf"]         = "mt<CMD>tabnew % <CR> `t <CMD>normal gf<CR>",
 
     -- Tab Management
     ["[T"]         = ":tabfirst<CR>",
@@ -138,6 +140,15 @@ require('util.config').create_mappings({
 
     -- Add and move to empty line above current one
     ["<A-o>"]      = "<C-o>O",
+
+    -- Undo break points
+    [","] = ",<c-g>u",
+    ["."] = ".<c-g>u",
+    ["!"] = "!<c-g>u",
+    ["?"] = "?<c-g>u",
+    ["("] = "(<c-g>u",
+    ["["] = "[<c-g>u",
+    ["{"] = "{<c-g>u",
   },
   x = {
     ["<leader>pro"] = ":lua require'ui.buffer'.prototype()<CR>"

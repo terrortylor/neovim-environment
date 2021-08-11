@@ -42,7 +42,7 @@ local function open()
     local buf = vim.api.nvim_create_buf(false, true)
 
     local opts = float.gen_centered_float_opts(0.8, 0.8, true)
-    local win_tuple = float.open_float(" Lazygit ", true, buf, opts, function() end)
+    local win_tuple = float.open_float(buf, opts, function() end)
 
     local  close_lazygit = function()
       restore_mappings()
@@ -57,4 +57,4 @@ local function open()
   end
 end
 
-return open()
+return {open = open}

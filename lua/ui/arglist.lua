@@ -56,7 +56,7 @@ function M.edit_args_in_buffer()
   end
 
   local opts = float.gen_centered_float_opts(0.8, 0.8, true)
-  float.open_float(" Edit arg list ", true, buf, opts, callback)
+  float.open_float(buf, opts, callback)
 end
 
 function M.setup()

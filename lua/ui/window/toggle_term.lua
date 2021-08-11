@@ -9,9 +9,8 @@ M.options = {
 
 local terms = {}
 
-function M.open(n, command, title)
+function M.open(n, command)
   command = command or "bash"
-  title = title or command
 
   local buf = terms[n]
   local new = false
@@ -23,16 +22,16 @@ function M.open(n, command, title)
   end
 
   local opts = float.gen_centered_float_opts(0.8, 0.8, true)
-  local win_tuple = float.open_float(title, true, buf, opts, function() end)
+  local win_tuple = float.open_float(buf, opts, function() end)
 
   if new then
-    local close_lazygit = function()
+    local close_toogle_term = function()
       float.close_windows(win_tuple[1], win_tuple[2])
       vim.api.nvim_buf_delete(buf, {force = true})
       terms[n] = nil
     end
 
-    vim.fn.termopen(command, {on_exit = close_lazygit})
+    vim.fn.termopen(command, {on_exit = close_toogle_term})
   end
 
   vim.cmd("startinsert!")
