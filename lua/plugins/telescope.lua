@@ -20,8 +20,9 @@ function M.dropdown_code_actions()
     borderchars = thin_border_chars,
     sorting_strategy = "ascending",
     layout_strategy = "center",
-    width = width,
-    results_height = 12,
+    layout_config = {
+      width = width,
+    },
     results_title = false,
   })
 end
