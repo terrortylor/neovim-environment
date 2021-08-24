@@ -27,8 +27,9 @@ local function set_mappings(client, bufnr)
     -- TODO save and restore mark?
       ['gtd'] = 'mt<Cmd>tabnew % <CR> `t <Cmd> lua vim.lsp.buf.definition()<CR>',
       ['K'] = '<Cmd>lua vim.lsp.buf.hover()<CR>',
-      ['ca'] = '<Cmd>lua require("plugins.telescope").dropdown_code_actions()<CR>',
-      ['cf'] = '<Cmd>lua require("util.lsp").fix_first_code_action()<CR>',
+      ['<leader>ca'] = '<Cmd>lua require("plugins.telescope").dropdown_code_actions()<CR>',
+      ['<leader>cf'] = '<Cmd>lua vim.lsp.diagnostic.goto_next()<CR><Cmd>lua require("util.lsp").fix_first_code_action()<CR>',
+      ['<leader>cF'] = '<Cmd>lua vim.lsp.diagnostic.goto_prev()<CR><Cmd>lua require("util.lsp").fix_first_code_action()<CR>',
       ['gI'] = '<cmd>Telescope lsp_implementations<CR>',
       -- ['gsI'] = '<cmd>vsplit <BAR> lua vim.lsp.buf.implementation()<CR>',
       -- ['ghI'] = '<cmd>split <BAR> lua vim.lsp.buf.implementation()<CR>',

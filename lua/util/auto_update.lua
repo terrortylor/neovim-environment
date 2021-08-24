@@ -52,7 +52,11 @@ function M.update_buffer()
 
       -- check if modified then run aucommand?
     -- vim.cmd("doautocmd BufWritePre")
-      vim.cmd(":update")
+      if vim.api.nvim_buf_get_option(0, "modified") then
+        vim.cmd("doautocmd BufWritePre")
+        vim.cmd(":write")
+        vim.cmd("doautocmd BufWritePost")
+      end
     end
   end
 end

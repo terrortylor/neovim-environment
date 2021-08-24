@@ -117,18 +117,23 @@ function M.todo_picker()
   }):find()
 end
 
+-- luacheck: ignore
+-- https://github.com/nvim-telescope/telescope.nvim/wiki/Configuration-Recipes#falling-back-to-find_files-if-git_files-cant-find-a-git-directory
+function M.project_files()
+  local opts = {} -- define here if you want to define something
+  local ok = pcall(require'telescope.builtin'.git_files, opts)
+  if not ok then require'telescope.builtin'.find_files(opts) end
+end
+
 function M.setup()
   local create_mappings = require("util.config").create_mappings
 
   local mappings = {
     n = {
       ["<leader>ff"] = "<cmd>lua require('telescope.builtin').find_files()<CR>",
-      -- TODO add func so if no .git dir is found then open from CWD
-      -- luacheck: ignore
-      -- https://github.com/nvim-telescope/telescope.nvim/wiki/Configuration-Recipes#falling-back-to-find_files-if-git_files-cant-find-a-git-directory
-      ["<c-p>"] = "<cmd>lua require('telescope.builtin').git_files()<CR>",
+      ["<c-p>"] = "<cmd>lua require('plugins.telescope').project_files()<CR>",
       ["<leader>fg"] = "<cmd>lua require('telescope.builtin').live_grep()<CR>",
-      ["<leader><space>"] = "<cmd>lua require('telescope.builtin').buffers()<CR>",
+      -- ["<leader><space>"] = "<cmd>lua require('telescope.builtin').buffers()<CR>",
       ["<leader>fh"] = "<cmd>lua require('telescope.builtin').help_tags()<CR>",
       ["<leader>ft"] = "<cmd>lua require('plugins.telescope').todo_picker()<CR>",
       ["<leader>fs"] = "<cmd>lua require('telescope.builtin.lsp').dynamic_workspace_symbols()<CR>",
