@@ -133,7 +133,7 @@ function M.setup()
       ["<leader>ff"] = "<cmd>lua require('telescope.builtin').find_files()<CR>",
       ["<c-p>"] = "<cmd>lua require('plugins.telescope').project_files()<CR>",
       ["<leader>fg"] = "<cmd>lua require('telescope.builtin').live_grep()<CR>",
-      -- ["<leader><space>"] = "<cmd>lua require('telescope.builtin').buffers()<CR>",
+      ["<leader><space>"] = "<cmd>lua require('telescope.builtin').buffers()<CR>",
       ["<leader>fh"] = "<cmd>lua require('telescope.builtin').help_tags()<CR>",
       ["<leader>ft"] = "<cmd>lua require('plugins.telescope').todo_picker()<CR>",
       ["<leader>fs"] = "<cmd>lua require('telescope.builtin.lsp').dynamic_workspace_symbols()<CR>",
