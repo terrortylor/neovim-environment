@@ -11,7 +11,10 @@ local autogroups = {
     {"BufWritePre", "*", [[%s/\s\+$//e]]}
   },
   return_to_last_edit_in_buffer = {
-    {"BufReadPost", "*", "lua require('ui.buffer').move_to_last_edit()"}
+    {"BufReadPost", "*", "lua require('ui.buffer').move_to_last_edit()"},
+  },
+  highlight_on_yank = {
+    {"TextYankPost", "*", "silent! lua vim.highlight.on_yank()"},
   },
 }
 
