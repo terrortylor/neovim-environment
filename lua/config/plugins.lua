@@ -1,5 +1,5 @@
 return require('packer').startup(function(use)
-  use 'wbthomason/packer.nvim'
+  use { 'wbthomason/packer.nvim' }
 
   -- colour scheme
   use { "terrortylor/zephyr-nvim", config = function() vim.cmd("colorscheme zephyr") end }
@@ -39,15 +39,17 @@ return require('packer').startup(function(use)
     },
     {
       "kyazdani42/nvim-tree.lua",
-      config = [[require("plugins.nvim-tree").setup()]]
+      config = function() require("plugins.nvim-tree").setup() end
     }
   }
 
   -- neovim general library, dependancy for many plugins, also a neovim lua test runner :)
   -- nvim-terminal provides colour code conceal for nicer output
-  use { "nvim-lua/plenary.nvim", requires = {"norcalli/nvim-terminal.lua"}, config = function()
-    require("terminal").setup()
-  end}
+  use {
+    "nvim-lua/plenary.nvim",
+    requires = {"norcalli/nvim-terminal.lua"},
+    config = function() require("terminal").setup() end
+  }
 
   -- telescope
   use {
@@ -57,14 +59,12 @@ return require('packer').startup(function(use)
         "nvim-lua/popup.nvim",
         "nvim-lua/plenary.nvim"
       },
-      config = [[require("plugins.telescope").setup()]]
+      config = function() require("plugins.telescope").setup() end
     },
     {
       -- adds github pull integration into telescope
       "nvim-telescope/telescope-github.nvim",
-      requires = {
-        "nvim-telescope/telescope.nvim"
-      },
+      requires = { "nvim-telescope/telescope.nvim" },
     }
   }
 
@@ -72,6 +72,7 @@ return require('packer').startup(function(use)
   use {
     {
       "nvim-treesitter/nvim-treesitter",
+      run = ':TSUpdate',
       config = function()
         require'nvim-treesitter.configs'.setup {
           ensure_installed = {"javascript", "typescript", "lua", "go"},
@@ -90,23 +91,25 @@ return require('packer').startup(function(use)
       "nvim-treesitter/playground",
       opt = true,
       cmd = {"TSPlaygroundToggle"},
-      requires = {
-        "nvim-treesitter/nvim-treesitter",
-      }
+      requires = { "nvim-treesitter/nvim-treesitter", }
     }
   }
 
-  -- snipets
+  -- -- snipets
+  -- use {
+  --   "SirVer/ultisnips",
+  --   config = function()
+  --     vim.g.UltiSnipsExpandTrigger = "<tab>"
+  --     vim.g.UltiSnipsEditSplit = "vertical"
+  --     -- TODO c-u isn't a great mapping as overrides builtin
+  --     vim.g.UltiSnipsListSnippets = "<c-u>"
+  --     vim.g.UltiSnipsJumpForwardTrigger = '<tab>'
+  --     vim.g.UltiSnipsJumpBackwardTrigger = '<s-tab>'
+  --   end
+  -- }
   use {
-    "SirVer/ultisnips",
-    config = function()
-      vim.g.UltiSnipsExpandTrigger = "<tab>"
-      vim.g.UltiSnipsEditSplit = "vertical"
-      -- TODO c-u isn't a great mapping as overrides builtin
-      vim.g.UltiSnipsListSnippets = "<c-u>"
-      vim.g.UltiSnipsJumpForwardTrigger = '<tab>'
-      vim.g.UltiSnipsJumpBackwardTrigger = '<s-tab>'
-    end
+    "L3MON4D3/LuaSnip",
+    config = function() require('plugins.luasnip').setup() end
   }
 
   -- add some colour to colors and colour codes in buffers
@@ -115,9 +118,7 @@ return require('packer').startup(function(use)
     opt = true,
     cmd = {"ColorizerAttachToBuffer", "ColorizerDetachFromBuffer",
     "ColorizerReloadAllBuffers", "ColorizerToggle"},
-    config = function()
-      require'colorizer'.setup()
-    end
+    config = function() require'colorizer'.setup() end
   }
 
   -- visual sugar
@@ -125,7 +126,7 @@ return require('packer').startup(function(use)
     -- git signs
     {
       "lewis6991/gitsigns.nvim",
-      config = [[require("plugins.gitsigns").setup()]],
+      config = function() require("plugins.gitsigns").setup() end,
     },
     -- show lightbulb when code action
     {
@@ -160,9 +161,26 @@ return require('packer').startup(function(use)
   }
 
   -- completion
+  -- use {
+  --   "hrsh7th/nvim-compe",
+  --   config = [[require("plugins.nvim-compe").setup()]],
+  -- }
   use {
-    "hrsh7th/nvim-compe",
-    config = [[require("plugins.nvim-compe").setup()]],
+    "hrsh7th/nvim-cmp",
+    config = function()
+      require("plugins.nvim-cmp").setup() end,
+    requires = {
+      "hrsh7th/cmp-nvim-lsp",
+      "saadparwaiz1/cmp_luasnip"
+    }
+  }
+
+  -- GO
+  use {
+    "ray-x/go.nvim",
+    requires = { "nvim-telescope/telescope.nvim", },
+    ft = {'go'},
+    config = function() require("plugins.go-nvim").setup() end,
   }
 
 end)
