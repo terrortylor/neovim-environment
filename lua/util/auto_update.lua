@@ -51,11 +51,13 @@ function M.update_buffer()
       end
 
       -- check if modified then run aucommand?
-    -- vim.cmd("doautocmd BufWritePre")
       if vim.api.nvim_buf_get_option(0, "modified") then
-        vim.cmd("doautocmd BufWritePre")
-        vim.cmd(":write")
-        vim.cmd("doautocmd BufWritePost")
+        -- problem with this is any other BufWrite[Pre|Post]
+        -- can really slow this system
+        -- vim.cmd("doautocmd BufWritePre")
+        -- vim.cmd(":write")
+        vim.cmd(":update")
+        -- vim.cmd("doautocmd BufWritePost")
       end
     end
   end

@@ -193,4 +193,17 @@ end
 -- autocmd CursorHold <buffer> lua vim.lsp.diagnostic.show_line_diagnostics()
 -- shows diagnostic on line
 
+
+-- auto popup signature help... cheap but could do with better pum support
+-- i.e. close sgnature help when pum visible
+function M.cheap_signiture()
+  if vim.fn.mode() ~= "i" then
+    print("here")
+    return
+  end
+  if vim.fn.pumvisible() == 0 then
+    vim.lsp.buf.signature_help()
+  end
+end
+
 return M

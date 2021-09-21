@@ -1,7 +1,18 @@
 return require('packer').startup(function(use)
-  use { 'wbthomason/packer.nvim' }
+  use { 'wbthomason/packer.nvim', config = function()
+    require('util.config').create_autogroups({
+      cursor_line_group = {
+        {
+          "BufEnter",
+          "lua/config/plugins.lua",
+          "lua vim.api.nvim_buf_set_keymap(0, 'n', '<leader>nn', '<cmd>luafile %<cr> | <cmd>PackerCompile<cr> | <cmd>PackerSync<cr>', {})"
+        },
+      },
+    })
+  end}
 
   -- colour scheme
+  -- Setting the colourscheme here prevents the info screen showing when opened without a file
   use { "terrortylor/zephyr-nvim", config = function() vim.cmd("colorscheme zephyr") end }
 
   -- toggle comments
@@ -51,6 +62,14 @@ return require('packer').startup(function(use)
     config = function() require("terminal").setup() end
   }
 
+  -- general
+  use {
+    "blackCauldron7/surround.nvim",
+    config = function()
+      require"surround".setup {mappings_style = "surround"}
+    end
+  }
+
   -- telescope
   use {
     {
@@ -95,21 +114,10 @@ return require('packer').startup(function(use)
     }
   }
 
-  -- -- snipets
-  -- use {
-  --   "SirVer/ultisnips",
-  --   config = function()
-  --     vim.g.UltiSnipsExpandTrigger = "<tab>"
-  --     vim.g.UltiSnipsEditSplit = "vertical"
-  --     -- TODO c-u isn't a great mapping as overrides builtin
-  --     vim.g.UltiSnipsListSnippets = "<c-u>"
-  --     vim.g.UltiSnipsJumpForwardTrigger = '<tab>'
-  --     vim.g.UltiSnipsJumpBackwardTrigger = '<s-tab>'
-  --   end
-  -- }
   use {
     "L3MON4D3/LuaSnip",
-    config = function() require('plugins.luasnip').setup() end
+    config = function() require('plugins.luasnip').setup() end,
+    requires = {"rafamadriz/friendly-snippets"}
   }
 
   -- add some colour to colors and colour codes in buffers
@@ -142,10 +150,6 @@ return require('packer').startup(function(use)
         vim.api.nvim_set_option("updatetime", 500)
       end
     },
-    -- function signiture help in insert mode
-    {
-      "ray-x/lsp_signature.nvim"
-    }
   }
 
   -- language server
@@ -154,24 +158,31 @@ return require('packer').startup(function(use)
     config = function()
       require("plugins.lsp.sumneko")
       require("plugins.lsp.tsserver")
-      require("plugins.lsp.gopls")
+      -- not required when using ray-s/go.nvim
+      -- require("plugins.lsp.gopls")
       require("plugins.lsp.bashls")
       require("plugins.lsp.efm")
     end
   }
 
   -- completion
-  -- use {
-  --   "hrsh7th/nvim-compe",
-  --   config = [[require("plugins.nvim-compe").setup()]],
-  -- }
   use {
     "hrsh7th/nvim-cmp",
-    config = function()
-      require("plugins.nvim-cmp").setup() end,
+    config = function() require("plugins.nvim-cmp").setup() end,
     requires = {
+      "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-nvim-lsp",
-      "saadparwaiz1/cmp_luasnip"
+      "saadparwaiz1/cmp_luasnip",
+      { 'andersevenrud/compe-tmux', branch = 'cmp' }
+    }
+  }
+
+  use {
+    "ThePrimeagen/refactoring.nvim",
+    config = function() require("plugins.refactor").setup() end,
+    requires = {
+      {"nvim-lua/plenary.nvim"},
+      {"nvim-treesitter/nvim-treesitter"}
     }
   }
 
@@ -183,61 +194,11 @@ return require('packer').startup(function(use)
     config = function() require("plugins.go-nvim").setup() end,
   }
 
+  -- testing
+  use {
+    "vim-test/vim-test",
+    ft = {"javascript", "typescript", "go"},
+    config = function() require("plugins.vim-test").setup() end,
+  }
+
 end)
-
--- -- http client
--- plug.add({
---   url = "terrortylor/nvim-httpclient",
---   package = "myplugins",
---   -- TODO make opt and main defaults
---   branch = "main",
---   post_handler = function()
---     require('nvim-httpclient').setup()
---   end
--- })
-
-
--- -- plug.add({url = "godlygeek/tabular", loaded = "opt"})
--- -- tabular needs to be sourced before vim-markdown
--- -- according to the repository site
-
--- vim.g.markdown_fenced_languages = {"bash=sh", "sh", "ruby"}
-
--- plug.add("plasticboy/vim-markdown")
--- -- This is for plasticboy/vim-markdown
--- -- Don't require .md extension
--- vim.g.vim_markdown_no_extensions_in_markdown = 1
-
--- -- Autosave when following links
--- vim.g.vim_markdown_autowrite = 1
--- -- require("plugins.vim-markdown")
-
--- -- trying to break some bad habbits
--- -- require("plugins.vim-hardtime").setup()
-
--- -- plug.add("AndrewRadev/switch.vim")
-
--- -- plug.add("fatih/vim-go")
--- plug.add({
---   url = "ray-x/go.nvim",
---   post_handler = function ()
---     -- Import on save
---     require('util.config').create_autogroups({
---       go_format_imports_on_save = {
---         {"BufWritePre", "*", ":silent! lua require('go.format').goimport()"}
---       },
---     })
-
---     require('go').setup({
---       goimport = 'gopls',
---     })
---   end
--- })
-
--- -- plug.add("machakann/vim-sandwich")
-
--- -- run tests in a project at various levels
--- -- require("plugins.vim-test")
-
--- -- setup custom colour overrides
--- require("config.colour-overrides").setup()

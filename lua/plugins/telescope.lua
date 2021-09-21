@@ -131,6 +131,8 @@ function M.setup()
   local mappings = {
     n = {
       ["<leader>ff"] = "<cmd>lua require('telescope.builtin').find_files()<CR>",
+      ["<leader>fr"] = "<cmd>Telescope current_buffer_fuzzy_find<CR>",
+      -- Nice ot have as a command to easily call from CLI
       ["<c-p>"] = "<cmd>lua require('plugins.telescope').project_files()<CR>",
       ["<leader>fg"] = "<cmd>lua require('telescope.builtin').live_grep()<CR>",
       ["<leader><space>"] = "<cmd>lua require('telescope.builtin').buffers()<CR>",

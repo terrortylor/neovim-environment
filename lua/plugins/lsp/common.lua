@@ -3,17 +3,6 @@ local create_mappings = require("util.config").create_mappings
 
 local M = {}
 
-local border = {
-      {"🭽", "FloatBorder"},
-      {"▔", "FloatBorder"},
-      {"🭾", "FloatBorder"},
-      {"▕", "FloatBorder"},
-      {"🭿", "FloatBorder"},
-      {"▁", "FloatBorder"},
-      {"🭼", "FloatBorder"},
-      {"▏", "FloatBorder"},
-}
-
 local function set_mappings(client, bufnr)
   local mappings = {
     n = {
@@ -30,7 +19,8 @@ local function set_mappings(client, bufnr)
       ['<leader>ca'] = '<Cmd>lua require("plugins.telescope").dropdown_code_actions()<CR>',
       ['<leader>cf'] = '<Cmd>lua vim.lsp.diagnostic.goto_next()<CR><Cmd>lua require("util.lsp").fix_first_code_action()<CR>',
       ['<leader>cF'] = '<Cmd>lua vim.lsp.diagnostic.goto_prev()<CR><Cmd>lua require("util.lsp").fix_first_code_action()<CR>',
-      ['gI'] = '<cmd>Telescope lsp_implementations<CR>',
+      -- ['gI'] = '<cmd>Telescope lsp_implementations<CR>',
+      ['gI'] = '<cmd>lua require("plugins.lsp.common").handler_implementation()<CR>',
       -- ['gsI'] = '<cmd>vsplit <BAR> lua vim.lsp.buf.implementation()<CR>',
       -- ['ghI'] = '<cmd>split <BAR> lua vim.lsp.buf.implementation()<CR>',
       ['<space>gs'] = '<cmd>Telescope lsp_document_symbols<CR>',
@@ -48,13 +38,23 @@ local function set_mappings(client, bufnr)
       ['[d'] = '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>',
       [']d'] = '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>',
       ['<space>th'] = '<cmd>lua require("util.lsp").diagnostic_toggle_virtual_text()<CR>',
+    },
+    i = {
+      ['<c-k>'] = '<cmd>lua vim.lsp.buf.signature_help()<CR>',
     }
   }
 
   -- Set some keybinds conditional on server capabilities
   if client.resolved_capabilities.document_formatting or
     client.resolved_capabilities.document_range_formatting then
-    mappings.n["<space>fd"] = "<cmd>lua require('util.lsp').efm_priority_document_format()<CR>"
+    -- TODO this is fucking gross, but quickfix 
+    -- Tried to do filetype mapping but isn't picked up for some reason when vim starts, only when explicitly settings
+    -- the filetype to go in the command line... user that is a bug though
+    if vim.bo.filetype == "go" then
+      mappings.n["<space>fd"] = "<cmd>Goimport<CR>"
+    else
+      mappings.n["<space>fd"] = "<cmd>lua require('util.lsp').efm_priority_document_format()<CR>"
+    end
   end
 
   create_mappings(mappings, nil, bufnr)
@@ -115,13 +115,18 @@ end
 
 
 function M.on_attach(client, bufnr)
+  require('util.config').create_autogroups({
+    hlmagic = {
+      {"CursorMovedI", "*", "lua require('util.lsp').cheap_signiture()"},
+    }})
+
   set_omnifunc(bufnr)
   set_mappings(client, bufnr)
   set_highlights(client)
 
   -- add border
-  vim.lsp.handlers["textDocument/hover"] =  vim.lsp.with(vim.lsp.handlers.hover, {border = border})
-  vim.lsp.handlers["textDocument/signatureHelp"] =  vim.lsp.with(vim.lsp.handlers.hover, {border = border})
+  vim.lsp.handlers["textDocument/hover"] =  vim.lsp.with(vim.lsp.handlers.hover, {border = "double"})
+  vim.lsp.handlers["textDocument/signatureHelp"] =  vim.lsp.with(vim.lsp.handlers.signature_help, {border = "double"})
 
   -- format publsh diagnostics
   vim.lsp.handlers["textDocument/publishDiagnostics"] =
@@ -131,6 +136,7 @@ function M.on_attach(client, bufnr)
     update_in_insert = false,
     virtual_text = false
   })
+end
 
   require "lsp_signature".on_attach()
 end
