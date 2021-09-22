@@ -5,42 +5,47 @@ local M = {}
 
 
 function M.hlsearch()
-  local row, col = unpack(vim.api.nvim_win_get_cursor(0))
-  -- print(row, col)
- local match_pos = vim.fn.match(vim.fn.getline('.'), vim.fn.getreg('/'), col)
+  if vim.g.smart_search_enabled then
+    local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+    local match_pos = vim.fn.match(vim.fn.getline('.'), vim.fn.getreg('/'), col)
 
- -- print(row, col, match_pos)
- -- if match_pos ~= col then
- if match_pos > 0 and match_pos ~= col then
-   M.hlstop()
-
---  elseif match_pos == col and vim.o.hlsearch then
-
---    print("match")
---     -- vim.cmd("redraw")
- end
+    if match_pos == col and vim.o.hlsearch then
+      -- if match and hlsearch option is true, just trigger it on again
+      -- to re highight if nohlsearch has been called, this is specific
+      -- to multiple searches on a single line
+       vim.o.hlsearch = true
+    elseif match_pos ~= col then
+      M.hlstop()
+    end
+  end
 end
 
 function M.hlstop()
-  if not vim.o.hlsearch or vim.fn.mode() ~= "n" then
-  print("hlstop in return")
-    return
-  end
+  if vim.g.smart_search_enabled then
+    if not vim.o.hlsearch or vim.fn.mode() ~= "n" then
+      return
+    end
     vim.cmd("nohlsearch")
     vim.cmd("redraw")
-  print("hlstop after")
+  end
+end
+
+function M.toggle_smart_search()
+  local smart_search = vim.g.smart_search_enabled
+  smart_search = not smart_search
+  vim.g.smart_search_enabled = smart_search
 end
 
 function M.setup()
+  vim.cmd [[command! -nargs=0 ToggleSmartSearch lua require('ui.search').toggle_smart_search()]]
 
-  vim.cmd("noremap <expr> <Plug>(StopHL) execute('nohlsearch')[-1]")
-  vim.cmd("noremap! <expr> <Plug>(StopHL) execute('nohlsearch')[-1]")
-require('util.config').create_autogroups({
-  hlmagic = {
-    {"CursorMoved", "*", "lua require('ui.search').hlsearch()"},
-    {"InsertLeave", "*", "lua require('ui.search').hlstop()"}
-  }})
+  require('util.config').create_autogroups({
+    hlmagic = {
+      {"CursorMoved", "*", "lua require('ui.search').hlsearch()"},
+      {"InsertLeave", "*", "lua require('ui.search').hlstop()"}
+    }})
 
+    vim.g.smart_search_enabled = true
 end
 
 return M
