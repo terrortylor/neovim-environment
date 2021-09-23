@@ -17,8 +17,8 @@ local function set_mappings(client, bufnr)
       ['gtd'] = 'mt<Cmd>tabnew % <CR> `t <Cmd> lua vim.lsp.buf.definition()<CR>',
       ['K'] = '<Cmd>lua vim.lsp.buf.hover()<CR>',
       ['<leader>ca'] = '<Cmd>lua require("plugins.telescope").dropdown_code_actions()<CR>',
-      ['<leader>cf'] = '<Cmd>lua vim.lsp.diagnostic.goto_next()<CR><Cmd>lua require("util.lsp").fix_first_code_action()<CR>',
-      ['<leader>cF'] = '<Cmd>lua vim.lsp.diagnostic.goto_prev()<CR><Cmd>lua require("util.lsp").fix_first_code_action()<CR>',
+      ['<leader>cf'] = '<Cmd>lua vim.lsp.diagnostic.goto_next()<CR><Cmd>lua require("lsp.codeactions").fix_first_code_action()<CR>',
+      ['<leader>cF'] = '<Cmd>lua vim.lsp.diagnostic.goto_prev()<CR><Cmd>lua require("lsp.codeactions").fix_first_code_action()<CR>',
       -- ['gI'] = '<cmd>Telescope lsp_implementations<CR>',
       ['gI'] = '<cmd>lua require("plugins.lsp.common").handler_implementation()<CR>',
       -- ['gsI'] = '<cmd>vsplit <BAR> lua vim.lsp.buf.implementation()<CR>',
@@ -37,7 +37,7 @@ local function set_mappings(client, bufnr)
       ['<space>ge'] = '<cmd>Telescope lsp_workspace_diagnostics<CR>',
       ['[d'] = '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>',
       [']d'] = '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>',
-      ['<space>th'] = '<cmd>lua require("util.lsp").diagnostic_toggle_virtual_text()<CR>',
+      ['<space>th'] = '<cmd>lua require("lsp.diagnostics").diagnostic_toggle_virtual_text()<CR>',
     },
     i = {
       ['<c-k>'] = '<cmd>lua vim.lsp.buf.signature_help()<CR>',
@@ -51,9 +51,9 @@ local function set_mappings(client, bufnr)
     -- Tried to do filetype mapping but isn't picked up for some reason when vim starts, only when explicitly settings
     -- the filetype to go in the command line... user that is a bug though
     if vim.bo.filetype == "go" then
-      mappings.n["<space>fd"] = "<cmd>Goimport<CR>"
+      mappings.n["<space>fd"] = "<cmd>GoImport<CR>"
     else
-      mappings.n["<space>fd"] = "<cmd>lua require('util.lsp').efm_priority_document_format()<CR>"
+      mappings.n["<space>fd"] = "<cmd>lua require('lsp.format').efm_priority_document_format()<CR>"
     end
   end
 
@@ -113,12 +113,8 @@ capabilities.textDocument.completion.completionItem.resolveSupport = {
   return capabilities
 end
 
-
 function M.on_attach(client, bufnr)
-  require('util.config').create_autogroups({
-    hlmagic = {
-      {"CursorMovedI", "*", "lua require('util.lsp').cheap_signiture()"},
-    }})
+  require('lsp.signature').setup()
 
   set_omnifunc(bufnr)
   set_mappings(client, bufnr)
@@ -138,7 +134,6 @@ function M.on_attach(client, bufnr)
   })
 end
 
-  require "lsp_signature".on_attach()
 end
 
 return M

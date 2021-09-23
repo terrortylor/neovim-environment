@@ -8,68 +8,6 @@ local levels = {
   -- hints = 'Hint'
 }
 
-local efm_priority_document_format
-function M.efm_priority_document_format()
-  if not efm_priority_document_format then
-    local clients = vim.lsp.buf_get_clients(0)
-    if #clients > 1 then
-      -- check if multiple clients, and if efm is setup
-      for _,c1 in pairs(clients) do
-        if c1.name == "efm" then
-          -- if efm then disable others
-          for _,c2 in pairs(clients) do
-            -- print(c2.name, c2.resolved_capabilities.document_formatting)
-            if c2.name ~= "efm" then c2.resolved_capabilities.document_formatting = false end
-          end
-          -- no need to contunue first loop
-          break
-        end
-      end
-    end
-  end
-  -- no need to do above check again
-  efm_priority_document_format = true
-  -- format the doc
-  -- TODO need a check to make sure actually has this func on one of the availble clients
-  vim.lsp.buf.formatting()
-end
-
--- Lifted from:
--- https://github.com/jose-elias-alvarez/nvim-lsp-ts-utils/blob/main/lua/nvim-lsp-ts-utils.lua
--- and
--- https://github.com/nvim-telescope/telescope.nvim/blob/79dc995f820150d5de880c08e814af327ff7e965/lua/telescope/builtin/lsp.lua#L238
-function M.fix_first_code_action()
-  local params = vim.lsp.util.make_range_params()
-  params.context = {
-    diagnostics = vim.lsp.diagnostic.get_line_diagnostics()
-  }
-
-  vim.lsp.buf_request(0, "textDocument/codeAction", params,
-  function(_, _, responses)
-    if not responses or not responses[1] then
-      print("No code actions available")
-      return
-    end
-
-
-    for i, v in ipairs(responses) do
-      print("found", vim.inspect(v))
-    end
-
-    local val = responses[1]
-    if val.edit or type(val.command) == "table" then
-      if val.edit then
-        vim.lsp.util.apply_workspace_edit(val.edit)
-      end
-      if type(val.command) == "table" then
-        vim.lsp.buf.execute_command(val.command)
-      end
-    else
-      vim.lsp.buf.execute_command(val)
-    end
-  end)
-end
-
 local all_diagnostics_to_qf = function() -- luacheck: ignore
   local diagnostics = vim.lsp.diagnostic.get_all()
   local qflist = {}
@@ -87,8 +25,6 @@ local all_diagnostics_to_qf = function() -- luacheck: ignore
   end
   return qflist
 end
-
-
 
 -- -- Modified from: https://github.com/neovim/nvim-lspconfig/issues/69
 -- local method = "textDocument/publishDiagnostics"
@@ -163,6 +99,9 @@ function M.get_buf_diagnostic_count(bufnr)
   return result
 end
 
+----------------------------------------------------------------------
+-- These are used ATM
+
 function M.get_all_diagnostic_count()
   local result = {}
 
@@ -186,23 +125,10 @@ function M.diagnostic_toggle_virtual_text()
   local virtual_text = vim.b.lsp_virtual_text_enabled
   virtual_text = not virtual_text
   vim.b.lsp_virtual_text_enabled = virtual_text
-  vim.lsp.diagnostic.display(vim.lsp.diagnostic.get(0, 1), 0, 1, {virtual_text = virtual_text})
-end
 
--- TODO could update toggle swithc betwen showing or show only if Hovered
--- autocmd CursorHold <buffer> lua vim.lsp.diagnostic.show_line_diagnostics()
--- shows diagnostic on line
-
-
--- auto popup signature help... cheap but could do with better pum support
--- i.e. close sgnature help when pum visible
-function M.cheap_signiture()
-  if vim.fn.mode() ~= "i" then
-    print("here")
-    return
-  end
-  if vim.fn.pumvisible() == 0 then
-    vim.lsp.buf.signature_help()
+  local clients = vim.lsp.buf_get_clients(0)
+  for _,c1 in pairs(clients) do
+    vim.lsp.diagnostic.display(vim.lsp.diagnostic.get(0, c1.id), 0, 1, {virtual_text = virtual_text})
   end
 end
 
