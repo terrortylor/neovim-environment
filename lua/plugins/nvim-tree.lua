@@ -39,12 +39,13 @@ function M.setup()
       symlink =    "ᐅ",
     }
   }
-  vim.g.nvim_tree_auto_close = 1
-  vim.g.nvim_tree_follow = 1
   vim.g.nvim_tree_quit_on_open = 1
   vim.g.nvim_tree_indent_markers = 1
   vim.g.nvim_tree_disable_window_picker = 1
-  -- vim.g.nvim_tree_width_allow_resize = 1
+  require'nvim-tree'.setup {
+    auto_close = true,
+
+  }
 
   local create_mappings = require("util.config").create_mappings
 
