@@ -36,8 +36,9 @@ o.termguicolors = true -- use terminal gui colours
 o.showtabline = 2 -- force always show tab line
 o.cursorline = true -- highlight line cursor is on
 o.number = true -- show line numbers
+o.relativenumber = true -- show relative line numbers
 o.signcolumn = "yes:2" -- show sign column, set width to two
-o.foldenable = false -- disbale autofolding
+o.foldenable = false -- disable autofolding
 
 o.ignorecase = true -- ignore case when searching
 o.showmatch = true -- visually show matches as typing
