@@ -122,7 +122,7 @@ function M.on_attach(client, bufnr)
 
   -- add border
   vim.lsp.handlers["textDocument/hover"] =  vim.lsp.with(vim.lsp.handlers.hover, {border = "double"})
-  vim.lsp.handlers["textDocument/signatureHelp"] =  vim.lsp.with(vim.lsp.handlers.signature_help, {border = "double"})
+  vim.lsp.handlers["textDocument/signatureHelp"] =  vim.lsp.with(vim.lsp.handlers.signature_help, {border = "double", focusable = false})
 
   -- format publsh diagnostics
   vim.lsp.handlers["textDocument/publishDiagnostics"] =
