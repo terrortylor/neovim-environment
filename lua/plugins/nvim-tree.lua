@@ -27,10 +27,12 @@ function M.setup()
   vim.g.nvim_tree_show_icons = {
     git = 0,
     folders = 1,
-    icons = 0
+    files = 0,
+    icons = 0,
   }
 
   vim.g.nvim_tree_icons = {
+    default = " ",
     folder = {
       default =    "ᐅ",
       open =       "ᐁ",
