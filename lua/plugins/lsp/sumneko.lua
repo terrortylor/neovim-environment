@@ -17,7 +17,7 @@ local sumneko_binary = sumneko_root_path.."/bin/"..system_name.."/lua-language-s
 
 require'lspconfig'.sumneko_lua.setup {
   on_attach = common.on_attach,
-  capabilities = common.compeSnippetCapabilities(),
+  capabilities = common.buildCapabilities(),
   cmd = {sumneko_binary, "-E", sumneko_root_path .. "/main.lua"};
   settings = {
     Lua = {

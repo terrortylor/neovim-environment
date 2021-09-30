@@ -8,23 +8,23 @@ local levels = {
   -- hints = 'Hint'
 }
 
-local all_diagnostics_to_qf = function() -- luacheck: ignore
-  local diagnostics = vim.lsp.diagnostic.get_all()
-  local qflist = {}
-  for bufnr, diagnostic in pairs(diagnostics) do
-    for _, d in ipairs(diagnostic) do
-      --  1 = Error, 2 = Warning, 3 = Information, 4 = Hint
-      if d.severity == 1 then
-        d.bufnr = bufnr
-        d.lnum = d.range.start.line + 1
-        d.col = d.range.start.character + 1
-        d.text = d.message
-        table.insert(qflist, d)
-      end
-    end
-  end
-  return qflist
-end
+-- local all_diagnostics_to_qf = function() -- luacheck: ignore
+--   local diagnostics = vim.lsp.diagnostic.get_all()
+--   local qflist = {}
+--   for bufnr, diagnostic in pairs(diagnostics) do
+--     for _, d in ipairs(diagnostic) do
+--       --  1 = Error, 2 = Warning, 3 = Information, 4 = Hint
+--       if d.severity == 1 then
+--         d.bufnr = bufnr
+--         d.lnum = d.range.start.line + 1
+--         d.col = d.range.start.character + 1
+--         d.text = d.message
+--         table.insert(qflist, d)
+--       end
+--     end
+--   end
+--   return qflist
+-- end
 
 -- -- Modified from: https://github.com/neovim/nvim-lspconfig/issues/69
 -- local method = "textDocument/publishDiagnostics"
@@ -48,56 +48,56 @@ end
 
 -- Limits a single diagnostic sign per line, showing the worst for that line
 -- TODO fix, this was workig but now seems to do a sign column per client
-function M.limit_diagnostic_sign_column()
-  local orig_set_signs = vim.lsp.diagnostic.set_signs
+-- function M.limit_diagnostic_sign_column()
+--   local orig_set_signs = vim.lsp.diagnostic.set_signs
 
-  local set_signs_limited = function(diagnostics, bufnr, client_id, sign_ns, opts)
-    print("in here", client_id, sign_ns)
-    opts = opts or {}
-    -- opts.priority = 1
+--   local set_signs_limited = function(diagnostics, bufnr, client_id, sign_ns, opts)
+--     print("in here", client_id, sign_ns)
+--     opts = opts or {}
+--     -- opts.priority = 1
+
+-- --     if not diagnostics then
+-- --       diagnostics = diagnostic_cache[bufnr][client_id]
+-- --     end
 
 --     if not diagnostics then
---       diagnostics = diagnostic_cache[bufnr][client_id]
+--       return
 --     end
 
-    if not diagnostics then
-      return
-    end
+--     print("has diagnostics")
+--     print(vim.inspect(diagnostics[1]))
+--     -- Work out max severity diagnostic per line
+--     local max_diagnostics = {}
+--     local check_severity = function(d)
+--       print("d", d.range.start.line, d.severity)
+--       if max_diagnostics[d.range.start.line] then
+--         local current_d = max_diagnostics[d.range.start.line]
+--         if d.severity < current_d.severity then
+--           print("found severity")
+--           max_diagnostics[d.range.start.line] = d
+--         end
+--       else
+--         max_diagnostics[d.range.start.line] = d
+--       end
+--     end
+--     vim.tbl_map(check_severity, diagnostics)
 
-    print("has diagnostics")
-    print(vim.inspect(diagnostics[1]))
-    -- Work out max severity diagnostic per line
-    local max_diagnostics = {}
-    local check_severity = function(d)
-      print("d", d.range.start.line, d.severity)
-      if max_diagnostics[d.range.start.line] then
-        local current_d = max_diagnostics[d.range.start.line]
-        if d.severity < current_d.severity then
-          print("found severity")
-          max_diagnostics[d.range.start.line] = d
-        end
-      else
-        max_diagnostics[d.range.start.line] = d
-      end
-    end
-    vim.tbl_map(check_severity, diagnostics)
+--     -- call original function
+--     orig_set_signs(vim.tbl_values(max_diagnostics), bufnr, client_id, sign_ns, opts)
+--   end
 
-    -- call original function
-    orig_set_signs(vim.tbl_values(max_diagnostics), bufnr, client_id, sign_ns, opts)
-  end
+--   vim.lsp.diagnostic.set_signs = set_signs_limited
+-- end
 
-  vim.lsp.diagnostic.set_signs = set_signs_limited
-end
+-- function M.get_buf_diagnostic_count(bufnr)
+--   local result = {}
 
-function M.get_buf_diagnostic_count(bufnr)
-  local result = {}
+--   for k, level in pairs(levels) do
+--     result[k] = vim.lsp.diagnostic.get_count(bufnr, level)
+--   end
 
-  for k, level in pairs(levels) do
-    result[k] = vim.lsp.diagnostic.get_count(bufnr, level)
-  end
-
-  return result
-end
+--   return result
+-- end
 
 ----------------------------------------------------------------------
 -- These are used ATM
@@ -121,6 +121,7 @@ end
 -- Called from mapping to toggle virtual text on and off for a given buffer
 -- https://www.reddit.com/r/neovim/comments/m7ne92/how_to_redraw_lsp_diagnostics/
 -- TODO this may be better to be global
+-- when diagnostics refresh this seems to get lost, and you have to toggle twice
 function M.diagnostic_toggle_virtual_text()
   local virtual_text = vim.b.lsp_virtual_text_enabled
   virtual_text = not virtual_text

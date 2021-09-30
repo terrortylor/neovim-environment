@@ -3,12 +3,13 @@ local common = require('plugins.lsp.common')
 -- GO111MODULE=on go get golang.org/x/tools/gopls@latest
 require'lspconfig'.gopls.setup{
   on_attach = common.on_attach,
-  capabilities = common.compeSnippetCapabilities(),
+  capabilities = common.buildCapabilities(),
   init_options = {
+    analyses = {unusedparams = true, unreachable = false},
     codelenses = {
-      -- no mappings here atm
-      generate = true,
-      test = true
-    }
-  },
+      generate = true, -- show the `go generate` lens.
+      test = true,
+      tidy = true
+    },
+  }
 }

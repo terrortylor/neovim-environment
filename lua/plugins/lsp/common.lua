@@ -60,11 +60,11 @@ local function set_mappings(client, bufnr)
   create_mappings(mappings, nil, bufnr)
 end
 
--- only sets omnifunc if compe not loaded
+-- only sets omnifunc if cmp not loaded
 local function set_omnifunc(bufnr)
-  if not vim.g.loaded_compe then
-    local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-    buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+  if not vim.g.loaded_cmp then
+    print("Setting built in LSP omnifunc")
+    vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
   end
 end
 
@@ -84,32 +84,10 @@ local function set_highlights(client)
 end
 
 -- snippet support
-function M.compeSnippetCapabilities()
+function M.buildCapabilities()
   local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities.textDocument.completion.completionItem.snippetSupport = true
-capabilities.textDocument.completion.completionItem.preselectSupport = true
-capabilities.textDocument.completion.completionItem.insertReplaceSupport = true
-capabilities.textDocument.completion.completionItem.labelDetailsSupport = true
-capabilities.textDocument.completion.completionItem.deprecatedSupport = true
-capabilities.textDocument.completion.completionItem.commitCharactersSupport = true
-capabilities.textDocument.completion.completionItem.tagSupport = { valueSet = { 1 } }
-capabilities.textDocument.completion.completionItem.resolveSupport = {
-  properties = {
-    'documentation',
-    'detail',
-    'additionalTextEdits',
-  },
-}
-
-  -- local capabilities = vim.lsp.protocol.make_client_capabilities()
-  -- capabilities.textDocument.completion.completionItem.snippetSupport = true
-  -- capabilities.textDocument.completion.completionItem.resolveSupport = {
-  --   properties = {
-  --     'documentation',
-  --     'detail',
-  --     'additionalTextEdits',
-  --   }
-  -- }
+  -- be nice to have this wrapped but the plugin isn't loaded at this point...
+  capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
   return capabilities
 end
 
@@ -134,6 +112,72 @@ function M.on_attach(client, bufnr)
   })
 end
 
+local ns_rename = vim.api.nvim_create_namespace "tj_rename"
+
+function MyLspRename()
+  local bufnr = vim.api.nvim_get_current_buf()
+  vim.api.nvim_buf_clear_namespace(bufnr, ns_rename, 0, -1)
+
+  local current_word = vim.fn.expand "<cword>"
+
+  local plenary_window = require("plenary.window.float").percentage_range_window(0.5, 0.2)
+  vim.api.nvim_buf_set_option(plenary_window.bufnr, "buftype", "prompt")
+  vim.fn.prompt_setprompt(plenary_window.bufnr, string.format('Rename "%s" to > ', current_word))
+  vim.fn.prompt_setcallback(plenary_window.bufnr, function(text)
+    vim.api.nvim_win_close(plenary_window.win_id, true)
+
+    if text ~= "" then
+      vim.schedule(function()
+        vim.api.nvim_buf_delete(plenary_window.bufnr, { force = true })
+
+        vim.lsp.buf.rename(text)
+      end)
+    else
+      print "Nothing to rename!"
+    end
+  end)
+
+  vim.cmd [[startinsert]]
+end
+
+
+GoImports = function(timeoutms)
+  local context = { source = { organizeImports = true } }
+  vim.validate { context = { context, "t", true } }
+  local params = vim.lsp.util.make_range_params()
+  params.context = context
+  local method = "textDocument/codeAction"
+  local resp = vim.lsp.buf_request_sync(0, method, params, timeoutms)
+  if resp and resp[1] then
+    local result = resp[1].result
+    if result and result[1] then
+      local edit = result[1].edit
+      vim.lsp.util.apply_workspace_edit(edit)
+    end
+  end
+  vim.lsp.buf.formatting_sync()
+end
+
+function M.handler_implementation()
+  local params = vim.lsp.util.make_position_params()
+
+  vim.lsp.buf_request(0, "textDocument/implementation", params, function(err, method, result, client_id, bufnr, config)
+    local ft = vim.api.nvim_buf_get_option(bufnr, "filetype")
+
+    -- In go code, I do not like to see any mocks for impls
+    if ft == "go" then
+      local new_result = vim.tbl_filter(function(v)
+        return not string.find(v.uri, "_mock")
+      end, result)
+
+      if #new_result > 0 then
+        result = new_result
+      end
+    end
+
+    vim.lsp.handlers["textDocument/implementation"](err, method, result, client_id, bufnr, config)
+    vim.cmd [[normal! zz]]
+  end)
 end
 
 return M

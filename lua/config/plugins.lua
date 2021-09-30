@@ -51,6 +51,13 @@ return require('packer').startup(function(use)
     {
       "kyazdani42/nvim-tree.lua",
       config = function() require("plugins.nvim-tree").setup() end
+    },
+    {
+      "takac/vim-hardtime",
+      config = function()
+        vim.g.hardtime_default_on = 1
+        vim.g.hardtime_allow_different_key = 1
+      end
     }
   }
 
@@ -159,7 +166,7 @@ return require('packer').startup(function(use)
       require("plugins.lsp.sumneko")
       require("plugins.lsp.tsserver")
       -- not required when using ray-s/go.nvim
-      -- require("plugins.lsp.gopls")
+      require("plugins.lsp.gopls")
       require("plugins.lsp.bashls")
       require("plugins.lsp.efm")
     end
@@ -170,6 +177,7 @@ return require('packer').startup(function(use)
     "hrsh7th/nvim-cmp",
     config = function() require("plugins.nvim-cmp").setup() end,
     requires = {
+      "L3MON4D3/LuaSnip",
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-nvim-lsp",
       "saadparwaiz1/cmp_luasnip",

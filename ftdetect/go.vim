@@ -1,6 +1,6 @@
 autocmd BufRead,BufNewFile *.go set filetype=go
 " TODO add wrapper to fail silently?
-" autocmd BufWritePre *.go :call GoImports
+" autocmd BufWritePre *.go :GoImport
 
 set errorformat =%-G#\ %.%#                   " Ignore lines beginning with '#' ('# command-line-arguments' line sometimes appears?)
 set errorformat+=%-G%.%#panic:\ %m            " Ignore lines containing 'panic: message'

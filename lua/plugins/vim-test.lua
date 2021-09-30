@@ -4,6 +4,8 @@ function M.setup()
   -- vim.api.nvim_set_var("test#strategy", "neovim")
   -- vim.api.nvim_set_var("test#neovim#term_position", "topleft")
 
+  vim.api.nvim_set_var("test#javascript#jest#executable", "yarn test")
+
   vim.cmd [[
     function! CustomTmuxStrategy(cmd)
       let Seed = luaeval("require('tmux.commands').seed_instance_command")
