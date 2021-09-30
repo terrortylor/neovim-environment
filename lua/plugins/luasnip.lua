@@ -6,6 +6,7 @@ local function setup_snippets()
   local s = ls.snippet
   -- local sn = ls.snippet_node
   -- local isn = ls.indent_snippet_node
+  local parse_snippet = ls.parser.parse_snippet
   local t = ls.text_node
   -- local i = ls.insert_node
   -- local f = ls.function_node
@@ -20,6 +21,27 @@ local function setup_snippets()
         ":setvar SQLCMDMAXVARTYPEWIDTH 30",
         ":setvar SQLCMDMAXFIXEDTYPEWIDTH 30"
       })})
+    },
+    go = {
+      parse_snippet("tt",
+      [[
+func Test$1(t *testing.T) {
+	testcases := []struct {
+		name  string
+		$2
+	}{
+		{
+			desc: "$3",
+			$4
+		},
+	}
+	for _, tc := range testcases {
+		t.Run(tc.name, func(t *testing.T) {
+			$0
+		})
+	}
+}
+      ]]),
     }
   }
 

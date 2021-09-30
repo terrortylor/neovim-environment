@@ -124,7 +124,7 @@ return require('packer').startup(function(use)
   use {
     "L3MON4D3/LuaSnip",
     config = function() require('plugins.luasnip').setup() end,
-    ft = {'go'},
+    ft = {'go', 'sql'},
     requires = {"rafamadriz/friendly-snippets"}
   }
 
