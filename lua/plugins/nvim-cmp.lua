@@ -1,5 +1,12 @@
 local M = {}
 
+-- could be moved to utils
+local function prequire(...)
+  local status, lib = pcall(require, ...)
+  if (status) then return lib end
+  return nil
+end
+
 function M.setup_sources()
   local sources = {}
 
@@ -37,13 +44,15 @@ function M.setup()
   end
 
   local cmp = require('cmp')
-  local luasnip = require 'luasnip'
+  local luasnip = prequire ('luasnip')
   cmp.setup({
     -- THIS IS THE FUCKING KEY!
     preselect = cmp.PreselectMode.None,
     snippet = {
       expand = function(args)
-        require('luasnip').lsp_expand(args.body)
+        if luasnip then
+          luasnip.lsp_expand(args.body)
+        end
       end,
     },
     mapping = {
@@ -58,14 +67,14 @@ function M.setup()
             behavior = cmp.ConfirmBehavior.Replace,
             select = true,
           }
-        elseif luasnip.expand_or_jumpable() then
+        elseif luasnip and luasnip.expand_or_jumpable() then
           vim.fn.feedkeys(t('<Plug>luasnip-expand-or-jump'), '')
         else
           fallback()
         end
       end, {'i', 's'}),
       ['<S-Tab>'] = cmp.mapping(function(fallback)
-        if luasnip.jumpable(-1) then
+        if luasnip and luasnip.jumpable(-1) then
           vim.fn.feedkeys(t('<Plug>luasnip-jump-prev'), '')
         else
           fallback()

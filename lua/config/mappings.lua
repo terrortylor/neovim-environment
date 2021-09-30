@@ -109,10 +109,7 @@ require('util.config').create_mappings({
       "(v:count? 'k' : (reg_recording() == '' ? 'gk' : (reg_executing() == '' ? 'gk' : 'k')))",
       {noremap = true, silent = true, expr = true}
     },
-
-    -- TODO move to ultisnips plugin
-    -- Ultisnips
-    ["<leader>ue"] = ":UltiSnipsEdit<CR>:set filetype=snippets<CR>",
+    ["<leader>/"] = [[/\<\><left><left>]],
   },
   v = {
     -- Find in buffer
