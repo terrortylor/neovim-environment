@@ -125,7 +125,6 @@ return require('packer').startup(function(use)
     "L3MON4D3/LuaSnip",
     config = function() require('plugins.luasnip').setup() end,
     ft = {'go', 'sql'},
-    requires = {"rafamadriz/friendly-snippets"}
   }
 
   -- add some colour to colors and colour codes in buffers
