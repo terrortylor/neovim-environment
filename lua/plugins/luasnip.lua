@@ -44,7 +44,6 @@ local function setup_snippets()
       pair('"', '"', neg, even_count),
       pair("`", "`", neg, even_count),
       s({trig="{,", wordTrig=false}, { t({"{","\t"}), i(1), t({"", "}"}) }),
-      ls.parser.parse_snippet({trig = "tr"}, "if ${1:[[ ${2:word} -eq ${3:word2} ]]}; then\n\t$4\nfi"),
     },
     sql = {
       s("nice-format", {t({
@@ -55,11 +54,7 @@ local function setup_snippets()
     go = {
       -- test table wrapped in a fun
       parse_snippet({ trig = "functest", name = "Test" },
-      [[
-func Test$1(t *testing.T) {
-  $0
-}
-      ]]),
+     "func Test$1(t *testing.T) {\n\t$0\n}"),
       parse_snippet({ trig = "tt", name = "Test Table" },
       [[
 testcases := []struct {
@@ -78,38 +73,16 @@ for _, tc := range testcases {
 }
       ]]),
       parse_snippet("iferr",
-      [[
-if err ${1:!=} nil {
-  return ${2:err}
-}
-$0
-      ]]),
-      parse_snippet({ trig = "fori", name = "for i <= N" },
-      [[
-${1:i := 1}
-for ${2:i <= 3} {
-  $0
-}
-      ]]),
-      parse_snippet({ trig = "forr", name = "for range" },
-      [[
-for ${1:i}, ${2:v} := range ${3:somearray} {
-  $0
-}
-      ]]),
+      "if err ${1:!=} nil {\n\treturn ${2:err}\n}\n$0"),
       parse_snippet({ trig = "if", name = "if" },
-      [[
-if $1 {
-  $0
-}
-      ]]),
+      "if $1 {\n\t${0:$TM_SELECTED_TEXT}\n}"),
     }
   }
+  require("luasnip").config.setup({store_selection_keys="<Tab>"})
 end
 
 function  M.setup()
   setup_snippets()
-  -- keymaps setup in nvim-cmp config
 end
 
 return M

@@ -62,7 +62,7 @@ function M.setup()
       ['<C-f>'] = cmp.mapping.scroll_docs(4),
       ['<C-e>'] = cmp.mapping.abort(),
       ['<TAB>'] = cmp.mapping(function(fallback)
-        if vim.fn.pumvisible() == 1 then
+        if cmp.visible() then
           cmp.confirm {
             behavior = cmp.ConfirmBehavior.Replace,
             select = true,
