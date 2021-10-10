@@ -6,6 +6,12 @@ local autogroups = {
     {"WinEnter", "*", "setlocal cursorline"},
     {"WinLeave", "*", "setlocal nocursorline"}
   },
+  line_numbers = {
+    {"WinEnter", "*", "set relativenumber"},
+    {"WinLeave", "*", "set norelativenumber"},
+    {"CmdLineEnter", "*", "set norelativenumber | redraw"},
+    {"CmdLineLeave", "*", "set relativenumber | redraw"},
+  },
   remove_trailing_whitespace = {
     -- FIXME this moves the cursor, so need to set mark and jump back
     {"BufWritePre", "*", [[%s/\s\+$//e]]}

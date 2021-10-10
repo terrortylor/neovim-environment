@@ -35,6 +35,7 @@ o.splitbelow = true -- defualt horizontal split to bottom
 o.termguicolors = true -- use terminal gui colours
 o.showtabline = 2 -- force always show tab line
 o.cursorline = true -- highlight line cursor is on
+-- There is a autogroup that pairs with this setting
 o.number = true -- show line numbers
 o.relativenumber = true -- show relative line numbers
 o.signcolumn = "yes:2" -- show sign column, set width to two
