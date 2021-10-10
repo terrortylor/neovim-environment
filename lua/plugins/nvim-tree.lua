@@ -53,7 +53,7 @@ function M.setup()
 
   create_mappings({
     n = {
-      ["<c-n>"] = "<cmd>lua require('plugins.nvim-tree').toggle_nvim()<CR>",
+      ["<c-n>"] = "<cmd>NvimTreeToggle<CR>",
     }
   })
 end
