@@ -39,6 +39,12 @@ function M.setup_sources()
 end
 
 function M.setup()
+  local line_only_whitespace = function()
+    local line, _ = unpack(vim.api.nvim_win_get_cursor(0))
+    print("ere", vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:match("^%s*$"))
+    return vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:match("^%s*$") ~= nil
+  end
+
   local cmp = require('cmp')
   local luasnip = prequire ('luasnip')
   cmp.setup({
@@ -63,6 +69,8 @@ function M.setup()
             behavior = cmp.ConfirmBehavior.Replace,
             select = true,
           }
+        elseif line_only_whitespace() then
+          fallback()
         elseif luasnip and luasnip.expand_or_jumpable() then
           luasnip.expand_or_jump()
         else
