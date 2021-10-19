@@ -3,9 +3,6 @@ local abbs = {
     teh = "the",
     adn = "and",
   },
-  c = {
-    luaprint = "lua print(vim.api.nvim_)<left>",
-  }
 }
 
 for mode, abbrevs in pairs(abbs) do

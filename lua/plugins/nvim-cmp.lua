@@ -68,14 +68,14 @@ function M.setup()
             select = true,
           }
         elseif luasnip and luasnip.expand_or_jumpable() then
-          vim.fn.feedkeys(t('<Plug>luasnip-expand-or-jump'), '')
+          luasnip.expand_or_jump()
         else
           fallback()
         end
       end, {'i', 's'}),
       ['<S-Tab>'] = cmp.mapping(function(fallback)
         if luasnip and luasnip.jumpable(-1) then
-          vim.fn.feedkeys(t('<Plug>luasnip-jump-prev'), '')
+          luasnip.jump(-1)
         else
           fallback()
         end
