@@ -39,10 +39,6 @@ function M.setup_sources()
 end
 
 function M.setup()
-  local t = function(str)
-    return vim.api.nvim_replace_termcodes(str, true, true, true)
-  end
-
   local cmp = require('cmp')
   local luasnip = prequire ('luasnip')
   cmp.setup({
