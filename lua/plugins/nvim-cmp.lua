@@ -7,6 +7,7 @@ local function prequire(...)
   return nil
 end
 
+local menu = {}
 function M.setup_sources()
   local sources = {}
 
@@ -17,18 +18,19 @@ function M.setup_sources()
     "lua"
   }
 
-  local addSource = function(name)
+  local addSource = function(name, menu_val)
     table.insert(sources, {name = name})
+    menu[name] = menu_val
   end
 
   local ft = vim.bo.filetype
 
-  addSource("luasnip")
+  addSource("luasnip", "[SNIP]")
 
   if vim.tbl_contains(lsp_filetytpe, ft) then
-    addSource("nvim_lsp")
+    addSource("nvim_lsp", "[LSP]")
   else
-    addSource("buffer")
+    addSource("buffer", "[BUF]")
   end
 
   -- if vim.fn.getenv("TMUX") then
@@ -55,6 +57,12 @@ function M.setup()
         if luasnip then
           luasnip.lsp_expand(args.body)
         end
+      end,
+    },
+    formatting = {
+      format = function(entry, vim_item)
+        vim_item.menu = menu[entry.source.name]
+        return vim_item
       end,
     },
     mapping = {
