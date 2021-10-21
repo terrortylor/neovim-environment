@@ -57,6 +57,7 @@ return require('packer').startup(function(use)
       config = function()
         vim.g.hardtime_default_on = 1
         vim.g.hardtime_allow_different_key = 1
+        vim.g.hardtime_ignore_buffer_patterns = {"org", "markdown"}
       end
     }
   }
@@ -67,6 +68,11 @@ return require('packer').startup(function(use)
     "nvim-lua/plenary.nvim",
     requires = {"norcalli/nvim-terminal.lua"},
     config = function() require("terminal").setup() end
+  }
+
+  use {
+    "kristijanhusak/orgmode.nvim",
+    config = function() require("plugins.orgmode") end
   }
 
   -- general
@@ -181,7 +187,8 @@ return require('packer').startup(function(use)
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-nvim-lsp",
       "saadparwaiz1/cmp_luasnip",
-      { 'andersevenrud/compe-tmux', branch = 'cmp' }
+      { 'andersevenrud/compe-tmux', branch = 'cmp' },
+      "f3fora/cmp-spell"
     }
   }
 

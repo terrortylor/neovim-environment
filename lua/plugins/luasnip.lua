@@ -52,6 +52,7 @@ local function setup_snippets()
       })})
     },
     go = {
+      parse_snippet({ trig = "fprint" }, 'fmt.Printf("$1\\n", $2)$0'),
       -- test table wrapped in a fun
       parse_snippet({ trig = "functest", name = "Test" },
      "func Test$1(t *testing.T) {\n\t$0\n}"),
@@ -76,8 +77,12 @@ for _, tc := range testcases {
       "if err ${1:!=} nil {\n\treturn ${2:err}\n}\n$0"),
       parse_snippet({ trig = "if", name = "if" },
       "if $1 {\n\t${0:$TM_SELECTED_TEXT}\n}"),
-    }
+    },
+    markdown = {
+      parse_snippet("**", "**${1:BOLD TEXT}**$0"),
+    },
   }
+  ls.snippets["wiki.markdown"] = ls.snippets.markdown
   require("luasnip").config.setup({store_selection_keys="<Tab>"})
 end
 
