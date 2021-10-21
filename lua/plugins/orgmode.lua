@@ -1,5 +1,5 @@
 require("orgmode").setup({
-  org_agenda_files = {"~/personnal-workspace/notes/*"},
+  org_agenda_files = {"~/personnal-workspace/notes/**/*"},
   org_default_notes_file = "~/personnal-workspace/notes/refile.org",
   org_todo_keywords = {"TODO(t)", "PROGRESS(p)", "BLOCKED(b)", "|", "DONE(d)"},
   org_agenda_templates = {
