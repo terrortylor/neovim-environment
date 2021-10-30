@@ -3,6 +3,7 @@ local M = {}
 -- Lifted from:
 -- https://github.com/jose-elias-alvarez/nvim-lsp-ts-utils/blob/main/lua/nvim-lsp-ts-utils.lua
 -- and
+-- luacheck: ignore
 -- https://github.com/nvim-telescope/telescope.nvim/blob/79dc995f820150d5de880c08e814af327ff7e965/lua/telescope/builtin/lsp.lua#L238
 function M.fix_first_code_action()
   local params = vim.lsp.util.make_range_params()
@@ -18,7 +19,7 @@ function M.fix_first_code_action()
     end
 
 
-    for i, v in ipairs(responses) do
+    for _, v in ipairs(responses) do
       print("found", vim.inspect(v))
     end
 

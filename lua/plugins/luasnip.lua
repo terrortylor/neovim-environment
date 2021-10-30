@@ -1,3 +1,4 @@
+-- luacheck: ignore
 local M = {}
 
 local function setup_snippets()
@@ -50,6 +51,12 @@ local function setup_snippets()
         ":setvar SQLCMDMAXVARTYPEWIDTH 30",
         ":setvar SQLCMDMAXFIXEDTYPEWIDTH 30"
       })})
+    },
+    html = {
+      parse_snippet({ trig = "newhttp" }, '${1:www.blablabla.com}\n${2:${3:POST /posts}\n${4:HEADER: Content-Type: application/json; charset=UTF-8}\n${5:id: 100}\n${6:@filename.txt}}'),
+    },
+    sh = {
+      parse_snippet({ trig = "print" }, 'echo ${2:"}${1:$TM_SELECTED_TEXT}${2}'),
     },
     go = {
       parse_snippet({ trig = "mock_controller" }, 'ctrl := gomock.NewController(t)\ndefer ctrl.Finish()\n$0'),

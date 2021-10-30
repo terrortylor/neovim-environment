@@ -32,9 +32,6 @@ function M.lsp_document_methods(opts)
   local pickers = require('telescope.pickers')
   local utils = require('telescope.utils')
   local finders = require('telescope.finders')
-  local previewers = require('telescope.previewers')
-  local sorters = require('telescope.sorters')
-
 
   local params = vim.lsp.util.make_position_params()
   local results_lsp, err = vim.lsp.buf_request_sync(0, "textDocument/documentSymbol", params)

@@ -5,6 +5,7 @@ return require('packer').startup(function(use)
         {
           "BufEnter",
           "lua/config/plugins.lua",
+          -- luacheck: ignore
           "lua vim.api.nvim_buf_set_keymap(0, 'n', '<leader>nn', '<cmd>luafile %<cr> | <cmd>PackerCompile<cr> | <cmd>PackerSync<cr>', {})"
         },
       },
@@ -75,7 +76,7 @@ return require('packer').startup(function(use)
   --   config = function() require("plugins.orgmode") end
   -- }
 
-  use { 
+  use {
     "nvim-neorg/neorg",
     ft = "norg",
     config = function()

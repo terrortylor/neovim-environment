@@ -6,7 +6,7 @@ local M = {}
 
 function M.hlsearch()
   if vim.g.smart_search_enabled then
-    local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+    local _, col = unpack(vim.api.nvim_win_get_cursor(0))
     local match_pos = vim.fn.match(vim.fn.getline('.'), vim.fn.getreg('/'), col)
 
     if match_pos == col and vim.o.hlsearch then

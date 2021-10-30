@@ -1,4 +1,3 @@
-local util = require('lspconfig/util')
 local create_mappings = require("util.config").create_mappings
 
 local M = {}
@@ -17,7 +16,9 @@ local function set_mappings(client, bufnr)
       ['gtd'] = 'mt<Cmd>tabnew % <CR> `t <Cmd> lua vim.lsp.buf.definition()<CR>',
       ['K'] = '<Cmd>lua vim.lsp.buf.hover()<CR>',
       ['<leader>ca'] = '<Cmd>lua require("plugins.telescope").dropdown_code_actions()<CR>',
+      -- luacheck: ignore
       ['<leader>cf'] = '<Cmd>lua vim.lsp.diagnostic.goto_next()<CR><Cmd>lua require("lsp.codeactions").fix_first_code_action()<CR>',
+      -- luacheck: ignore
       ['<leader>cF'] = '<Cmd>lua vim.lsp.diagnostic.goto_prev()<CR><Cmd>lua require("lsp.codeactions").fix_first_code_action()<CR>',
       -- ['gI'] = '<cmd>Telescope lsp_implementations<CR>',
       ['gI'] = '<cmd>lua require("plugins.lsp.common").handler_implementation()<CR>',
@@ -100,6 +101,7 @@ function M.on_attach(client, bufnr)
 
   -- add border
   vim.lsp.handlers["textDocument/hover"] =  vim.lsp.with(vim.lsp.handlers.hover, {border = "double"})
+  -- luacheck: ignore
   vim.lsp.handlers["textDocument/signatureHelp"] =  vim.lsp.with(vim.lsp.handlers.signature_help, {border = "double", focusable = false})
 
   -- format publsh diagnostics
@@ -110,74 +112,6 @@ function M.on_attach(client, bufnr)
     update_in_insert = false,
     virtual_text = false
   })
-end
-
-local ns_rename = vim.api.nvim_create_namespace "tj_rename"
-
-function MyLspRename()
-  local bufnr = vim.api.nvim_get_current_buf()
-  vim.api.nvim_buf_clear_namespace(bufnr, ns_rename, 0, -1)
-
-  local current_word = vim.fn.expand "<cword>"
-
-  local plenary_window = require("plenary.window.float").percentage_range_window(0.5, 0.2)
-  vim.api.nvim_buf_set_option(plenary_window.bufnr, "buftype", "prompt")
-  vim.fn.prompt_setprompt(plenary_window.bufnr, string.format('Rename "%s" to > ', current_word))
-  vim.fn.prompt_setcallback(plenary_window.bufnr, function(text)
-    vim.api.nvim_win_close(plenary_window.win_id, true)
-
-    if text ~= "" then
-      vim.schedule(function()
-        vim.api.nvim_buf_delete(plenary_window.bufnr, { force = true })
-
-        vim.lsp.buf.rename(text)
-      end)
-    else
-      print "Nothing to rename!"
-    end
-  end)
-
-  vim.cmd [[startinsert]]
-end
-
-
-GoImports = function(timeoutms)
-  local context = { source = { organizeImports = true } }
-  vim.validate { context = { context, "t", true } }
-  local params = vim.lsp.util.make_range_params()
-  params.context = context
-  local method = "textDocument/codeAction"
-  local resp = vim.lsp.buf_request_sync(0, method, params, timeoutms)
-  if resp and resp[1] then
-    local result = resp[1].result
-    if result and result[1] then
-      local edit = result[1].edit
-      vim.lsp.util.apply_workspace_edit(edit)
-    end
-  end
-  vim.lsp.buf.formatting_sync()
-end
-
-function M.handler_implementation()
-  local params = vim.lsp.util.make_position_params()
-
-  vim.lsp.buf_request(0, "textDocument/implementation", params, function(err, method, result, client_id, bufnr, config)
-    local ft = vim.api.nvim_buf_get_option(bufnr, "filetype")
-
-    -- In go code, I do not like to see any mocks for impls
-    if ft == "go" then
-      local new_result = vim.tbl_filter(function(v)
-        return not string.find(v.uri, "_mock")
-      end, result)
-
-      if #new_result > 0 then
-        result = new_result
-      end
-    end
-
-    vim.lsp.handlers["textDocument/implementation"](err, method, result, client_id, bufnr, config)
-    vim.cmd [[normal! zz]]
-  end)
 end
 
 return M

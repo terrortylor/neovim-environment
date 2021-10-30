@@ -10,7 +10,7 @@ local M = {}
 local timer
 local speed = 100
 local snake
-local food 
+local food
 
 -- Stores window with / height
 local canvas = {}

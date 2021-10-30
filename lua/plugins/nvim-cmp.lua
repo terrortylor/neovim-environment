@@ -63,11 +63,10 @@ function M.setup_sources()
 end
 
 function M.setup()
-  print("in setup")
-  local line_only_whitespace = function()
-    local line, _ = unpack(vim.api.nvim_win_get_cursor(0))
-    return vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:match("^%s*$") ~= nil
-  end
+  -- local line_only_whitespace = function()
+  --   local line, _ = unpack(vim.api.nvim_win_get_cursor(0))
+  --   return vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:match("^%s*$") ~= nil
+  -- end
 
   local cmp = require('cmp')
   local luasnip = prequire ('luasnip')
