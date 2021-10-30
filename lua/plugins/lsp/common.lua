@@ -40,7 +40,7 @@ local function set_mappings(client, bufnr)
       ['<space>th'] = '<cmd>lua require("lsp.diagnostics").diagnostic_toggle_virtual_text()<CR>',
     },
     i = {
-      ['<c-k>'] = '<cmd>lua vim.lsp.buf.signature_help()<CR>',
+      -- ['<c-k>'] = '<cmd>lua vim.lsp.buf.signature_help()<CR>',
     }
   }
 

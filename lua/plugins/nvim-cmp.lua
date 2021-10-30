@@ -11,50 +11,59 @@ local menu = {}
 function M.setup_sources()
   local sources = {}
 
-  local lsp_filetytpe = {
-    "go",
-    "typescript",
-    "javascript",
-    "lua"
-  }
-
-  local spelling_filetypes = {
-    "markdown",
-    "wiki.markdown",
-    "org",
-  }
-
   local addSource = function(name, menu_val)
-    table.insert(sources, {name = name})
-    menu[name] = menu_val
+    if type(name) == 'string' then
+      table.insert(sources, {name = name})
+      menu[name] = menu_val
+    else
+      table.insert(sources, name)
+      menu[name.name] = menu_val
+    end
   end
 
   local ft = vim.bo.filetype
 
   addSource("luasnip", "[SNIP]")
 
+  local lsp_filetytpe = {
+    "go",
+    "typescript",
+    "javascript",
+    "lua"
+  }
   if vim.tbl_contains(lsp_filetytpe, ft) then
     addSource("nvim_lsp", "[LSP]")
   else
-    addSource("buffer", "[BUF]")
+    addSource({name = "buffer", keyword_length = 4}, "[BUF]")
   end
 
+  local spelling_filetypes = {
+    "markdown",
+    "wiki.markdown",
+    "org",
+  }
   if vim.tbl_contains(spelling_filetypes, ft) then
-    addSource("spell", "[SPELL]")
+    addSource({name = "spell", keyword_length = 4}, "[SPELL]")
   end
 
   if ft == "org" then
     addSource("orgmode", "[ORG]")
   end
 
-  -- if vim.fn.getenv("TMUX") then
-  --   addSource("tmux")
-  -- end
+  if ft == "norg" then
+    addSource("neorg", "[NORG]")
+  end
+
+  if vim.fn.getenv("TMUX") then
+    addSource({ name = "tmux", keyword_length = 4, max_item_count = 5 }, "[TMUX]")
+  end
 
   require('cmp').setup.buffer({sources = sources})
+  -- print(vim.inspect(sources))
 end
 
 function M.setup()
+  print("in setup")
   local line_only_whitespace = function()
     local line, _ = unpack(vim.api.nvim_win_get_cursor(0))
     return vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:match("^%s*$") ~= nil
@@ -65,6 +74,7 @@ function M.setup()
   cmp.setup({
     -- THIS IS THE FUCKING KEY!
     preselect = cmp.PreselectMode.None,
+    -- completion = {autocomplete = true},
     snippet = {
       expand = function(args)
         if luasnip then
@@ -84,10 +94,19 @@ function M.setup()
       ['<C-d>'] = cmp.mapping.scroll_docs(-4),
       ['<C-f>'] = cmp.mapping.scroll_docs(4),
       ['<C-e>'] = cmp.mapping.abort(),
---       ['<CR>'] = cmp.mapping.confirm({
---         behavior = cmp.ConfirmBehavior.Replace,
---         select = true,
---       }),
+      ["<c-y>"] = cmp.mapping.confirm {
+        behavior = cmp.ConfirmBehavior.Insert,
+        select = true,
+      },
+      ["<c-q>"] = cmp.mapping.confirm {
+        behavior = cmp.ConfirmBehavior.Replace,
+        select = true,
+      },
+
+      ['<CR>'] = cmp.mapping.confirm({
+        behavior = cmp.ConfirmBehavior.Replace,
+        select = true,
+      }),
 --       ["<Tab>"] = cmp.mapping(function(fallback)
 --         if cmp.visible() then
 --           cmp.select_next_item()
@@ -107,38 +126,39 @@ function M.setup()
 --           luasnip.jump(-1)
 --         end
 --       end, { "i", "s" }),
-      ['<TAB>'] = cmp.mapping(function(fallback)
-        if cmp.get_selected_entry() == nil then
-          print("is nil")
-        end
-        -- if cmp.visible() then
-        if cmp.visible() and cmp.get_selected_entry() ~= nil then
-          print("in confirm")
-          cmp.confirm {
-            behavior = cmp.ConfirmBehavior.Replace,
-            select = true,
-          }
-        elseif line_only_whitespace() then
-          print("in whitespace")
-          fallback()
-        -- elseif luasnip and luasnip.expand_or_jumpable() then
-        --   print("injump")
-        --   luasnip.expand_or_jump()
-        elseif luasnip and luasnip.jumpable(1) then
-          print("in jump")
-          luasnip.jump(1)
-        else
-          print("in fallback")
-          fallback()
-        end
-      end, {'i', 's'}),
-      ['<S-Tab>'] = cmp.mapping(function(fallback)
-        if luasnip and luasnip.jumpable(-1) then
-          luasnip.jump(-1)
-        else
-          fallback()
-        end
-      end, {'i', 's'}),
+
+      -- ['<TAB>'] = cmp.mapping(function(fallback)
+      --   if cmp.get_selected_entry() == nil then
+      --     print("is nil")
+      --   end
+      --   -- if cmp.visible() then
+      --   if cmp.visible() and cmp.get_selected_entry() ~= nil then
+      --     print("in confirm")
+      --     cmp.confirm {
+      --       behavior = cmp.ConfirmBehavior.Replace,
+      --       select = true,
+      --     }
+      --   elseif line_only_whitespace() then
+      --     print("in whitespace")
+      --     fallback()
+      --   -- elseif luasnip and luasnip.expand_or_jumpable() then
+      --   --   print("injump")
+      --   --   luasnip.expand_or_jump()
+      --   elseif luasnip and luasnip.jumpable(1) then
+      --     print("in jump")
+      --     luasnip.jump(1)
+      --   else
+      --     print("in fallback")
+      --     fallback()
+      --   end
+      -- end, {'i', 's'}),
+      -- ['<S-Tab>'] = cmp.mapping(function(fallback)
+      --   if luasnip and luasnip.jumpable(-1) then
+      --     luasnip.jump(-1)
+      --   else
+      --     fallback()
+      --   end
+      -- end, {'i', 's'}),
     },
   })
 

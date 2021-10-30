@@ -37,13 +37,13 @@ local function setup_snippets()
   ls.snippets = {
     all = {
       pair("(", ")", neg, char_count_same),
-      pair("{", "}", neg, char_count_same),
+      -- pair("{", "}", neg, char_count_same),
       pair("[", "]", neg, char_count_same),
       pair("<", ">", neg, char_count_same),
       pair("'", "'", neg, even_count),
       pair('"', '"', neg, even_count),
       pair("`", "`", neg, even_count),
-      s({trig="{,", wordTrig=false}, { t({"{","\t"}), i(1), t({"", "}"}) }),
+      s({trig="{", wordTrig=false}, { t({"{","\t"}), i(1), t({"", "}"}), i(2) }),
     },
     sql = {
       s("nice-format", {t({
@@ -52,6 +52,10 @@ local function setup_snippets()
       })})
     },
     go = {
+      parse_snippet({ trig = "mock_controller" }, 'ctrl := gomock.NewController(t)\ndefer ctrl.Finish()\n$0'),
+      parse_snippet({ trig = "mock_generation" }, '//go:generate mockgen -source=\\$GOFILE -destination=mock_\\$GOFILE -package=\\$GOPACKAGE'),
+      parse_snippet({ trig = "pretty_print_struct" }, 'prettyStruct, err := json.MarshalIndent(${1:$TM_SELECTED_TEXT}, "", "  ")\nif err != nil {\n\tlog.Fatalf(err.Error())\n}\nfmt.Printf("MarshalIndent funnction output %s\\n", string(prettyStruct))'),
+      parse_snippet({ trig = "interface_check" }, 'var _ ${1:INTERFACE} = (*${2:STUCT})(nil)'),
       parse_snippet({ trig = "fprint" }, 'fmt.Printf("$1\\n", $2)$0'),
       -- test table wrapped in a fun
       parse_snippet({ trig = "functest", name = "Test" },
@@ -81,13 +85,31 @@ for _, tc := range testcases {
     markdown = {
       parse_snippet("**", "**${1:BOLD TEXT}**$0"),
     },
+    org = {
+      parse_snippet("code", "#+NAME: ${1:NAME}\n#+BEGIN_SRC ${2:LANGUAGE}\n${3:CODE}\n#+END_SRC"),
+    },
   }
-  ls.snippets["wiki.markdown"] = ls.snippets.markdown
+  ls.filetype_extend("wiki.markdown", {"markdown"})
   require("luasnip").config.setup({store_selection_keys="<Tab>"})
+end
+
+local function setup_keymaps()
+
+  vim.cmd [[
+  imap <silent><expr> <c-k> luasnip#expand_or_jumpable() ? '<Plug>luasnip-expand-or-jump' : '<c-k>'
+  inoremap <silent> <c-j> <cmd>lua require('luasnip').jump(-1)<CR>
+
+  imap <silent><expr> <C-l> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : '<C-l>'
+
+  snoremap <silent> <c-k> <cmd>lua require('luasnip').jump(1)<CR>
+  snoremap <silent> <c-j> <cmd>lua require('luasnip').jump(-1)<CR>
+]]
+
 end
 
 function  M.setup()
   setup_snippets()
+  setup_keymaps()
 end
 
 return M
