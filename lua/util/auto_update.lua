@@ -14,11 +14,33 @@ M.opts = {
   "lspinfo"
   }
 }
+M.debounce = 500
 
 function M.toggle_auto_update()
   vim.g.enable_auto_update = not vim.g.enable_auto_update
   -- TODO this should be a post hook
   vim.cmd("redrawtabline")
+end
+
+local queued_event = false
+local debounce_running = false
+
+local function debounce(lfn, duration)
+		if debounce_running then
+      queued_event = true
+    else
+			debounce_running = true
+      queued_event = false
+			vim.defer_fn(function()
+				debounce_running = false
+        if queued_event then
+          queued_event = false
+          debounce(lfn, M.debounce)
+        else
+          lfn()
+        end
+			end, duration)
+		end
 end
 
 --- Saves a buffer if the file path exists (directory path), if the file
@@ -63,13 +85,17 @@ function M.update_buffer()
   end
 end
 
+function M.write_buffers()
+  debounce(M.update_buffer, M.debounce)
+end
+
 function M.setup()
   vim.g.enable_auto_update = true
   vim.cmd [[
   command!  -nargs=0 ToggleAutoUpdate lua require('util.auto_update').toggle_auto_update()
   augroup auto_update
   autocmd!
-  autocmd InsertLeave,TextChanged * lua require('util.auto_update').update_buffer()
+  autocmd InsertLeave,TextChanged * noautocmd lua require('util.auto_update').write_buffers()
   augroup END
   ]]
 end
