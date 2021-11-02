@@ -205,11 +205,12 @@ return require('packer').startup(function(use)
     -- show lightbulb when code action
     {
       "kosayoda/nvim-lightbulb",
+      -- TODO only needed on specific filetypes
       config  = function()
         require'nvim-lightbulb'.update_lightbulb {}
 
         require('util.config').create_autogroups({
-          return_to_last_edit_in_buffer = {
+          update_lightbulb = {
             {"CursorHold,CursorHoldI", "*", "lua require'nvim-lightbulb'.update_lightbulb()"}
           }})
 
