@@ -3,6 +3,13 @@ local log  = require("util.log")
 
 local M = {}
 
+--- Creates a directory, linux only
+-- @param path string the path to create, if nil then uses path of current buffer
+function M.mkdir(path)
+  path = path or api.nvim_call_function("expand", {"%:p:h"})
+  os.execute("mkdir -p " .. path)
+end
+
 -- TODO remove this in favoure of just calling vim function
 function M.file_exists(filename)
     local file = io.open(filename, "r")

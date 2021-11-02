@@ -36,16 +36,9 @@ local commands = {
   {
     "command!",
     "-nargs=?",
-    "-complete=buffer",
-    "DeleteFile",
-    "lua require('config.function.filesystem').delete_file(<args>)"
-  },
-  {
-    "command!",
-    "-nargs=?",
     "-complete=dir",
     "Mkdir",
-    "lua require('config.function.filesystem').mkdir(<args>)"
+    "lua require('util.filesystem').mkdir(<args>)"
   },
   {
     "command!",
