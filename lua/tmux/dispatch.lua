@@ -6,6 +6,10 @@ local M = {}
 -- @param command string: command to send
 -- @param escape boolean: if tmux's normal mode should be escapes, defaults to true
 function M.execute(pane, command, escape)
+  if vim.opt.autowrite:get() or vim.opt.autowriteall:get() then
+    vim.cmd("wall")
+  end
+
   if escape == nil then escape = true end
 
   if escape then

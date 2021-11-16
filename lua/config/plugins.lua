@@ -41,13 +41,7 @@ return require('packer').startup(function(use)
     -- quickly jump to locations in the visible buffer
     {
       "phaazon/hop.nvim",
-      config = function()
-        require'hop'.setup {
-          keys = 'etovxqpdygfblzhckisuran',
-        }
-
-        vim.api.nvim_set_keymap("n", "<leader>fj", ":HopWord<CR>", {noremap = true, silent = true})
-      end
+      config = function() require('plugins.hop') end
     },
     {
       "kyazdani42/nvim-tree.lua",

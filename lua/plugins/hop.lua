@@ -1,31 +1,10 @@
-local plug = require("pluginman")
+require'hop'.setup {
+  keys = 'etovxqpdygfblzhckisuran',
+}
 
-local M = {}
+vim.api.nvim_set_keymap("n", "<leader>fj", ":HopWord<CR>", {noremap = true, silent = true})
+vim.api.nvim_set_keymap("n", "<leader>jj", ":HopChar1<CR>", {noremap = true, silent = true})
+vim.api.nvim_set_keymap("n", "<leader>/", ":HopPattern<CR>", {noremap = true, silent = true})
 
-function M.setup()
-  plug.add({
-    url = "phaazon/hop.nvim",
-    post_handler = function()
-      require'hop'.setup {
-        keys = 'etovxqpdygfblzhckisuran',
-      }
-
-      vim.api.nvim_set_keymap("n", "<leader>fj", ":HopWord<CR>", {noremap = true, silent = true})
-      -- TODO get visual seletions working
-
-    end,
-    highlight_handler = function()
-      local c = require('config.colours').c
-      local hl = require('util.highlights')
-      local set_highlight = hl.set_highlight
-      local fg = hl.guifg
-      local bg = hl.guibg
-
-      set_highlight("HopNextkey", {fg(c.yellow2), bg(c.blue5)})
-      set_highlight("HopNextkey1", {fg(c.green1), bg(c.blue5)})
-      set_highlight("HopNextkey2", {fg(c.green2), bg(c.blue5)})
-    end
-  })
-end
-
-return M
+-- Playing with f/F replacement
+vim.api.nvim_set_keymap('n', '<leader>jf', "<cmd>lua require'hop'.hint_char1({ current_line_only = true })<cr>", {})

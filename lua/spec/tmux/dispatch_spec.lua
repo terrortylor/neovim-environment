@@ -9,6 +9,7 @@ describe('tmux.dispatch', function()
   describe('execute', function()
     it('Should call user input local methods then send command', function()
       -- Setup stubbed values
+      stub(vim, 'cmd')
       stub(os, 'execute')
       testModule.execute("9", "df -h")
 
@@ -21,6 +22,7 @@ describe('tmux.dispatch', function()
 
     it('Should not run escape command', function()
       -- Setup stubbed values
+      stub(vim, 'cmd')
       stub(os, 'execute')
       testModule.execute("9", "df -h", false)
 
@@ -29,6 +31,10 @@ describe('tmux.dispatch', function()
 
       -- reset stubs
       os.execute:revert()
+    end)
+
+    it('Should run wall if autowrite option set', function()
+      -- todo...
     end)
   end)
 

@@ -50,7 +50,7 @@ describe('ui.arglist', function()
   end)
 
   describe("edit_args_in_buffer", function()
-    it(function()
+    it("Should create buffer and set lines to current arglist", function()
       local float= mock(require("ui.window.float"), true)
       local buffer= mock(require("util.buffer"), true)
       local orig_arg_list = {"arg1", "arg2"}
@@ -124,6 +124,6 @@ describe('ui.arglist', function()
       assert.stub(api.nvim_buf_set_lines).was_called_with(101, 0, 2, false, orig_arg_list)
       -- test call back func called though
       assert.stub(testModule.set_arglist).was_called_with(edited_arg_list)
-    end, "Should create buffer and set lines to current arglist")
+    end)
   end)
 end)
