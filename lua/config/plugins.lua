@@ -51,6 +51,9 @@ return require('packer').startup(function(use)
       "takac/vim-hardtime",
       config = function()
         vim.g.hardtime_default_on = 1
+        vim.g.hardtime_showmsg = 1
+        vim.g.hardtime_maxcount = 3
+        vim.g.hardtime_ignore_quickfix = 1
         vim.g.hardtime_allow_different_key = 1
         vim.g.hardtime_ignore_buffer_patterns = {"org", "markdown"}
       end
