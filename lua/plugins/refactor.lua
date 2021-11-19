@@ -27,7 +27,7 @@ end
 
 function M.setup()
   local refactor = require("refactoring")
-  refactor.setup()
+  refactor.setup({})
 
   local function keymap(...) vim.api.nvim_set_keymap(...) end
   local opts = {noremap = true, silent = true, expr = false}
