@@ -32,7 +32,8 @@ local function set_mappings(client, bufnr)
       ['<space>D'] = '<cmd>lua vim.lsp.buf.type_definition()<CR>',
       ['<space>vD'] = '<cmd>vsplit <BAR> lua vim.lsp.buf.type_definition()<CR>',
       ['<space>hD'] = '<cmd>split <BAR> lua vim.lsp.buf.type_definition()<CR>',
-      ['<space>rn'] = '<cmd>lua vim.lsp.buf.rename()<CR>',
+      ['<space>rn'] = '<cmd>lua require("scratch.lsp_rename_popup").rename()<CR>',
+      -- ['<space>rn'] = '<cmd>lua vim.lsp.buf.rename()<CR>',
       ['gr'] = '<Cmd>Telescope lsp_references<CR>',
       ['<space>e'] = '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>',
       ['<space>ge'] = '<cmd>Telescope lsp_workspace_diagnostics<CR>',
@@ -48,7 +49,7 @@ local function set_mappings(client, bufnr)
   -- Set some keybinds conditional on server capabilities
   if client.resolved_capabilities.document_formatting or
     client.resolved_capabilities.document_range_formatting then
-    -- TODO this is fucking gross, but quickfix 
+    -- TODO this is fucking gross, but quickfix
     -- Tried to do filetype mapping but isn't picked up for some reason when vim starts, only when explicitly settings
     -- the filetype to go in the command line... user that is a bug though
     if vim.bo.filetype == "go" then

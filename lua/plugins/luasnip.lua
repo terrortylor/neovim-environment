@@ -84,10 +84,13 @@ for _, tc := range testcases {
   })
 }
       ]]),
-      parse_snippet("iferr",
-      "if err ${1:!=} nil {\n\treturn ${2:err}\n}\n$0"),
-      parse_snippet({ trig = "if", name = "if" },
-      "if $1 {\n\t${0:$TM_SELECTED_TEXT}\n}"),
+      parse_snippet("iferr", "if err ${1:!=} nil {\n\treturn ${2:err}\n}\n$0"),
+      parse_snippet({ trig = "if", name = "if" }, "if $1 {\n\t${0:$TM_SELECTED_TEXT}\n}"),
+      s({ trig = "testserver", name = "httptest.NewServer" }, {t({
+        'ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {',
+        '    t.Fatalf("Did not expect call: %s %s\\n", r.Method, r.URL.Path)',
+        "}))"
+      })}),
     },
     markdown = {
       parse_snippet("**", "**${1:BOLD TEXT}**$0"),

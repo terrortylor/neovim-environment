@@ -90,7 +90,7 @@ function M.write_buffers()
 end
 
 function M.setup()
-  vim.g.enable_auto_update = true
+  vim.g.enable_auto_update = false
   vim.cmd [[
   command!  -nargs=0 ToggleAutoUpdate lua require('util.auto_update').toggle_auto_update()
   augroup auto_update

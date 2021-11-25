@@ -28,6 +28,8 @@ o.timeoutlen = 1500 -- leader timeout
 o.hidden = true -- Allow switching buffers without writing changes
 o.autowriteall = true -- autowrite on a handleful of actions
 
+-- o.clipboard="unnamedplus" -- use system clipboard, this is actually really annoying
+
 o.scrolloff = 5 -- start scrolling 5 lines from top/bottom
 o.splitright = true -- default vertical split to right
 o.splitbelow = true -- defualt horizontal split to bottom

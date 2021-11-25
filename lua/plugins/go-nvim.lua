@@ -8,7 +8,8 @@ function M.setup()
 
   require('util.config').create_autogroups({
     format_go_on_save = {
-      {"BufWritePre", "*.go", ":silent! lua require('go.format').goimport()"}
+      -- auto format on write, don't do this if the auto_update plugin in enabled
+      {"BufWritePre", "*.go", ":silent! lua if not vim.g.enable_auto_update then require('go.format').goimport() end"}
     },
   })
 end
