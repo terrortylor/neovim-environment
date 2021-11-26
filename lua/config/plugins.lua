@@ -56,6 +56,7 @@ return require('packer').startup(function(use)
         vim.g.hardtime_ignore_quickfix = 1
         vim.g.hardtime_allow_different_key = 1
         vim.g.hardtime_ignore_buffer_patterns = {"org", "markdown"}
+        vim.g.list_of_normal_keys = {"h", "j", "k", "l", "-", "+", "<LEFT>", "<RIGHT>"}
       end
     }
   }
