@@ -7,10 +7,10 @@ local autogroups = {
     {"WinLeave", "*", "setlocal nocursorline"}
   },
   line_numbers = {
-    {"WinEnter", "*", "set relativenumber"},
-    {"WinLeave", "*", "set norelativenumber"},
-    {"CmdLineEnter", "*", "set norelativenumber | redraw"},
-    {"CmdLineLeave", "*", "set relativenumber | redraw"},
+    {"WinEnter", "*", "lua require('ui.window.numbering').win_enter()"},
+    {"WinLeave", "*", "lua require('ui.window.numbering').win_leave()"},
+    {"CmdLineEnter", "*", "lua require('ui.window.numbering').cmd_enter()"},
+    {"CmdLineLeave", "*", "lua require('ui.window.numbering').cmd_leave()"},
   },
   remove_trailing_whitespace = {
     -- FIXME this moves the cursor, so need to set mark and jump back
