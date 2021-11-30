@@ -6,6 +6,7 @@ local bg = highlights.guibg
 local lsp_funcs = require('lsp.diagnostics')
 local util = require('util.config')
 local get_user_input = require('util.input').get_user_input
+local ignore_filetype = require('util.buffer').ignore_filetype
 
 local left_tabline = {}
 local left_width = 0
@@ -14,16 +15,6 @@ local right_width = 0
 
 local M = {}
 local tab_names = {}
-
--- TODO this is duplicated in statusline
--- TODO this should not be hard codded?
-local ignore_filetypes = {
-  "qf",
-  "help",
-  "TelescopePrompt",
-  "NvimTree",
-  "lspinfo"
-}
 
 local function add_left(hl, text)
   table.insert(left_tabline, "%#" .. hl .."#")
@@ -102,11 +93,8 @@ local function show_filetype()
   end
 
   local skip = false
-  for _,ft in pairs(ignore_filetypes) do
-    if ft == filetype then
-      skip = true
-      break
-    end
+  if ignore_filetype() then
+    return
   end
 
   if not skip then

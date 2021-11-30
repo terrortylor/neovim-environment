@@ -1,19 +1,10 @@
 local filesystem = require("util.filesystem")
+local ignore_filetype = require('util.buffer').ignore_filetype
 local log = require("util.log")
 local api = vim.api
 
 local M = {}
 
-M.opts = {
--- TODO this is duplicated in statusline
-  blacklist_filetypes = {
-  "qf",
-  "help",
-  "TelescopePrompt",
-  "NvimTree",
-  "lspinfo"
-  }
-}
 M.debounce = 500
 
 function M.toggle_auto_update()
@@ -65,11 +56,8 @@ function M.update_buffer()
         return
       end
 
-      local filetype = vim.api.nvim_buf_get_option(0, "filetype")
-      for _,ft in pairs(M.opts.blacklist_filetypes) do
-        if ft == filetype then
-          return
-        end
+      if ignore_filetype() then
+        return
       end
 
       -- check if modified then run aucommand?

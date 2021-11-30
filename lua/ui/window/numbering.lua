@@ -1,3 +1,5 @@
+local ignore_filetype = require('util.buffer').ignore_filetype
+
 local M = {}
 
 -- TODO this is duplicated in statusline
@@ -12,32 +14,17 @@ local ignore_filetypes = {
 }
 
 function M.win_enter()
-  local filetype = vim.api.nvim_buf_get_option(0, "filetype")
-  if filetype == "" then
+  if ignore_filetype() then
     return
-  end
-
-  for _,ft in pairs(ignore_filetypes) do
-    if ft == filetype then
-      return
-    end
   end
 
   vim.wo.relativenumber = true
 end
 
 function M.win_leave()
-  local filetype = vim.api.nvim_buf_get_option(0, "filetype")
-  if filetype == "" then
+  if ignore_filetype() then
     return
   end
-
-  for _,ft in pairs(ignore_filetypes) do
-    if ft == filetype then
-      return
-    end
-  end
-
   vim.wo.relativenumber = false
 end
 
@@ -47,15 +34,8 @@ function M.cmd_enter()
 end
 
 function M.cmd_leave()
-  local filetype = vim.api.nvim_buf_get_option(0, "filetype")
-  if filetype == "" then
+  if ignore_filetype() then
     return
-  end
-
-  for _,ft in pairs(ignore_filetypes) do
-    if ft == filetype then
-      return
-    end
   end
 
   vim.o.relativenumber = true

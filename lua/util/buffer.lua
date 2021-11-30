@@ -18,4 +18,29 @@ function M.run_and_back_to_mark(command)
   vim.api.nvim_win_set_cursor(0, mark)
 end
 
+local ignore_filetypes = {
+  "qf",
+  "help",
+  "TelescopePrompt",
+  "NvimTree",
+  "lspinfo",
+  "packer"
+}
+
+function M.ignore_filetype(ft_list)
+  local ftlist = ft_list or ignore_filetypes
+  local filetype = vim.api.nvim_buf_get_option(0, "filetype")
+  if filetype == "" then
+    return
+  end
+
+  for _,ft in pairs(ftlist) do
+    if ft == filetype then
+      return true
+    end
+  end
+
+  return false
+end
+
 return M
