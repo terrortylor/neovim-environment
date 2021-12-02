@@ -64,6 +64,10 @@ local function setup_snippets()
       parse_snippet({ trig = "pretty_print_struct" }, 'prettyStruct, err := json.MarshalIndent(${1:$TM_SELECTED_TEXT}, "", "  ")\nif err != nil {\n\tlog.Fatalf(err.Error())\n}\nfmt.Printf("MarshalIndent funnction output %s\\n", string(prettyStruct))'),
       parse_snippet({ trig = "interface_check" }, 'var _ ${1:INTERFACE} = (*${2:STUCT})(nil)'),
       parse_snippet({ trig = "fprint" }, 'fmt.Printf("$1\\n", $2)$0'),
+      parse_snippet({ trig = "fori" }, 'for ${1:i} := ${2:0}; $1 < ${3:count}; $1${4:++} {\n\t$0\n}'),
+      parse_snippet({ trig = "forrange" }, 'for ${1:_, }${2:v} := range ${3:v} {\n\t$0\n}'),
+      parse_snippet({ trig = "fpf" }, 'fmt.Printf(\"$1\", $2)\n$0'),
+      parse_snippet({ trig = "switch" }, 'switch ${1:expression} {\ncase ${2:condition}:\n\t$0\n}'),
       -- test table wrapped in a fun
       parse_snippet({ trig = "functest", name = "Test" },
      "func Test$1(t *testing.T) {\n\t$0\n}"),
@@ -95,8 +99,9 @@ for _, tc := range testcases {
     markdown = {
       parse_snippet("**", "**${1:BOLD TEXT}**$0"),
     },
-    org = {
-      parse_snippet("code", "#+NAME: ${1:NAME}\n#+BEGIN_SRC ${2:LANGUAGE}\n${3:CODE}\n#+END_SRC"),
+    norg = {
+      parse_snippet("code", "@code ${1:language}\n${2:TM_SELECTED_TEXT}\n@$0"),
+      parse_snippet("link", "[${1}](${2:TM_SELECTED_TEXT})$0"),
     },
   }
   ls.filetype_extend("wiki.markdown", {"markdown"})
