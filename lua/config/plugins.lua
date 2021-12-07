@@ -244,6 +244,21 @@ return require('packer').startup(function(use)
     }
   }
 
+  -- autopairs
+  use {
+    "windwp/nvim-autopairs",
+    config = function()
+      require('nvim-autopairs').setup{
+        disable_filetype = { "TelescopePrompt" , "vim" },
+      }
+
+      local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+      local cmp = require('cmp')
+      cmp.event:on( 'confirm_done', cmp_autopairs.on_confirm_done({  map_char = { tex = '' } }))
+    end,
+    requires = {"hrsh7th/nvim-cmp"},
+  }
+
   use {
     "ThePrimeagen/refactoring.nvim",
     config = function() require("plugins.refactor").setup() end,

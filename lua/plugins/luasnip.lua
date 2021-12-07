@@ -78,7 +78,7 @@ testcases := []struct {
   $2
 }{
   {
-  desc: "$3",
+  name: "$3",
   $4
   },
 }
