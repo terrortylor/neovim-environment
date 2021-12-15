@@ -2,109 +2,48 @@
 local M = {}
 
 local function setup_snippets()
-  local ls = require"luasnip"
+  local ls = require("luasnip")
 
-  local s = ls.snippet
-  local parse_snippet = ls.parser.parse_snippet
-  local t = ls.text_node
-  local i = ls.i
-
-  local function char_count_same(c1, c2)
-    local line = vim.api.nvim_get_current_line()
-    local _, ct1 = string.gsub(line, '%'..c1, '')
-    local _, ct2 = string.gsub(line, '%'..c2, '')
-    return ct1 == ct2
+  function _G.snippets_clear()
+    for m, _ in pairs(ls.snippets) do
+      package.loaded["snippets."..m] = nil
+    end
+    ls.snippets = setmetatable({}, {
+      __index = function(t, k)
+        local ok, m = pcall(require, "snippets." .. k)
+        if not ok and not string.match(m, "^module.*not found:") then
+          error(m)
+        end
+        t[k] = ok and m or {}
+        return t[k]
+      end
+    })
   end
 
-  local function even_count(c)
-    local line = vim.api.nvim_get_current_line()
-    local _, ct = string.gsub(line, c, '')
-    return ct % 2 == 0
+  _G.snippets_clear()
+
+  vim.cmd [[
+  augroup snippets_clear
+  au!
+  au BufWritePost ~/.config/nvim/lua/snippets/*.lua lua _G.snippets_clear()
+  augroup END
+  ]]
+
+  function _G.edit_ft()
+    -- returns table like {"lua", "all"}
+    local fts = require("luasnip.util.util").get_snippet_filetypes()
+    vim.ui.select(fts, {
+      prompt = "Select which filetype to edit:"
+    }, function(item, idx)
+      -- selection aborted -> idx == nil
+      if idx then
+        vim.cmd("edit ~/.config/nvim/lua/snippets/"..item..".lua")
+      end
+    end)
   end
 
-  local function neg(fn, ...)
-    return not fn(...)
-  end
+  vim.cmd [[command! LuaSnipEdit :lua _G.edit_ft()]]
 
-  local function part(func, ...)
-    local args = {...}
-    return function() return func(unpack(args)) end
-  end
-
-  local function pair(pair_begin, pair_end, expand_func, ...)
-    return s({trig = pair_begin, wordTrig=false}, {t({pair_begin}), i(1), t({pair_end})}, {condition = part(expand_func, part(..., pair_begin, pair_end))})
-  end
-
-  ls.snippets = {
-    all = {
-      pair("(", ")", neg, char_count_same),
-      -- pair("{", "}", neg, char_count_same),
-      pair("[", "]", neg, char_count_same),
-      pair("<", ">", neg, char_count_same),
-      pair("'", "'", neg, even_count),
-      pair('"', '"', neg, even_count),
-      pair("`", "`", neg, even_count),
-      s({trig="{", wordTrig=false}, { t({"{","\t"}), i(1), t({"", "}"}), i(2) }),
-    },
-    sql = {
-      s("nice-format", {t({
-        ":setvar SQLCMDMAXVARTYPEWIDTH 30",
-        ":setvar SQLCMDMAXFIXEDTYPEWIDTH 30"
-      })})
-    },
-    html = {
-      parse_snippet({ trig = "newhttp" }, '${1:www.blablabla.com}\n${2:${3:POST /posts}\n${4:HEADER: Content-Type: application/json; charset=UTF-8}\n${5:id: 100}\n${6:@filename.txt}}'),
-    },
-    sh = {
-      parse_snippet({ trig = "print" }, 'echo ${2:"}${1:$TM_SELECTED_TEXT}${2}'),
-    },
-    go = {
-      parse_snippet({ trig = "mock_controller" }, 'ctrl := gomock.NewController(t)\ndefer ctrl.Finish()\n$0'),
-      parse_snippet({ trig = "mock_generation" }, '//go:generate mockgen -source=\\$GOFILE -destination=mock_\\$GOFILE -package=\\$GOPACKAGE'),
-      parse_snippet({ trig = "pretty_print_struct" }, 'prettyStruct, err := json.MarshalIndent(${1:$TM_SELECTED_TEXT}, "", "  ")\nif err != nil {\n\tlog.Fatalf(err.Error())\n}\nfmt.Printf("MarshalIndent funnction output %s\\n", string(prettyStruct))'),
-      parse_snippet({ trig = "interface_check" }, 'var _ ${1:INTERFACE} = (*${2:STUCT})(nil)'),
-      parse_snippet({ trig = "fprint" }, 'fmt.Printf("$1\\n", $2)$0'),
-      parse_snippet({ trig = "fori" }, 'for ${1:i} := ${2:0}; $1 < ${3:count}; $1${4:++} {\n\t$0\n}'),
-      parse_snippet({ trig = "forrange" }, 'for ${1:_, }${2:v} := range ${3:v} {\n\t$0\n}'),
-      parse_snippet({ trig = "fpf" }, 'fmt.Printf(\"$1\", $2)\n$0'),
-      parse_snippet({ trig = "switch" }, 'switch ${1:expression} {\ncase ${2:condition}:\n\t$0\n}'),
-      -- test table wrapped in a fun
-      parse_snippet({ trig = "functest", name = "Test" },
-     "func Test$1(t *testing.T) {\n\t$0\n}"),
-      parse_snippet({ trig = "tt", name = "Test Table" },
-      [[
-testcases := []struct {
-  name  string
-  $2
-}{
-  {
-  name: "$3",
-  $4
-  },
-}
-for _, tc := range testcases {
-  t.Run(tc.name, func(t *testing.T) {
-  $0
-  })
-}
-      ]]),
-      parse_snippet("iferr", "if err ${1:!=} nil {\n\treturn ${2:err}\n}\n$0"),
-      parse_snippet({ trig = "if", name = "if" }, "if $1 {\n\t${0:$TM_SELECTED_TEXT}\n}"),
-      s({ trig = "testserver", name = "httptest.NewServer" }, {t({
-        'ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {',
-        '    t.Fatalf("Did not expect call: %s %s\\n", r.Method, r.URL.Path)',
-        "}))"
-      })}),
-    },
-    markdown = {
-      parse_snippet("**", "**${1:BOLD TEXT}**$0"),
-    },
-    norg = {
-      parse_snippet("code", "@code ${1:language}\n${2:TM_SELECTED_TEXT}\n@$0"),
-      parse_snippet("link", "[${1}](${2:TM_SELECTED_TEXT})$0"),
-    },
-  }
-  ls.filetype_extend("wiki.markdown", {"markdown"})
   require("luasnip").config.setup({store_selection_keys="<Tab>"})
 end
 
