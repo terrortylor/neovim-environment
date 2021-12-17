@@ -36,6 +36,7 @@ local plugins = {
   "tmux",
   "alternate",
   -- "generator",
+  "ui.switcheroo",
   "pa",
   -- "snake",
   "wiki",
