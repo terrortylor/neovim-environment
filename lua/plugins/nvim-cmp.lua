@@ -106,6 +106,19 @@ function M.setup()
         behavior = cmp.ConfirmBehavior.Replace,
         select = false,
       }),
+      ["<Tab>"] = cmp.mapping(function(fallback)
+        -- select top entry from open confirm list,
+        -- if nothing is selected...
+        if cmp.visible() and cmp.get_selected_entry() == nil then
+          cmp.select_next_item()
+          cmp.confirm {
+            behavior = cmp.ConfirmBehavior.Replace,
+            select = true,
+          }
+        else
+          fallback()
+        end
+      end, {"i", "s"}),
 --       ["<Tab>"] = cmp.mapping(function(fallback)
 --         if cmp.visible() then
 --           cmp.select_next_item()
