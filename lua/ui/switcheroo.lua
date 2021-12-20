@@ -7,13 +7,25 @@ local M = {}
 M.swapperoos = {
   ["true"] = "false",
   ["=="] = "!=",
+  ["&&"] = "||",
 }
 
 -- set with helper func in setup
 M.swap_map = {}
 
 function M.do_switcheroo()
-  local cword = vim.fn.expand('<cword>')
+  -- can't use vim.fn.expand here as cword may != which come out as expression
+
+  -- backup register to put macro in
+  local old_reg = vim.fn.getreg("s")
+  local old_reg_type = vim.fn.getregtype("s")
+
+  vim.cmd('normal! "syiw')
+  local cword = vim.fn.getreg("s")
+
+  -- restore register
+  vim.fn.setreg("s", old_reg, old_reg_type)
+
   local replace = M.swap_map[cword]
   if replace == nil then
     print("No alternative found for: " .. cword)
@@ -34,6 +46,7 @@ function M.create_switch_map(map)
 end
 
 function M.setup()
+  M.swap_map = M.create_switch_map(M.swapperoos)
  vim.api.nvim_set_keymap("n", "<leader>tw", "<CMD>lua require('ui.switcheroo').do_switcheroo()<CR>", {noremap = true})
 end
 
