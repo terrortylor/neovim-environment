@@ -63,9 +63,9 @@ require('util.config').create_mappings({
 
     -- Quickfix
     -- Opens first non empty list, location list is local to window
-    ["<leader>cl"] = ":call quickfix#window#OpenList()<CR>",
+    ["<leader>cl"] = "<CMD>lua require('ui.quickfix').open_list()<CR>",
     -- Close all quicklist windows
-    ["<leader>cc"] = ":call quickfix#window#CloseAll()<CR>",
+    ["<leader>cc"] = "<CMD>lua require('ui.quickfix').close_all()<CR>",
     ["[c"]         = ":cprevious<CR>",
     ["]c"]         = ":cnext<CR>",
 
