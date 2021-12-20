@@ -268,12 +268,19 @@ return require('packer').startup(function(use)
     }
   }
 
+  -- Language Specific
   -- GO
   use {
     "ray-x/go.nvim",
     requires = { "nvim-telescope/telescope.nvim", },
     ft = {'go'},
     config = function() require("plugins.go-nvim").setup() end,
+  }
+
+  -- Terraform
+  use {
+    "hashivim/vim-terraform",
+    ft = {'terraform'},
   }
 
   -- testing
