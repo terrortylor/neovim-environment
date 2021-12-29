@@ -1,11 +1,11 @@
 local M = {}
 
 local levels = {
-  errors = 'Error',
-  warnings = 'Warning',
+  errors = vim.diagnostic.severity.ERROR,
+  warnings = vim.diagnostic.severity.WARN,
   -- Currently only displaying Errors and Warning in tabline
-  -- info = 'Information',
-  -- hints = 'Hint'
+  info = vim.diagnostic.severity.INFO,
+  hint = vim.diagnostic.severity.HINT,
 }
 
 -- local all_diagnostics_to_qf = function() -- luacheck: ignore
@@ -110,7 +110,7 @@ function M.get_all_diagnostic_count()
     if vim.api.nvim_buf_is_loaded(b) then
       for k, level in pairs(levels) do
         local count = result[k] or 0
-        result[k] = count + vim.lsp.diagnostic.get_count(b, level)
+        result[k] = count + vim.tbl_count(vim.diagnostic.get(b, {severity = level}))
       end
     end
   end
@@ -129,6 +129,7 @@ function M.diagnostic_toggle_virtual_text()
 
   local clients = vim.lsp.buf_get_clients(0)
   for _,c1 in pairs(clients) do
+    -- TODO vim.lsp.diagrnostic is deprecated
     vim.lsp.diagnostic.display(vim.lsp.diagnostic.get(0, c1.id), 0, 1, {virtual_text = virtual_text})
   end
 end
