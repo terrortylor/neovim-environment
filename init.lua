@@ -26,24 +26,29 @@ end
 
 require("config.plugins")
 
+-- require('packer').init({config = {
+--   profile = {
+--     enable = false,
+--     threshold = 1 -- the amount in ms that a plugins load time must be over for it to be included in the profile
+--   }
+-- }})
+
 -- Custom Plugins
 local plugins = {
-  "ui.arglist",
   "git.blame",
+  "ui.arglist",
   "ui.tabline",
   "ui.statusline",
-  "ui.search",
+  -- "ui.search",
   "tmux",
   "alternate",
-  -- "generator",
   "ui.switcheroo",
   "pa",
-  -- "snake",
-  "wiki",
+  "snake",
   "util.auto_update",
 }
 
-for i,p in pairs(plugins) do
+for _,p in pairs(plugins) do
   require(p).setup()
 end
 
