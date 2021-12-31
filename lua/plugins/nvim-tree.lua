@@ -25,7 +25,7 @@ end
 
 function M.setup()
   vim.g.nvim_tree_show_icons = {
-    git = 0,
+    git = 1,
     folders = 1,
     files = 0,
     icons = 0,
@@ -39,6 +39,15 @@ function M.setup()
       empty =      "ᐅ",
       empty_open = "ᐅ",
       symlink =    "ᐅ",
+    },
+    git = {
+      unstaged =  "~",
+      staged =  "✓",
+      unmerged =  "M",
+      renamed =  "R",
+      untracked =  "★",
+      deleted =  "✗",
+      ignored =  "I"
     }
   }
   vim.g.nvim_tree_quit_on_open = 1
@@ -46,6 +55,18 @@ function M.setup()
   vim.g.nvim_tree_disable_window_picker = 1
   require'nvim-tree'.setup {
     auto_close = true,
+    diagnostics = {
+      enable = true,
+      icons = {
+        hint = "",
+        info = "",
+        warning = "",
+        error = "E",
+      }
+    },
+    git = {
+      ignore = false,
+    }
 
   }
 
