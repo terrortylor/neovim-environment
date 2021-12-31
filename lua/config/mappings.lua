@@ -15,9 +15,6 @@ require('util.config').create_mappings({
     ["<leader>ts"] = ":set spell!<CR>", -- Toggle spelling
     ["<F2>"]       = ":set paste!<CR>", -- Toggle paste mode
 
-    -- Load vimrc in split
-    ["<leader>ev"] = ":vsplit $MYVIMRC<CR>",
-
     -- Window Resizing
     -- TODO can these take a count?
     ["<leader>="]  = ":vertical resize +10<CR>",
