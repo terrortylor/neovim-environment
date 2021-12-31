@@ -4,10 +4,10 @@ local mock = require('luassert.mock')
 local stub = require('luassert.stub')
 local spy = require('luassert.spy')
 
-describe('git.lib.blame', function()
+describe('git.blame', function()
 
   before_each(function()
-    testModule = require('git.lib.blame')
+    testModule = require('git.blame')
     api = mock(vim.api, true)
   end)
 
@@ -115,9 +115,9 @@ describe('git.lib.blame', function()
       assert.stub(api.nvim_buf_set_lines).was_called_with(101, 0, -1, true, lines)
       -- mappings created to close window with
       assert.stub(api.nvim_buf_set_keymap).was_called_with(101, "n", "<ESC>",
-      "<CMD>lua require('git.lib.blame').close_window()<CR>", { noremap = true })
+      "<CMD>lua require('git.blame').close_window()<CR>", { noremap = true })
       assert.stub(api.nvim_buf_set_keymap).was_called_with(101, "n", "<CR>",
-      "<CMD>lua require('git.lib.blame').close_window()<CR>", { noremap = true })
+      "<CMD>lua require('git.blame').close_window()<CR>", { noremap = true })
 
       local opts = {
         style = "minimal",

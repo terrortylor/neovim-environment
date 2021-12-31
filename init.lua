@@ -28,8 +28,8 @@ require("config.plugins")
 
 -- Custom Plugins
 local plugins = {
-  "git",
   "ui.arglist",
+  "git.blame",
   "ui.tabline",
   "ui.statusline",
   "ui.search",

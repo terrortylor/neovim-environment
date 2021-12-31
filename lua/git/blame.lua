@@ -2,6 +2,10 @@ local api = vim.api
 
 local M = {}
 
+M.defaults = {
+  close_mappings = {"<ESC>", "<CR>", "q"}
+}
+
 local window_id
 
 --- Takes git blame results and returns results in table
@@ -70,9 +74,9 @@ function M.create_window(lines, row, col, lhs_mappings)
   api.nvim_buf_set_option(buf, 'filetype', 'gitblame')
   api.nvim_buf_set_lines(buf, 0, -1, true, lines)
   for _, v in pairs(lhs_mappings) do
-    api.nvim_buf_set_keymap(buf, "n", v, "<CMD>lua require('git.lib.blame').close_window()<CR>", { noremap = true })
+    api.nvim_buf_set_keymap(buf, "n", v, "<CMD>lua require('git.blame').close_window()<CR>", { noremap = true })
   end
-  vim.cmd("autocmd WinLeave <buffer=" .. buf .."> ++once :lua require('git.lib.blame').close_window()")
+  vim.cmd("autocmd WinLeave <buffer=" .. buf .."> ++once :lua require('git.blame').close_window()")
 
   local opts = {
     style = "minimal",
@@ -116,5 +120,13 @@ end
 function M.set_window_id(id)
     window_id = id
 end
+
+--- Used to setup the plugin, sets up commands etc
+function M.setup()
+  vim.api.nvim_add_user_command("GitBlame", function(params)
+    M.go(params.line1, params.line2, M.defaults.close_mappings)
+  end, {range= true})
+end
+
 
 return M
