@@ -20,7 +20,9 @@ describe('ui.switcheroo', function()
         ["true"] = "false",
         ["false"] = "true",
         ["=="] = "!=",
-        ["!="] = "=="
+        ["!="] = "==",
+        ["&&"] = "||",
+        ["||"] = "&&",
       }
       assert.are.same(expected, actual)
     end)
