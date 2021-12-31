@@ -55,9 +55,9 @@ function M.open_float(buf, buf_opts, callback)
   win = api.nvim_open_win(buf, true, buf_opts)
   M.callbacks[win] = callback
 
-  -- TODO pass in extra mapping, such as <sec> or <c-c>
+  -- TODO pass in extra mapping, such as <sec> or <c-c>,this is an example as per git blame
   -- for _, v in pairs(lhs_mappings) do
-  --   api.nvim_buf_set_keymap(buf, "n", v, "<CMD>lua require('git.lib.blame').close_window()<CR>", { noremap = true })
+  --   api.nvim_buf_set_keymap(buf, "n", v, "<CMD>lua require('git.blame').close_window()<CR>", { noremap = true })
   -- end
   -- TODO how is buffer removed from list?
   local command = {
