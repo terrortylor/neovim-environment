@@ -76,7 +76,7 @@ return require('packer').startup(function(use)
 
   use {
     "nvim-neorg/neorg",
-    ft = "norg",
+    -- ft = "norg",
     config = function()
       require('neorg').setup {
         -- Tell Neorg what modules to load
@@ -102,7 +102,8 @@ return require('packer').startup(function(use)
           ["core.norg.dirman"] = { -- Manage your directories with Neorg
             config = {
               workspaces = {
-                my_workspace = "~/personnal-workspace/notes"
+                my_workspace = "~/personnal-workspace/notes",
+                gtd_wksp = "~/personnal-workspace/notes/gtd"
               }
             }
           },
@@ -110,8 +111,32 @@ return require('packer').startup(function(use)
             config = {
               engine = "nvim-cmp"
             }
-          }
+          },
+          ["core.gtd.base"] = {
+            config = {
+              workspace = "gtd_wksp",
+            },
+          },
+          ["core.integrations.telescope"] = {},
         },
+        hook = function ()
+          local neorg_callbacks = require('neorg.callbacks')
+
+          neorg_callbacks.on_event("core.keybinds.events.enable_keybinds", function(_, keybinds)
+
+            -- Map all the below keybinds only when the "norg" mode is active
+            keybinds.map_event_to_mode("norg", {
+              i = {
+              { "<C-a>", "core.integrations.telescope.insert_link" }
+
+            },
+          }, {
+            silent = true,
+            noremap = true
+          })
+
+        end)
+        end
       }
       local parser_configs = require('nvim-treesitter.parsers').get_parser_configs()
 
@@ -123,7 +148,7 @@ return require('packer').startup(function(use)
           },
       }
     end,
-    requires = "nvim-lua/plenary.nvim"
+    requires = {"nvim-lua/plenary.nvim", "nvim-neorg/neorg-telescope"}
 }
 
   -- general
