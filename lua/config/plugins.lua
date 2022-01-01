@@ -274,7 +274,7 @@ return require('packer').startup(function(use)
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-nvim-lsp",
       "saadparwaiz1/cmp_luasnip",
-      { 'andersevenrud/compe-tmux', branch = 'cmp' },
+      'andersevenrud/cmp-tmux',
       "f3fora/cmp-spell"
     }
   }
