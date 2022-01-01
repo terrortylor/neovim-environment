@@ -2,17 +2,6 @@ local ignore_filetype = require('util.buffer').ignore_filetype
 
 local M = {}
 
--- TODO this is duplicated in statusline
--- TODO this should not be hard codded?
-local ignore_filetypes = {
-  "qf",
-  "help",
-  "TelescopePrompt",
-  "NvimTree",
-  "lspinfo",
-  "packer"
-}
-
 function M.win_enter()
   if ignore_filetype() then
     return
