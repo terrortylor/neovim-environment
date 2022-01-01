@@ -27,7 +27,7 @@ function M.cheap_signiture_toggle()
   end
 
 function M.setup()
-  vim.cmd [[command! -nargs=0 ToggleSignature lua require('lsp.signature').cheap_signiture_toggle()]]
+  vim.api.nvim_add_user_command("ToggleSignature", require('lsp.signature').cheap_signiture_toggle, {})
   vim.g.cheap_signiture_enabled = false
   M.cheap_signiture_toggle()
 end
