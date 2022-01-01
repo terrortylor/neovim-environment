@@ -4,7 +4,9 @@ local p = require("luasnip").parser.parse_snippet
 
 local snippets = {
     p({ trig = "mock_controller" }, 'ctrl := gomock.NewController(t)\ndefer ctrl.Finish()\n$0'),
+    -- luacheck: ignore
     p({ trig = "mock_generation" }, '//go:generate mockgen -source=\\$GOFILE -destination=mock_\\$GOFILE -package=\\$GOPACKAGE'),
+    -- luacheck: ignore
     p({ trig = "pretty_print_struct" }, 'prettyStruct, err := json.MarshalIndent(${1:$TM_SELECTED_TEXT}, "", "  ")\nif err != nil {\n\tlog.Fatalf(err.Error())\n}\nfmt.Printf("MarshalIndent funnction output %s\\n", string(prettyStruct))'),
     p({ trig = "interface_check" }, 'var _ ${1:INTERFACE} = (*${2:STUCT})(nil)'),
     p({ trig = "fprint" }, 'fmt.Printf("$1\\n", $2)$0'),
