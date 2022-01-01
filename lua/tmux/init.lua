@@ -48,13 +48,7 @@ M.mappings = {
 function M.setup()
   local cmd = vim.api.nvim_add_user_command
   for k,v in pairs(commands) do
-    local command = {
-      "command!",
-      "-nargs=?",
-      k,
-      "lua require('tmux.commands')." .. v .. "(<f-args>)"
-    }
-    vim.cmd(table.concat(command, " "))
+    cmd(k, "lua require('tmux.commands')." .. v .. "(<f-args>)", {nargs="?"})
   end
 
   cmd("TmuxSeedCommand", "lua require('tmux.commands').seed_instance_command(<f-args>)", {nargs="+"})
