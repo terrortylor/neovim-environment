@@ -1,6 +1,8 @@
 local utils = require('util.test_utils')
 
 describe("switcheroo", function()
+  -- TODO shouldn't need this, integration tests should load the init.lua
+  require('ui.switcheroo').setup()
   it("Should swap both key/value words in swapperoos", function()
   local input = { "true", "false" }
   local expected = { "false", "true" }
