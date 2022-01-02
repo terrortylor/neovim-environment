@@ -1,6 +1,19 @@
 -- luacheck: ignore
 local M = {}
 
+local function edit_ft()
+  -- returns table like {"lua", "all"}
+  local fts = require("luasnip.util.util").get_snippet_filetypes()
+  vim.ui.select(fts, {
+    prompt = "Select which filetype to edit:"
+  }, function(item, idx)
+    -- selection aborted -> idx == nil
+    if idx then
+      vim.cmd("edit ~/.config/nvim/lua/snippets/"..item..".lua")
+    end
+  end)
+end
+
 local function setup_snippets()
   local ls = require("luasnip")
 
@@ -29,20 +42,7 @@ local function setup_snippets()
   augroup END
   ]]
 
-  function _G.edit_ft()
-    -- returns table like {"lua", "all"}
-    local fts = require("luasnip.util.util").get_snippet_filetypes()
-    vim.ui.select(fts, {
-      prompt = "Select which filetype to edit:"
-    }, function(item, idx)
-      -- selection aborted -> idx == nil
-      if idx then
-        vim.cmd("edit ~/.config/nvim/lua/snippets/"..item..".lua")
-      end
-    end)
-  end
-
-  vim.cmd [[command! LuaSnipEdit :lua _G.edit_ft()]]
+  vim.api.nvim_add_user_command("LuaSnipEdit", edit_ft, {force = true})
 
   require("luasnip").config.setup({store_selection_keys="<Tab>"})
 end

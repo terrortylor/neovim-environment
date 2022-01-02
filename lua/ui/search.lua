@@ -37,7 +37,11 @@ function M.toggle_smart_search()
 end
 
 function M.setup()
-  vim.cmd [[command! -nargs=0 ToggleSmartSearch lua require('ui.search').toggle_smart_search()]]
+  vim.api.nvim_add_user_command(
+    "ToggleSmartSearch",
+    require('ui.search').toggle_smart_search,
+    {force = true}
+  )
 
   require('util.config').create_autogroups({
     hlmagic = {

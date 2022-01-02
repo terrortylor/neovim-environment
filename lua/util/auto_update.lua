@@ -79,8 +79,12 @@ end
 
 function M.setup()
   vim.g.enable_auto_update = false
+  vim.api.nvim_add_user_command(
+    "ToggleAutoUpdate",
+    require('util.auto_update').toggle_auto_update,
+    {force = true}
+  )
   vim.cmd [[
-  command!  -nargs=0 ToggleAutoUpdate lua require('util.auto_update').toggle_auto_update()
   augroup auto_update
   autocmd!
   autocmd InsertLeave,TextChanged * noautocmd lua require('util.auto_update').write_buffers()
