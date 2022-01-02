@@ -29,6 +29,18 @@ function M.create_mappings(mappings, opts, buffer)
   end
 end
 
+---Define vim user command
+---@param name string
+---@param command string | function
+---@param opts? table
+function M.user_command(name, command, opts)
+  local options = { force = true }
+  if opts then
+    options = vim.tbl_extend('force', options, opts)
+  end
+  vim.api.nvim_add_user_command(name, command, options)
+end
+
 function M.create_autogroups(definitions)
   for group, definition in pairs(definitions) do
     vim.cmd('augroup '..group)

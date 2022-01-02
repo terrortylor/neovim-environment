@@ -1,87 +1,29 @@
-local api = vim.api
 local log = require("util.log")
+local user_command = require("util.config").user_command
 
-local commands = {
+user_command("Lazygit", require('ui.lazygit').open)
+user_command("ShowHighlightGroup", require('util.config').show_highlight_group)
+user_command("SetProjectCWD", require('util.path').set_cwd_to_project_root)
+-- some filesystem helpers
+user_command(
+  "Mkdir",
+  "lua require('util.filesystem').mkdir(<args>)",
   {
-    "command!",
-    "-nargs=0",
-    "OpenFTPluginFile",
-    "lua require('config.function.filetype').open_ftplugin_file()"
-  },
-  {
-    "command!",
-    "-nargs=0",
-    "Lazygit",
-    "lua require('ui.lazygit').open()"
-  },
-  {
-    "command!",
-    "-nargs=0",
-    "LuaTerm",
-    "lua require('ui.window.toggle_term').open(99, 'lua')"
-  },
-  {
-    "command!",
-    "-nargs=0",
-    "ShowHighlightGroup",
-    "lua require('util.config').show_highlight_group()"
-  },
-  {
-    "command!",
-    "-nargs=0",
-    "SetProjectCWD",
-    "lua require('util.path').set_cwd_to_project_root()"
-  },
-  -- some filesystem helpers
-  {
-    "command!",
-    "-nargs=?",
-    "-complete=dir",
-    "Mkdir",
-    "lua require('util.filesystem').mkdir(<args>)"
-  },
-  {
-    "command!",
-    "-nargs=0",
-    "SetCWDToBuffer",
-    "cd %:p:h"
-  },
-  {
-    "command!",
-    "-nargs=0",
-    "IntelliJ",
-    "lua require('config.intellij-mappings')"
-  },
-}
-
-for _,v in pairs(commands) do
-  vim.cmd(table.concat(v, " "))
-end
+    nargs = "?",
+    complete = "dir"
+  }
+)
+user_command("SetCWDToBuffer", "cd %:p:h")
+user_command("IntelliJ", "lua require('config.intellij-mappings')")
 
 
 -- Gron transforms JSON to 'discrete assignments to make it easier to grep'
 -- essentially flatterns in. Woth noting that it doesn't presrve original order but
 -- useful to for exploring a json file.
-if api.nvim_call_function("executable", {"gron"}) > 0 then
-  local gron_commands = {
+if vim.api.nvim_call_function("executable", {"gron"}) > 0 then
     -- gron
-    {
-      "command!",
-      "-nargs=0",
-      "Gron",
-      "%!gron"
-    },
-    {
-      "command!",
-      "-nargs=0",
-      "UnGron",
-      "%!gron --ungron"
-    },
-  }
-
-  for _,v in pairs(gron_commands) do
-    vim.cmd(table.concat(v, " "))
-  end
+    user_command("Gron", "%!gron")
+    user_command("UnGron", "%!gron --ungron")
 else
   log.error("gron not found on command line, no Gron commands created")
 end
