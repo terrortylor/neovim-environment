@@ -125,7 +125,7 @@ end
 function M.setup()
   vim.api.nvim_add_user_command("GitBlame", function(params)
     M.go(params.line1, params.line2, M.defaults.close_mappings)
-  end, {range= true})
+  end, {range= true, force = true})
 end
 
 
