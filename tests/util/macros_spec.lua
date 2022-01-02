@@ -10,7 +10,7 @@ test
 
     require('util.macros').run_macro([[itest]], "q")
 
-    local actual = utils.buf_as_multiline()
+    local actual = utils.get_buf_as_multiline()
     assert.are.same(expected, actual)
 
     local reg = vim.fn.getreg("q")

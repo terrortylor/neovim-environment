@@ -16,7 +16,7 @@ Blurgh
 ]]
 
   it("Should jump to next pattern matching in direction", function()
-    utils.load_lines(lines)
+    utils.buf_from_multiline(lines)
 
     -- Start on first header
     vim.api.nvim_win_set_cursor(0, {1,0})

@@ -10,8 +10,7 @@ function M.multiline_to_table(s)
     return t
 end
 
--- TODO this is duplicated move to helper func
-function M.load_lines(lines)
+function M.buf_from_multiline(lines)
   local buf = vim.api.nvim_create_buf(false, true)
   vim.cmd("sbuffer " .. buf)
 
@@ -20,15 +19,24 @@ function M.load_lines(lines)
   return buf
 end
 
-function M.buf_get_lines()
+function M.buf_from_table(lines)
+  local buf = vim.api.nvim_create_buf(false, true)
+  vim.cmd("sbuffer " .. buf)
+
+  vim.api.nvim_buf_set_lines(0, 0, -1, true, lines)
+
+  return buf
+end
+
+function M.get_buf_lines()
   local result = vim.api.nvim_buf_get_lines(
   0, 0, vim.api.nvim_buf_line_count(0), false
   )
   return result
 end
 
-function M.buf_as_multiline()
-  local lines = M.buf_get_lines()
+function M.get_buf_as_multiline()
+  local lines = M.get_buf_lines()
   local s = ""
   for _,l in pairs(lines) do
     s = s .. l .. '\n'
