@@ -24,7 +24,8 @@ local ignore_filetypes = {
   "TelescopePrompt",
   "NvimTree",
   "lspinfo",
-  "packer"
+  "packer",
+  "splash"
 }
 
 function M.ignore_filetype(ft_list)
