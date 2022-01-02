@@ -27,23 +27,32 @@ function M.go()
     -- vim.bo.list=false
     -- TODO these window local options need to be captured and restored
     -- print("wo.number", vim.wo.number)
-    vim.wo.number=false
-    vim.wo.relativenumber=false
-    vim.wo.spell=false
+    vim.wo["number"]=false
+    vim.wo["relativenumber"]=false
+    vim.wo["spell"]=false
     vim.bo.swapfile=false
-    vim.wo.signcolumn="no"
+    vim.wo["signcolumn"]="no"
     -- vim.bo.synmaxcol&
     -- vim.bo.buftype=nofile
     -- vim.bo.filetype=alpha
-    vim.wo.wrap=false
+    vim.wo["wrap"]=false
 
+
+  local buf = vim.fn.bufnr("%")
+  print("buffer", buf)
+  vim.cmd("autocmd BufHidden <buffer=" .. buf .."> ++once lua require('ui.splash').go()")
   end
+end
+
+function M.cleanup()
+    vim.wo["number"]=true
+    print("in here cleanup")
 end
 
 function M.setup()
   util.create_autogroups({
     splash_update = {
-      {"VimEnter", "*", "lua require('ui.splash').go()"},
+      {"VimEnter", "* ++once", "lua require('ui.splash').go()"},
     },
     splash_highlights = {
       {"ColorScheme", "*", "lua require('ui.splash').highlighting()"}

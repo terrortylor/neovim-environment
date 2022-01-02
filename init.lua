@@ -40,6 +40,7 @@ local plugins = {
   "ui.tabline",
   "ui.statusline",
   -- "ui.search",
+  -- "ui.splash",
   "tmux",
   "alternate",
   "ui.switcheroo",
@@ -51,4 +52,3 @@ local plugins = {
 for _,p in pairs(plugins) do
   require(p).setup()
 end
-
