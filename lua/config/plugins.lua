@@ -1,3 +1,15 @@
+local fn = vim.fn
+local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
+local packer_bootstrap = false
+if fn.empty(fn.glob(install_path)) > 0 then
+  print("Init packer.nvim")
+  packer_bootstrap = true
+  fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
+
+  vim.api.nvim_command 'packadd packer.nvim'
+end
+
+
 return require('packer').startup(function(use)
   use { 'wbthomason/packer.nvim', config = function()
     require('util.config').create_autogroups({
@@ -325,4 +337,7 @@ return require('packer').startup(function(use)
     config = function() require("plugins.vim-test").setup() end,
   }
 
+  if packer_bootstrap then
+    require('packer').sync()
+  end
 end)
