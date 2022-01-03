@@ -20,6 +20,10 @@ jobs:
           wget https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage
           chmod +x nvim.appimage
           mv nvim.appimage ./build/nvim
+
+      - name: Init packer.nvim
+        run: |
+          export PATH="${PWD}/build/:${PATH}"
           nvim --headless -c 'autocmd User PackerComplete quitall'
       # - name: Run Lint
       #   run: make lint
