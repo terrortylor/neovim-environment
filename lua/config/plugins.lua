@@ -199,6 +199,7 @@ return require('packer').startup(function(use)
   }
 
   -- treesitter
+  -- TODO tryout: https://github.com/mizlan/iswap.nvim
   use {
     {
       "nvim-treesitter/nvim-treesitter",
@@ -222,6 +223,21 @@ return require('packer').startup(function(use)
       opt = true,
       cmd = {"TSPlaygroundToggle"},
       requires = { "nvim-treesitter/nvim-treesitter", }
+    },
+    {
+      "RRethy/nvim-treesitter-textsubjects",
+      requires = { "nvim-treesitter/nvim-treesitter", },
+      config = function ()
+        require'nvim-treesitter.configs'.setup {
+          textsubjects = {
+            enable = true,
+            keymaps = {
+              ['.'] = 'textsubjects-smart',
+              [';'] = 'textsubjects-container-outer',
+            }
+          },
+        }
+      end
     }
   }
 
