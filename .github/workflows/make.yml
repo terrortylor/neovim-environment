@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   luacheck:
-    name: Luacheck
+    name: Run Linting and Test
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -13,25 +13,28 @@ jobs:
         run: |
           # sudo apt-get update
           sudo apt-get install lua-check
-          mkdir -p ~/.config
-          # mkdir -p ~/.local/share/nvim/site/pack/vendor/start
-          # git clone --depth 1 https://github.com/nvim-lua/plenary.nvim ~/.local/share/nvim/site/pack/vendor/start/plenary.nvim
-          # ln -s $(pwd) ~/.local/share/nvim/site/pack/vendor/start
-          ln -s $(pwd) ~/.config/nvim
+          mkdir -p ~/.local/share/nvim/site/pack/vendor/start
+          git clone --depth 1 https://github.com/nvim-lua/plenary.nvim ~/.local/share/nvim/site/pack/vendor/start/plenary.nvim
+          ln -s $(pwd) ~/.local/share/nvim/site/pack/vendor/start
           mkdir -p build
           wget https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage
           chmod +x nvim.appimage
           mv nvim.appimage ./build/nvim
 
-      - name: Init packer.nvim
+      - name: Run Linting Checks
         run: |
           export PATH="${PWD}/build/:${PATH}"
-          nvim --headless -c 'autocmd User PackerComplete quitall'
-      # - name: Run Lint
-      #   run: make lint
+          make lint
+          echo "exit code $?"
 
-      - name: Run tests
+      - name: Run Unit Tests
         run: |
           export PATH="${PWD}/build/:${PATH}"
-          make test
+          make unit
+          echo "exit code $?"
+
+      - name: Run Integration Tests
+        run: |
+          export PATH="${PWD}/build/:${PATH}"
+          make integration
           echo "exit code $?"
