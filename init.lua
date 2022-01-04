@@ -7,16 +7,16 @@ vim.bo.undofile = true
 
 vim.g.mapleader = " "
 
--- -- Configurations
--- require("config.options")
--- require("config.autogroups")
--- require("config.mappings")
--- require("config.commands")
--- require("config.abbreviations")
+-- Configurations
+require("config.options")
+require("config.autogroups")
+require("config.mappings")
+require("config.commands")
+require("config.abbreviations")
 
-print("before packer")
+-- print("before packer")
 require("config.plugins")
-print("after packer")
+-- print("after packer")
 
 -- require('packer').init({config = {
 --   profile = {
@@ -32,7 +32,7 @@ local plugins = {
   "ui.tabline",
   "ui.statusline",
   -- "ui.search",
-  "ui.splash",
+  -- "ui.splash",
   "tmux",
   "alternate",
   "ui.switcheroo",
