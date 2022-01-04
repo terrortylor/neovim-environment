@@ -13,9 +13,11 @@ jobs:
         run: |
           # sudo apt-get update
           sudo apt-get install lua-check
-          mkdir -p ~/.local/share/nvim/site/pack/vendor/start
+          mkdir -p ~/.config
+          # mkdir -p ~/.local/share/nvim/site/pack/vendor/start
           # git clone --depth 1 https://github.com/nvim-lua/plenary.nvim ~/.local/share/nvim/site/pack/vendor/start/plenary.nvim
-          ln -s $(pwd) ~/.local/share/nvim/site/pack/vendor/start
+          # ln -s $(pwd) ~/.local/share/nvim/site/pack/vendor/start
+          ln -s $(pwd) ~/.config/nvim
           mkdir -p build
           wget https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage
           chmod +x nvim.appimage
