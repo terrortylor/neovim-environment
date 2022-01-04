@@ -18,7 +18,7 @@ return require('packer').startup(function(use)
           "BufEnter",
           "lua/config/plugins.lua",
           -- luacheck: ignore
-          "lua vim.api.nvim_buf_set_keymap(0, 'n', '<leader>nn', '<cmd>write<cr> | <cmd>luafile %<cr> | <cmd>PackerCompile<cr> | <cmd>PackerSync<cr>', {})"
+          "lua vim.api.nvim_buf_set_keymap(0, 'n', '<leader>nn', '<cmd>write<cr> | <cmd>luafile %<cr> | <cmd>PackerSync<cr>', {})"
         },
       },
     })
