@@ -44,3 +44,5 @@ local plugins = {
 for _,p in pairs(plugins) do
   require(p).setup()
 end
+
+print("end of config")
