@@ -1,9 +1,5 @@
 require('util.config').create_mappings({
   n = {
-    -- Find in buffer
-    -- TODO rewrite in lua?
-    ["<leader>fb"] = {":FindInBuffer<space>", {noremap = true}},
-
     -- Refactoring
     ["<leader>rw"] = {[[:%s/\C\<<c-r><c-w>\>//<left>]], {noremap = true}},
 
@@ -109,9 +105,6 @@ require('util.config').create_mappings({
     ["<leader>/"] = [[/\<\><left><left>]],
   },
   v = {
-    -- Find in buffer
-    ["<leader>fb"] = 'y:FindInBuffer <c-r>"<cr>',
-
     -- Indent Lines and reselect
     ["<"]          = "<gv",
     [">"]          = ">gv",
