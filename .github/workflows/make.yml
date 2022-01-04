@@ -42,7 +42,7 @@ jobs:
       - name: Init packer.nvim
         run: |
           export PATH="${PWD}/build/:${PATH}"
-          nvim --headless -c 'autocmd User PackerComplete quitall'
+          nvim --headless -c 'PackerSync' -c 'autocmd User PackerComplete quitall'
       # - name: Run Lint
       #   run: make lint
 
