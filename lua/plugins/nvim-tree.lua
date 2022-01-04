@@ -74,7 +74,7 @@ function M.setup()
 
   create_mappings({
     n = {
-      ["<c-n>"] = "<cmd>NvimTreeToggle<CR>",
+      ["<c-n>"] = "<cmd>NvimTreeFindFileToggle<CR>",
     }
   })
 end
