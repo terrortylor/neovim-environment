@@ -91,7 +91,7 @@ return require('packer').startup(function(use)
     -- ft = "norg",
     config = function() require("plugins.neorg") end,
     requires = {"nvim-lua/plenary.nvim", "nvim-neorg/neorg-telescope"}
-}
+  }
 
   -- general
   use {
@@ -199,19 +199,10 @@ return require('packer').startup(function(use)
     }
   }
 
+  -- snippets
   use {
     "L3MON4D3/LuaSnip",
     config = function() require('plugins.luasnip').setup() end,
-    -- ft = {'go', 'sql'},
-  }
-
-  -- add some colour to colors and colour codes in buffers
-  use {
-    "norcalli/nvim-colorizer.lua",
-    opt = true,
-    cmd = {"ColorizerAttachToBuffer", "ColorizerDetachFromBuffer",
-    "ColorizerReloadAllBuffers", "ColorizerToggle"},
-    config = function() require'colorizer'.setup() end
   }
 
   -- visual sugar
