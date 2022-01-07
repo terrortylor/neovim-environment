@@ -14,7 +14,7 @@ function get_all_available_keymaps()
     mappings = vim.tbl_deep_extend('force', mappings, r)
   end
 
-  -- filter out mappings withouth modes
+  -- filter out mappings with out modes set
   local filtered = {}
   for _, value in ipairs(mappings) do
     if value.mode ~= " " then
@@ -45,14 +45,14 @@ local function search(opts)
     },
   })
   local make_display = function(entry)
-    local left = entry.mode .. " " .. entry.lhs
+    local left = entry.value.mode .. " " .. entry.value.lhs
     local middle = ""
     local right = ""
-    if entry.description == "" then
-      middle = entry.rhs
+    if entry.value.desc == "" then
+      middle = entry.value.rhs
     else
-      middle = entry.description
-      right = entry.rhs
+      middle = entry.value.desc
+      right = entry.value.rhs
     end
     return displayer({
       left,
@@ -68,21 +68,21 @@ local function search(opts)
     finder = finders.new_table({
       results = get_all_available_keymaps(),
       entry_maker = function(mapping)
-        return {
-          description = mapping.desc,
-          ordinal = mapping.lhs,
-          display = make_display,
+        -- ordinal should be description if present
+        local ordinal
+        if not mapping.desc then
+          ordinal = mapping.rhs
+        else
+          ordinal = mapping.desc
+        end
 
-          mode = mapping.mode,
-          lhs = mapping.lhs,
-          rhs = mapping.rhs,
+        return {
+          value = mapping,
+          ordinal = ordinal,
+          display = make_display,
         }
       end,
     }),
-    attach_mappings = function(prompt_bufnr)
-      print("A selection has occoured")
-      return true
-    end,
   }):find()
 end
 
