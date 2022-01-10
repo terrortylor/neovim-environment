@@ -8,7 +8,7 @@ M.callbacks = {}
 
 -- TODO pop up scrath terminal, that is repl for filetype
 
-function M.close_windows(win)
+function M.close_window(win)
   if win then
     if api.nvim_win_is_valid(win) then
       api.nvim_win_close(win, true)
