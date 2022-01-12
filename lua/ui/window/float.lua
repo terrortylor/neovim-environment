@@ -64,7 +64,7 @@ function M.open_float(buf, buf_opts, callback)
     "autocmd",
     "WinLeave",
     "<buffer=" .. buf .."> ++once",
-    ":lua require('ui.window.float').close_windows(" .. win .. ")"
+    ":lua require('ui.window.float').close_window(" .. win .. ")"
   }
   vim.cmd(table.concat(command, " "))
 

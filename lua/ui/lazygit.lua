@@ -50,7 +50,7 @@ local function open()
 
     local  close_lazygit = function()
       restore_mappings()
-      float.close_windows(win_tuple[1], win_tuple[2])
+      float.close_window(win_tuple[1])
       vim.api.nvim_buf_delete(buf, {force = true})
       map_backup = nil
       is_open = nil
