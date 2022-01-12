@@ -7,15 +7,6 @@ local thin_border_chars= {
   preview = { '─', '│', '─', '│', '┌', '┐', '┘', '└'},
 }
 
-local function edit_bashrcd()
-  require("telescope.builtin").find_files {
-    shorten_path = false,
-    cwd = "~/.bashrc.d/",
-    prompt = "bashrc.d files",
-    hidden = true,
-  }
-end
-
 function M.dropdown_code_actions()
   local preffered_width = 0.4 -- percentage
   local columns = vim.api.nvim_get_option("columns")
@@ -163,7 +154,9 @@ function M.setup()
       }
     }
   }
-  vim.api.nvim_add_user_command("EditBashrcdFiles", edit_bashrcd, {force = true})
+
+  require("telescope").load_extension("bashrc")
+  require("telescope").load_extension("go_src")
 end
 
 return M
