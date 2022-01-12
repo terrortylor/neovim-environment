@@ -68,7 +68,7 @@ function M.open_float(buf, buf_opts, callback)
   }
   vim.cmd(table.concat(command, " "))
 
-  return {win, nil}
+  return win
 
 end
 

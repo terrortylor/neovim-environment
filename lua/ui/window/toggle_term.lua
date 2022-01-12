@@ -22,16 +22,21 @@ function M.open(n, command)
   end
 
   local opts = float.gen_centered_float_opts(0.8, 0.8, true)
-  local win_tuple = float.open_float(buf, opts, function() end)
+  local win = float.open_float(buf, opts, function() end)
+
+  for _, v in pairs({"<ESC>", "<CR>", "q"}) do
+    vim.api.nvim_buf_set_keymap(buf, "n", v, "<CMD>lua require('ui.window.float').close_window(" .. win .. ")<CR>", { noremap = true })
+  end
 
   if new then
-    local close_toogle_term = function()
-      float.close_windows(win_tuple[1], win_tuple[2])
+
+    local close_toggle_term = function()
+      float.close_windows(win)
       vim.api.nvim_buf_delete(buf, {force = true})
       terms[n] = nil
     end
 
-    vim.fn.termopen(command, {on_exit = close_toogle_term})
+    vim.fn.termopen(command, {on_exit = close_toggle_term})
   end
 
   vim.cmd("startinsert!")
