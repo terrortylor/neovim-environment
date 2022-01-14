@@ -3,6 +3,8 @@ local t = require("luasnip").text_node
 local p = require("luasnip").parser.parse_snippet
 
 local snippets = {
+    p({ trig = "ti" }, 'type $1 interface {\n\t$0\n}'),
+    p({ trig = "ts" }, 'type $1 struct {\n\t$0\n}'),
     p({ trig = "mock_controller" }, 'ctrl := gomock.NewController(t)\ndefer ctrl.Finish()\n$0'),
     -- luacheck: ignore
     p({ trig = "mock_generation" }, '//go:generate mockgen -source=\\$GOFILE -destination=mock_\\$GOFILE -package=\\$GOPACKAGE'),
