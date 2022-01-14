@@ -157,6 +157,7 @@ function M.setup()
 
   require("telescope").load_extension("bashrc")
   require("telescope").load_extension("go_src")
+  require("telescope").load_extension("plugin_files")
 end
 
 return M
