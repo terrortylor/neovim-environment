@@ -55,6 +55,10 @@ function M.open_float(buf, buf_opts, callback)
   win = api.nvim_open_win(buf, true, buf_opts)
   M.callbacks[win] = callback
 
+  if vim.opt.autowrite:get() or vim.opt.autowriteall:get() then
+    vim.cmd("wall")
+  end
+
   -- TODO pass in extra mapping, such as <sec> or <c-c>,this is an example as per git blame
   -- for _, v in pairs(lhs_mappings) do
   --   api.nvim_buf_set_keymap(buf, "n", v, "<CMD>lua require('git.blame').close_window()<CR>", { noremap = true })

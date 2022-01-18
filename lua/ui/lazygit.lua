@@ -37,10 +37,6 @@ local function restore_mappings()
 end
 
 local function open()
-  if vim.opt.autowrite:get() or vim.opt.autowriteall:get() then
-    vim.cmd("wall")
-  end
-
   if not is_open then
     capture_and_clear_mappings()
     local buf = vim.api.nvim_create_buf(false, true)
