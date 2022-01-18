@@ -1,9 +1,6 @@
 local M = {}
 
 function M.setup()
-  -- vim.api.nvim_set_var("test#strategy", "neovim")
-  -- vim.api.nvim_set_var("test#neovim#term_position", "topleft")
-
   vim.api.nvim_set_var("test#javascript#jest#executable", "yarn test")
 
   vim.cmd [[
@@ -13,8 +10,15 @@ function M.setup()
       lua require('tmux.commands').send_command_to_pane("tmux-test-runner")
     endfunction
 
-    let g:test#custom_strategies = {'customtmuxstrategy': function('CustomTmuxStrategy')}
-    let g:test#strategy = 'customtmuxstrategy'
+    function! CustomToggleTermStrategy(cmd)
+    echo a:cmd
+      let Open = luaeval("require('ui.window.toggle_term').open")
+      call Open("vim-test", "bash", v:false, a:cmd)
+    endfunction
+
+    let g:test#custom_strategies = {'customtmuxstrategy': function('CustomTmuxStrategy'), 'customtoggletermstrategy': function('CustomToggleTermStrategy')}
+    " let g:test#strategy = 'customtmuxstrategy'
+    let g:test#strategy = 'customtoggletermstrategy'
   ]]
 
   require('util.config').create_mappings({

@@ -9,8 +9,11 @@ M.options = {
 
 local terms = {}
 
-function M.open(n, command)
-  command = command or "bash"
+function M.open(n, seed_command, start_insert, ...)
+  seed_command = seed_command or "bash"
+
+  local args = {...}
+  local command = table.concat(args, " ")
 
   local buf = terms[n]
   local new = false
@@ -36,10 +39,16 @@ function M.open(n, command)
       terms[n] = nil
     end
 
-    vim.fn.termopen(command, {on_exit = close_toggle_term})
+    vim.fn.termopen(seed_command, {on_exit = close_toggle_term})
   end
 
-  vim.cmd("startinsert!")
+  if command and command ~= "" then
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("i" .. command .. "<cr><C-\\><C-n>", true, false, true), "n", true)
+  end
+
+  if start_insert then
+    vim.api.nvim_feedkeys("i", "n", true)
+  end
 end
 
 return M
