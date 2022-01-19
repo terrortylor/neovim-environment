@@ -5,9 +5,6 @@ local conf = require("telescope.config").values
 local entry_display = require("telescope.pickers.entry_display")
 local action_state = require("telescope.actions.state")
 
--- testing with this
--- vim -c 'lua require("telescope").load_extension("mapdesc")' -c 'lua vim.api.nvim_set_keymap("n", "gggg", ":echo 'test'", {desc = "a description"})' -c 'inoremap <c-i> <cmd>Telescope mapdesc<cr>'
-
 local function get_all_available_keymaps(mode)
   mode = {mode} or {"n", "v", "x", "i", "o", "s", "t"}
   local mappings = {}
@@ -55,7 +52,7 @@ local function search(opts)
   })
   local make_display = function(entry)
     local left = entry.value.mode .. " " .. entry.value.lhs
-    local middle = ""
+    local middle
     local right = ""
     if entry.value.desc == "" then
       middle = entry.value.rhs
@@ -92,7 +89,7 @@ local function search(opts)
         }
       end,
     }),
-    attach_mappings = function(prompt_bufnr, map)
+    attach_mappings = function(prompt_bufnr, _)
       actions.select_default:replace(function()
         actions.close(prompt_bufnr)
         local selection = action_state.get_selected_entry()

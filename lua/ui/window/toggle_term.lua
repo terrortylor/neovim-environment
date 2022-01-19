@@ -28,7 +28,13 @@ function M.open(n, seed_command, start_insert, ...)
   local win = float.open_float(buf, opts, function() end)
 
   for _, v in pairs({"<ESC>", "<CR>", "q"}) do
-    vim.api.nvim_buf_set_keymap(buf, "n", v, "<CMD>lua require('ui.window.float').close_window(" .. win .. ")<CR>", { noremap = true })
+    vim.api.nvim_buf_set_keymap(
+      buf,
+      "n",
+      v,
+      "<CMD>lua require('ui.window.float').close_window(" .. win .. ")<CR>",
+      { noremap = true }
+    )
   end
 
   if new then
@@ -43,7 +49,14 @@ function M.open(n, seed_command, start_insert, ...)
   end
 
   if command and command ~= "" then
-    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("i" .. command .. "<cr><C-\\><C-n>", true, false, true), "n", true)
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(
+      "i" .. command .. "<cr><C-\\><C-n>",
+      true,
+      false,
+      true),
+      "n",
+      true
+    )
   end
 
   if start_insert then

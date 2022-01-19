@@ -16,7 +16,8 @@ function M.setup()
       call Open("vim-test", "bash", v:false, a:cmd)
     endfunction
 
-    let g:test#custom_strategies = {'customtmuxstrategy': function('CustomTmuxStrategy'), 'customtoggletermstrategy': function('CustomToggleTermStrategy')}
+    let g:test#custom_strategies = {'customtmuxstrategy': function('CustomTmuxStrategy'),
+      \'customtoggletermstrategy': function('CustomToggleTermStrategy')}
     " let g:test#strategy = 'customtmuxstrategy'
     let g:test#strategy = 'customtoggletermstrategy'
   ]]

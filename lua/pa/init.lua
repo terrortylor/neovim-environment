@@ -25,7 +25,7 @@ local function open_markdown_buf(filename)
   return buf
 end
 
-function M.open_markdown_centered_float(title, filename, style)
+function M.open_markdown_centered_float(filename, style)
   local buf = open_markdown_buf(filename)
   local opts = float.gen_centered_float_opts(0.8, 0.8, style)
 
@@ -55,7 +55,7 @@ function M.remindme(args)
   local reminder = args.args
   local filepath = string.format("%s/remindme/%s.md", M.notes_path, reminder)
   if fs.file_exists(filepath) then
-    M.open_markdown_centered_float(string.format(" RemindMe: %s ", reminder), filepath, true)
+    M.open_markdown_centered_float(filepath, true)
   else
     log.error("RemindMe - File not found: " .. filepath)
   end

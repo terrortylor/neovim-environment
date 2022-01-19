@@ -1,4 +1,4 @@
-local function find_files(opts)
+local function find_files(_)
   return require("telescope/builtin/files").find_files {
     shorten_path = false,
     cwd = "~/.local/share/nvim/site/pack/packer",
@@ -7,7 +7,7 @@ local function find_files(opts)
   }
 end
 
-local function live_grep(opts)
+local function live_grep(_)
   return require("telescope/builtin/files").live_grep {
     shorten_path = false,
     search_dirs = {"~/.local/share/nvim/site/pack/packer"},

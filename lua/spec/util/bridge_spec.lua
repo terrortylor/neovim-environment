@@ -13,10 +13,6 @@ describe('util.bridge', function()
     mock.revert(api)
   end)
 
-  local function assertCalled(mode, lhs, rhs, opts)
-    assert.stub(api.nvim_set_keymap).was_called_with(mode, lhs, rhs, opts)
-  end
-
   describe("metatable function calls", function()
     it("should call metatable functions", function()
       testModule.nmap("lhs", "rhs")
