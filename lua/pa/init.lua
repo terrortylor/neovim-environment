@@ -62,7 +62,12 @@ function M.remindme(args)
 end
 
 function M.setup()
-  vim.api.nvim_add_user_command("RemindMe", M.remindme, {force = true, nargs=1, complete="customlist,v:lua.remindme_complete"})
+  vim.api.nvim_add_user_command(
+    "RemindMe",
+    M.remindme,
+    {force = true, nargs=1,
+    complete="customlist,v:lua.remindme_complete"}
+  )
 end
 
 return M
