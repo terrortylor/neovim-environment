@@ -8,14 +8,14 @@ local action_state = require("telescope.actions.state")
 -- testing with this
 -- vim -c 'lua require("telescope").load_extension("mapdesc")' -c 'lua vim.api.nvim_set_keymap("n", "gggg", ":echo 'test'", {desc = "a description"})' -c 'inoremap <c-i> <cmd>Telescope mapdesc<cr>'
 
-function get_all_available_keymaps()
+local function get_all_available_keymaps(mode)
+  mode = {mode} or {"n", "v", "x", "i", "o", "s", "t"}
   local mappings = {}
-  -- TODO for some reason this removes some mappings, Lazygit for example
+  -- TODO for some reason this removes some mappings when all modes passed, Lazygit for example
   -- which is a n mapping, isn't present when adding them all
   -- keep works, and error throws error, so there is a conflicting
   -- mapping
-  -- for _, v in pairs({"n"}) do
-  for _, v in pairs({"n", "v", "x", "i", "o", "s", "t"}) do
+  for _, v in pairs(mode) do
     local r = vim.api.nvim_get_keymap(v)
     mappings = vim.tbl_extend('force', mappings, r)
   end
@@ -75,7 +75,7 @@ local function search(opts)
     prompt_title = "key mappings",
     sorter = conf.generic_sorter(opts),
     finder = finders.new_table({
-      results = get_all_available_keymaps(),
+      results = get_all_available_keymaps(mode),
       entry_maker = function(mapping)
         -- ordinal should be description if present
         local ordinal
@@ -96,10 +96,12 @@ local function search(opts)
       actions.select_default:replace(function()
         actions.close(prompt_bufnr)
         local selection = action_state.get_selected_entry()
+        local keys = vim.api.nvim_replace_termcodes(selection.value.lhs, true, false, true)
+        -- TODO support other modes!
         if mode == "i" then
-          vim.api.nvim_feedkeys("i" .. vim.api.nvim_replace_termcodes(selection.value.lhs, true, true, false), "m", true)
+          vim.api.nvim_feedkeys("i" .. keys, "m", true)
         else
-          vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(selection.value.lhs, true, false, true), "m", true)
+          vim.api.nvim_feedkeys(keys, "m", true)
         end
 
       end)
