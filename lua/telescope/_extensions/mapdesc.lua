@@ -5,13 +5,19 @@ local conf = require("telescope.config").values
 local entry_display = require("telescope.pickers.entry_display")
 local action_state = require("telescope.actions.state")
 
+-- testing with this
+-- vim -c 'lua require("telescope").load_extension("mapdesc")' -c 'lua vim.api.nvim_set_keymap("n", "gggg", ":echo 'test'", {desc = "a description"})' -c 'inoremap <c-i> <cmd>Telescope mapdesc<cr>'
 
 function get_all_available_keymaps()
   local mappings = {}
-  for _, v in pairs({"n"}) do
-  -- for _, v in pairs({"n", "v", "x", "i", "o", "s", "t"}) do
+  -- TODO for some reason this removes some mappings, Lazygit for example
+  -- which is a n mapping, isn't present when adding them all
+  -- keep works, and error throws error, so there is a conflicting
+  -- mapping
+  -- for _, v in pairs({"n"}) do
+  for _, v in pairs({"n", "v", "x", "i", "o", "s", "t"}) do
     local r = vim.api.nvim_get_keymap(v)
-    mappings = vim.tbl_deep_extend('force', mappings, r)
+    mappings = vim.tbl_extend('force', mappings, r)
   end
 
   -- filter out mappings with out modes set
@@ -35,6 +41,9 @@ function get_all_available_keymaps()
 end
 
 local function search(opts)
+  local mode = vim.api.nvim_get_mode().mode
+  print("mode", mode)
+
   local displayer = entry_display.create({
     separator = " ",
     items = {
@@ -83,6 +92,19 @@ local function search(opts)
         }
       end,
     }),
+    attach_mappings = function(prompt_bufnr, map)
+      actions.select_default:replace(function()
+        actions.close(prompt_bufnr)
+        local selection = action_state.get_selected_entry()
+        if mode == "i" then
+          vim.api.nvim_feedkeys("i" .. vim.api.nvim_replace_termcodes(selection.value.lhs, true, true, false), "m", true)
+        else
+          vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(selection.value.lhs, true, false, true), "m", true)
+        end
+
+      end)
+      return true
+    end,
   }):find()
 end
 
