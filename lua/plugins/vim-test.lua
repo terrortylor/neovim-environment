@@ -1,5 +1,17 @@
 local M = {}
 
+local function select_strategy()
+  local set_selection = function(item, _)
+    vim.g["test#strategy"] = item
+  end
+
+  vim.ui.select(
+    {"customtmuxstrategy", "customtoggletermstrategy"},
+    {prompt = "Select Test strategy:"},
+    set_selection
+  )
+end
+
 function M.setup()
   local custom_toggle_term_strategy = function(cmd)
     require('ui.window.toggle_term').open("vim-test", "bash", false, cmd)
@@ -26,6 +38,8 @@ function M.setup()
       ["gtn"]     = "<cmd>TestNearest<CR>",
     },
   })
+
+  vim.api.nvim_add_user_command("TestStrategySelect", select_strategy, {force = true})
 end
 
 return M
