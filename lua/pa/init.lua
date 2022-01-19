@@ -33,12 +33,7 @@ function M.open_markdown_centered_float(title, filename, style)
     vim.api.nvim_buf_delete(buf, {force = true})
   end
 
-  float.open_float(title, true, buf, opts, cb)
-end
-
-function M.tasks()
-  local filepath = string.format('%s/tasks/%s', M.notes_path, 'index.md')
-  M.open_markdown_centered_float(" Tasks ", filepath, true)
+  float.open_float(buf, opts, cb)
 end
 
 function M.remindme_complete()
@@ -56,7 +51,8 @@ function M.remindme_complete()
 end
 
 -- TODO add mapping so q in normal mode closes window
-function M.remindme(reminder)
+function M.remindme(args)
+  local reminder = args.args
   local filepath = string.format("%s/remindme/%s.md", M.notes_path, reminder)
   if fs.file_exists(filepath) then
     M.open_markdown_centered_float(string.format(" RemindMe: %s ", reminder), filepath, true)
@@ -67,25 +63,7 @@ end
 
 function M.setup()
   -- TODO allow argument to say from command line so auto close vim when leave window
-  local commands = {
-    {
-      "command!",
-      "-nargs=0",
-      "Tasks",
-      "lua require('pa').tasks()"
-    },
-    {
-      -- TODO add completion here that looks in files in directory, see _complete func above,
-      -- just how to call lua func here? do I need a vim func wrapper?
-      "command!",
-      "-nargs=1",
-      "RemindMe",
-      "lua require('pa').remindme('<args>')"
-    },
-  }
-  for _,v in pairs(commands) do
-    vim.cmd(table.concat(v, " "))
-  end
+  vim.api.nvim_add_user_command("RemindMe", M.remindme, {force = true, nargs=1})
 end
 
 return M
