@@ -36,7 +36,7 @@ function M.open_markdown_centered_float(filename, style)
   float.open_float(buf, opts, cb)
 end
 
-function M.remindme_complete()
+function M.remindme_complete(_, _, _)
   local tbl = {}
 
   local files = api.nvim_call_function("globpath", {M.notes_path .. "/remindme", "*.md", 0})
@@ -62,8 +62,14 @@ function M.remindme(args)
 end
 
 function M.setup()
-  -- TODO allow argument to say from command line so auto close vim when leave window
-  vim.api.nvim_add_user_command("RemindMe", M.remindme, {force = true, nargs=1})
+  vim.cmd [[
+    function! RemindMeComplete(A, L, P)
+      let Seed = luaeval("require('pa').remindme_complete")
+      return Seed(a:A, a:L, a:P)
+    endfunction
+  ]]
+
+  vim.api.nvim_add_user_command("RemindMe", M.remindme, {force = true, nargs=1, complete="customlist,RemindMeComplete"})
 end
 
 return M
