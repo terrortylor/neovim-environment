@@ -6,7 +6,7 @@ local function select_strategy()
   end
 
   vim.ui.select(
-    {"customtmuxstrategy", "customtoggletermstrategy"},
+    {"TmuxPane", "PopupTerm"},
     {prompt = "Select Test strategy:"},
     set_selection
   )
@@ -24,10 +24,10 @@ function M.setup()
 
   vim.g["test#javascript#jest#executable"] = "yarn test"
   vim.g["test#custom_strategies"] = {
-    customtmuxstrategy = custom_tmux_strategy,
-    customtoggletermstrategy = custom_toggle_term_strategy
+    TmuxPane = custom_tmux_strategy,
+    PopupTerm = custom_toggle_term_strategy
   }
-  vim.g["test#strategy"] = 'customtoggletermstrategy'
+  vim.g["test#strategy"] = 'PopupTerm'
 
   require('util.config').create_mappings({
     n = {
