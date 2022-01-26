@@ -1,19 +1,19 @@
 local function find_files(_)
   return require("telescope/builtin/files").find_files {
     shorten_path = false,
-    cwd = "~/.bashrc.d/",
-    prompt = "bashrc.d files",
-    hidden = true,
+    cwd = "~/personnal-workspace/notes",
+    prompt = "Notes",
+    hidden = false,
   }
 end
 
 local function live_grep(_)
   return require("telescope/builtin/files").live_grep {
     shorten_path = false,
-    cwd = "~/.bashrc.d/",
-    search_dirs = {"~/.bashrc.d/"},
-    prompt = "bashrc.d files",
-    hidden = true,
+    cwd = "~/personnal-workspace/notes",
+    search_dirs = {"~/personnal-workspace/notes"},
+    prompt = "Notes",
+    hidden = false,
   }
 end
 

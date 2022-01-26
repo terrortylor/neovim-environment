@@ -10,6 +10,7 @@ end
 local function live_grep(_)
   return require("telescope/builtin/files").live_grep {
     shorten_path = false,
+    cwd = "~/.local/share/nvim/site/pack/packer",
     search_dirs = {"~/.local/share/nvim/site/pack/packer"},
     prompt = "NVIM plugins - live grep",
     hidden = true,
