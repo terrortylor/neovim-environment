@@ -88,7 +88,6 @@ return require('packer').startup(function(use)
 
   use {
     "nvim-neorg/neorg",
-    -- ft = "norg",
     config = function() require("plugins.neorg") end,
     requires = {"nvim-lua/plenary.nvim", "nvim-neorg/neorg-telescope"}
   }
@@ -137,14 +136,6 @@ return require('packer').startup(function(use)
       config = function()
         -- requred for neorg
         local parser_configs = require('nvim-treesitter.parsers').get_parser_configs()
-
-        parser_configs.norg = {
-          install_info = {
-            url = "https://github.com/nvim-neorg/tree-sitter-norg",
-            files = { "src/parser.c", "src/scanner.cc" },
-            branch = "main"
-          },
-        }
 
         parser_configs.norg_meta = {
           install_info = {

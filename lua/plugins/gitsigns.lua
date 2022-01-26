@@ -28,10 +28,6 @@ function M.setup()
           ['o ih'] = ':<C-U>lua require"gitsigns".text_object()<CR>',
           ['x ih'] = ':<C-U>lua require"gitsigns".text_object()<CR>'
         },
-        watch_index = {
-          interval = 1000
-        },
-        -- sign_priority = 15,
         status_formatter = nil, -- Use default
       }
 end
