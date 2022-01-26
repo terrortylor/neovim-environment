@@ -47,7 +47,7 @@ function M.setup()
       renamed =  "R",
       untracked =  "★",
       deleted =  "✗",
-      ignored =  "I"
+      ignored =  "🙅"
     }
   }
   vim.g.nvim_tree_quit_on_open = 1
