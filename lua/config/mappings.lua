@@ -103,6 +103,7 @@ require('util.config').create_mappings({
       {noremap = true, silent = true, expr = true}
     },
     ["<leader>/"] = [[/\<\><left><left>]],
+    ["cw"] = "ciw",
   },
   v = {
     -- Indent Lines and reselect
