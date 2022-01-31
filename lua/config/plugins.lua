@@ -26,7 +26,7 @@ return require('packer').startup(function(use)
 
   -- colour scheme
   -- Setting the colourscheme here prevents the info screen showing when opened without a file
-  use { "terrortylor/zephyr-nvim", config = function() vim.cmd("colorscheme zephyr") end }
+  use { "folke/tokyonight.nvim", config = function() vim.cmd("colorscheme tokyonight") end }
 
   -- toggle comments
   use {
