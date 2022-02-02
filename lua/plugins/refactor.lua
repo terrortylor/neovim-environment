@@ -39,10 +39,10 @@ function M.setup()
   )
 
   -- Print var: this remap should be made in visual mode
-  keymap("v", "<leader>rv", ":lua require('refactoring').debug.print_var({})<CR>", { noremap = true })
+  keymap("v", "<leader>rpv", ":lua require('refactoring').debug.print_var({})<CR>", { noremap = true })
 
   -- Cleanup function: this remap should be made in normal mode
-  keymap("n", "<leader>rc", ":lua require('refactoring').debug.cleanup({})<CR>", { noremap = true })
+  keymap("n", "<leader>rpc", ":lua require('refactoring').debug.cleanup({})<CR>", { noremap = true })
 end
 
 return M
