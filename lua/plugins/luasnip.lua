@@ -9,13 +9,21 @@ local function edit_ft()
   }, function(item, idx)
     -- selection aborted -> idx == nil
     if idx then
-      vim.cmd("edit ~/.config/nvim/lua/snippets/"..item..".lua")
+      vim.cmd("edit ~/.config/nvim/snippets/"..item..".snippets")
     end
   end)
 end
 
 local function setup_snippets()
   local ls = require("luasnip")
+
+  -- enable snipmate stype snippets, and load
+  -- from snippets dir
+  require("luasnip.loaders.from_snipmate").load()
+
+  vim.api.nvim_add_user_command("LuaSnipEdit", edit_ft, {force = true})
+
+  -- require("luasnip").config.setup({store_selection_keys="<Tab>"})
 
   function _G.snippets_clear()
     for m, _ in pairs(ls.snippets) do
@@ -31,6 +39,8 @@ local function setup_snippets()
         return t[k]
       end
     })
+
+    require("luasnip.loaders.from_snipmate").load()
   end
 
   _G.snippets_clear()
@@ -38,32 +48,13 @@ local function setup_snippets()
   vim.cmd [[
   augroup snippets_clear
   au!
-  au BufWritePost ~/.config/nvim/lua/snippets/*.lua lua _G.snippets_clear()
+  au BufWritePost ~/.config/nvim/snippets/*.snippets lua _G.snippets_clear()
   augroup END
   ]]
-
-  vim.api.nvim_add_user_command("LuaSnipEdit", edit_ft, {force = true})
-
-  require("luasnip").config.setup({store_selection_keys="<Tab>"})
-end
-
-local function setup_keymaps()
-
-  vim.cmd [[
-  imap <silent><expr> <c-k> luasnip#expand_or_jumpable() ? '<Plug>luasnip-expand-or-jump' : '<c-k>'
-  inoremap <silent> <c-j> <cmd>lua require('luasnip').jump(-1)<CR>
-
-  imap <silent><expr> <C-l> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : '<C-l>'
-
-  snoremap <silent> <c-k> <cmd>lua require('luasnip').jump(1)<CR>
-  snoremap <silent> <c-j> <cmd>lua require('luasnip').jump(-1)<CR>
-]]
-
 end
 
 function  M.setup()
   setup_snippets()
-  setup_keymaps()
 end
 
 return M
