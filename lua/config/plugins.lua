@@ -24,6 +24,13 @@ return require('packer').startup(function(use)
     })
   end}
 
+  use {
+    "~/personnal-workspace/nvim-plugins/nvim-httpclient",
+    config = function()
+      require("nvim-httpclient").setup()
+    end
+  }
+
   -- colour scheme
   -- Setting the colourscheme here prevents the info screen showing when opened without a file
   use { "folke/tokyonight.nvim", config = function() vim.cmd("colorscheme tokyonight") end }
@@ -123,7 +130,11 @@ return require('packer').startup(function(use)
     {
       -- adds github pull integration into telescope
       "nvim-telescope/telescope-github.nvim",
-      requires = { "nvim-telescope/telescope.nvim" },
+      config = function() require('telescope').load_extension('gh') end,
+      requires = {
+        "nvim-lua/plenary.nvim",
+        "nvim-telescope/telescope.nvim"
+      },
     }
   }
 
