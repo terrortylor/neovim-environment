@@ -88,35 +88,19 @@ function M.setup()
       mapping = {
         ['<C-p>'] = cmp.mapping.select_prev_item(),
         ['<C-n>'] = cmp.mapping.select_next_item(),
-        ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-        ['<C-u>'] = cmp.mapping.scroll_docs(4),
         ['<C-e>'] = cmp.mapping.abort(),
-        ["<c-y>"] = cmp.mapping.confirm {
-          behavior = cmp.ConfirmBehavior.Insert,
-          select = false,
-        },
-        ["<c-q>"] = cmp.mapping.confirm {
-          behavior = cmp.ConfirmBehavior.Replace,
-          select = false,
-        },
 
-        ['<CR>'] = cmp.mapping.confirm({
-          behavior = cmp.ConfirmBehavior.Replace,
-          select = false,
-        }),
-
-        -- TAB/S-TAB aren't used navigate the PUM
-        -- but are used expand/jump in luasnip
-        -- setting here gives bonus of when PUM
-        -- open but nothing selected (default)
-        -- CR goes to new line, leaving what ever text
-        -- untouched but TAB will select and expand that
-        -- top item, regardless of not being selected.
-        -- Which is more often what I want as snippets
-        -- are always at the top and nvim-cmp has fuzzy
-        -- mathcing.
+        -- TAB
+        -- will select and confirm top unselected PUM item
+        -- or confirm selected PUM item
+        -- if no PUM is visiable then trys luasnip expand or jump
         ["<Tab>"] = cmp.mapping(function(fallback)
-          if cmp.visible() and cmp.get_selected_entry() == nil then
+          if cmp.visible() and cmp.get_selected_entry() ~= nil then
+            cmp.confirm {
+              behavior = cmp.ConfirmBehavior.Replace,
+              select = true,
+            }
+          elseif cmp.visible() and cmp.get_selected_entry() == nil then
             cmp.select_next_item()
             cmp.confirm {
               behavior = cmp.ConfirmBehavior.Replace,
