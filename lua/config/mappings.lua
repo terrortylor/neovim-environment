@@ -1,5 +1,7 @@
 require('util.config').create_mappings({
   n = {
+    -- save all, this is overwritten in lsp's to format doc also
+    ["<space>fd"] = "<cmd>wall<cr>",
     -- Refactoring
     ["<leader>rw"] = {[[:%s/\C\<<c-r><c-w>\>//<left>]], {noremap = true}},
 

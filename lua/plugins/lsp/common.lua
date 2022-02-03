@@ -53,9 +53,9 @@ local function set_mappings(client, bufnr)
     -- Tried to do filetype mapping but isn't picked up for some reason when vim starts, only when explicitly settings
     -- the filetype to go in the command line... user that is a bug though
     if vim.bo.filetype == "go" then
-      mappings.n["<space>fd"] = "<cmd>GoImport<CR>"
+      mappings.n["<space>fd"] = "<cmd>wall<cr><cmd>GoImport<CR>"
     else
-      mappings.n["<space>fd"] = "<cmd>lua require('lsp.format').efm_priority_document_format()<CR>"
+      mappings.n["<space>fd"] = "<cmd>wall<cr><cmd>lua require('lsp.format').efm_priority_document_format()<CR>"
     end
   end
 
