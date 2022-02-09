@@ -254,7 +254,8 @@ return require('packer').startup(function(use)
       "hrsh7th/cmp-nvim-lsp",
       "saadparwaiz1/cmp_luasnip",
       'andersevenrud/cmp-tmux',
-      "f3fora/cmp-spell"
+      "f3fora/cmp-spell",
+      -- "hrsh7th/cmp-nvim-lsp-signature-help"
     }
   }
 

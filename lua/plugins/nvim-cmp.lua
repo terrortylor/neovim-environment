@@ -57,6 +57,7 @@ function M.setup_sources()
   if vim.fn.getenv("TMUX") then
     addSource({ name = "tmux", keyword_length = 4, max_item_count = 5 }, "[TMUX]")
   end
+  -- addSource("nvim_lsp_signature_help", "[SIG]")
 
   require('cmp').setup.buffer({sources = sources})
 end
