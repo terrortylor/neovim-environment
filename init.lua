@@ -7,6 +7,8 @@ vim.bo.undofile = true
 
 vim.g.mapleader = " "
 
+require("util.globals")
+
 -- Configurations
 require("config.options")
 require("config.autogroups")
