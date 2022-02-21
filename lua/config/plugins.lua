@@ -294,8 +294,6 @@ return require("packer").startup(function(use)
 		},
 	})
 
-	goo = 2
-
 	-- completion
 	use({
 		"hrsh7th/nvim-cmp",

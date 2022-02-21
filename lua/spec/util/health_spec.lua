@@ -1,19 +1,10 @@
 local testModule
-local api
-local mock = require('luassert.mock')
-local stub = require('luassert.stub')
-local spy = require('luassert.spy')
 
 describe('util.health', function()
 
   before_each(function()
     testModule = require('util.health')
     testModule.required_bins = {}
-    -- api = mock(vim.api, true)
-  end)
-
-  after_each(function()
-    -- mock.revert(api)
   end)
 
   describe('register_required_binary', function()

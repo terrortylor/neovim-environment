@@ -10,6 +10,7 @@ M.required_bins = {}
 
 function M.register_required_binary(bin, description)
  if not bin or not description then
+   -- luacheck: ignore
    print("can not register required binary, bin and description must be set: bin: " .. bin .. " description: " .. description)
    return
  end
