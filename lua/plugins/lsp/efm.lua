@@ -1,6 +1,8 @@
 local util = require('lspconfig.util')
+require('util.health').register_required_binary("efm-langserver", "Used by efm language server")
 
 -- eslint via efm
+-- TODO move to null-ls and get rid of efm
 local eslint = {
   lintCommand = "eslint_d -f unix --stdin --stdin-filename ${INPUT}",
   lintStdin = true,

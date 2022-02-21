@@ -1,6 +1,7 @@
 local log = require("util.log")
 local user_command = require("util.config").user_command
 
+user_command("Health", require('util.health').display)
 user_command("Lazygit", require('ui.lazygit').open)
 user_command("ShowHighlightGroup", require('util.config').show_highlight_group)
 user_command("SetProjectCWD", require('util.path').set_cwd_to_project_root)
