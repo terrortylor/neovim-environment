@@ -25,7 +25,7 @@ end
 
 function M.setup()
   vim.g.nvim_tree_show_icons = {
-    git = 1,
+    git = 0,
     folders = 1,
     files = 0,
     icons = 0,
