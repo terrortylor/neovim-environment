@@ -272,9 +272,6 @@ return require("packer").startup(function(use)
 	use({
 		{
 			"jose-elias-alvarez/null-ls.nvim",
-			config = function()
-				require("null-ls").setup()
-			end,
 			requires = { "nvim-lua/plenary.nvim" },
 		},
 		{
@@ -285,7 +282,7 @@ return require("packer").startup(function(use)
 				-- not required when using ray-s/go.nvim
 				require("plugins.lsp.gopls")
 				require("plugins.lsp.bashls")
-				-- require("plugins.lsp.efm")
+				require("plugins.lsp.efm")
 				require("plugins.lsp.null-ls")
 			end,
 			requires = {
