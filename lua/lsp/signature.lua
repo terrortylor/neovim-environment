@@ -12,7 +12,7 @@ function M.cheap_signiture()
 		for _, client in pairs(clients) do
 			if client.resolved_capabilities.signature_help then
 				vim.lsp.buf.signature_help()
-        return
+				return
 			end
 		end
 	end

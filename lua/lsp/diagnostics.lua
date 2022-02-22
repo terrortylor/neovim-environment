@@ -1,11 +1,11 @@
 local M = {}
 
 local levels = {
-  errors = vim.diagnostic.severity.ERROR,
-  warnings = vim.diagnostic.severity.WARN,
-  -- Currently only displaying Errors and Warning in tabline
-  info = vim.diagnostic.severity.INFO,
-  hint = vim.diagnostic.severity.HINT,
+	errors = vim.diagnostic.severity.ERROR,
+	warnings = vim.diagnostic.severity.WARN,
+	-- Currently only displaying Errors and Warning in tabline
+	info = vim.diagnostic.severity.INFO,
+	hint = vim.diagnostic.severity.HINT,
 }
 
 -- local all_diagnostics_to_qf = function() -- luacheck: ignore
@@ -103,19 +103,19 @@ local levels = {
 -- These are used ATM
 
 function M.get_all_diagnostic_count()
-  local result = {}
+	local result = {}
 
-  local buffers = vim.api.nvim_list_bufs()
-  for _,b in pairs(buffers) do
-    if vim.api.nvim_buf_is_loaded(b) then
-      for k, level in pairs(levels) do
-        local count = result[k] or 0
-        result[k] = count + vim.tbl_count(vim.diagnostic.get(b, {severity = level}))
-      end
-    end
-  end
+	local buffers = vim.api.nvim_list_bufs()
+	for _, b in pairs(buffers) do
+		if vim.api.nvim_buf_is_loaded(b) then
+			for k, level in pairs(levels) do
+				local count = result[k] or 0
+				result[k] = count + vim.tbl_count(vim.diagnostic.get(b, { severity = level }))
+			end
+		end
+	end
 
-  return result
+	return result
 end
 
 -- Called from mapping to toggle virtual text on and off for a given buffer
@@ -123,15 +123,15 @@ end
 -- TODO this may be better to be global
 -- when diagnostics refresh this seems to get lost, and you have to toggle twice
 function M.diagnostic_toggle_virtual_text()
-  local virtual_text = vim.b.lsp_virtual_text_enabled
-  virtual_text = not virtual_text
-  vim.b.lsp_virtual_text_enabled = virtual_text
+	local virtual_text = vim.b.lsp_virtual_text_enabled
+	virtual_text = not virtual_text
+	vim.b.lsp_virtual_text_enabled = virtual_text
 
-  local clients = vim.lsp.buf_get_clients(0)
-  for _,c1 in pairs(clients) do
-    -- TODO vim.lsp.diagrnostic is deprecated
-    vim.lsp.diagnostic.display(vim.lsp.diagnostic.get(0, c1.id), 0, 1, {virtual_text = virtual_text})
-  end
+	local clients = vim.lsp.buf_get_clients(0)
+	for _, c1 in pairs(clients) do
+		-- TODO vim.lsp.diagrnostic is deprecated
+		vim.lsp.diagnostic.display(vim.lsp.diagnostic.get(0, c1.id), 0, 1, { virtual_text = virtual_text })
+	end
 end
 
 return M

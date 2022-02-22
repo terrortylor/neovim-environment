@@ -1,9 +1,9 @@
 -- Lifted from: https://simplegametutorials.github.io/snake/
 -- For the sake of it :P
-require'snake.lib.cell'
-require'snake.lib.snake'
-local input = require'snake.lib.input'
-local sprites = require'snake.lib.sprites'
+require("snake.lib.cell")
+require("snake.lib.snake")
+local input = require("snake.lib.input")
+local sprites = require("snake.lib.sprites")
 local api = vim.api
 local M = {}
 
@@ -16,135 +16,138 @@ local food
 local canvas = {}
 
 function M.get_next_pos()
-  local x = snake.segments[1].x
-  local y = snake.segments[1].y
+	local x = snake.segments[1].x
+	local y = snake.segments[1].y
 
-  local direction = input.get_direction()
+	local direction = input.get_direction()
 
-  if direction == 'right' then
-    x = x + 1
-    if x > canvas.width then
-      x = 1
-    end
-  elseif direction == 'left' then
-    x = x - 1
-    if x < 1 then
-      x = canvas.width
-    end
-  elseif direction == 'down' then
-    y = y + 1
-    if y > canvas.height then
-      y = 1
-    end
-  elseif direction == 'up' then
-    y = y - 1
-    if y < 1 then
-      y = canvas.height
-    end
-  end
+	if direction == "right" then
+		x = x + 1
+		if x > canvas.width then
+			x = 1
+		end
+	elseif direction == "left" then
+		x = x - 1
+		if x < 1 then
+			x = canvas.width
+		end
+	elseif direction == "down" then
+		y = y + 1
+		if y > canvas.height then
+			y = 1
+		end
+	elseif direction == "up" then
+		y = y - 1
+		if y < 1 then
+			y = canvas.height
+		end
+	end
 
-  return x, y
+	return x, y
 end
 
 function M.update()
-  local next_x_pos, next_y_pos = M.get_next_pos()
+	local next_x_pos, next_y_pos = M.get_next_pos()
 
-  if snake:collision(next_x_pos, next_y_pos) then
-    M.stop()
-    -- TODO print error so clearer... or new window
-    vim.cmd("echo 'Bad luck'")
-  else
-    local has_eaten = false
-    if next_x_pos == food.x
-      and next_y_pos == food.y then
-      has_eaten = true
-    end
+	if snake:collision(next_x_pos, next_y_pos) then
+		M.stop()
+		-- TODO print error so clearer... or new window
+		vim.cmd("echo 'Bad luck'")
+	else
+		local has_eaten = false
+		if next_x_pos == food.x and next_y_pos == food.y then
+			has_eaten = true
+		end
 
-    snake:move(next_x_pos, next_y_pos, has_eaten)
-    if has_eaten then
-      M.new_food()
-    end
-    snake:draw()
-    food:draw()
-  end
+		snake:move(next_x_pos, next_y_pos, has_eaten)
+		if has_eaten then
+			M.new_food()
+		end
+		snake:draw()
+		food:draw()
+	end
 end
 
 function M.new_food()
-  food:close_window()
+	food:close_window()
 
-  local possible_positions = {}
+	local possible_positions = {}
 
-  for food_x = 1, canvas.width do
-    for food_y = 1, canvas.height do
-      local possible = true
+	for food_x = 1, canvas.width do
+		for food_y = 1, canvas.height do
+			local possible = true
 
-      for _,segment in ipairs(snake.segments) do
-        if food_x == segment.x and food_y == segment.y then
-          possible = false
-        end
-      end
+			for _, segment in ipairs(snake.segments) do
+				if food_x == segment.x and food_y == segment.y then
+					possible = false
+				end
+			end
 
-      if possible then
-        table.insert(possible_positions, {x = food_x, y = food_y})
-      end
-    end
-  end
+			if possible then
+				table.insert(possible_positions, { x = food_x, y = food_y })
+			end
+		end
+	end
 
-  local pos = possible_positions[math.random(#possible_positions)]
-  local new_food = Cell:new(nil, pos.x, pos.y, sprites.get_sprite("food"))
-  food = new_food
+	local pos = possible_positions[math.random(#possible_positions)]
+	local new_food = Cell:new(nil, pos.x, pos.y, sprites.get_sprite("food"))
+	food = new_food
 end
 
 function M.start()
-  -- Stores sprite  buffers used to paint snake / food
-  sprites.create_sprite("body", "X")
-  sprites.create_sprite("food", "$")
+	-- Stores sprite  buffers used to paint snake / food
+	sprites.create_sprite("body", "X")
+	sprites.create_sprite("food", "$")
 
-  snake = Snake:new(nil, sprites.get_sprite("body"))
-  food = Cell:new(nil, 0, 0, sprites.get_sprite("food"))
-  -- setup/capture canvas size
-  local current_win_id = api.nvim_tabpage_get_win(0)
-  canvas.width = api.nvim_win_get_width(current_win_id)
-  canvas.height = api.nvim_win_get_height(current_win_id)
+	snake = Snake:new(nil, sprites.get_sprite("body"))
+	food = Cell:new(nil, 0, 0, sprites.get_sprite("food"))
+	-- setup/capture canvas size
+	local current_win_id = api.nvim_tabpage_get_win(0)
+	canvas.width = api.nvim_win_get_width(current_win_id)
+	canvas.height = api.nvim_win_get_height(current_win_id)
 
-  -- draw some food
-  M.new_food()
+	-- draw some food
+	M.new_food()
 
-  -- setup keymaps
-  input.setup_mappings()
+	-- setup keymaps
+	input.setup_mappings()
 
-  -- begin main game loop
-  timer = vim.loop.new_timer()
-  timer:start(0, speed, vim.schedule_wrap(function()
-    M.update()
-  end))
+	-- begin main game loop
+	timer = vim.loop.new_timer()
+	timer:start(
+		0,
+		speed,
+		vim.schedule_wrap(function()
+			M.update()
+		end)
+	)
 end
 
 function M.stop()
-  timer:close()
-  -- Cleanup
-  snake:cleanup()
-  food:close_window()
-  input.teardown_mappins()
-  -- TODO Unload / wipe all sprite buffers
+	timer:close()
+	-- Cleanup
+	snake:cleanup()
+	food:close_window()
+	input.teardown_mappins()
+	-- TODO Unload / wipe all sprite buffers
 end
 
 function M.setup()
-  local command = {
-    "command!",
-    "-nargs=0",
-    "Snake",
-    "lua require('snake').start()"
-  }
-  vim.cmd(table.concat(command, " "))
+	local command = {
+		"command!",
+		"-nargs=0",
+		"Snake",
+		"lua require('snake').start()",
+	}
+	vim.cmd(table.concat(command, " "))
 
-  command = {
-    "command!",
-    "-nargs=0",
-    "SnakeStop",
-    "lua require('snake').stop()"
-  }
-  vim.cmd(table.concat(command, " "))
+	command = {
+		"command!",
+		"-nargs=0",
+		"SnakeStop",
+		"lua require('snake').stop()",
+	}
+	vim.cmd(table.concat(command, " "))
 end
 
 return M
