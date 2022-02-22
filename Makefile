@@ -1,8 +1,10 @@
 all: lint test
 
 lint:
-	@echo "Linting..."
+	@echo "Linting ..."
 	luacheck --no-color .
+	@echo "Formatting ..."
+	stylua -c lua
 	@echo
 
 unit:

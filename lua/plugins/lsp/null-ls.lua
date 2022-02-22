@@ -10,6 +10,7 @@ null_ls.setup({
 	debug = true,
 	sources = {
 		null_ls.builtins.formatting.stylua,
+		null_ls.builtins.diagnostics.luacheck,
 
 		-- TODO setup eslint here and get rid of efm
 		-- null_ls.builtins.diagnostics.eslint,

@@ -36,17 +36,14 @@ describe("util.health", function()
 			testModule.register_required_binary("notexists", "required for something")
 			testModule.register_required_binary("notexists", "LOUD NOISES")
 			local htbl = testModule.get_health_table()
-			assert.are.same(
-				{
-					missing_binaries = {
-						notexists = {
-							"required for something",
-							"LOUD NOISES",
-						},
+			assert.are.same({
+				missing_binaries = {
+					notexists = {
+						"required for something",
+						"LOUD NOISES",
 					},
 				},
-				htbl
-			)
+			}, htbl)
 		end)
 	end)
 end)
