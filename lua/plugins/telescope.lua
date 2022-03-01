@@ -16,10 +16,11 @@ function M.dropdown_code_actions()
 		width = preffered_width
 	end
 
-	require("telescope.builtin.lsp").code_actions({
+require("telescope.builtin.lsp").code_actions({
 		borderchars = thin_border_chars,
 		sorting_strategy = "ascending",
 		layout_strategy = "center",
+    winnr = vim.api.nvim_get_current_win(),
 		layout_config = {
 			width = width,
 		},
