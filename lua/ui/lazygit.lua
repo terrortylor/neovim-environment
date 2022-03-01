@@ -54,6 +54,9 @@ local function open()
 			vim.api.nvim_buf_delete(buf, { force = true })
 			map_backup = nil
 			is_open = nil
+			-- reload all buffers
+      vim.cmd("checktime")
+      -- TODO set mark and resrore
 		end
 
 		vim.fn.termopen("lazygit", { on_exit = close_lazygit })
