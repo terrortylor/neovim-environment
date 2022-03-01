@@ -20,10 +20,7 @@ local function set_mappings(client, bufnr)
 			["<leader>cf"] = '<Cmd>lua vim.diagnostic.goto_next()<CR><Cmd>lua require("lsp.codeactions").fix_first_code_action()<CR>',
 			-- luacheck: ignore
 			["<leader>cF"] = '<Cmd>lua vim.diagnostic.goto_prev()<CR><Cmd>lua require("lsp.codeactions").fix_first_code_action()<CR>',
-			-- ['gI'] = '<cmd>Telescope lsp_implementations<CR>',
-			["gI"] = '<cmd>lua require("plugins.lsp.common").handler_implementation()<CR>',
-			-- ['gsI'] = '<cmd>vsplit <BAR> lua vim.lsp.buf.implementation()<CR>',
-			-- ['ghI'] = '<cmd>split <BAR> lua vim.lsp.buf.implementation()<CR>',
+			['gI'] = '<cmd>Telescope lsp_implementations<CR>',
 			["<space>gss"] = "<cmd>Telescope lsp_document_symbols<CR>",
 			["gK"] = "<cmd>lua vim.lsp.buf.signature_help()<CR>",
 			-- ['<space>wa'] = '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>',
