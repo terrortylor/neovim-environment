@@ -76,18 +76,18 @@ return require("packer").startup(function(use)
 				require("plugins.nvim-tree").setup()
 			end,
 		},
-		{
-			"takac/vim-hardtime",
-			config = function()
-				vim.g.hardtime_default_on = 1
-				vim.g.hardtime_showmsg = 1
-				vim.g.hardtime_maxcount = 3
-				vim.g.hardtime_ignore_quickfix = 1
-				vim.g.hardtime_allow_different_key = 1
-				vim.g.hardtime_ignore_buffer_patterns = { "org", "markdown" }
-				vim.g.list_of_normal_keys = { "h", "j", "k", "l", "-", "+", "<LEFT>", "<RIGHT>" }
-			end,
-		},
+		-- {
+		-- 	"takac/vim-hardtime",
+		-- 	config = function()
+		-- 		vim.g.hardtime_default_on = 1
+		-- 		vim.g.hardtime_showmsg = 1
+		-- 		vim.g.hardtime_maxcount = 3
+		-- 		vim.g.hardtime_ignore_quickfix = 1
+		-- 		vim.g.hardtime_allow_different_key = 1
+		-- 		vim.g.hardtime_ignore_buffer_patterns = { "org", "markdown" }
+		-- 		vim.g.list_of_normal_keys = { "h", "j", "k", "l", "-", "+", "<LEFT>", "<RIGHT>" }
+		-- 	end,
+		-- },
 	})
 
 	-- neovim general library, dependancy for many plugins, also a neovim lua test runner :)
