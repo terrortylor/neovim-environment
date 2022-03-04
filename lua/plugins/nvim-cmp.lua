@@ -29,6 +29,7 @@ function M.setup_sources()
 
 	local lsp_filetytpe = {
 		"go",
+		"terraform",
 		"typescript",
 		"javascript",
 		"lua",

@@ -279,6 +279,7 @@ return require("packer").startup(function(use)
 			config = function()
 				require("plugins.lsp.sumneko")
 				require("plugins.lsp.tsserver")
+				require("plugins.lsp.terraform")
 				-- not required when using ray-s/go.nvim
 				require("plugins.lsp.gopls")
 				require("plugins.lsp.bashls")

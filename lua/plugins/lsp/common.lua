@@ -20,7 +20,7 @@ local function set_mappings(client, bufnr)
 			["<leader>cf"] = '<Cmd>lua vim.diagnostic.goto_next()<CR><Cmd>lua require("lsp.codeactions").fix_first_code_action()<CR>',
 			-- luacheck: ignore
 			["<leader>cF"] = '<Cmd>lua vim.diagnostic.goto_prev()<CR><Cmd>lua require("lsp.codeactions").fix_first_code_action()<CR>',
-			['gI'] = '<cmd>Telescope lsp_implementations<CR>',
+			["gI"] = "<cmd>Telescope lsp_implementations<CR>",
 			["<space>gss"] = "<cmd>Telescope lsp_document_symbols<CR>",
 			["gK"] = "<cmd>lua vim.lsp.buf.signature_help()<CR>",
 			-- ['<space>wa'] = '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>',
@@ -102,10 +102,12 @@ function M.on_attach(client, bufnr)
 	-- add border
 	vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "double" })
 	-- luacheck: ignore
-	vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
-		vim.lsp.handlers.signature_help,
-		{ border = "double", focusable = false }
-	)
+	if client.resolved_capabilities.signature_help then
+		vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
+			vim.lsp.handlers.signature_help,
+			{ border = "double", focusable = false }
+		)
+	end
 
 	-- format publsh diagnostics
 	vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
