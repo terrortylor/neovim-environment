@@ -51,10 +51,16 @@ function M.setup()
 		},
 	}
 	vim.g.nvim_tree_git_hl = 1
-	vim.g.nvim_tree_quit_on_open = 1
 	vim.g.nvim_tree_indent_markers = 1
-	vim.g.nvim_tree_disable_window_picker = 1
 	require("nvim-tree").setup({
+		actions = {
+			open_files = {
+				quit_on_open = false,
+				window_picker = {
+					enable = false,
+				},
+			},
+		},
 		auto_close = true,
 		diagnostics = {
 			enable = true,
