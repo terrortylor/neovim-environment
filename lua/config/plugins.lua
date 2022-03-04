@@ -290,6 +290,9 @@ return require("packer").startup(function(use)
 				"jose-elias-alvarez/null-ls.nvim",
 			},
 		},
+    {
+      "ray-x/lsp_signature.nvim",
+    }
 	})
 
 	-- completion

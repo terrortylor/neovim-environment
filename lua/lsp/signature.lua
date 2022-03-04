@@ -1,3 +1,5 @@
+-- not using this atm, as ther eare a few edge cases that are a little
+-- annoying to handle
 local M = {}
 
 -- auto popup signature help... cheap but could do with better pum support
