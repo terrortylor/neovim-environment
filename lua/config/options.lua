@@ -6,21 +6,21 @@ o.diffopt = "internal,filler,algorithm:patience,indent-heuristic" -- better diff
 o.wildmode = "full"
 o.wildignorecase = true
 o.wildignore = {
-	"*.bmp",
-	"*.gif",
-	"*.ico",
-	"*.jpg",
-	"*.png",
-	"*.ico",
-	"*.pdf",
-	"*.psd",
-	"*/node_modules/*",
-	"bower_components/*",
-	"*/target/*",
-	"*/dist/*",
-	"*/build/*",
-	"tags",
-	"*.session",
+  "*.bmp",
+  "*.gif",
+  "*.ico",
+  "*.jpg",
+  "*.png",
+  "*.ico",
+  "*.pdf",
+  "*.psd",
+  "*/node_modules/*",
+  "bower_components/*",
+  "*/target/*",
+  "*/dist/*",
+  "*/build/*",
+  "tags",
+  "*.session",
 }
 
 o.timeoutlen = 1500 -- leader timeout
@@ -64,5 +64,5 @@ vim.cmd("syn sync fromstart")
 vim.cmd("syn sync minlines=20")
 
 if vim.fn.executable("rg") > 0 then
-	vim.o.grepprg = "rg --vimgrep --no-heading --smart-case"
+  vim.o.grepprg = "rg --vimgrep --no-heading --smart-case"
 end

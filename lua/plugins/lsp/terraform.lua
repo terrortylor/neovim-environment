@@ -4,7 +4,6 @@ require("util.health").register_required_binary("terraform-ls", "Reqiured for te
 -- https://github.com/hashicorp/terraform-ls/blob/main/docs/installation.md
 
 require("lspconfig").terraformls.setup({
-	on_attach = common.on_attach,
-	capabilities = common.buildCapabilities(),
+  on_attach = common.on_attach,
+  capabilities = common.buildCapabilities(),
 })
-

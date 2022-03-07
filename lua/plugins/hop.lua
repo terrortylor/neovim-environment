@@ -1,5 +1,5 @@
 require("hop").setup({
-	keys = "etovxqpdygfblzhckisuran",
+  keys = "etovxqpdygfblzhckisuran",
 })
 
 vim.api.nvim_set_keymap("n", "<leader>fj", ":HopWord<CR>", { noremap = true, silent = true })

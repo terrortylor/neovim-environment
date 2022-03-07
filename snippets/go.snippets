@@ -129,10 +129,13 @@ snippet pn "panic"
 	panic("${0:msg}")
 
 snippet pf "fmt.Printf()"
-	fmt.Printf("%${1:s}\n", ${2:var})
+	fmt.Printf("${1}${2:%s}\n", ${3:var})
 
 snippet pl "fmt.Println()"
-	fmt.Println("${1:s}")
+	fmt.Println("${1}")
+
+snippet ps "fmt.Sprintf"
+	fmt.Sprintf("${1}${2:%s}", ${3:var})
 
 snippet sl "select"
 	select {
@@ -157,9 +160,6 @@ snippet sw "switch"
 	default:
 		${0}
 	}
-
-snippet ps "fmt.Sprintf"
-	fmt.Sprintf("%${1:s}", ${2:var})
 
 snippet g "goroutine named function"
 	go ${1:funcName}(${0})

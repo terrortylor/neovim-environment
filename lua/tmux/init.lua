@@ -31,42 +31,38 @@
 local M = {}
 
 local commands = {
-	TmuxSendCommand = "send_command_to_pane",
-	TmuxSetCommand = "set_instance_command",
-	TmuxSendCommandOneShot = "send_one_off_command",
-	TmuxEditCommand = "edit_last_command",
+  TmuxSendCommand = "send_command_to_pane",
+  TmuxSetCommand = "set_instance_command",
+  TmuxSendCommandOneShot = "send_one_off_command",
+  TmuxEditCommand = "edit_last_command",
 }
 
 -- Define settings
 M.mappings = {
-	["<C-PAGEUP>"] = ":lua require('tmux.commands').scroll(true)<CR>",
-	["<C-PAGEDOWN>"] = ":lua require('tmux.commands').scroll(false)<CR>",
-	["<leader>nn"] = ":TmuxSendCommand<CR>",
+  ["<C-PAGEUP>"] = ":lua require('tmux.commands').scroll(true)<CR>",
+  ["<C-PAGEDOWN>"] = ":lua require('tmux.commands').scroll(false)<CR>",
+  ["<leader>nn"] = ":TmuxSendCommand<CR>",
 }
 
 -- Create commands and setup mappings
 function M.setup()
-	local cmd = vim.api.nvim_add_user_command
-	for k, v in pairs(commands) do
-		cmd(k, "lua require('tmux.commands')." .. v .. "(<f-args>)", { nargs = "?" })
-	end
+  local cmd = vim.api.nvim_add_user_command
+  for k, v in pairs(commands) do
+    cmd(k, "lua require('tmux.commands')." .. v .. "(<f-args>)", { nargs = "?" })
+  end
 
-	cmd(
-		"TmuxSeedCommand",
-		"lua require('tmux.commands').seed_instance_command(<f-args>)",
-		{ nargs = "+", force = true }
-	)
-	cmd("TmuxSeedPane", "lua require('tmux.commands').seed_instance_pane(<f-args>)", { nargs = "+", force = true })
+  cmd("TmuxSeedCommand", "lua require('tmux.commands').seed_instance_command(<f-args>)", { nargs = "+", force = true })
+  cmd("TmuxSeedPane", "lua require('tmux.commands').seed_instance_pane(<f-args>)", { nargs = "+", force = true })
 
-	local opts = { noremap = true, silent = true }
-	local function keymap(...)
-		vim.api.nvim_set_keymap(...)
-	end
+  local opts = { noremap = true, silent = true }
+  local function keymap(...)
+    vim.api.nvim_set_keymap(...)
+  end
 
-	-- Create mappings
-	for k, v in pairs(M.mappings) do
-		keymap("n", k, v, opts)
-	end
+  -- Create mappings
+  for k, v in pairs(M.mappings) do
+    keymap("n", k, v, opts)
+  end
 end
 
 return M
