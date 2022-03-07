@@ -54,8 +54,8 @@ function M.setup()
 	vim.g.nvim_tree_indent_markers = 1
 	require("nvim-tree").setup({
 		actions = {
-			open_files = {
-				quit_on_open = false,
+			open_file = {
+				quit_on_open = true,
 				window_picker = {
 					enable = false,
 				},
