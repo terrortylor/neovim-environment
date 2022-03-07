@@ -69,6 +69,13 @@ local function show_tab_markers()
   end
 end
 
+local function current_signature(width)
+  local sig = require("lsp_signature").status_line(width)
+  if sig.label ~= "" then
+    add_right("LspSignatureActiveParameter", " [" .. sig.label .. "] ")
+  end
+end
+
 local function show_auto_update()
   if not vim.g.enable_auto_update then
     add_right("TabLineAutoUpdate", "[AU - Off] ")
@@ -113,6 +120,7 @@ function M.tabline()
   show_tab_markers()
 
   -- right
+  current_signature(80)
   show_auto_update()
   show_filetype()
   show_diagnostics()
