@@ -33,7 +33,7 @@ require("neorg").setup({
         workspaces = {
           my_workspace = "~/personnal-workspace/notes",
           gtd_wksp = "~/personnal-workspace/notes/gtd",
-          daybook = "~/personnal-workspace/notes/daybook",
+          journal = "~/personnal-workspace/notes/journal",
         },
       },
     },
@@ -48,11 +48,7 @@ require("neorg").setup({
       },
     },
     ["core.integrations.telescope"] = {},
-    ["core.norg.journal"] = {
-      config = {
-        workspace = "daybook",
-      },
-    },
+    ["core.norg.journal"] = {},
   },
 })
 
