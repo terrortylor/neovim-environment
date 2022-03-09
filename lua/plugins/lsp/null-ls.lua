@@ -11,6 +11,7 @@ null_ls.setup({
   on_attach = common.on_attach,
   debug = true,
   sources = {
+    -- lua
     null_ls.builtins.formatting.stylua,
     null_ls.builtins.diagnostics.luacheck,
 
@@ -22,6 +23,7 @@ null_ls.setup({
     -- TODO setup eslint here and get rid of efm
     -- null_ls.builtins.diagnostics.eslint,
 
+    -- github actions
     null_ls.builtins.diagnostics.actionlint.with({
       filetypes = { "yaml.github" },
     }),

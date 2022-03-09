@@ -9,6 +9,31 @@ if fn.empty(fn.glob(install_path)) > 0 then
   vim.api.nvim_command("packadd packer.nvim")
 end
 
+local disabled_built_ins = {
+  "netrw",
+  "netrwPlugin",
+  "netrwSettings",
+  "netrwFileHandlers",
+  "gzip",
+  "zip",
+  "zipPlugin",
+  "tar",
+  "tarPlugin",
+  "getscript",
+  "getscriptPlugin",
+  "vimball",
+  "vimballPlugin",
+  "2html_plugin",
+  "logipat",
+  "rrhelper",
+  "spellfile_plugin",
+  "matchit",
+}
+
+for _, plugin in pairs(disabled_built_ins) do
+  vim.g["loaded_" .. plugin] = 1
+end
+
 return require("packer").startup(function(use)
   use({
     "wbthomason/packer.nvim",
@@ -54,8 +79,8 @@ return require("packer").startup(function(use)
 
   -- optimisation
   use({
-    {"lewis6991/impatient.nvim"},
-    {"nathom/filetype.nvim"}
+    { "lewis6991/impatient.nvim" },
+    { "nathom/filetype.nvim" },
   })
 
   -- navigation
@@ -72,12 +97,27 @@ return require("packer").startup(function(use)
     -- quickly jump to locations in the visible buffer
     {
       "phaazon/hop.nvim",
+      -- Not really sure this made much of a difference
+      keys = {
+        "<leader>fj",
+        "<leader>jj",
+        "<leader>/",
+        "<leader>jf",
+      },
       config = function()
         require("plugins.hop")
       end,
     },
     {
       "kyazdani42/nvim-tree.lua",
+      cmd = {
+        "NvimTreeFindFile",
+        "NvimTreeFindFileToggle",
+        "NvimTreeFocus",
+        "NvimTreeOpen",
+        "NvimTreeToggle",
+      },
+      keys = { "<c-n>" },
       config = function()
         require("plugins.nvim-tree").setup()
       end,
@@ -107,25 +147,21 @@ return require("packer").startup(function(use)
   -- neovim general library, dependancy for many plugins, also a neovim lua test runner :)
   -- nvim-terminal provides colour code conceal for nicer output
   use({
-    "nvim-lua/plenary.nvim",
-    requires = { "norcalli/nvim-terminal.lua" },
+    -- "nvim-lua/plenary.nvim",
+    "norcalli/nvim-terminal.lua",
+    ft = "terminal",
     config = function()
       require("terminal").setup()
     end,
   })
 
   use({
-    {
-      "nvim-neorg/neorg",
-      config = function()
-        require("plugins.neorg")
-      end,
-      -- requires = {"nvim-lua/plenary.nvim", "nvim-neorg/neorg-telescope"}
-      requires = { "nvim-lua/plenary.nvim" },
-    },
-    {
-      "~/personnal-workspace/nvim-plugins/neorg-telescope",
-    },
+    "nvim-neorg/neorg",
+    config = function()
+      require("plugins.neorg")
+    end,
+    -- requires = {"nvim-lua/plenary.nvim", "nvim-neorg/neorg-telescope"}
+    requires = { "nvim-lua/plenary.nvim", "~/personnal-workspace/nvim-plugins/neorg-telescope" },
   })
 
   -- general editing
@@ -173,6 +209,8 @@ return require("packer").startup(function(use)
     {
       -- make search replace varients better
       "tpope/vim-abolish",
+      cmd = { "Abolish", "Subvert" },
+      keys = { "crs", "crm", "crc", "cru", "cr-", "cr.", "cr<space>", "crt" },
     },
   })
 
@@ -272,38 +310,17 @@ return require("packer").startup(function(use)
   })
 
   -- visual sugar
-  use({
-    -- git signs
+  use( -- git signs
     {
       "lewis6991/gitsigns.nvim",
       config = function()
         require("plugins.gitsigns").setup()
       end,
-    },
-    -- show lightbulb when code action
-    {
-      "kosayoda/nvim-lightbulb",
-      -- TODO only needed on specific filetypes
-      config = function()
-        require("nvim-lightbulb").update_lightbulb({})
-
-        require("util.config").create_autogroups({
-          update_lightbulb = {
-            { "CursorHold,CursorHoldI", "*", "lua require'nvim-lightbulb'.update_lightbulb()" },
-          },
-        })
-
-        vim.opt.updatetime = 500
-      end,
-    },
-  })
+    }
+  )
 
   -- language server
   use({
-    {
-      "jose-elias-alvarez/null-ls.nvim",
-      requires = { "nvim-lua/plenary.nvim" },
-    },
     {
       "neovim/nvim-lspconfig",
       config = function()
@@ -317,11 +334,18 @@ return require("packer").startup(function(use)
       end,
       requires = {
         "jose-elias-alvarez/null-ls.nvim",
+        "nvim-lua/plenary.nvim",
       },
     },
     {
       -- This config is called when attaching a lsp
       "ray-x/lsp_signature.nvim",
+    },
+    {
+      -- show lightbulb when code action
+      "kosayoda/nvim-lightbulb",
+      opt = true,
+      -- this is loaded when on attach is called
     },
   })
 
@@ -347,6 +371,16 @@ return require("packer").startup(function(use)
     config = function()
       require("plugins.refactor").setup()
     end,
+    keys = {
+      { "v", "<Leader>re" },
+      { "v", "<Leader>rf" },
+      { "v", "<Leader>rv" },
+      { "v", "<Leader>ri" },
+      { "v", "<leader>rr" },
+      { "n", "<leader>rp" },
+      { "v", "<leader>rpv" },
+      { "n", "<leader>rpc" },
+    },
     requires = {
       { "nvim-lua/plenary.nvim" },
       { "nvim-treesitter/nvim-treesitter" },

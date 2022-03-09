@@ -94,6 +94,7 @@ end
 
 function M.on_attach(client, bufnr)
   require("plugins.lsp.lsp_signature").attach(bufnr)
+  require("plugins.lsp.lightbulb")
 
   set_omnifunc(bufnr)
   set_mappings(client, bufnr)
