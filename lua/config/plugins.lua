@@ -52,6 +52,12 @@ return require("packer").startup(function(use)
     end,
   })
 
+  -- optimisation
+  use({
+    {"lewis6991/impatient.nvim"},
+    {"nathom/filetype.nvim"}
+  })
+
   -- navigation
   use({
     {
