@@ -56,6 +56,9 @@ function M.setup()
     actions = {
       open_file = {
         quit_on_open = true,
+        window_picker = {
+          chars = "asdfjkl;",
+        },
       },
     },
     view = {
