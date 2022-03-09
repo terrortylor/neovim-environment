@@ -16,10 +16,7 @@ null_ls.setup({
     -- null_ls.builtins.diagnostics.eslint,
 
     null_ls.builtins.diagnostics.actionlint.with({
-      filetypes = { "yaml", "yml" },
-      condition = function(utils)
-        return utils.root_has_file({ ".github" })
-      end,
+      filetypes = { "yaml.github" },
     }),
   },
 })
