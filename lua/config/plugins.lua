@@ -90,6 +90,14 @@ return require("packer").startup(function(use)
     -- },
   })
 
+  -- session management
+  use({
+    "rmagatti/auto-session",
+    config = function()
+      require("auto-session").setup()
+    end,
+  })
+
   -- neovim general library, dependancy for many plugins, also a neovim lua test runner :)
   -- nvim-terminal provides colour code conceal for nicer output
   use({
@@ -100,50 +108,66 @@ return require("packer").startup(function(use)
     end,
   })
 
-  -- use {
-  --   "kristijanhusak/orgmode.nvim",
-  --   config = function() require("plugins.orgmode") end
-  -- }
-
   use({
-    "nvim-neorg/neorg",
-    config = function()
-      require("plugins.neorg")
-    end,
-    -- requires = {"nvim-lua/plenary.nvim", "nvim-neorg/neorg-telescope"}
-    requires = { "nvim-lua/plenary.nvim" },
+    {
+      "nvim-neorg/neorg",
+      config = function()
+        require("plugins.neorg")
+      end,
+      -- requires = {"nvim-lua/plenary.nvim", "nvim-neorg/neorg-telescope"}
+      requires = { "nvim-lua/plenary.nvim" },
+    },
+    {
+      "~/personnal-workspace/nvim-plugins/neorg-telescope",
+    },
   })
 
+  -- general editing
   use({
-    "~/personnal-workspace/nvim-plugins/neorg-telescope",
-  })
-
-  -- general
-  use({
-    "blackCauldron7/surround.nvim",
-    config = function()
-      require("surround").setup({
-        mappings_style = "surround",
-        pairs = {
-          nestable = { { "(", ")" }, { "[", "]" }, { "{", "}" } },
-          linear = {
-            { "<", ">" },
-            { "'", "'" },
-            { '"', '"' },
-            { "*", "*" },
-            { "/", "/" },
-            { "-", "-" },
-            { "_", "_" },
-            { "|", "|" },
-            { "^", "^" },
-            { ",", "," },
-            { "$", "$" },
-            { "=", "=" },
-            { "+", "+" },
+    -- autopairs
+    {
+      "windwp/nvim-autopairs",
+      config = function()
+        require("nvim-autopairs").setup({
+          disable_filetype = { "TelescopePrompt", "vim" },
+        })
+        local cmp_autopairs = require("nvim-autopairs.completion.cmp")
+        local cmp = require("cmp")
+        cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done({ map_char = { tex = "" } }))
+      end,
+      requires = { "hrsh7th/nvim-cmp" },
+    },
+    -- surround manipulation
+    {
+      "blackCauldron7/surround.nvim",
+      config = function()
+        require("surround").setup({
+          mappings_style = "surround",
+          pairs = {
+            nestable = { { "(", ")" }, { "[", "]" }, { "{", "}" } },
+            linear = {
+              { "<", ">" },
+              { "'", "'" },
+              { '"', '"' },
+              { "*", "*" },
+              { "/", "/" },
+              { "-", "-" },
+              { "_", "_" },
+              { "|", "|" },
+              { "^", "^" },
+              { ",", "," },
+              { "$", "$" },
+              { "=", "=" },
+              { "+", "+" },
+            },
           },
-        },
-      })
-    end,
+        })
+      end,
+    },
+    {
+      -- make search replace varients better
+      "tpope/vim-abolish",
+    },
   })
 
   -- telescope
@@ -291,6 +315,7 @@ return require("packer").startup(function(use)
       },
     },
     {
+      -- This config is called when attaching a lsp
       "ray-x/lsp_signature.nvim",
     },
   })
@@ -312,21 +337,6 @@ return require("packer").startup(function(use)
     },
   })
 
-  -- autopairs
-  use({
-    "windwp/nvim-autopairs",
-    config = function()
-      require("nvim-autopairs").setup({
-        disable_filetype = { "TelescopePrompt", "vim" },
-      })
-
-      local cmp_autopairs = require("nvim-autopairs.completion.cmp")
-      local cmp = require("cmp")
-      cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done({ map_char = { tex = "" } }))
-    end,
-    requires = { "hrsh7th/nvim-cmp" },
-  })
-
   use({
     "ThePrimeagen/refactoring.nvim",
     config = function()
@@ -341,18 +351,19 @@ return require("packer").startup(function(use)
   -- Language Specific
   -- GO
   use({
-    "ray-x/go.nvim",
-    requires = { "nvim-telescope/telescope.nvim" },
-    ft = { "go" },
-    config = function()
-      require("plugins.go-nvim").setup()
-    end,
-  })
-
-  -- Terraform
-  use({
-    "hashivim/vim-terraform",
-    ft = { "terraform" },
+    {
+      "ray-x/go.nvim",
+      requires = { "nvim-telescope/telescope.nvim" },
+      ft = { "go" },
+      config = function()
+        require("plugins.go-nvim").setup()
+      end,
+    },
+    -- Terraform
+    {
+      "hashivim/vim-terraform",
+      ft = { "terraform" },
+    },
   })
 
   -- testing
