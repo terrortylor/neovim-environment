@@ -56,8 +56,13 @@ function M.setup()
     actions = {
       open_file = {
         quit_on_open = true,
-        window_picker = {
-          enable = false,
+      },
+    },
+    view = {
+      mappings = {
+        list = {
+          { key = { "o" }, action = "edit", mode = "n" },
+          { key = { "<CR>", "<2-LeftMouse>" }, action = "edit_no_picker", mode = "n" },
         },
       },
     },
