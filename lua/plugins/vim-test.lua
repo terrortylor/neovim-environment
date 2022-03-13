@@ -38,4 +38,18 @@ function M.setup()
   vim.api.nvim_add_user_command("TestStrategySelect", select_strategy, { force = true })
 end
 
+-- helpers for plenary
+local lua_last_file = ""
+function M.lua_test_file()
+  lua_last_file = vim.fn.expand("%:p")
+  vim.cmd("wall")
+  require('plenary.test_harness').test_directory(lua_last_file)
+end
+
+function M.lua_test_last()
+  vim.cmd("wall")
+  require('plenary.test_harness').test_directory(lua_last_file)
+end
+
+
 return M
