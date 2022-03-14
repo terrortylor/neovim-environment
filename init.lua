@@ -31,6 +31,7 @@ local plugins = {
   "ui.arglist",
   "ui.tabline",
   "ui.statusline",
+  "ui.buffer.trailing_whitespace",
   -- "ui.search",
   -- "ui.splash",
   "tmux",

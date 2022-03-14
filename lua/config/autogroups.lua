@@ -12,10 +12,6 @@ local autogroups = {
     { "CmdLineEnter", "*", "lua require('ui.window.numbering').cmd_enter()" },
     { "CmdLineLeave", "*", "lua require('ui.window.numbering').cmd_leave()" },
   },
-  remove_trailing_whitespace = {
-    -- FIXME this moves the cursor, so need to set mark and jump back
-    { "BufWritePre", "*", [[%s/\s\+$//e]] },
-  },
   return_to_last_edit_in_buffer = {
     { "BufReadPost", "*", "lua require('ui.buffer').move_to_last_edit()" },
   },
