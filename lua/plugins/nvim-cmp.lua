@@ -37,7 +37,7 @@ function M.setup_sources()
   if vim.tbl_contains(lsp_filetytpe, ft) then
     addSource("nvim_lsp", "[LSP]")
   else
-    addSource({ name = "buffer", keyword_length = 4 }, "[BUF]")
+    addSource({ name = "buffer", keyword_length = 3 }, "[BUF]")
   end
 
   local spelling_filetypes = {
@@ -99,13 +99,10 @@ function M.setup()
       -- or confirm selected PUM item
       -- if no PUM is visiable then trys luasnip expand or jump
       ["<Tab>"] = cmp.mapping(function(fallback)
-        if cmp.visible() and cmp.get_selected_entry() ~= nil then
-          cmp.confirm({
-            behavior = cmp.ConfirmBehavior.Replace,
-            select = true,
-          })
-        elseif cmp.visible() and cmp.get_selected_entry() == nil then
-          cmp.select_next_item()
+        if cmp.visible() then
+          if cmp.get_selected_entry() == nil then
+            cmp.select_next_item()
+          end
           cmp.confirm({
             behavior = cmp.ConfirmBehavior.Replace,
             select = true,
