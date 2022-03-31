@@ -217,6 +217,9 @@ return require("packer").startup(function(use)
   -- telescope
   use({
     {
+      "nvim-lua/plenary.nvim",
+    },
+    {
       "nvim-telescope/telescope.nvim",
       requires = {
         "nvim-lua/popup.nvim",
@@ -309,15 +312,28 @@ return require("packer").startup(function(use)
     end,
   })
 
-  -- visual sugar
-  use( -- git signs
+  -- GIT
+  use({ -- git signs
     {
       "lewis6991/gitsigns.nvim",
       config = function()
         require("plugins.gitsigns").setup()
       end,
-    }
-  )
+    },
+    {
+      "rhysd/conflict-marker.vim",
+      config = function()
+        vim.g.conflict_marker_highlightgroup = ""
+        vim.cmd [[
+          highlight ConflictMarkerBegin guibg=#2f7366
+          highlight ConflictMarkerOurs guibg=#2e5049
+          highlight ConflictMarkerTheirs guibg=#344f69
+          highlight ConflictMarkerEnd guibg=#2f628e
+          highlight ConflictMarkerCommonAncestorsHunk guibg=#754a81
+        ]]
+      end,
+    },
+  })
 
   -- language server
   use({
