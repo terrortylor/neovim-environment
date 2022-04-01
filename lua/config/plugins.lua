@@ -324,15 +324,34 @@ return require("packer").startup(function(use)
       "rhysd/conflict-marker.vim",
       config = function()
         vim.g.conflict_marker_highlightgroup = ""
-        vim.cmd [[
+        vim.cmd([[
           highlight ConflictMarkerBegin guibg=#2f7366
           highlight ConflictMarkerOurs guibg=#2e5049
           highlight ConflictMarkerTheirs guibg=#344f69
           highlight ConflictMarkerEnd guibg=#2f628e
           highlight ConflictMarkerCommonAncestorsHunk guibg=#754a81
-        ]]
+        ]])
       end,
     },
+  })
+
+  use({
+    "github/copilot.vim",
+    cmd = { "Copilot" },
+    config = function()
+      vim.g.copilot_no_tab_map = true
+      vim.g.copilot_assume_mapped = true
+      vim.g.copilot_tab_fallback = ""
+
+      function _G.copilot_keymap()
+        local copilot_keys = vim.fn["copilot#Accept"]()
+        if copilot_keys ~= "" and type(copilot_keys) == "string" then
+          vim.api.nvim_feedkeys(copilot_keys, "i", true)
+        end
+      end
+
+      vim.api.nvim_set_keymap("i", "<C-a>", "<cmd>lua _G.copilot_keymap()<cr>", { noremap = true, silent = true })
+    end,
   })
 
   -- language server
