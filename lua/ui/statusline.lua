@@ -3,7 +3,6 @@ local highlights = require("util.highlights")
 local set_highlight = highlights.set_highlight
 local fg = highlights.guifg
 local bg = highlights.guibg
-local util = require("util.config")
 
 local M = {}
 
@@ -14,7 +13,7 @@ local ignore_filetypes = {
   "NvimTree",
 }
 
-function M.statusline(active)
+local function statusline(active)
   local sl = ""
 
   local active_hl = ""
@@ -61,24 +60,41 @@ function M.statusline(active)
   vim.wo.statusline = sl
 end
 
-function M.setup()
-  util.create_autogroups({
-    statusline_update = {
-      { "VimEnter,WinEnter,BufWinEnter", "*", "lua require('ui.statusline').statusline(true)" },
-      { "WinLeave", "*", "lua require('ui.statusline').statusline(false)" },
-    },
-    statusline_highlights = {
-      { "ColorScheme", "*", "lua require('ui.statusline').highlighting()" },
-    },
-  })
-end
-
-function M.highlighting()
+local function highlighting()
   set_highlight("StatusLine", { fg(c.blue2), bg(c.purple) })
   set_highlight("StatusLineNC", { fg(c.grey1), bg(c.purple) })
   set_highlight("StatusLineBracket", { fg(c.green2), bg(c.purple) })
   set_highlight("StatusLinePosition", { fg(c.blue2), bg(c.purple) })
   set_highlight("StatusLinePositionSeperator", { fg(c.green2), bg(c.purple) })
+end
+
+function M.setup()
+  local ag = vim.api.nvim_create_augroup("statusline", { clear = true })
+  vim.api.nvim_create_autocmd("ColorScheme", {
+    pattern = "*",
+    callback = function()
+      highlighting()
+    end,
+    group = ag,
+  })
+  vim.api.nvim_create_autocmd({
+    "VimEnter",
+    "WinEnter",
+    "BufWinEnter",
+  }, {
+    pattern = "*",
+    callback = function()
+      statusline(true)
+    end,
+    group = ag,
+  })
+  vim.api.nvim_create_autocmd("WinLeave", {
+    pattern = "*",
+    callback = function()
+      statusline(false)
+    end,
+    group = ag,
+  })
 end
 
 return M

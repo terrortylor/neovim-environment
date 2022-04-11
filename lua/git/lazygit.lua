@@ -7,6 +7,8 @@ local float = require("ui.window.float")
 local is_open
 local map_backup
 
+local M = {}
+
 local function capture_and_clear_mappings()
   map_backup = {}
 
@@ -64,4 +66,8 @@ local function open()
   end
 end
 
-return { open = open }
+function M.setup()
+  vim.api.nvim_add_user_command("Lazygit", open, { force = true })
+end
+
+return M

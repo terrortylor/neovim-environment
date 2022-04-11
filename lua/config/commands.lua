@@ -1,8 +1,18 @@
 local log = require("util.log")
-local user_command = require("util.config").user_command
+
+---Define vim user command
+---@param name string
+---@param command string | function
+---@param opts? table
+local function user_command(name, command, opts)
+  local options = { force = true }
+  if opts then
+    options = vim.tbl_extend("force", options, opts)
+  end
+  vim.api.nvim_add_user_command(name, command, options)
+end
 
 user_command("Health", require("util.health").display)
-user_command("Lazygit", require("ui.lazygit").open)
 user_command("ShowHighlightGroup", require("util.config").show_highlight_group)
 user_command("SetProjectCWD", require("util.path").set_cwd_to_project_root)
 -- some filesystem helpers

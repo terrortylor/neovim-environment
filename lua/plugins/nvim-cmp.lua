@@ -10,7 +10,7 @@ local function prequire(...)
 end
 
 local menu = {}
-function M.setup_sources()
+local function setup_sources()
   local sources = {}
 
   local addSource = function(name, menu_val)
@@ -35,18 +35,19 @@ function M.setup_sources()
     "lua",
   }
   if vim.tbl_contains(lsp_filetytpe, ft) then
-    addSource("nvim_lsp", "[LSP]")
+    addSource("nvim_lsp", "[🧞]")
   else
-    addSource({ name = "buffer", keyword_length = 3 }, "[BUF]")
+    addSource({ name = "buffer" }, "[💪]")
   end
 
   local spelling_filetypes = {
     "markdown",
     "wiki.markdown",
     "org",
+    "terraform",
   }
   if vim.tbl_contains(spelling_filetypes, ft) then
-    addSource({ name = "spell", keyword_length = 4 }, "[SPELL]")
+    addSource({ name = "spell" }, "[SPELL]")
   end
 
   if ft == "org" then
@@ -58,7 +59,7 @@ function M.setup_sources()
   end
 
   if vim.fn.getenv("TMUX") then
-    addSource({ name = "tmux", keyword_length = 4, max_item_count = 5 }, "[TMUX]")
+    addSource({ name = "tmux", max_item_count = 5 }, "[🌍]")
   end
   -- addSource("nvim_lsp_signature_help", "[SIG]")
 
@@ -76,6 +77,14 @@ function M.setup()
   cmp.setup({
     -- THIS IS THE FUCKING KEY!
     preselect = cmp.PreselectMode.None,
+    window = {
+      completion = {
+        border = "rounded",
+      },
+      documentation = {
+        border = "rounded",
+      },
+    },
     snippet = {
       expand = function(args)
         if luasnip then
@@ -140,10 +149,12 @@ function M.setup()
     }),
   })
 
-  require("util.config").create_autogroups({
-    cmp_setup_sources = {
-      { "FileType", "*", ":silent! lua require'plugins.nvim-cmp'.setup_sources()" },
-    },
+  vim.api.nvim_create_autocmd("FileType", {
+    pattern = "*",
+    callback = function()
+      setup_sources()
+    end,
+    group = vim.api.nvim_create_augroup("cmp_setup_sources", { clear = true }),
   })
 end
 

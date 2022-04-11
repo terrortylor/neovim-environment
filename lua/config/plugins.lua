@@ -38,15 +38,19 @@ return require("packer").startup(function(use)
   use({
     "wbthomason/packer.nvim",
     config = function()
-      require("util.config").create_autogroups({
-        cursor_line_group = {
-          {
-            "BufEnter",
-            "lua/config/plugins.lua",
-            -- luacheck: ignore
-            "lua vim.api.nvim_buf_set_keymap(0, 'n', '<leader>nn', '<cmd>wall<cr> | <cmd>luafile %<cr> | <cmd>PackerSync<cr>', {})",
-          },
-        },
+      vim.api.nvim_create_autocmd("bufenter", {
+        pattern = "lua/config/plugins.lua",
+        callback = function()
+          -- luacheck: ignore
+          vim.api.nvim_buf_set_keymap(
+            0,
+            "n",
+            "<leader>nn",
+            "<cmd>wall<cr> | <cmd>luafile %<cr> | <cmd>PackerSync<cr>",
+            {}
+          )
+        end,
+        group = vim.api.nvim_create_augroup("packer-config-mapping", { clear = true }),
       })
     end,
   })
@@ -331,6 +335,30 @@ return require("packer").startup(function(use)
           highlight ConflictMarkerEnd guibg=#2f628e
           highlight ConflictMarkerCommonAncestorsHunk guibg=#754a81
         ]])
+
+        -- local md = vim.api.nvim_create_augroup("conflict-marker-remindme", { clear = true })
+        -- vim.api.nvim_create_autocmd({
+        --   "BufReadPost",
+        --   "FileChangedShellPost",
+        --   "ShellFilterPost",
+        --   "StdinReadPost",
+        --   "BufEnter",
+        --   "FocusGained",
+        --   "ColorScheme",
+        -- }, {
+        --   pattern = "*",
+        --   callback = function()
+        --     local detected = vim.api.nvim_eval("conflict_marker#detect#markers()")
+        --     print("detected" .. detected)
+        --     if vim.api.nvim_eval("conflict_marker#detect#markers()") then
+        --       print("detected")
+        --       -- require("pa").remindme({ args = "conflict-marker" })
+        --     else
+        --       print("here")
+        --     end
+        --   end,
+        --   group = md,
+        -- })
       end,
     },
   })
@@ -350,6 +378,7 @@ return require("packer").startup(function(use)
         end
       end
 
+      -- terrible mapping choice, TODO change this
       vim.api.nvim_set_keymap("i", "<C-a>", "<cmd>lua _G.copilot_keymap()<cr>", { noremap = true, silent = true })
     end,
   })

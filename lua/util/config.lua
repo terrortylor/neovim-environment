@@ -29,30 +29,6 @@ function M.create_mappings(mappings, opts, buffer)
   end
 end
 
----Define vim user command
----@param name string
----@param command string | function
----@param opts? table
-function M.user_command(name, command, opts)
-  local options = { force = true }
-  if opts then
-    options = vim.tbl_extend("force", options, opts)
-  end
-  vim.api.nvim_add_user_command(name, command, options)
-end
-
-function M.create_autogroups(definitions)
-  for group, definition in pairs(definitions) do
-    vim.cmd("augroup " .. group)
-    vim.cmd("autocmd!")
-    for _, line in ipairs(definition) do
-      -- TODO is flatterning a table here overkill, why not just a line with spaces...?
-      local command = table.concat(vim.tbl_flatten({ "autocmd", line }), " ")
-      vim.cmd(command)
-    end
-    vim.cmd("augroup END")
-  end
-end
 
 -- Show highlight group under cursor
 -- https://stackoverflow.com/questions/9464844/how-to-get-group-name-of-highlighting-under-cursor-in-vim

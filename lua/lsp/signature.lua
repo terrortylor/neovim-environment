@@ -4,7 +4,7 @@ local M = {}
 
 -- auto popup signature help... cheap but could do with better pum support
 -- i.e. close sgnature help when pum visible
-function M.cheap_signiture()
+local function cheap_signiture()
   if vim.fn.mode() ~= "i" then
     return
   end
@@ -20,25 +20,27 @@ function M.cheap_signiture()
   end
 end
 
-function M.cheap_signiture_toggle()
+local function cheap_signiture_toggle()
   local toggle = vim.g.cheap_signiture_enabled
   toggle = not toggle
   if toggle then
-    require("util.config").create_autogroups({
-      lsp_hover = {
-        { "CursorMovedI", "*", "lua require('lsp.signature').cheap_signiture()" },
-      },
+    vim.api.nvim_create_autocmd("CursorMovedI", {
+      pattern = "*",
+      callback = function()
+        cheap_signiture()
+      end,
+      group = vim.api.nvim_create_augroup("lsp_hover", { clear = true }),
     })
   else
-    vim.cmd("autocmd! lsp_hover")
+    vim.api.nvim_del_augroup_by_name("lsp_hover")
   end
   vim.g.cheap_signiture_enabled = toggle
 end
 
 function M.setup()
-  vim.api.nvim_add_user_command("ToggleSignature", require("lsp.signature").cheap_signiture_toggle, { force = true })
+  vim.api.nvim_add_user_command("ToggleSignature", cheap_signiture_toggle, { force = true })
   vim.g.cheap_signiture_enabled = false
-  M.cheap_signiture_toggle()
+  cheap_signiture_toggle()
 end
 
 return M

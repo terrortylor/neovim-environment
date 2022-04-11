@@ -1,3 +1,25 @@
+-- local m = require("util.bridge")
+-- m.nnoremap("<leader>rw", [[:%s/\C\<<c-r><c-w>\>//<left>]], "Replace word under cursor")
+
+-- -- Toggles
+-- m.nmap("<leader>t/", ":set hlsearch!<CR>", "Toggle highlight")
+-- m.nmap("<leader>tc", ":set ignorecase!<CR>", "Toggle case")
+-- m.nmap("<leader>tn", ":set number!<CR>", "Toggle line numbers")
+-- m.nmap("<leader>tr", ":set relativenumber!<CR>", "Toggle releative numbers")
+-- m.nmap("<leader>ts", ":set spell!<CR>", "Toggle spelling")
+-- m.nmap("<F2>", ":set paste!<CR>", "Toggle paste mode")
+
+-- -- Window Resizing
+-- -- TODO can these take a count?
+-- m.nmap("<leader>=", ":vertical resize +10<CR>", "Increase window width")
+-- m.nmap("<leader>-", ":vertical resize -10<CR>", "Decrease window width")
+-- m.nmap("<leader>_", ":resize -10<CR>", "Decrease window height")
+-- m.nmap("<leader>+", ":resize +10<CR>", "Increase window height")
+
+-- -- Move window up and down in chunks
+-- m.nnoremap("<c-y>", "5<c-y>", "Override window scrolling  up to 5 line chunks")
+-- m.nnoremap("<c-e>", "5<c-e>", "Override window scrolling down to 5 line chunks")
+
 require("util.config").create_mappings({
   n = {
     -- save all, this is overwritten in lsp's to format doc also

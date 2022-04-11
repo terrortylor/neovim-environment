@@ -1,10 +1,8 @@
-local util = require("util.config")
-
 local M = {}
 
 local saved_window_opts = {}
 
-function M.go()
+local function go()
   local save_and_update_window_option = function(opt, value)
     saved_window_opts[opt] = vim.wo[opt]
     vim.wo[opt] = value
@@ -46,6 +44,8 @@ function M.go()
   end
 end
 
+local function highlighting() end
+
 function M.cleanup()
   for k, v in ipairs(saved_window_opts) do
     vim.wo[k] = v
@@ -53,16 +53,22 @@ function M.cleanup()
 end
 
 function M.setup()
-  util.create_autogroups({
-    splash_update = {
-      { "VimEnter", "* ++once", "lua require('ui.splash').go()" },
-    },
-    splash_highlights = {
-      { "ColorScheme", "*", "lua require('ui.splash').highlighting()" },
-    },
+  local ag = vim.api.nvim_create_augroup("spash_screen", { clear = true })
+  vim.api.nvim_create_autocmd("VimEnter", {
+    pattern = "*",
+    callback = function()
+      go()
+    end,
+    once = true,
+    group = ag,
+  })
+  vim.api.nvim_create_autocmd("ColorScheme", {
+    pattern = "",
+    callback = function()
+      highlighting()
+    end,
+    group = ag,
   })
 end
-
-function M.highlighting() end
 
 return M

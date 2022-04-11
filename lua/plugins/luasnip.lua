@@ -32,7 +32,9 @@ local function edit_ft()
 end
 
 local function setup_snippets()
+  -- package.loaded["luasnip"] = nil
   local ls = require("luasnip")
+  -- ls.snippets = {}
 
   -- enable snipmate stype snippets, and load
   -- from snippets dir
@@ -42,55 +44,37 @@ local function setup_snippets()
 
   -- require("luasnip").config.setup({store_selection_keys="<Tab>"})
 
-  function _G.snippets_clear(printMessage)
-    for m, _ in pairs(ls.snippets) do
-      -- print("clearing ", m)
-      package.loaded["snippets." .. m] = nil
-    end
-    -- snippets/<FT>.lua files are not clearing
-    -- seems that the luasnip snippets are not loaded, registering
-    -- until after a snippet it used?
-    --     local fts = require("luasnip.util.util").get_snippet_filetypes()
-    --     for _, v in pairs(fts) do
-    --       -- print("clearing ", v)
-
-    --       package.loaded["snippets."..v] = nil
-    --     end
-    ls.snippets = setmetatable({}, {
-      __index = function(t, k)
-        -- print("K", k)
-        local ok, m = pcall(require, "snippets." .. k)
-        if not ok and not string.match(m, "^module.*not found:") then
-          -- print("not loaded")
-          error(m)
-        end
-        -- print(vim.inspect(m))
-
-        t[k] = ok and m or {}
-
-        require("luasnip.loaders.from_snipmate").load({ include = { k } })
-        return t[k]
-      end,
-    })
-
-    if printMessage then
-      print("Snippets Reloaded! 🧟")
-    end
+  -- function _G.snippets_clear(printMessage)
+  print("in snippet")
+  require("plenary.reload").reload_module("./lua/snippets")
+  for _, ft_path in ipairs(vim.api.nvim_get_runtime_file("lua/snippets/*.lua", true)) do
+    local ft = vim.fn.fnamemodify(ft_path, ":t:r")
+    print("filetype: " .. ft)
+    package.loaded["snippets." .. ft] = nil
+    ls.snippets[ft] = require("snippets." .. ft)
+    -- require("luasnip.loaders.from_snipmate").load({ include = { ft } })
   end
 
-  _G.snippets_clear(false)
+  -- if printMessage then
+  print("Snippets Reloaded! 🧟")
+  -- end
+  -- end
 
-  vim.cmd([[
-  augroup snippets_clear
-  au!
-  au BufWritePost ~/.config/nvim/snippets/*.snippets lua _G.snippets_clear(true)
-  au BufWritePost ~/.config/nvim/lua/snippets/*.lua lua _G.snippets_clear(true)
-  augroup END
-  ]])
+  require("luasnip.loaders.from_snipmate").load()
+  -- require("luasnip.loaders.from_snipmate").lazy_load()
+  -- _G.snippets_clear(false)
+
+  -- vim.cmd([[
+  -- augroup snippets_clear
+  -- au!
+  -- au BufWritePost ~/.config/nvim/snippets/*.snippets lua _G.snippets_clear(true)
+  -- au BufWritePost ~/.config/nvim/lua/snippets/*.lua lua _G.snippets_clear(true)
+  -- augroup END
+  -- ]])
 end
 
 function M.setup()
-  setup_snippets()
+  -- setup_snippets()
 end
 
 return M

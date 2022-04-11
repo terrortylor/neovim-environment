@@ -6,15 +6,15 @@ function M.setup()
     lsp_cfg = false,
   })
 
-  require("util.config").create_autogroups({
-    format_go_on_save = {
-      -- auto format on write, don't do this if the auto_update plugin in enabled
-      {
-        "BufWritePre",
-        "*.go",
-        ":silent! lua if not vim.g.enable_auto_update then require('go.format').goimport() end",
-      },
-    },
+  vim.api.nvim_create_autocmd("BufWritePre", {
+    pattern = "*.go",
+    callback = function()
+      -- TODO why did I set this? MADNESS?
+      if not vim.g.enable_auto_update then
+        require("go.format").goimport()
+      end
+    end,
+    group = vim.api.nvim_create_augroup("format_go_on_save", { clear = true }),
   })
 end
 

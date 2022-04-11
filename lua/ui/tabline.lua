@@ -4,7 +4,6 @@ local set_highlight = highlights.set_highlight
 local fg = highlights.guifg
 local bg = highlights.guibg
 local lsp_funcs = require("lsp.diagnostics")
-local util = require("util.config")
 local get_user_input = require("util.input").get_user_input
 local ignore_filetype = require("util.buffer").ignore_filetype
 
@@ -133,30 +132,44 @@ function M.tabline()
   return lhs .. string.rep(" ", padding) .. rhs
 end
 
+local function highlighting()
+  -- TODO this is same as current line marker, and looks a bit shit, better backgroud colour required
+  set_highlight("TabLine", { fg(c.blue2), bg(c.purple) })
+  set_highlight("TabLineSel", { fg(c.green1), bg(c.purple) })
+  set_highlight("TabLineFill", { fg(c.shadow), bg(c.purple) })
+  set_highlight("TabLineAtomHeader", { fg(c.green1), bg(c.purple) })
+  set_highlight("TabLineAutoUpdate", { fg(c.green1), bg(c.purple) })
+  set_highlight("TabLineDiagError", { fg(c.red1), bg(c.purple) })
+  set_highlight("TabLineDiagWarn", { fg(c.yellow3), bg(c.purple) })
+end
+
 function M.setup()
   local tabline = "%!luaeval('require(\"ui.tabline\").tabline()')"
-  util.create_autogroups({
-    tabline_highlights = {
-      { "ColorScheme", "*", "lua require('ui.tabline').highlighting()" },
-    },
-    -- TODO whis breaks but is required as telescope fucks clears tabline
-    -- set_tabline = {
-    -- {"BufNew", "*", "set tabline=" .. tabline .. ""},
-    --   {"BufEnter", "*", tabline},
-    --   {"BufWipeout", "*", tabline},
-    --   {"BufWinEnter", "*", tabline},
-    --   {"BufWinLeave", "*", tabline},
-    --   {"BufWritePost", "*", tabline},
-    --   {"SessionLoadPost", "*", tabline},
-    --   {"OptionSet", "*", tabline},
-    --   {"VimResized", "*", tabline},
-    --   {"WinEnter", "*", tabline},
-    --   {"WinLeave", "*", tabline}
-    -- }
+  vim.api.nvim_create_autocmd("ColorScheme", {
+    pattern = "*",
+    callback = function()
+      highlighting()
+    end,
+    group = vim.api.nvim_create_augroup("tabline_highlights", { clear = true }),
   })
+  -- TODO whis breaks but is required as telescope fucks clears tabline
+  -- set_tabline = {
+  -- {"BufNew", "*", "set tabline=" .. tabline .. ""},
+  --   {"BufEnter", "*", tabline},
+  --   {"BufWipeout", "*", tabline},
+  --   {"BufWinEnter", "*", tabline},
+  --   {"BufWinLeave", "*", tabline},
+  --   {"BufWritePost", "*", tabline},
+  --   {"SessionLoadPost", "*", tabline},
+  --   {"OptionSet", "*", tabline},
+  --   {"VimResized", "*", tabline},
+  --   {"WinEnter", "*", tabline},
+  --   {"WinLeave", "*", tabline}
+  -- }
 
   vim.o.tabline = tabline
 
+  -- TODO set up as user_command
   local command = {
     "command!",
     "-nargs=0",
@@ -170,17 +183,6 @@ function M.set_tab_name()
   local name = get_user_input("Tabname: ", "")
   tab_names[vim.fn.tabpagenr()] = name
   vim.cmd("redrawtabline")
-end
-
-function M.highlighting()
-  -- TODO this is same as current line marker, and looks a bit shit, better backgroud colour required
-  set_highlight("TabLine", { fg(c.blue2), bg(c.purple) })
-  set_highlight("TabLineSel", { fg(c.green1), bg(c.purple) })
-  set_highlight("TabLineFill", { fg(c.shadow), bg(c.purple) })
-  set_highlight("TabLineAtomHeader", { fg(c.green1), bg(c.purple) })
-  set_highlight("TabLineAutoUpdate", { fg(c.green1), bg(c.purple) })
-  set_highlight("TabLineDiagError", { fg(c.red1), bg(c.purple) })
-  set_highlight("TabLineDiagWarn", { fg(c.yellow3), bg(c.purple) })
 end
 
 return M

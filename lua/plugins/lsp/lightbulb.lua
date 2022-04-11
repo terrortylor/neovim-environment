@@ -1,10 +1,12 @@
 vim.cmd("packadd nvim-lightbulb")
 require("nvim-lightbulb").update_lightbulb({})
 
-require("util.config").create_autogroups({
-  update_lightbulb = {
-    { "CursorHold,CursorHoldI", "*", "lua require'nvim-lightbulb'.update_lightbulb()" },
-  },
+vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+  pattern = "*",
+  callback = function()
+    require("nvim-lightbulb").update_lightbulb()
+  end,
+  group = vim.api.nvim_create_augroup("update_lightbulb", { clear = true }),
 })
 
 vim.opt.updatetime = 500
