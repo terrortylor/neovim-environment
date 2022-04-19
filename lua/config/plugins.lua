@@ -55,12 +55,12 @@ return require("packer").startup(function(use)
     end,
   })
 
-  use({
-    "~/personnal-workspace/nvim-plugins/nvim-httpclient",
-    config = function()
-      require("nvim-httpclient").setup()
-    end,
-  })
+  -- use({
+  --   "~/personnal-workspace/nvim-plugins/nvim-httpclient",
+  --   config = function()
+  --     require("nvim-httpclient").setup()
+  --   end,
+  -- })
 
   -- colour scheme
   -- Setting the colourscheme here prevents the info screen showing when opened without a file
@@ -159,14 +159,14 @@ return require("packer").startup(function(use)
     end,
   })
 
-  use({
-    "nvim-neorg/neorg",
-    config = function()
-      require("plugins.neorg")
-    end,
-    -- requires = {"nvim-lua/plenary.nvim", "nvim-neorg/neorg-telescope"}
-    requires = { "nvim-lua/plenary.nvim", "~/personnal-workspace/nvim-plugins/neorg-telescope" },
-  })
+  -- use({
+  --   "nvim-neorg/neorg",
+  --   config = function()
+  --     require("plugins.neorg")
+  --   end,
+  --   -- requires = {"nvim-lua/plenary.nvim", "nvim-neorg/neorg-telescope"}
+  --   requires = { "nvim-lua/plenary.nvim", "~/personnal-workspace/nvim-plugins/neorg-telescope" },
+  -- })
 
   -- general editing
   use({
@@ -336,29 +336,21 @@ return require("packer").startup(function(use)
           highlight ConflictMarkerCommonAncestorsHunk guibg=#754a81
         ]])
 
-        -- local md = vim.api.nvim_create_augroup("conflict-marker-remindme", { clear = true })
-        -- vim.api.nvim_create_autocmd({
-        --   "BufReadPost",
-        --   "FileChangedShellPost",
-        --   "ShellFilterPost",
-        --   "StdinReadPost",
-        --   "BufEnter",
-        --   "FocusGained",
-        --   "ColorScheme",
-        -- }, {
-        --   pattern = "*",
-        --   callback = function()
-        --     local detected = vim.api.nvim_eval("conflict_marker#detect#markers()")
-        --     print("detected" .. detected)
-        --     if vim.api.nvim_eval("conflict_marker#detect#markers()") then
-        --       print("detected")
-        --       -- require("pa").remindme({ args = "conflict-marker" })
-        --     else
-        --       print("here")
-        --     end
-        --   end,
-        --   group = md,
-        -- })
+        local md = vim.api.nvim_create_augroup("conflict-marker-remindme", { clear = true })
+        vim.api.nvim_create_autocmd({
+          "BufReadPost",
+        }, {
+          once = true,
+          pattern = "*",
+          callback = function()
+            local detected = vim.api.nvim_eval("conflict_marker#detect#markers()")
+            if detected ~= 0 then
+              require("pa").remindme({ args = "conflict-marker" })
+              -- TODO need to keep focus on pop up
+            end
+          end,
+          group = md,
+        })
       end,
     },
   })

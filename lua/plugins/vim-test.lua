@@ -35,7 +35,7 @@ function M.setup()
     },
   })
 
-  vim.api.nvim_add_user_command("TestStrategySelect", select_strategy, { force = true })
+  vim.api.nvim_create_user_command("TestStrategySelect", select_strategy, { force = true })
 end
 
 -- helpers for plenary

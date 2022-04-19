@@ -35,7 +35,7 @@ end
 
 function M.setup()
   -- luacheck: ignore
-  vim.api.nvim_add_user_command("ToggleWhitespaceTrim", remove_trailing_whitespace_toggle, { force = true })
+  vim.api.nvim_create_user_command("ToggleWhitespaceTrim", remove_trailing_whitespace_toggle, { force = true })
   vim.g.trim_whitespace_enabled = false
   remove_trailing_whitespace_toggle()
 end

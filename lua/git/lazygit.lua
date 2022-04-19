@@ -67,7 +67,7 @@ local function open()
 end
 
 function M.setup()
-  vim.api.nvim_add_user_command("Lazygit", open, { force = true })
+  vim.api.nvim_create_user_command("Lazygit", open, { force = true })
 end
 
 return M

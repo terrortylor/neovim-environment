@@ -88,7 +88,7 @@ function M.setup()
   -- in theory this should hide the written message but doesn't seem to work
   -- could use combination of silent  and unsilent, but seems clunky
   vim.opt.shortmess:append({ F = true })
-  vim.api.nvim_add_user_command("ToggleAutoUpdate", require("util.auto_update").toggle_auto_update, { force = true })
+  vim.api.nvim_create_user_command("ToggleAutoUpdate", require("util.auto_update").toggle_auto_update, { force = true })
   vim.cmd([[
   augroup auto_update
   autocmd!

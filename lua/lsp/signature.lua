@@ -38,7 +38,7 @@ local function cheap_signiture_toggle()
 end
 
 function M.setup()
-  vim.api.nvim_add_user_command("ToggleSignature", cheap_signiture_toggle, { force = true })
+  vim.api.nvim_create_user_command("ToggleSignature", cheap_signiture_toggle, { force = true })
   vim.g.cheap_signiture_enabled = false
   cheap_signiture_toggle()
 end

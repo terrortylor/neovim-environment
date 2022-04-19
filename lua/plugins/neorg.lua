@@ -52,13 +52,13 @@ require("neorg").setup({
   },
 })
 
-vim.api.nvim_add_user_command("GtdCapture", function(_)
+vim.api.nvim_create_user_command("GtdCapture", function(_)
   require("neorg").org_file_entered(true, "silent=true")
   vim.cmd("Neorg gtd capture")
 end, { force = true })
 vim.api.nvim_set_keymap("n", "<leader>otc", "<CMD>GtdCapture<CR>", { noremap = true })
 
-vim.api.nvim_add_user_command("GtdView", function(_)
+vim.api.nvim_create_user_command("GtdView", function(_)
   require("neorg").org_file_entered(true, "silent=true")
   vim.cmd("Neorg gtd views")
 end, { force = true })

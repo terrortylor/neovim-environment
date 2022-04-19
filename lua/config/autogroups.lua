@@ -33,7 +33,7 @@ vim.api.nvim_create_autocmd("CmdLineLeave", {
   group = ag,
 })
 
-vim.api.nvim_create_autocmd("bufenter", {
+vim.api.nvim_create_autocmd("BufReadPost", {
   pattern = "*",
   command = "lua require('ui.buffer').move_to_last_edit()",
   group = vim.api.nvim_create_augroup("return_to_last_edit_in_buffer", { clear = true }),

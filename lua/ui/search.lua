@@ -36,7 +36,7 @@ local function toggle_smart_search()
 end
 
 function M.setup()
-  vim.api.nvim_add_user_command("ToggleSmartSearch", toggle_smart_search, { force = true })
+  vim.api.nvim_create_user_command("ToggleSmartSearch", toggle_smart_search, { force = true })
 
   local ag = vim.api.nvim_create_augroup("hlmagic", { clear = true })
   vim.api.nvim_create_autocmd("CursorMoved", {

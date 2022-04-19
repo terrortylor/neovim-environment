@@ -46,7 +46,7 @@ M.mappings = {
 
 -- Create commands and setup mappings
 function M.setup()
-  local cmd = vim.api.nvim_add_user_command
+  local cmd = vim.api.nvim_create_user_command
   for k, v in pairs(commands) do
     cmd(k, "lua require('tmux.commands')." .. v .. "(<f-args>)", { nargs = "?" })
   end

@@ -40,7 +40,7 @@ local function setup_snippets()
   -- from snippets dir
   -- require("luasnip.loaders.from_snipmate").load()
 
-  vim.api.nvim_add_user_command("LuaSnipEdit", edit_ft, { force = true })
+  vim.api.nvim_create_user_command("LuaSnipEdit", edit_ft, { force = true })
 
   -- require("luasnip").config.setup({store_selection_keys="<Tab>"})
 
