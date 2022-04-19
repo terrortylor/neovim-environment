@@ -56,7 +56,9 @@ function M.setup()
       open_file = {
         quit_on_open = true,
         window_picker = {
-          chars = "asdfjkl;",
+          -- TODO reenable if ever vsplit_no_picker option exists
+          enable = false,
+          -- chars = "asdfjkl;",
         },
       },
     },
