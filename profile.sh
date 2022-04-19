@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash
 # https://gist.github.com/disusered/af7c1bf0add302946bf1
 
 iterations=10

@@ -18,12 +18,18 @@ function M.create_mappings(mappings, opts, buffer)
     for k, v in pairs(maps) do
       if type(v) == "string" then
         keymap(mode, k, v, opts)
+        -- TODO why isn't the function passed here?
+      -- elseif type(v) == "function" then
+      --   print("function found")
+      --   keymap(mode, k, v, opts)
       elseif type(v) == "table" then
         if #v == 2 then
           keymap(mode, k, v[1], v[2])
         else
           log.error("Mapping not run for lhs: " .. k .. " mode: " .. mode)
         end
+      else
+        print("unknown type")
       end
     end
   end

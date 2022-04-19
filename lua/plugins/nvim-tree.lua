@@ -82,7 +82,7 @@ function M.setup()
     },
   })
 
-  vim.api.nvim_set_keymap("n", "<c-n>", "<cmd>NvimTreeFindFileToggle<CR>", { noremap = true })
+  vim.keymap.set("n", "<c-n>", "<cmd>NvimTreeFindFileToggle<CR>", { noremap = true })
 end
 
 return M
