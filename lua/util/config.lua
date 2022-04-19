@@ -29,7 +29,6 @@ function M.create_mappings(mappings, opts, buffer)
   end
 end
 
-
 -- Show highlight group under cursor
 -- https://stackoverflow.com/questions/9464844/how-to-get-group-name-of-highlighting-under-cursor-in-vim
 function M.show_highlight_group()

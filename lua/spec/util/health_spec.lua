@@ -1,4 +1,5 @@
 local testModule
+local stub = require("luassert.stub")
 
 describe("util.health", function()
   before_each(function()
@@ -26,24 +27,14 @@ describe("util.health", function()
   end)
 
   describe("get_health_table", function()
-    it("should be empty if nothing registerd", function()
-      local empty_health_table = testModule.generate_empty_health_table()
-      local htbl = testModule.get_health_table()
-      assert.are.same(empty_health_table, htbl)
-    end)
-
     it("should contain missing binary and descriptions", function()
+      local health = require("health")
+      stub(health, "report_start").on_call_with("my-config-health")
+      stub(health, "report_info").on_call_with("Missing binary: notexists : required for something")
+      stub(health, "report_info").on_call_with("Missing binary: notexists : LOUD NOISES")
       testModule.register_required_binary("notexists", "required for something")
       testModule.register_required_binary("notexists", "LOUD NOISES")
-      local htbl = testModule.get_health_table()
-      assert.are.same({
-        missing_binaries = {
-          notexists = {
-            "required for something",
-            "LOUD NOISES",
-          },
-        },
-      }, htbl)
+      testModule.check()
     end)
   end)
 end)

@@ -1,5 +1,6 @@
 local M = {}
 
+-- TODO get rid of this as now in API
 function M.set_highlight(hl, style)
   if type(style) == "table" then
     style = table.concat(style, " ")
