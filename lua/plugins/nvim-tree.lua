@@ -51,7 +51,6 @@ function M.setup()
     },
   }
   vim.g.nvim_tree_git_hl = 1
-  vim.g.nvim_tree_indent_markers = 1
   require("nvim-tree").setup({
     actions = {
       open_file = {
@@ -69,7 +68,6 @@ function M.setup()
         },
       },
     },
-    auto_close = true,
     diagnostics = {
       enable = true,
       icons = {
@@ -84,13 +82,7 @@ function M.setup()
     },
   })
 
-  local create_mappings = require("util.config").create_mappings
-
-  create_mappings({
-    n = {
-      ["<c-n>"] = "<cmd>NvimTreeFindFileToggle<CR>",
-    },
-  })
+  vim.api.nvim_set_keymap("n", "<c-n>", "<cmd>NvimTreeFindFileToggle<CR>", { noremap = true })
 end
 
 return M
