@@ -47,6 +47,10 @@ function M.lua_test_file()
 end
 
 function M.lua_test_last()
+  if lua_last_file == "" then
+    print("No file tested yet!")
+    return
+  end
   vim.cmd("wall")
   require("plenary.test_harness").test_directory(lua_last_file)
 end
