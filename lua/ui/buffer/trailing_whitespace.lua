@@ -4,10 +4,13 @@ local M = {}
 -- https://stackoverflow.com/questions/4617059/showing-trailing-spaces-in-vim
 
 local function remove_trailing_whitespace()
-  -- if not vim.bo.modified then
-  --   print("not modified here")
-  --   return
-  -- end
+  -- some helpful circuit breakers
+  if not vim.bo.modifiable then
+    return
+  end
+  if not vim.bo.modified then
+    return
+  end
   if vim.fn.search("\\s\\+$", "nw") > 0 then
     local pos = vim.api.nvim_win_get_cursor(0)
     vim.cmd([[:keepjumps keeppatterns %s/\s\+$//e]])
