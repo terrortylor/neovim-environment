@@ -159,14 +159,21 @@ return require("packer").startup(function(use)
     end,
   })
 
-  -- use({
-  --   "nvim-neorg/neorg",
-  --   config = function()
-  --     require("plugins.neorg")
-  --   end,
-  --   -- requires = {"nvim-lua/plenary.nvim", "nvim-neorg/neorg-telescope"}
-  --   requires = { "nvim-lua/plenary.nvim", "~/personnal-workspace/nvim-plugins/neorg-telescope" },
-  -- })
+  use  ({
+    "jakewvincent/mkdnflow.nvim",
+    condif = function ()
+      require('mkdnflow').setup({})
+    end
+  })
+
+  use({
+    "nvim-neorg/neorg",
+    config = function()
+      require("plugins.neorg")
+    end,
+    -- requires = {"nvim-lua/plenary.nvim", "nvim-neorg/neorg-telescope"}
+    requires = { "nvim-lua/plenary.nvim", "~/personnal-workspace/nvim-plugins/neorg-telescope" },
+  })
 
   -- general editing
   use({
@@ -273,7 +280,7 @@ return require("packer").startup(function(use)
         }
 
         require("nvim-treesitter.configs").setup({
-          ensure_installed = { "javascript", "typescript", "lua", "go", "norg", "norg_meta", "norg_table" },
+          ensure_installed = { "javascript", "markdown", "typescript", "lua", "go", "norg", "norg_meta", "norg_table" },
           highlight = {
             enable = true,
           },
