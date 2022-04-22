@@ -14,6 +14,7 @@ local right_width = 0
 
 local M = {}
 local tab_names = {}
+local isRecording = false
 
 local function add_left(hl, text)
   table.insert(left_tabline, "%#" .. hl .. "#")
@@ -103,9 +104,21 @@ local function show_filetype()
   end
 
   if not skip then
-    add_right("TabLineAtomHeader", "FT: ")
+    add_right("TabLineAtomHeader", " FT: ")
     add_right("TabLine", filetype)
   end
+end
+
+local function recording()
+  if not isRecording then
+    return
+  end
+  local rec = vim.fn.reg_recording()
+  if rec == "" then
+    return
+  end
+  add_right("TabLineAtomHeader", " Rec: ")
+  add_right("TabLine", rec)
 end
 
 function M.tabline()
@@ -120,6 +133,7 @@ function M.tabline()
 
   -- right
   current_signature(80)
+  recording()
   show_auto_update()
   show_filetype()
   show_diagnostics()
@@ -145,12 +159,29 @@ end
 
 function M.setup()
   local tabline = "%!luaeval('require(\"ui.tabline\").tabline()')"
+  local group = vim.api.nvim_create_augroup("tabline_group", { clear = true })
   vim.api.nvim_create_autocmd("ColorScheme", {
     pattern = "*",
     callback = function()
       highlighting()
     end,
-    group = vim.api.nvim_create_augroup("tabline_highlights", { clear = true }),
+    group = group,
+  })
+  vim.api.nvim_create_autocmd("RecordingEnter", {
+    pattern = "*",
+    callback = function()
+      isRecording = true
+      vim.cmd("redrawtabline")
+    end,
+    group = group,
+  })
+  vim.api.nvim_create_autocmd("RecordingLeave", {
+    pattern = "*",
+    callback = function()
+      isRecording = false
+      vim.cmd("redrawtabline")
+    end,
+    group = group,
   })
   -- TODO whis breaks but is required as telescope fucks clears tabline
   -- set_tabline = {
