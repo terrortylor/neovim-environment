@@ -33,7 +33,7 @@ function M.open_markdown_centered_float(filename, style)
     vim.api.nvim_buf_delete(buf, { force = true })
   end
 
-  float.open_float(buf, opts, cb)
+  return float.open_float(buf, opts, cb)
 end
 
 function _G.remindme_complete(_, _, _)
@@ -55,9 +55,10 @@ function M.remindme(args)
   local reminder = args.args
   local filepath = string.format("%s/remindme/%s.md", M.notes_path, reminder)
   if fs.file_exists(filepath) then
-    M.open_markdown_centered_float(filepath, true)
+    return M.open_markdown_centered_float(filepath, true)
   else
     log.error("RemindMe - File not found: " .. filepath)
+    return nil
   end
 end
 
