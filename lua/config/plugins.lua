@@ -159,11 +159,11 @@ return require("packer").startup(function(use)
     end,
   })
 
-  use  ({
+  use({
     "jakewvincent/mkdnflow.nvim",
-    condif = function ()
-      require('mkdnflow').setup({})
-    end
+    condif = function()
+      require("mkdnflow").setup({})
+    end,
   })
 
   use({
@@ -280,7 +280,16 @@ return require("packer").startup(function(use)
         }
 
         require("nvim-treesitter.configs").setup({
-          ensure_installed = { "javascript", "markdown", "typescript", "lua", "go", "norg", "norg_meta", "norg_table" },
+          ensure_installed = {
+            "javascript",
+            "markdown",
+            "typescript",
+            "lua",
+            "go",
+            "norg",
+            "norg_meta",
+            "norg_table",
+          },
           highlight = {
             enable = true,
           },
@@ -344,16 +353,16 @@ return require("packer").startup(function(use)
         ]])
 
         local md = vim.api.nvim_create_augroup("conflict-marker-remindme", { clear = true })
-        vim.api.nvim_create_autocmd({
-          "BufReadPost",
-        }, {
+        vim.api.nvim_create_autocmd("VimEnter", {
           once = true,
           pattern = "*",
           callback = function()
             local detected = vim.api.nvim_eval("conflict_marker#detect#markers()")
             if detected ~= 0 then
-              require("pa").remindme({ args = "conflict-marker" })
-              -- TODO need to keep focus on pop up
+              local win = require("pa").remindme({ args = "conflict-marker" })
+              if vim.api.nvim_win_is_valid(win) then
+                vim.api.nvim_set_current_win(win)
+              end
             end
           end,
           group = md,

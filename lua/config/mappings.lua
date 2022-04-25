@@ -117,14 +117,15 @@ require("util.config").create_mappings({
     -- smart lines, these do break macro's quite often though...
     -- standard behaviour if in recording a macro
     -- TODO neds testing, if recoring a marcro or in a macro should default to j/k not magic gj/gk
-    ["j"] = {
-      "(v:count? 'j' : (reg_recording() == '' ? 'gj' : (reg_executing() == '' ? 'gj' : 'k')))",
-      { noremap = true, silent = true, expr = true },
-    },
-    ["k"] = {
-      "(v:count? 'k' : (reg_recording() == '' ? 'gk' : (reg_executing() == '' ? 'gk' : 'k')))",
-      { noremap = true, silent = true, expr = true },
-    },
+    -- ["j"] = {
+    --   "(v:count? 'j' : (reg_recording() == '' ? 'gj' : (reg_executing() == '' ? 'gj' : 'k')))",
+    --   { noremap = true, silent = true, expr = true },
+    -- },
+    -- ["k"] = {
+    --   "(v:count? 'k' : (reg_recording() == '' ? 'gk' : (reg_executing() == '' ? 'gk' : 'k')))",
+    --   { noremap = true, silent = true, expr = true },
+    -- },
+    -- TODO this isn't really used any more is it...
     ["<leader>/"] = [[/\<\><left><left>]],
   },
   v = {
@@ -135,6 +136,7 @@ require("util.config").create_mappings({
     -- replace default register contents with XXX in selection
     -- FIXME the double quote in the rhs breaks formatiing
     ["<leader>rw"] = { [[:s/\C\<<c-r>"\>//<left>]], { noremap = true } },
+    ["gy"] = '"+y',
   },
   i = {
     -- Exit insert mode
