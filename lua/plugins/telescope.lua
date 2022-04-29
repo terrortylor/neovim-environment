@@ -1,5 +1,7 @@
 local M = {}
 
+require("util.health").register_required_binary("rg", "Used by telescope")
+
 local thin_border_chars = {
   { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
   prompt = { "─", "│", " ", "│", "┌", "┐", "│", "│" },
