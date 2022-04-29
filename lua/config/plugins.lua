@@ -460,6 +460,10 @@ return require("packer").startup(function(use)
   })
 
   -- Language Specific
+  use({
+    "aliou/bats.vim",
+    ft = { "bats" }
+  })
   -- GO
   use({
     {
