@@ -191,32 +191,32 @@ return require("packer").startup(function(use)
       requires = { "hrsh7th/nvim-cmp" },
     },
     -- surround manipulation
-    {
-      "blackCauldron7/surround.nvim",
-      config = function()
-        require("surround").setup({
-          mappings_style = "surround",
-          pairs = {
-            nestable = { { "(", ")" }, { "[", "]" }, { "{", "}" } },
-            linear = {
-              { "<", ">" },
-              { "'", "'" },
-              { '"', '"' },
-              { "*", "*" },
-              { "/", "/" },
-              { "-", "-" },
-              { "_", "_" },
-              { "|", "|" },
-              { "^", "^" },
-              { ",", "," },
-              { "$", "$" },
-              { "=", "=" },
-              { "+", "+" },
-            },
-          },
-        })
-      end,
-    },
+    -- {
+    --   "blackCauldron7/surround.nvim",
+    --   config = function()
+    --     require("surround").setup({
+    --       mappings_style = "surround",
+    --       pairs = {
+    --         nestable = { { "(", ")" }, { "[", "]" }, { "{", "}" } },
+    --         linear = {
+    --           { "<", ">" },
+    --           { "'", "'" },
+    --           { '"', '"' },
+    --           { "*", "*" },
+    --           { "/", "/" },
+    --           { "-", "-" },
+    --           { "_", "_" },
+    --           { "|", "|" },
+    --           { "^", "^" },
+    --           { ",", "," },
+    --           { "$", "$" },
+    --           { "=", "=" },
+    --           { "+", "+" },
+    --         },
+    --       },
+    --     })
+    --   end,
+    -- },
     {
       -- make search replace varients better
       "tpope/vim-abolish",
