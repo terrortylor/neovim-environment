@@ -6,7 +6,7 @@ local fs = require("util.filesystem")
 local log = require("util.log")
 local M = {}
 
-M.notes_path = "/home/alextylor/personnal-workspace/notes"
+M.notes_path = "/home/alextylor/personal-workspace/notes"
 
 local function open_markdown_buf(filename)
   -- TODO use lua/util/buffer function

@@ -56,7 +56,7 @@ return require("packer").startup(function(use)
   })
 
   -- use({
-  --   "~/personnal-workspace/nvim-plugins/nvim-httpclient",
+  --   "~/personal-workspace/nvim-plugins/nvim-httpclient",
   --   config = function()
   --     require("nvim-httpclient").setup()
   --   end,
@@ -172,7 +172,7 @@ return require("packer").startup(function(use)
       require("plugins.neorg")
     end,
     -- requires = {"nvim-lua/plenary.nvim", "nvim-neorg/neorg-telescope"}
-    requires = { "nvim-lua/plenary.nvim", "~/personnal-workspace/nvim-plugins/neorg-telescope" },
+    requires = { "nvim-lua/plenary.nvim", "~/personal-workspace/nvim-plugins/neorg-telescope" },
   })
 
   -- general editing

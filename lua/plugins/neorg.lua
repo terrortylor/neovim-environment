@@ -31,9 +31,9 @@ require("neorg").setup({
     ["core.norg.dirman"] = { -- Manage your directories with Neorg
       config = {
         workspaces = {
-          my_workspace = "~/personnal-workspace/notes",
-          gtd_wksp = "~/personnal-workspace/notes/gtd",
-          journal = "~/personnal-workspace/notes/journal",
+          my_workspace = "~/personal-workspace/notes",
+          gtd_wksp = "~/personal-workspace/notes/gtd",
+          journal = "~/personal-workspace/notes/journal",
         },
       },
     },
