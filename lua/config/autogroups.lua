@@ -19,9 +19,20 @@ vim.api.nvim_create_autocmd("WinLeave", {
 
 vim.api.nvim_create_autocmd("BufReadPost", {
   pattern = "*",
-  command = "lua require('ui.buffer').move_to_last_edit()",
+  callback = function()
+    local exit_loc = vim.api.nvim_buf_get_mark(0, '"')
+    local last_line = vim.api.nvim_buf_line_count(0)
+
+    if exit_loc[1] > 0 and exit_loc[1] <= last_line then
+      local w_id = vim.api.nvim_tabpage_get_win(0)
+      vim.api.nvim_win_set_cursor(w_id, exit_loc)
+      -- Open fold and center
+      vim.api.nvim_input("zvzz")
+    end
+  end,
   group = vim.api.nvim_create_augroup("return_to_last_edit_in_buffer", { clear = true }),
 })
+
 vim.api.nvim_create_autocmd("TextYankPost", {
   pattern = "*",
   command = "silent! lua vim.highlight.on_yank()",
