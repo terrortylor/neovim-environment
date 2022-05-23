@@ -17,29 +17,6 @@ vim.api.nvim_create_autocmd("WinLeave", {
   group = ag,
 })
 
--- TODO move to another unit
-ag = vim.api.nvim_create_augroup("line_numbers", { clear = true })
-vim.api.nvim_create_autocmd("WinEnter", {
-  pattern = "*",
-  command = "lua require('ui.window.numbering').win_enter()",
-  group = ag,
-})
-vim.api.nvim_create_autocmd("WinLeave", {
-  pattern = "*",
-  command = "lua require('ui.window.numbering').win_leave()",
-  group = ag,
-})
-vim.api.nvim_create_autocmd("CmdLineEnter", {
-  pattern = "*",
-  command = "lua require('ui.window.numbering').cmd_enter()",
-  group = ag,
-})
-vim.api.nvim_create_autocmd("CmdLineLeave", {
-  pattern = "*",
-  command = "lua require('ui.window.numbering').cmd_leave()",
-  group = ag,
-})
-
 vim.api.nvim_create_autocmd("BufReadPost", {
   pattern = "*",
   command = "lua require('ui.buffer').move_to_last_edit()",
