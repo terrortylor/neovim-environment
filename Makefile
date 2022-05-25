@@ -1,5 +1,9 @@
 all: lint test
 
+install_dependencies:
+	luarocks install luacheck --local
+	luarocks path > ~/.bashrc.d/luacheck.sh
+
 lint:
 	@echo "Linting ..."
 	luacheck --no-color .
