@@ -24,33 +24,7 @@ function M.toggle_nvim()
 end
 
 function M.setup()
-  vim.g.nvim_tree_show_icons = {
-    git = 0,
-    folders = 1,
-    files = 0,
-    icons = 0,
-  }
 
-  vim.g.nvim_tree_icons = {
-    default = " ",
-    folder = {
-      default = "ᐅ",
-      open = "ᐁ",
-      empty = "ᐅ",
-      empty_open = "ᐅ",
-      symlink = "ᐅ",
-    },
-    git = {
-      unstaged = "~",
-      staged = "✓",
-      unmerged = "M",
-      renamed = "R",
-      untracked = "★",
-      deleted = "✗",
-      ignored = "🙅",
-    },
-  }
-  vim.g.nvim_tree_git_hl = 1
   require("nvim-tree").setup({
     actions = {
       open_file = {
@@ -67,6 +41,35 @@ function M.setup()
         list = {
           { key = { "o" }, action = "edit", mode = "n" },
           { key = { "<CR>", "<2-LeftMouse>" }, action = "edit_no_picker", mode = "n" },
+        },
+      },
+    },
+    renderer = {
+      highlight_git = true,
+      icons = {
+        show = {
+          git = false,
+          folder_arrow = false,
+          file = false,
+        },
+        glyphs = {
+          default = " ",
+          folder = {
+            default = "ᐅ",
+            open = "ᐁ",
+            empty = "ᐅ",
+            empty_open = "ᐅ",
+            symlink = "ᐅ",
+          },
+          git = {
+            unstaged = "~",
+            staged = "✓",
+            unmerged = "M",
+            renamed = "R",
+            untracked = "★",
+            deleted = "✗",
+            ignored = "🙅",
+          },
         },
       },
     },
