@@ -26,8 +26,7 @@ local ignore_filetypes = {
   "lspinfo",
   "packer",
   "splash",
-  "neorg://Quick Actions",
-  "neorg://norg/Projects.norg",
+  "neorg",
 }
 
 function M.ignore_filetype(ft_list)
