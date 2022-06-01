@@ -144,7 +144,7 @@ return require("packer").startup(function(use)
   use({
     "rmagatti/auto-session",
     config = function()
-      require("auto-session").setup()
+      require("auto-session").setup({auto_restore_enabled = false})
     end,
   })
 
@@ -171,8 +171,8 @@ return require("packer").startup(function(use)
     config = function()
       require("plugins.neorg")
     end,
-    -- requires = {"nvim-lua/plenary.nvim", "nvim-neorg/neorg-telescope"}
-    requires = { "nvim-lua/plenary.nvim", "~/personal-workspace/nvim-plugins/neorg-telescope" },
+    requires = {"nvim-lua/plenary.nvim", "nvim-neorg/neorg-telescope"}
+    -- requires = { "nvim-lua/plenary.nvim", "~/personal-workspace/nvim-plugins/neorg-telescope" },
   })
 
   -- general editing
