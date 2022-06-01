@@ -42,15 +42,14 @@ end
 --- Saves a buffer if the file path exists (directory path), if the file
 -- exists all ready then updates, if the file has no name then do nothing
 function M.update_buffer()
-  -- TODO blacklist filtypes
   if vim.g.enable_auto_update then
-    local filename = api.nvim_call_function("expand", { "%" })
+    local filename = vim.fn.expand("%")
     if filename ~= "" then
       if ignore_filetype() then
         return
       end
 
-      local path = api.nvim_call_function("expand", { "%:p:h" })
+      local path = vim.fn.expand("%:p:h")
       if path:match("term://") then
         log.info("Terminal buffer, not saving")
         return
