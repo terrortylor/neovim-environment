@@ -53,6 +53,9 @@ function M.update_buffer()
       if path:match("term://") then
         log.info("Terminal buffer, not saving")
         return
+      elseif path:match("neorg://") then
+        log.info("Neorg buffer, not saving")
+        return
       elseif not filesystem.is_directory(path) then
         log.error("Buffer directory doesn't exit, not saving")
         return
