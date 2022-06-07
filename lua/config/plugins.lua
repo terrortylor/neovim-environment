@@ -83,8 +83,7 @@ return require("packer").startup(function(use)
 
   -- optimisation
   use({
-    { "lewis6991/impatient.nvim" },
-    { "nathom/filetype.nvim" },
+    "lewis6991/impatient.nvim"
   })
 
   -- navigation
@@ -282,6 +281,7 @@ return require("packer").startup(function(use)
         require("nvim-treesitter.configs").setup({
           ensure_installed = {
             "javascript",
+            "yaml",
             "markdown",
             "typescript",
             "lua",
