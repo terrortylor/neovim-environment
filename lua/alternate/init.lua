@@ -8,7 +8,9 @@ local api = vim.api
 local M = {}
 
 -- Define settings
+-- TODO use new keymappings style vim.keymap etc
 M.mappings = {
+  ["<leader>a"] = ":<C-u>lua require('alternate').alternate_or_buf_next()<CR>",
   ["<leader>ga"] = ":<C-u>lua require('alternate').get_alternate_file()<CR>",
   ["<leader>gsa"] = ":<C-u>vsplit <BAR> lua require('alternate').get_alternate_file()<CR>",
   ["<leader>gha"] = ":<C-u>split <BAR> lua require('alternate').get_alternate_file()<CR>",
@@ -134,6 +136,15 @@ function M.get_alternate_file()
 
     i = i + 1
   until match or i > #rules
+end
+
+function M.alternate_or_buf_next()
+  local reg = vim.fn.getreg("#")
+  if not reg then
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-^>", true, false, true), "n", true)
+  else
+    vim.cmd("bnext")
+  end
 end
 
 -- Create commands and setup mappings

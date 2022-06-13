@@ -44,8 +44,6 @@ require("util.config").create_mappings({
     -- Move window up and down in chunks
     ["<c-y>"] = "5<c-y>",
     ["<c-e>"] = "5<c-e>",
-    -- Easier alternate file (not custom 'alternate file')
-    ["<leader>a"] = "<c-^>",
     -- Open file under cursor in vertical split
     ["gsf"] = ":vertical wincmd f<CR>",
     ["ghf"] = ":wincmd f<CR>",
