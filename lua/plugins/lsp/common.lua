@@ -1,47 +1,46 @@
-local create_mappings = require("util.config").create_mappings
 
 local M = {}
 
-local function set_mappings(client, bufnr)
-  local mappings = {
-    n = {
-      -- TODO have a func to prefix vsplit/splt/tabnew wrapper
-      ["gD"] = "<Cmd>Telescope lsp_definitions<CR>",
-      ["gsD"] = "<Cmd>vsplit <BAR> Telescope lsp_definitions<CR>", -- overkill but i like these mappings
-      ["ghD"] = "<Cmd>split <BAR> Telescope lsp_definitions<CR>", -- overkill but i like these mappings
-      ["gd"] = "<Cmd>lua vim.lsp.buf.definition()<CR>",
-      ["gsd"] = "<Cmd>vsplit <BAR> lua vim.lsp.buf.definition()<CR>",
-      ["ghd"] = "<Cmd>split <BAR> lua vim.lsp.buf.definition()<CR>",
-      -- TODO save and restore mark?
-      ["gtd"] = "mt<Cmd>tabnew % <CR> `t <Cmd> lua vim.lsp.buf.definition()<CR>",
-      ["K"] = "<Cmd>lua vim.lsp.buf.hover()<CR>",
-      ["<leader>ca"] = '<Cmd>lua require("plugins.telescope").dropdown_code_actions()<CR>',
-      -- luacheck: ignore
-      ["<leader>cf"] = '<Cmd>lua vim.diagnostic.goto_next()<CR><Cmd>lua require("lsp.codeactions").fix_first_code_action()<CR>',
-      -- luacheck: ignore
-      ["<leader>cF"] = '<Cmd>lua vim.diagnostic.goto_prev()<CR><Cmd>lua require("lsp.codeactions").fix_first_code_action()<CR>',
-      ["gI"] = "<cmd>Telescope lsp_implementations<CR>",
-      ["<space>gss"] = "<cmd>Telescope lsp_document_symbols<CR>",
-      ["gK"] = "<cmd>lua vim.lsp.buf.signature_help()<CR>",
-      -- ['<space>wa'] = '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>',
-      -- ['<space>wr'] = '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>',
-      -- ['<space>wl'] = '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>',
-      ["<space>D"] = "<cmd>lua vim.lsp.buf.type_definition()<CR>",
-      ["<space>vD"] = "<cmd>vsplit <BAR> lua vim.lsp.buf.type_definition()<CR>",
-      ["<space>hD"] = "<cmd>split <BAR> lua vim.lsp.buf.type_definition()<CR>",
-      ["<space>rn"] = '<cmd>lua require("scratch.lsp_rename_popup").rename()<CR>',
-      -- ['<space>rn'] = '<cmd>lua vim.lsp.buf.rename()<CR>',
-      ["gr"] = "<Cmd>Telescope lsp_references<CR>",
-      ["<space>e"] = "<cmd>lua vim.diagnostic.open_float()<CR>",
-      ["<space>ge"] = "<cmd>Telescope lsp_workspace_diagnostics<CR>",
-      ["[d"] = "<cmd>lua vim.diagnostic.goto_prev()<CR>",
-      ["]d"] = "<cmd>lua vim.diagnostic.goto_next()<CR>",
-      ["<space>th"] = '<cmd>lua require("lsp.diagnostics").diagnostic_toggle_virtual_text()<CR>',
-    },
-    i = {
-      -- ['<c-k>'] = '<cmd>lua vim.lsp.buf.signature_help()<CR>',
-    },
-  }
+local function set_mappings(client)
+  local set = vim.keymap.set
+
+  -- TODO have a func to prefix vsplit/splt/tabnew wrapper
+  set("n", "gD", require("telescope.builtin.lsp").definitions, {buffer=true})
+
+  set("n", "gsD", function()
+    vim.cmd "vsplit"
+    require("telescope.builtin.lsp").definitions()
+  end, {buffer=true})
+
+  set("n", "ghD", function()
+    vim.cmd "split"
+    require("telescope.builtin.lsp").definitions()
+  end, {buffer=true})
+
+  set("n", "gd", vim.lsp.buf.definition, {buffer=true})
+  set("n", "gsd", "<Cmd>vsplit <BAR> lua vim.lsp.buf.definition()<CR>", {buffer=true})
+  set("n", "ghd", "<Cmd>split <BAR> lua vim.lsp.buf.definition()<CR>", {buffer=true})
+  -- TODO save and restore mark?
+  set("n", "gtd", "mt<Cmd>tabnew % <CR> `t <Cmd> lua vim.lsp.buf.definition()<CR>", {buffer=true})
+  set("n", "K", vim.lsp.buf.hover, {buffer=true})
+  -- luacheck: ignore
+  set("n","<leader>cf",'<Cmd>lua vim.diagnostic.goto_next()<CR><Cmd>lua require("lsp.codeactions").fix_first_code_action()<CR>', {buffer=true})
+  -- luacheck: ignore
+  set("n", "<leader>cF", '<Cmd>lua vim.diagnostic.goto_prev()<CR><Cmd>lua require("lsp.codeactions").fix_first_code_action()<CR>', {buffer=true})
+  set("n", "gI", "<cmd>Telescope lsp_implementations<CR>", {buffer=true})
+  set("n", "<space>gss", "<cmd>Telescope lsp_document_symbols<CR>", {buffer=true})
+  set("n", "gK", vim.lsp.buf.signature_help, {buffer=true})
+  set("n", "<space>D", vim.lsp.buf.type_definition, {buffer=true})
+  set("n", "<space>vD", "<cmd>vsplit <BAR> lua vim.lsp.buf.type_definition()<CR>", {buffer=true})
+  set("n", "<space>hD", "<cmd>split <BAR> lua vim.lsp.buf.type_definition()<CR>", {buffer=true})
+  set("n", "<space>rn", require("scratch.lsp_rename_popup").rename, {buffer=true})
+  set("n", "gr", "<Cmd>Telescope lsp_references<CR>", {buffer=true})
+  set("n", "<space>e", vim.diagnostic.open_float, {buffer=true})
+  set("n", "<space>ge", "<cmd>Telescope lsp_workspace_diagnostics<CR>", {buffer=true})
+  set("n", "[d", vim.diagnostic.goto_prev, {buffer=true})
+  set("n", "]d", vim.diagnostic.goto_next, {buffer=true})
+  set("n", "<space>th",require("lsp.diagnostics").diagnostic_toggle_virtual_text, {buffer=true})
+  set({"n","x"}, "<leader>ca", vim.lsp.buf.range_code_action, {buffer=true})
 
   -- Set some keybinds conditional on server capabilities
   if client.resolved_capabilities.document_formatting or client.resolved_capabilities.document_range_formatting then
@@ -49,13 +48,12 @@ local function set_mappings(client, bufnr)
     -- Tried to do filetype mapping but isn't picked up for some reason when vim starts, only when explicitly settings
     -- the filetype to go in the command line... user that is a bug though
     if vim.bo.filetype == "go" then
-      mappings.n["<space>fd"] = "<cmd>wall<cr><cmd>GoImport<CR>"
+      set("n", "<space>fd","<cmd>wall<cr><cmd>GoImport<CR>", {buffer=true})
     else
-      mappings.n["<space>fd"] = "<cmd>wall<cr><cmd>lua require('lsp.format').efm_priority_document_format()<CR>"
+  -- luacheck: ignore
+     set("n", "<space>fd","<cmd>wall<cr><cmd>lua require('lsp.format').efm_priority_document_format()<CR>", {buffer=true})
     end
   end
-
-  create_mappings(mappings, nil, bufnr)
 end
 
 -- only sets omnifunc if cmp not loaded
@@ -97,7 +95,7 @@ function M.on_attach(client, bufnr)
   require("plugins.lsp.lightbulb")
 
   set_omnifunc(bufnr)
-  set_mappings(client, bufnr)
+  set_mappings(client)
   set_highlights(client)
 
   -- add border

@@ -240,6 +240,12 @@ return require("packer").startup(function(use)
       end,
     },
     {
+      "nvim-telescope/telescope-ui-select.nvim",
+      requires = {
+        "nvim-telescope/telescope.nvim",
+      },
+    },
+    {
       -- adds github pull integration into telescope
       "nvim-telescope/telescope-github.nvim",
       config = function()

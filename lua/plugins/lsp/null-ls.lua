@@ -20,6 +20,9 @@ null_ls.setup({
     null_ls.builtins.diagnostics.shellcheck,
     null_ls.builtins.formatting.shfmt,
 
+    -- refactoring
+    null_ls.builtins.code_actions.refactoring,
+
     -- TODO setup eslint here and get rid of efm
     -- null_ls.builtins.diagnostics.eslint,
 

@@ -9,27 +9,6 @@ local thin_border_chars = {
   preview = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
 }
 
-function M.dropdown_code_actions()
-  local preffered_width = 0.4 -- percentage
-  local columns = vim.api.nvim_get_option("columns")
-  local width = 100 -- default min width columns
-
-  if width < (columns * preffered_width) then
-    width = preffered_width
-  end
-
-  require("telescope.builtin.lsp").code_actions({
-    borderchars = thin_border_chars,
-    sorting_strategy = "ascending",
-    layout_strategy = "center",
-    winnr = vim.api.nvim_get_current_win(),
-    layout_config = {
-      width = width,
-    },
-    results_title = false,
-  })
-end
-
 -- TODO get lsp doucment symbols, filter out methods
 function M.lsp_document_methods(opts)
   local pickers = require("telescope.pickers")
@@ -155,9 +134,17 @@ function M.setup()
           ["<c-k>"] = actions.move_selection_previous,
         },
       },
+      extensions = {
+        ["ui-select"] = {
+          require("telescope.themes").get_dropdown({})
+        },
+      },
     },
   })
 
+  require("telescope").load_extension("ui-select")
+
+  -- my extensions
   require("telescope").load_extension("mapdesc")
   require("telescope").load_extension("bashrc")
   require("telescope").load_extension("go_src")
