@@ -7,15 +7,6 @@ local api = vim.api
 
 local M = {}
 
--- Define settings
--- TODO use new keymappings style vim.keymap etc
-M.mappings = {
-  ["<leader>a"] = ":<C-u>lua require('alternate').alternate_or_buf_next()<CR>",
-  ["<leader>ga"] = ":<C-u>lua require('alternate').get_alternate_file()<CR>",
-  ["<leader>gsa"] = ":<C-u>vsplit <BAR> lua require('alternate').get_alternate_file()<CR>",
-  ["<leader>gha"] = ":<C-u>split <BAR> lua require('alternate').get_alternate_file()<CR>",
-}
-
 --- Rules are defined for filetypes:
 -- condition    : used to control if alternate file will work on given path
 -- direction    : matched on path, if false then transformers are applied v subed for k, otherwise the other way around
@@ -140,7 +131,7 @@ end
 
 function M.alternate_or_buf_next()
   local reg = vim.fn.getreg("#")
-  if not reg then
+  if reg ~= "" then
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-^>", true, false, true), "n", true)
   else
     vim.cmd("bnext")
@@ -150,15 +141,18 @@ end
 -- Create commands and setup mappings
 -- TODO add test
 function M.setup()
-  local opts = { noremap = true, silent = true }
-  local function keymap(...)
-    vim.api.nvim_set_keymap(...)
+  local set = vim.keymap.set
+  set("n", "<leader>a", require('alternate').alternate_or_buf_next)
+  set("n", "<leader>ga", require('alternate').get_alternate_file)
+  set("n", "<leader>gsa", function()
+    vim.cmd "vsplit"
+    require('alternate').get_alternate_file()
+  end)
+  set("n", "<leader>gha", function()
+    vim.cmd "split"
+    require('alternate').get_alternate_file()
   end
-
-  -- Create mappings
-  for k, v in pairs(M.mappings) do
-    keymap("n", k, v, opts)
-  end
+  )
 end
 
 return M
