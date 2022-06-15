@@ -105,24 +105,17 @@ function M.project_files()
 end
 
 function M.setup()
-  local create_mappings = require("util.config").create_mappings
-
-  local mappings = {
-    n = {
-      ["<leader>ff"] = "<cmd>lua require('telescope.builtin').find_files()<CR>",
-      ["<leader>fr"] = "<cmd>Telescope current_buffer_fuzzy_find<CR>",
-      -- Nice ot have as a command to easily call from CLI
-      ["<c-p>"] = "<cmd>lua require('plugins.telescope').project_files()<CR>",
-      ["<leader>fg"] = "<cmd>lua require('telescope.builtin').live_grep()<CR>",
-      ["<leader><space>"] = "<cmd>lua require('telescope.builtin').buffers()<CR>",
-      ["<leader>fh"] = "<cmd>lua require('telescope.builtin').help_tags()<CR>",
-      ["<leader>ft"] = "<cmd>lua require('plugins.telescope').todo_picker()<CR>",
-      ["<leader>fs"] = "<cmd>lua require('telescope.builtin.lsp').dynamic_workspace_symbols()<CR>",
-      -- todo nice to filter this only to errors
-      ["<leader>fe"] = "<cmd>Telescope lsp_workspace_diagnostics<CR>",
-    },
-  }
-  create_mappings(mappings)
+  local set = vim.keymap.set
+  set("n", "<leader>fr", "<cmd>Telescope current_buffer_fuzzy_find<CR>", {desc = "telescope find in current buffer"})
+  -- Nice to have as a command to easily call from CLI
+  set("n", "<c-p>", function() require('plugins.telescope').project_files() end, {desc = "telescope open file, either git_files or fallback to CWD"})
+  set("n", "<leader>fg", function() require('telescope.builtin').live_grep() end, {desc = "telescope grep project/CWD"})
+  set("n", "<leader><space>", function() require('telescope.builtin').buffers() end, {desc = "telescope switch to an open buffer"})
+  set("n", "<leader>fh", function() require('telescope.builtin').help_tags() end, {desc = "telescope search tags"})
+  set("n", "<leader>ft", function() require('plugins.telescope').todo_picker() end, {desc = "telescope search todo's in CWD"})
+  set("n", "<leader>fs", function() require('telescope.builtin.lsp').dynamic_workspace_symbols() end, {desc = "telescope LSP symbols"})
+  -- todo nice to filter this only to errors
+  set("n", "<leader>fe", "<cmd>Telescope lsp_workspace_diagnostics<CR>", {desc = "telescope LSP diagnostics"})
 
   local actions = require("telescope.actions")
   require("telescope").setup({
