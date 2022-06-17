@@ -19,7 +19,7 @@ require("neorg").setup({
       config = {
         icons = {
           marker ={
-            icon = "⚓ ",
+            icon = "|",
           },
           todo = {
             undone = { icon = " " },
