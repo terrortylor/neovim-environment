@@ -159,13 +159,6 @@ return require("packer").startup(function(use)
   })
 
   use({
-    "jakewvincent/mkdnflow.nvim",
-    condif = function()
-      require("mkdnflow").setup({})
-    end,
-  })
-
-  use({
     "nvim-neorg/neorg",
     config = function()
       require("plugins.neorg")
