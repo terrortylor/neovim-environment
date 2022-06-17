@@ -1,4 +1,4 @@
--- As cofig becomes more and more dependant on external sources
+-- As config becomes more and more dependant on external sources
 -- this is a helper module to help register and check they are
 -- available
 -- Exposed as user command set lua/config/commads.lua
