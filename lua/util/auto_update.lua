@@ -1,7 +1,6 @@
 local filesystem = require("util.filesystem")
 local ignore_filetype = require("util.buffer").ignore_filetype
 local log = require("util.log")
-local api = vim.api
 
 local M = {}
 
