@@ -115,7 +115,7 @@ function M.setup()
   set("n", "<leader>ft", function() require('plugins.telescope').todo_picker() end, {desc = "telescope search todo's in CWD"})
   set("n", "<leader>fs", function() require('telescope.builtin.lsp').dynamic_workspace_symbols() end, {desc = "telescope LSP symbols"})
   -- todo nice to filter this only to errors
-  set("n", "<leader>fe", "<cmd>Telescope lsp_workspace_diagnostics<CR>", {desc = "telescope LSP diagnostics"})
+  set("n", "<leader>fe", "<cmd>Telescope diagnostics<CR>", {desc = "telescope LSP diagnostics"})
 
   local actions = require("telescope.actions")
   require("telescope").setup({
