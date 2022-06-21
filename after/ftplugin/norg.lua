@@ -3,5 +3,6 @@ vim.opt.spelllang = { 'en_gb' }
 -- vim.o.conceallevel = 2
 -- vim.o.concealcursor = "nc"
 
-local function keymap(...) vim.api.nvim_buf_set_keymap(0, ...) end
-keymap("i", "<C-b>", "*", {noremap = true})
+local set = vim.keymap.set
+set("i", "<C-b>", "*", {buffer = true})
+set("n", "<leader>ff", ":Telescope neorg find_linkable<CR>", {buffer = true})

@@ -15,6 +15,7 @@ require("neorg").setup({
         -- end,
       },
     },
+    ["core.export"] = {config = {extensions = "all"}},
     ["core.norg.concealer"] = {
       config = {
         icons = {
