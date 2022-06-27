@@ -10,9 +10,9 @@ function M.efm_priority_document_format()
         if c1.name == "efm" then
           -- if efm then disable others
           for _, c2 in pairs(clients) do
-            -- print(c2.name, c2.resolved_capabilities.document_formatting)
+            -- print(c2.name, c2.server_capabilities.document_formatting)
             if c2.name ~= "efm" then
-              c2.resolved_capabilities.document_formatting = false
+              c2.server_capabilities.document_formatting = false
             end
           end
           -- no need to contunue first loop

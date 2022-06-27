@@ -12,7 +12,7 @@ local function cheap_signiture()
   if vim.fn.pumvisible() == 0 then
     local clients = vim.lsp.buf_get_clients(0)
     for _, client in pairs(clients) do
-      if client.resolved_capabilities.signature_help then
+      if client.server_capabilities.signature_help then
         vim.lsp.buf.signature_help()
         return
       end

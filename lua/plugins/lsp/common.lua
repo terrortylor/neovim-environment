@@ -43,7 +43,7 @@ local function set_mappings(client)
   set({"n","x"}, "<leader>ca", vim.lsp.buf.range_code_action, {buffer=true})
 
   -- Set some keybinds conditional on server capabilities
-  if client.resolved_capabilities.document_formatting or client.resolved_capabilities.document_range_formatting then
+  if client.server_capabilities.document_formatting or client.resolved_capabilities.document_range_formatting then
     -- TODO this is fucking gross, but quickfix
     -- Tried to do filetype mapping but isn't picked up for some reason when vim starts, only when explicitly settings
     -- the filetype to go in the command line... user that is a bug though
@@ -68,7 +68,7 @@ local function set_highlights(client)
   -- TODO not sure I like this feature, unless updatetime is set to like 500~
   -- have to check other CursorHold autocommands
   -- Set autocommands conditional on server_capabilities
-  if client.resolved_capabilities.document_highlight then
+  if client.server_capabilities.document_highlight then
     vim.api.nvim_exec(
       [[
       augroup lsp_document_highlight
