@@ -1,28 +1,5 @@
 local M = {}
 
--- Opens nvim if closed, finding current buffer
--- If nvim open and current window then close
--- If nvim open and not current window then find current but and jump too
-function M.toggle_nvim()
-  local tree = require("nvim-tree")
-  local view = require("nvim-tree.view")
-  if view.win_open() then
-    if view.get_winnr() == vim.api.nvim_get_current_win() then
-      view.close()
-      return
-    end
-  else
-    -- TODO have a max windth perhaps?
-    local width = vim.api.nvim_get_option("columns")
-    local shift = math.floor(width / 3)
-    if shift < 30 then
-      shift = 30
-    end
-    view.width = shift
-  end
-  tree.find_file(true)
-end
-
 function M.setup()
 
   require("nvim-tree").setup({
