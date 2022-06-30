@@ -420,6 +420,40 @@ return require("packer").startup(function(use)
     },
   })
 
+  -- debugging (DAP)
+  use({
+    {
+      "mfussenegger/nvim-dap",
+      config = function()
+        require("plugins.nvimdap")
+      end,
+      requires ={
+        "rcarriga/nvim-dap-ui",
+        "theHamsta/nvim-dap-virtual-text",
+        "nvim-treesitter/nvim-treesitter",
+      }
+    },
+    {
+      "nvim-telescope/telescope-dap.nvim",
+      config = function()
+        require('telescope').load_extension('dap')
+      end,
+      requires = {
+        "nvim-neorg/neorg-telescope",
+        "mfussenegger/nvim-dap",
+        "nvim-treesitter/nvim-treesitter",
+      },
+    },
+    -- languages:
+    -- GO
+    {
+      "leoluz/nvim-dap-go",
+      config = function()
+        require('dap-go').setup()
+      end
+    },
+  })
+
   -- completion
   use({
     "hrsh7th/nvim-cmp",
