@@ -25,7 +25,7 @@ function M.efm_priority_document_format()
   efm_priority_document_format = true
   -- format the doc
   -- TODO need a check to make sure actually has this func on one of the availble clients
-  vim.lsp.buf.formatting()
+  vim.lsp.buf.format({ async = true })
 end
 
 return M
