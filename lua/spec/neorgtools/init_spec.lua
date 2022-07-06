@@ -24,7 +24,7 @@ describe("markdown.tasks", function()
       local fixture = "lua/spec/neorgtools/fixtures/links.norg"
       os.execute("cp " .. fixture .. " " .. tmpfile)
       testModule.update_links_to_file({
-        old_name = "/lua/spec/neorgtools/golden/fakefile",
+        old_name = "/lua/spec/neorgtools/golden/fakefile.norg",
         new_name = "/not-a-path/file"
       })
       assertGoldenAndTemp("lua/spec/neorgtools/golden/filelink.norg", tmpfile)
