@@ -18,9 +18,8 @@ describe("markdown.tasks", function()
       end
   end)
 
-  describe("nvim_escaped_command", function()
-
-    it("Should call expected API mehtods with expected arguments", function()
+  describe("neorgtools", function()
+    it("Should update backlink value in files in workspace", function()
       local tmpfile = vim.fn.tempname()
       local fixture = "lua/spec/neorgtools/fixtures/links.norg"
       os.execute("cp " .. fixture .. " " .. tmpfile)
