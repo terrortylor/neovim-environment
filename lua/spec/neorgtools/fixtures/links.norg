@@ -1,0 +1,4 @@
+* Fixture file for testing
+
+  {:$/lua/spec/neorgtools/golden/fakefile:}[fakefile]
+  {:$/lua/spec/neorgtools/golden/fakefile:}[fakefile]

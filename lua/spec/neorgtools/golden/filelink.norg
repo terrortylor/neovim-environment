@@ -1,0 +1,4 @@
+* Fixture file for testing
+
+  {:$/not-a-path/file:}[fakefile]
+  {:$/not-a-path/file:}[fakefile]
