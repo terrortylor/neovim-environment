@@ -1,6 +1,5 @@
 local testModule
 
-
 -- helper func assert golden file and temp file are same
 local function assertGoldenAndTemp(golden, temp)
   local g = vim.fn.system("diff " .. golden .. " " .. temp)
@@ -13,6 +12,7 @@ describe("markdown.tasks", function()
     os.execute("mkdir /tmp/tests")
     vim.env.TMPDIR = "/tmp/tests"
     testModule = require("neorgtools")
+    -- stub neorg current workspace to TMPDIR
     testModule.getNeorgCurrentWorkspaceDir = function()
       return vim.env.TMPDIR
       end
