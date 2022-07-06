@@ -113,14 +113,16 @@ return require("packer").startup(function(use)
     },
     {
       "kyazdani42/nvim-tree.lua",
-      cmd = {
-        "NvimTreeFindFile",
-        "NvimTreeFindFileToggle",
-        "NvimTreeFocus",
-        "NvimTreeOpen",
-        "NvimTreeToggle",
-      },
-      keys = { "<c-n>" },
+      -- norg rename file for updating links
+      -- ft = { "norg" },
+      -- cmd = {
+      --   "nvimtreefindfile",
+      --   "NvimTreeFindFileToggle",
+      --   "NvimTreeFocus",
+      --   "NvimTreeOpen",
+      --   "NvimTreeToggle",
+      -- },
+      -- keys = { "<c-n>" },
       config = function()
         require("plugins.nvim-tree").setup()
       end,
@@ -163,8 +165,8 @@ return require("packer").startup(function(use)
     config = function()
       require("plugins.neorg")
     end,
-    requires = {"nvim-lua/plenary.nvim", "nvim-neorg/neorg-telescope"}
-    -- requires = { "nvim-lua/plenary.nvim", "~/personal-workspace/nvim-plugins/neorg-telescope" },
+    -- requires = {"nvim-lua/plenary.nvim", "nvim-neorg/neorg-telescope"}
+    requires = { "nvim-lua/plenary.nvim", "~/personal-workspace/nvim-plugins/neorg-telescope" },
   })
 
   -- general editing
