@@ -48,7 +48,7 @@ local function update_links_to_file(data)
   update_with_sed(grepResults, cur_old_name, cur_new_name)
   local unModifiedFiles = getFileContainingString(cur_old_name, cur_path)
   -- TODO doesn't seem to refresh current buffer open
-  vim.cmd(":update")
+  vim.cmd(":checktime")
   if vim.tbl_count(unModifiedFiles) > 0 then
     print("Some backlinks have not been modified! Expected: " .. vim.tbl_count(grepResults) .. " but have " .. vim.tbl_count(unModifiedFiles) .. " unmodified files.")
   else
