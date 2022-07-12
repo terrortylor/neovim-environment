@@ -119,18 +119,20 @@ function M.get_all_diagnostic_count()
 end
 
 -- Called from mapping to toggle virtual text on and off for a given buffer
--- https://www.reddit.com/r/neovim/comments/m7ne92/how_to_redraw_lsp_diagnostics/
+-- assumes virtual text in enabled initially
 -- TODO this may be better to be global
 -- when diagnostics refresh this seems to get lost, and you have to toggle twice
 function M.diagnostic_toggle_virtual_text()
   local virtual_text = vim.b.lsp_virtual_text_enabled
+  -- assume it's on currently
+  if virtual_text == nil then
+    virtual_text = true
+  end
   virtual_text = not virtual_text
   vim.b.lsp_virtual_text_enabled = virtual_text
 
-  local clients = vim.lsp.buf_get_clients(0)
-  for _, c1 in pairs(clients) do
-    -- TODO vim.lsp.diagrnostic is deprecated
-    vim.lsp.diagnostic.display(vim.lsp.diagnostic.get(0, c1.id), 0, 1, { virtual_text = virtual_text })
+  for key, _ in pairs(vim.diagnostic.get_namespaces()) do
+    vim.diagnostic.show(key, 0, nil, { virtual_text = virtual_text })
   end
 end
 
