@@ -104,6 +104,7 @@ set("n", "gp", "`[v`]", {desc = "Reselect last put"})
     -- FIXME the double quote in the rhs breaks formatiing
     set("v", "<leader>rw", [[:%s/\C<c-r>"//<left>]], {desc = "replace default register contents with XXX in selection"})
     set("v", "gy", '"+y', {desc = "yank to system clipboard"})
+    set("n", "gy", 'gv"+y', {desc = "select last selection and yank to system clipboard"})
 
     set("i", "jj", "<ESC>", {desc = "Exit insert mode"})
 
