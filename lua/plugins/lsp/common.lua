@@ -5,16 +5,16 @@ local function set_mappings(client)
   local set = vim.keymap.set
 
   -- TODO have a func to prefix vsplit/splt/tabnew wrapper
-  set("n", "gD", require("telescope.builtin.lsp").definitions, {buffer=true})
+  set("n", "gD", require("telescope.builtin").lsp_definitions, {buffer=true})
 
   set("n", "gsD", function()
     vim.cmd "vsplit"
-    require("telescope.builtin.lsp").definitions()
+    require("telescope.builtin").lsp_definitions()
   end, {buffer=true})
 
   set("n", "ghD", function()
     vim.cmd "split"
-    require("telescope.builtin.lsp").definitions()
+    require("telescope.builtin").lsp_definitions()
   end, {buffer=true})
 
   set("n", "gd", vim.lsp.buf.definition, {buffer=true})
