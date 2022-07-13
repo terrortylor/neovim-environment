@@ -6,6 +6,8 @@ local M = {}
 -- in setup that allows toggleing back and forth
 M.swapperoos = {
   ["true"] = "false",
+  ["enable"] = "disable",
+  ["on"] = "off",
   ["=="] = "!=",
   ["&&"] = "||",
 }
