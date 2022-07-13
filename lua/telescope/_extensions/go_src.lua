@@ -1,5 +1,5 @@
 local function find_files_go_src(_)
-  return require("telescope/builtin/files").find_files({
+  return require("telescope/builtin/__files").find_files({
     shorten_path = false,
     cwd = "/usr/local/go/src",
     prompt = "Go Src files",
@@ -8,16 +8,16 @@ local function find_files_go_src(_)
 end
 
 local function find_files_pkg_src(_)
-  return require("telescope/builtin/files").find_files({
+  return require("telescope/builtin/__files").find_files({
     shorten_path = false,
-    cwd = "~/go/src",
+    cwd = "~/go/pkg/src",
     prompt = "Go pkg Src files",
     hidden = false,
   })
 end
 
 local function live_grep_go_src(_)
-  return require("telescope/builtin/files").live_grep({
+  return require("telescope/builtin/__files").live_grep({
     shorten_path = false,
     cwd = "/usr/local/go/src",
     search_dirs = { "/usr/local/go/src" },
@@ -27,10 +27,10 @@ local function live_grep_go_src(_)
 end
 
 local function live_grep_pkg_src(_)
-  return require("telescope/builtin/files").live_grep({
+  return require("telescope/builtin/__files").live_grep({
     shorten_path = false,
     cwd = "~/go/src",
-    search_dirs = { "~/go/src" },
+    search_dirs = { "~/go/pkg/mod" },
     prompt = "Go pkg src live grep",
     hidden = false,
   })

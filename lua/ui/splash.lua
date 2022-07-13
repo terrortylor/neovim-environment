@@ -1,4 +1,12 @@
 local M = {}
+-- TODO randomly show a"tip"?
+-- Where should tips live?
+-- tip ideas:
+-- change in ci ...
+-- ( or ) or b for () block
+-- < or > for <> block
+-- t for tag block
+-- { or } or B for {} block
 
 local saved_window_opts = {}
 

@@ -1,0 +1,287 @@
+* 1 July 2022
+  - environment setup
+  - {| Steve Belford} to share naming conventions
+  - {| Ed Moss - ed.moss@nuffieldhealth.com} to help with network ranges etc
+  - {| Steve Belford} to ask about AEM I whitelistig access
+
+* 27 June 2022
+  looked at
+  - environment forms, passed to Kat and Alberto
+  - IaC Azure pipelines for unsupported commands:  {:$/tech/azure/az:* Calling API from az devops invoke}[Calling API from az devops invoke]
+  - spent time with Alberto an Mo looking at {:$goat:*** Deployed App doesn't handle routes}[Deployed App doesn't handle routes]
+
+* 20 June 2022
+  *TDA*
+
+  - Single page site, plan to confirm Azure web app serice {| Steve Belford}
+  -- *Question* around performance but as SPA should be fine as bottle neck is with client machine
+
+  - cart journet, UX side {| Joe Hankin - joe.hankin@nuffieldhealth.com}
+  -- what is MVP, e2x and nuffield becoming aligned
+  -- how can we reduce deuplication of work, as AEM and SPA have duplication
+
+* 16 June 2022
+  - ECOM-955 update with Azure Pipeline info so Pete doesn't have to do work twice
+
+** Environment Provisioning - access tasks
+   {| Ed Moss - ed.moss@nuffieldhealth.com}
+   - not had any inital request, input from {| Nicholas Vandy}
+    - no idea of costs/budget
+
+    - environemnt setup process
+    -- low level design
+    --- there is a tempalte for this
+        https://nuffielddigital.atlassian.net/wiki/spaces/IDD/pages/3132489744/4.+New+Digital+Platform+-+Server+Requirements
+
+   *actions*
+    - arhcitecture diagram
+    - terraform files
+    - no devops skills internal
+    -- ideally we build out supoprt and document
+   - {| Nicholas Vandy} to include Spencer and {| Ian Sawyer - ian.sawyer@nuffieldhealth.com}
+
+* 10 June 2022
+  - migrate / jenkins update, username for key is nuffield
+  - key created manually, job updated manaually
+* 9 June 2022
+  - set up self hosted agent runner
+
+* 6 June 2022
+** Technical Design Authority
+   - Azure infrastructure
+   - Kubernetes?
+   - Security, reviewing Azure DevOps
+** Done
+   - Access to DevOps
+   - Explore DevOps as IaC, need to write up notes and send out to Yuliya and James
+   - Reached out to Ed and Ange around environments and K8s
+
+* 1 June 2022
+  SPA single page application:
+  - decision to use headless, SPA for checkout and product configuration, so is {* Adobe Experience Manager} only used for content management
+  - check out is an SPA
+  - Azure app services
+  - so need to expose endpoints for checkout process
+  Azure pipelines, no longer jenkins
+  Migrate repositories to Azure, get jenkins working with Azure repo then migrate to Azure pipelines
+  What are nuf using of ours?
+  - they are accessing our repositories, they now have access via Azure Reposiitories
+    We need to engage with Nuffield to buld out pipelines? steve martin, or james Pope
+
+  Invite to techinical design authothority
+
+  Nuffield askig for physical arhtecture diagram
+  - kata generic diagram
+  - how does that look or nuffield
+
+* Azure Devops pipelines, quiality gates etc
+  *Date:* 2022-06-14
+  *Members:*
+  {| James Pope - james.pope@nuffieldhealth.com}
+  {| Yuliya Spiridonova - yuliya.spiridonova@nuffieldhealth.com}
+
+  *Items to discuss:*
+** Environments
+   Intergration stable, before QA god for on merge build...
+   *security testsing*
+   - sonar qube
+   - lighthouse
+** Code Promotion checks
+   - QA control code deployed?
+
+   - UAT how to control coce is deployed? End of sprint? Testing process
+** Quality Gates
+   https://nuffielddigital.atlassian.net/wiki/spaces/NHREM/pages/3122364437/Pipeline+Quality+Gates+-+DRAFT
+** Manageing secrets / rotations
+** Where should pileline definisitions live?
+   - in code repository
+   - in a seperate repositroy
+
+   meet in a week Yuliya and then all together in a few weeks, QA to be involved earlish
+
+* Directory
+  | Joe Hankin - joe.hankin@nuffieldhealth.com
+     - Head of digitial
+     - Main contact
+
+  | James Pope - james.pope@nuffieldhealth.com
+    - responsible for CI/CD pipelines, along with Yuliya
+    - responsible for DevOps security and access, along with Yuliya
+
+  | Yuliya Spiridonova - yuliya.spiridonova@nuffieldhealth.com
+    - can grant access to Azure DevOps repositories
+    - responsible for CI/CD pipelines, along with James P
+    - responsible for DevOps security and access, along with James P
+
+  | Nicola Sharp
+    - QA Head
+
+  | Vinoth Krishnan
+    - azure pipelines
+
+  | Steve Martin - steve.martin@nuffieldhealth.com
+     - digital patform architect
+
+  | Steve Belford
+     - Enterprise architect
+
+  | Nicholas Vandy
+     - project delivery, lead?
+     - change manager
+     - I like this dude
+
+  | Ian Sawyer - ian.sawyer@nuffieldhealth.com
+
+  | Spencer McCarthy - spencer.mccarthy@nuffieldhealth.com
+
+  | Ange Stone - ange.stone@nuffieldhealth.com
+    - Azure Environment secrity...
+
+  | Ed Moss - ed.moss@nuffieldhealth.com
+     - Azure owner?
+     - Terraform owner
+
+  | Doug Chapman - doug.chapman@nuffield.com
+     - head of application delivery
+     - powerful, so escilate stuff too
+
+
+* Inital Azure Project Setup
+
+  Nuffield to host Production
+
+  Likely two k8s subscriptions:
+  - dev, test, qa etc
+  - production
+
+  To start with e2x want to get (Nuffield) kata up and running in Azure,
+  we will need access to the cluster on E2X office, and VPN.
+
+  Dom to confirm:
+  - what images and charts are we using in harbor.e2x.com, to see if we can use an Azure native solution to avoid a tie to e2x.com core and unexposed infra
+  - What are we storing in artifactory? Can we use another solution, like an Azure native solution?
+
+  Want to setup: nuffield.kata.e2x.com as a managed domain in Azure so DNS for exposed subdomians are managed in Azure, so same config for prod/non-prod environments
+
+  Cluster sizing should be same as the POC on GCP
+
+  Alex to:
+  - Sort out e2x.com azure billing so we can create and manage a subscription
+  - Setup managed subdomain in Azure
+  - Create cluster for non prod environments
+  - Configure secure access to cluster (VPN to office), does this need to be on a VLAN?
+
+* Links:
+  [Jira sprints / backlogs]{https://nuffielddigital.atlassian.net/jira/software/c/projects/ECOM/boards/367/backlog?view=detail&selectedIssue=ECOM-792&issueLimit=100}
+  [Confluence E-Commerce]{https://nuffielddigital.atlassian.net/wiki/spaces/ECOM/overview}
+  [Azure Reposiitories]{https://portal.azure.com/#blade/AzureTfsExtension/OrganizationsTemplateBlade}
+  [Org Structure]{https://nuffielddigital.atlassian.net/wiki/spaces/DIG/pages/2948759568/Org+Structure}
+
+
+* Kata name use elsewhere
+  https://kataverse.com/
+  Dom Selvon
+  15:55
+  api.nuffield-kata.e2x.com
+  nuffield-kata.e2x.com
+  Dom Selvon
+  15:58
+  https://e2x.atlassian.net/wiki/spaces/KATA/pages/7018905527/Azure
+  https://www.cncf.io/online-programs/cluster-api-capi-a-kubernetes-subproject-to-simplify-cluster-lifecycle-management/
+  Dom Selvon
+  15:59
+  https://cluster-api.sigs.k8s.io/
+
+* Azure and kubernetes
+
+  @code bash
+  # install kubectl
+  az aks install-cli
+  # then get crtedentials for kubectl
+  az aks get-credentials --resource-group XXX --name CLUSTER
+  @end
+
+* VPN
+  https://docs.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-ipsecikepolicy-rm-powershell
+
+  Debug VPN traffic over juiper with show security flow:
+  https://www.juniper.net/documentation/us/en/software/junos/flow-packet-processing/topics/ref/command/show-security-flow-session.html
+
+  @code
+  show security flow session destination-prefix 40.0.0.6 source-prefix 192.168.64.2
+  @end
+
+* DNS
+
+  list systemd dns enteries, when /etc/resolv.conf is using systemd dns settings
+  @code bash
+  systemd-resolve --status
+  @end
+
+
+* Kubernetes
+
+  @code bash
+  Error from server (InternalError): error when creating "ingress.yaml": Internal error occurred: failed calling webhook "validate.nginx.ingress.kubernetes.io": Post "https://nginx-ingress-ingress-nginx-controller-admission.ingress-basic.svc:443/networking/v1/ingresses?timeout=10s": service "nginx-ingress-ingress-nginx-controller-admission" not found
+  @end
+
+  This was a left over *validatingwebhookconfigurations* from the nginx ingress controller, removing this solved the issue:
+  @code bash
+  kubectl delete -A ValidatingWebhookConfiguration nginx-ingress-controller-ingress-nginx-admission
+  @end
+
+** Kong
+*** Ingress
+    When curling an Ingress endpoint:
+    @code
+    failure to get a peer from the ring-balancer
+    @end
+
+
+    This happens when no upstream/backend is available, in this case the backing pod had not been created correctly.
+
+
+*** trying to get private ingress
+    have created a NIC and private DNS, the DNS is netwo4rk linked to the main vnet, and this allows for resolution and hte DNS forwarded is working as expected
+
+    unable to get kong service (of type loadbalancer) to bind to the provided IP
+
+    Have tried to manually add "Network Contributor" role to the AKS managed identity... but this doesn't seem to work either
+
+    Looks like this is promising: https://samcogan.com/accessing-a-private-aks-cluster-with-additional-private-endpoints/
+
+*** Cert manager
+    @code
+    url: (35) error:1408F10B:SSL routines:ssl3_get_record:wrong version number
+    @end
+
+    This was trying to cURL the target on the IP and not the hostname, which is required for TLS.
+    Making sure that the e2x.com subdomain resolved interanlly fixed this.
+
+    @code
+E0427 08:23:10.482298       1 azuredns.go:157] cert-manager/azure-dns "msg"="Error creating TXT:" "error"="azure.BearerAuthorizer#WithAuthorization: Failed to refresh the Token for request to https://management.azure.com/subscriptions/dd10b060-3cf4-4310-a216-ef0807c429ca/resourceGroups/e2x_uat/providers/Microsoft.Network/dnsZones/nuffield.kata.e2x.com/TXT/_acme-challenge.jaeger.nuffield.e2x.com?api-version=2017-10-01: StatusCode=400 -- Original Error: adal: Refresh request failed. Status Code = '400'. Response body: {\"error\":\"unauthorized_client\",\"error_description\":\"AADSTS700016: Application with identifier '3066e80d-9c6a-4011-b58f-410fb6fe5737' was not found in the directory 'e2x.com'. This can happen if the application has not been installed by the administrator of the tenant or consented to by any user in the tenant. You may have sent your authentication request to the wrong tenant.\\r\\nTrace ID: 2500149b-ad3e-4e8e-b8a3-bcecdaf3c300\\r\\nCorrelation ID: 93f3c7b1-ecf6-4988-833d-9772716c0b5f\\r\\nTimestamp: 2022-04-27 08:23:10Z\",\"error_codes\":[70001 [],\"timestamp\":\"2022-04-27 08:23:10Z\",\"trace_id\":\"2500149b-ad3e-4e8e-b8a3-bcecdaf3c300\",\"correlation_id\":\"93f3c7b1-ecf6-4988-833d-9772716c0b5f\",\"error_uri\":\"https://login.microsoftonline.com/error?code=700016\"} Endpoint https://login.microsoftonline.com/dc8e33ed-3003-49f6-955c-2cf7c60a269d/oauth2/token?api-version=1.0"  "nuffield.kata.e2x.com"=null
+    @end
+
+    check that Azure Active Directory App Registrations is configured, in this case it was state, so I had to remove and recreate it.
+
+*** RBAC
+    @code
+    Release "grafana" does not exist. Installing it now.
+    Error: unable to build kubernetes objects from release manifest: [unable to recognize "": no matches for kind "Role" in version "rbac.authorization.k8s.io/v1beta1", unable to recognize "": no matches for kind "RoleBinding" in version "rbac.authorization.k8s.io/v1beta1", unable to recognize "": no matches for kind "Ingress" in version "extensions/v1beta1"]
+    configmap/apiserver unchanged
+    @end
+
+    Implies RBAC isn't enabled... https://github.com/kubernetes/dashboard/issues/2745
+    Check the `kubectl proxy` command and then hit locally http://localhost:8001/apis
+
+    This turned out to be the version called in the helm chart, upgrading the version solfed the issue.
+
+** Azure RBAC built in roles
+   https://docs.microsoft.com/en-us/azure/role-based-access-control/built-in-roles#network-contributor
+
+* Adobe Experience Manager
+  [Adobe Expereince Manager]{https://business.adobe.com/uk/products/experience-manager/adobe-experience-manager.html}
+
+  Content managager
+
+  Some examples of ingesting data into platform: https://experienceleague.adobe.com/docs/experience-platform/ingestion/home.html?lang=en

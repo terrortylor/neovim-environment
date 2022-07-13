@@ -1,5 +1,5 @@
 local function find_files(_)
-  return require("telescope/builtin/files").find_files({
+  return require("telescope/builtin/__files").find_files({
     shorten_path = false,
     cwd = "~/personal-workspace/notes",
     prompt = "Notes",
@@ -8,7 +8,7 @@ local function find_files(_)
 end
 
 local function live_grep(_)
-  return require("telescope/builtin/files").live_grep({
+  return require("telescope/builtin/__files").live_grep({
     shorten_path = false,
     cwd = "~/personal-workspace/notes",
     search_dirs = { "~/personal-workspace/notes" },
