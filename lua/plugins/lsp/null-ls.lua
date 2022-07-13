@@ -6,6 +6,7 @@ register_required_binary("stylua", "Used for null-ls formatting of lua files")
 register_required_binary("actionlint", "Used by null-ls for linting git hub actions")
 register_required_binary("shellcheck", "Used by null-ls")
 register_required_binary("shfmt", "Used by null-ls")
+register_required_binary("yamllint", "Used by null-ls")
 
 null_ls.setup({
   on_attach = common.on_attach,
@@ -19,6 +20,9 @@ null_ls.setup({
     null_ls.builtins.code_actions.shellcheck,
     null_ls.builtins.diagnostics.shellcheck,
     null_ls.builtins.formatting.shfmt,
+
+    -- yaml schemas
+    null_ls.builtins.diagnostics.yamllint,
 
     -- refactoring
     null_ls.builtins.code_actions.refactoring,
