@@ -185,37 +185,18 @@ return require("packer").startup(function(use)
       requires = { "hrsh7th/nvim-cmp" },
     },
     -- surround manipulation
-    -- {
-    --   "blackCauldron7/surround.nvim",
-    --   config = function()
-    --     require("surround").setup({
-    --       mappings_style = "surround",
-    --       pairs = {
-    --         nestable = { { "(", ")" }, { "[", "]" }, { "{", "}" } },
-    --         linear = {
-    --           { "<", ">" },
-    --           { "'", "'" },
-    --           { '"', '"' },
-    --           { "*", "*" },
-    --           { "/", "/" },
-    --           { "-", "-" },
-    --           { "_", "_" },
-    --           { "|", "|" },
-    --           { "^", "^" },
-    --           { ",", "," },
-    --           { "$", "$" },
-    --           { "=", "=" },
-    --           { "+", "+" },
-    --         },
-    --       },
-    --     })
-    --   end,
-    -- },
+    {
+      "kylechui/nvim-surround",
+      config = function()
+        require("plugins.nvim-surround")
+      end
+    },
     {
       -- make search replace varients better
       "tpope/vim-abolish",
-      cmd = { "Abolish", "Subvert" },
-      keys = { "crs", "crm", "crc", "cru", "cr-", "cr.", "cr<space>", "crt" },
+      config = function()
+        vim.g.abolish_no_mappings = true
+      end,
     },
   })
 
