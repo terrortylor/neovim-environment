@@ -40,13 +40,15 @@ set("n", "<leader>8", ":8tabnext<CR>", {desc = "go to tab 8"})
 set("n", "<leader>9", ":9tabnext<CR>", {desc = "go to tab 9"})
 set("n", "<leader>ct", ":tabclose<CR>", {desc = "close tab"})
 
--- TODO save and restore mark?
+-- TODO save and restore mark so as not to override `m`
+-- TODO check if nvim tree window and move to a buffer window, then run
 set("n", "<leader>nt", "mt:tabnew % <BAR> tabmove <CR>`t")
 
 -- Buffer List
 set("n", "[b", ":bprevious<CR>", {desc = "go to previous buffer"})
 set("n", "]b", ":bnext<CR>", {desc = "go to next buffer"})
-set("n", "<leader>bd", ":lua require'ui.window'.delete_buffer_keep_window()<cr>", {desc = "delete buffer but keep window layout"})
+set("n", "<leader>bd", ":lua require'ui.window'.delete_buffer_keep_window()<cr>",
+  {desc = "delete buffer but keep window layout"})
 
 -- Arg List
 set("n", "[a", ":previous<CR>", {desc = "go to previous buffer in arg list"})
@@ -61,8 +63,8 @@ set("n", "]c", ":cnext<CR>", {desc = "go to next item in quickfix list"})
 
 set("n", "<leader>lg", ":Lazygit<CR>", {desc = "Lazygit throw away terminal"})
 
-set("n", "<leader>O", function() require'ui.buffer'.new_line_no_comment(true) end, {desc = "Insert new line above without a comment"})
-set("n", "<leader>o", function() require'ui.buffer'.new_line_no_comment(false) end, {desc = "Insert new line bellow without a comment"})
+set("n", "<leader>OO", function() require'ui.buffer'.new_line_no_comment(true) end, {desc = "Insert new line above without a comment"})
+set("n", "<leader>oo", function() require'ui.buffer'.new_line_no_comment(false) end, {desc = "Insert new line bellow without a comment"})
 
 -- TODO can this take a count?
 set("n", "<leader>q", "@q", {desc = "run the macro in q register"})
