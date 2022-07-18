@@ -459,16 +459,6 @@ return require("packer").startup(function(use)
     config = function()
       require("plugins.refactor").setup()
     end,
-    keys = {
-      { "v", "<Leader>re" },
-      { "v", "<Leader>rf" },
-      { "v", "<Leader>rv" },
-      { "v", "<Leader>ri" },
-      { "v", "<leader>rr" },
-      { "n", "<leader>rp" },
-      { "v", "<leader>rpv" },
-      { "n", "<leader>rpc" },
-    },
     requires = {
       { "nvim-lua/plenary.nvim" },
       { "nvim-treesitter/nvim-treesitter" },
