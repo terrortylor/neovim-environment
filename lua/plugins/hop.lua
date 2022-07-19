@@ -26,10 +26,13 @@ set("n", "<leader>fj", ":HopWord<CR>", { noremap = true, silent = true })
 set("n", "<leader>jj", ":HopChar1<CR>", { noremap = true, silent = true })
 set("n", "<leader>/", ":HopPattern<CR>", { noremap = true, silent = true })
 
-set("n", "<leader>jd",hint_char1_and_then(vim.lsp.buf.definition), { noremap = true, silent = true })
-set("n", "<leader>jD",hint_char1_and_then(require("telescope.builtin").lsp_definitions), { noremap = true, silent = true })
-set("n", "<leader>jI",hint_char1_and_then(require("telescope.builtin").lsp_implementations), { noremap = true, silent = true })
-set("n", "<leader>jk",hint_char1_and_then(vim.lsp.buf.type_definition), { noremap = true, silent = true })
+set("n", "<leader>jd",hint_char1_and_then(require("telescope.builtin").lsp_definitions), { noremap = true, silent = true })
+set("n", "<leader>jD",hint_char1_and_then(vim.lsp.buf.declaration), { noremap = true, silent = true })
+set("n", "<leader>ji",hint_char1_and_then(require("telescope.builtin").lsp_implementations), { noremap = true, silent = true })
+set("n", "<leader>jr",hint_char1_and_then(require("telescope.builtin").lsp_references), { noremap = true, silent = true })
+set("n", "<leader>jk",hint_char1_and_then(vim.lsp.buf.type_definition), { noremap = true })
+-- TODO je don't seem ot trigger the and_then_func
+set("n", "<leader>je",hint_char1_and_then(vim.diagnostic.open_float), { noremap = true })
 
 -- Playing with f/F replacement
 -- TODO come back to this, HopChar1 is basically all I need along wiht hint_char1_and_then
