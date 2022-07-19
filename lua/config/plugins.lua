@@ -99,14 +99,15 @@ return require("packer").startup(function(use)
     },
     -- quickly jump to locations in the visible buffer
     {
-      "phaazon/hop.nvim",
+      "~/personal-workspace/nvim-plugins/hop.nvim",
+      -- "phaazon/hop.nvim",
       -- Not really sure this made much of a difference
-      keys = {
-        "<leader>fj",
-        "<leader>jj",
-        "<leader>/",
-        "<leader>jf",
-      },
+      -- keys = {
+      --   "<leader>fj",
+      --   "<leader>jj",
+      --   "<leader>/",
+      --   "<leader>jf",
+      -- },
       config = function()
         require("plugins.hop")
       end,
