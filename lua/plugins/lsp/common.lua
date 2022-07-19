@@ -5,23 +5,23 @@ local function set_mappings(client)
   local set = vim.keymap.set
 
   -- TODO have a func to prefix vsplit/splt/tabnew wrapper
-  set("n", "gD", require("telescope.builtin").lsp_definitions, {buffer=true})
+  set("n", "gd", require("telescope.builtin").lsp_definitions, {buffer=true})
 
-  set("n", "gsD", function()
+  set("n", "gsd", function()
     vim.cmd "vsplit"
     require("telescope.builtin").lsp_definitions()
   end, {buffer=true})
 
-  set("n", "ghD", function()
+  set("n", "ghd", function()
     vim.cmd "split"
     require("telescope.builtin").lsp_definitions()
   end, {buffer=true})
 
-  set("n", "gd", vim.lsp.buf.definition, {buffer=true})
-  set("n", "gsd", "<Cmd>vsplit <BAR> lua vim.lsp.buf.definition()<CR>", {buffer=true})
-  set("n", "ghd", "<Cmd>split <BAR> lua vim.lsp.buf.definition()<CR>", {buffer=true})
+  set("n", "gD", vim.lsp.buf.declaration, {buffer=true})
+  set("n", "gsD", "<Cmd>vsplit <BAR> lua vim.lsp.buf.declaration()<CR>", {buffer=true})
+  set("n", "ghD", "<Cmd>split <BAR> lua vim.lsp.buf.declaration()<CR>", {buffer=true})
   -- TODO save and restore mark?
-  set("n", "gtd", "mt<Cmd>tabnew % <CR> `t <Cmd> lua vim.lsp.buf.definition()<CR>", {buffer=true})
+  set("n", "gtD", "mt<Cmd>tabnew % <CR> `t <Cmd> lua vim.lsp.buf.declaration()<CR>", {buffer=true})
   set("n", "K", vim.lsp.buf.hover, {buffer=true})
   -- luacheck: ignore
   set("n","<leader>cf",'<Cmd>lua vim.diagnostic.goto_next()<CR><Cmd>lua require("lsp.codeactions").fix_first_code_action()<CR>', {buffer=true})
@@ -36,7 +36,7 @@ local function set_mappings(client)
   set("n", "<space>rn", require("scratch.lsp_rename_popup").rename, {buffer=true})
   set("n", "gr", "<Cmd>Telescope lsp_references<CR>", {buffer=true})
   set("n", "<space>e", vim.diagnostic.open_float, {buffer=true})
-  set("n", "<space>ge", "<cmd>Telescope lsp_workspace_diagnostics<CR>", {buffer=true})
+  set("n", "<space>ge", "<cmd>Telescope diagnostics<CR>", {buffer=true})
   set("n", "[d", vim.diagnostic.goto_prev, {buffer=true})
   set("n", "]d", vim.diagnostic.goto_next, {buffer=true})
   set("n", "<space>th",require("lsp.diagnostics").diagnostic_toggle_virtual_text, {buffer=true})
