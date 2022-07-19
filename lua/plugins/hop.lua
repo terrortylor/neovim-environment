@@ -22,9 +22,9 @@ hop.setup({
   keys = "etovxdygfblzhckisuran",
 })
 
-set("n", "<leader>fj", ":HopWord<CR>", { noremap = true, silent = true })
-set("n", "<leader>jj", ":HopChar1<CR>", { noremap = true, silent = true })
-set("n", "<leader>/", ":HopPattern<CR>", { noremap = true, silent = true })
+set("n", "<leader>jj", "<CMD>HopChar1<CR>", { noremap = true, silent = true })
+set("x", "<leader>jj", "<CMD>HopChar1<CR>", { noremap = true, silent = true })
+set("n", "<leader>/", "<CMD>HopPattern<CR>", { noremap = true, silent = true })
 
 set("n", "<leader>jd",hint_char1_and_then(require("telescope.builtin").lsp_definitions), { noremap = true, silent = true })
 set("n", "<leader>jD",hint_char1_and_then(vim.lsp.buf.declaration), { noremap = true, silent = true })
