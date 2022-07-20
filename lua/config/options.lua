@@ -27,6 +27,7 @@ o.timeoutlen = 1500 -- leader timeout
 
 o.hidden = true -- Allow switching buffers without writing changes
 o.autowriteall = true -- autowrite on a handleful of actions
+o.mouse = "" -- disbale mouse
 
 -- o.clipboard="unnamedplus" -- use system clipboard, this is actually really annoying
 
