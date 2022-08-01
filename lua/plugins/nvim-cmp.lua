@@ -9,63 +9,6 @@ local function prequire(...)
   return nil
 end
 
-local menu = {}
-local function setup_sources()
-  local sources = {}
-
-  local addSource = function(name, menu_val)
-    if type(name) == "string" then
-      table.insert(sources, { name = name })
-      menu[name] = menu_val
-    else
-      table.insert(sources, name)
-      menu[name.name] = menu_val
-    end
-  end
-
-  local ft = vim.bo.filetype
-
-  addSource("luasnip", "[SNIP]")
-
-  local lsp_filetytpe = {
-    "go",
-    "terraform",
-    "typescript",
-    "javascript",
-    "lua",
-  }
-  if vim.tbl_contains(lsp_filetytpe, ft) then
-    addSource("nvim_lsp", "[🧞]")
-  else
-    addSource({ name = "buffer" }, "[💪]")
-  end
-
-  local spelling_filetypes = {
-    "markdown",
-    "wiki.markdown",
-    "org",
-    "terraform",
-  }
-  if vim.tbl_contains(spelling_filetypes, ft) then
-    addSource({ name = "spell" }, "[SPELL]")
-  end
-
-  if ft == "org" then
-    addSource("orgmode", "[ORG]")
-  end
-
-  if ft == "norg" then
-    addSource("neorg", "[NORG]")
-  end
-
-  if vim.fn.getenv("TMUX") then
-    addSource({ name = "tmux", max_item_count = 5 }, "[🌍]")
-  end
-  -- addSource("nvim_lsp_signature_help", "[SIG]")
-
-  require("cmp").setup.buffer({ sources = sources })
-end
-
 function M.setup()
   local has_words_before = function()
     local line, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -90,12 +33,6 @@ function M.setup()
         if luasnip then
           luasnip.lsp_expand(args.body)
         end
-      end,
-    },
-    formatting = {
-      format = function(entry, vim_item)
-        vim_item.menu = menu[entry.source.name]
-        return vim_item
       end,
     },
     mapping = {
@@ -135,6 +72,9 @@ function M.setup()
         end
       end, { "i", "s" }),
     },
+    sources = cmp.config.sources({
+      {name = "luasnip"},
+    }),
   })
 
   cmp.setup.cmdline("/", {
@@ -144,6 +84,7 @@ function M.setup()
   })
 
   cmp.setup.cmdline(":", {
+    mapping = cmp.mapping.preset.cmdline(),
     sources = cmp.config.sources({
       { name = "path" },
     }, {
@@ -151,13 +92,50 @@ function M.setup()
     }),
   })
 
-  vim.api.nvim_create_autocmd("FileType", {
-    pattern = "*",
-    callback = function()
-      setup_sources()
-    end,
-    group = vim.api.nvim_create_augroup("cmp_setup_sources", { clear = true }),
+  cmp.setup.filetype({
+    'go',
+    'typescript',
+    'javascript',
+    'lua',
+  }, {
+    sources = {
+      {name = 'nvim_lsp'},
+    }
   })
+
+  cmp.setup.filetype({
+    'markdown',
+  }, {
+    sources = {
+      {name = 'spell'},
+    }
+  })
+
+  cmp.setup.filetype({
+    'org',
+  }, {
+    sources = {
+      {name = 'spell'},
+      {name = 'neorg'},
+    }
+  })
+
+  cmp.setup.filetype({
+    'tmux',
+  }, {
+    sources = {
+      {name = 'tmux'},
+    },
+  })
+
+  cmp.setup.filetype('terraform', {
+    sources = {
+      { name = 'nvim_lsp' },
+      { name = 'buffer' },
+      { name = 'spell' },
+    }
+  })
+
 end
 
 return M
