@@ -22,11 +22,22 @@ hop.setup({
   keys = "etovxdygfblzhckisuran",
 })
 
+local file_type_definition = function()
+  local bf = vim.b.local_hop_definition
+  if bf then
+    bf()
+  else
+    if #vim.lsp.buf_get_clients(0) > 0 then
+      require("telescope.builtin").lsp_definitions()
+    end
+  end
+end
+
 set("n", "<leader>jj", "<CMD>HopChar1<CR>", { noremap = true, silent = true })
 set("x", "<leader>jj", "<CMD>HopChar1<CR>", { noremap = true, silent = true })
 set("n", "<leader>/", "<CMD>HopPattern<CR>", { noremap = true, silent = true })
 
-set("n", "<leader>jd",hint_char1_and_then(require("telescope.builtin").lsp_definitions), { noremap = true, silent = true })
+set("n", "<leader>jd",hint_char1_and_then(file_type_definition), { noremap = true, silent = true })
 set("n", "<leader>jD",hint_char1_and_then(vim.lsp.buf.declaration), { noremap = true, silent = true })
 set("n", "<leader>ji",hint_char1_and_then(require("telescope.builtin").lsp_implementations), { noremap = true, silent = true })
 set("n", "<leader>jr",hint_char1_and_then(require("telescope.builtin").lsp_references), { noremap = true, silent = true })

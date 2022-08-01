@@ -7,6 +7,7 @@ register_required_binary("actionlint", "Used by null-ls for linting git hub acti
 register_required_binary("shellcheck", "Used by null-ls")
 register_required_binary("shfmt", "Used by null-ls")
 register_required_binary("yamllint", "Used by null-ls")
+register_required_binary("cfn-lint", "Used by null-ls for cloudformaiton linting")
 
 null_ls.setup({
   on_attach = common.on_attach,
@@ -23,6 +24,8 @@ null_ls.setup({
 
     -- yaml lint
     null_ls.builtins.diagnostics.yamllint,
+    -- cloudformation
+    null_ls.builtins.diagnostics.cfn_lint,
 
     -- refactoring
     null_ls.builtins.code_actions.refactoring,
