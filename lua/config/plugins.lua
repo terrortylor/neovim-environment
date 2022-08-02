@@ -455,7 +455,8 @@ return require("packer").startup(function(use)
       "hrsh7th/cmp-nvim-lsp",
       "hrsh7th/cmp-path",
       "saadparwaiz1/cmp_luasnip",
-      "andersevenrud/cmp-tmux",
+      -- "andersevenrud/cmp-tmux",
+      "~/personal-workspace/nvim-plugins/cmp-tmux",
       "f3fora/cmp-spell",
       "hrsh7th/cmp-nvim-lua",
       -- "hrsh7th/cmp-nvim-lsp-signature-help"

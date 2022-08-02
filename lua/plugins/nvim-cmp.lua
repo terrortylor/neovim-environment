@@ -23,6 +23,9 @@ function M.setup()
       {
         name = 'tmux',
         keyword_length = 4,
+        option = {
+          keyword_pattern = [[\w\w\w\w\+]]
+        }
       },
       { name = 'spell' },
     }
