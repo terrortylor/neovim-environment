@@ -436,6 +436,10 @@ return require("packer").startup(function(use)
         require('dap-go').setup()
       end
     },
+    -- lua (nvim)
+    {
+      "folke/lua-dev.nvim"
+    }
   })
 
   -- completion

@@ -18,6 +18,7 @@ function M.setup()
   local default_sources = function()
     return {
       { name = "luasnip" },
+      { name = 'nvim_lsp' },
       { name = "path" },
       {
         name = 'tmux',
@@ -114,8 +115,6 @@ function M.setup()
   })
 
   sources = default_sources()
-  table.insert(sources, { name = 'nvim_lua' })
-  table.insert(sources, { name = 'nvim_lsp' })
   cmp.setup.filetype('lua', {
     sources = sources
   })
