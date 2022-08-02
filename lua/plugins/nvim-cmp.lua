@@ -15,6 +15,20 @@ function M.setup()
     return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
   end
 
+  local default_sources = function()
+    return {
+      { name = "luasnip" },
+      { name = 'nvim_lsp' },
+      { name = 'nvim_lua' },
+      { name = "path" },
+      {
+        name = 'tmux',
+        keyword_length = 4,
+      },
+      { name = 'spell' },
+    }
+  end
+
   local cmp = require("cmp")
   local luasnip = prequire("luasnip")
   cmp.setup({
@@ -72,10 +86,7 @@ function M.setup()
         end
       end, { "i", "s" }),
     },
-    sources = cmp.config.sources({
-      { name = "luasnip" },
-      { name = "path" },
-    }),
+    sources = default_sources(),
   })
 
   cmp.setup.cmdline("/", {
@@ -88,72 +99,20 @@ function M.setup()
     mapping = cmp.mapping.preset.cmdline(),
     sources = cmp.config.sources({
       { name = "path" },
-    }, {
       { name = "cmdline" },
     }),
   })
 
-  cmp.setup.filetype({
-    'go',
-    'typescript',
-    'javascript',
-  }, {
-    sources = {
-      { name = 'nvim_lsp' },
-      { name = "luasnip" },
-      { name = "path" },
-    }
-  })
-
-  cmp.setup.filetype('lua',
-    {
-      sources = {
-        { name = 'nvim_lsp' },
-        { name = 'nvim_lua' },
-        { name = "luasnip" },
-        { name = "path" },
-      }
-    })
-
-  cmp.setup.filetype({
-    'markdown',
-  }, {
-    sources = {
-      { name = 'spell' },
-      { name = "luasnip" },
-      { name = "path" },
-    }
-  })
-
-  cmp.setup.filetype({
-    'org',
-  }, {
-    sources = {
-      { name = 'spell' },
-      { name = 'neorg' },
-      { name = "luasnip" },
-      { name = "path" },
-    }
-  })
-
-  cmp.setup.filetype({
-    'tmux',
-  }, {
-    sources = {
-      { name = 'tmux' },
-      { name = "luasnip" },
-      { name = "path" },
-    },
-  })
-
+  local sources = default_sources()
+  table.insert(sources, { name = 'buffer' })
   cmp.setup.filetype('terraform', {
-    sources = {
-      { name = 'nvim_lsp' },
-      { name = 'buffer' },
-      { name = 'spell' },
-      { name = "luasnip" },
-      { name = "path" },
-    }
+    sources = sources
+  })
+
+  sources = default_sources()
+  table.insert(sources, { name = 'norg' })
+  cmp.setup.filetype('norg', {
+    sources = sources
   })
 
 end
