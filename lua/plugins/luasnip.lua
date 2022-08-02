@@ -25,56 +25,17 @@ local function edit_ft()
       if style == "snipmate" then
         vim.cmd("edit ~/.config/nvim/snippets/" .. ft .. ".snippets")
       else
-        vim.cmd("edit ~/.config/nvim/lua/snippets/" .. ft .. ".lua")
+        vim.cmd("edit ~/.config/nvim/luasnippets/" .. ft .. ".lua")
       end
+      -- TODO on buffer change/close then re-run the setup() below to reload
     end
   end)
 end
 
-local function setup_snippets()
-  -- package.loaded["luasnip"] = nil
-  local ls = require("luasnip")
-  -- ls.snippets = {}
-
-  -- enable snipmate stype snippets, and load
-  -- from snippets dir
-  -- require("luasnip.loaders.from_snipmate").load()
-
-  vim.api.nvim_create_user_command("LuaSnipEdit", edit_ft, { force = true })
-
-  -- require("luasnip").config.setup({store_selection_keys="<Tab>"})
-
-  -- function _G.snippets_clear(printMessage)
-  print("in snippet")
-  require("plenary.reload").reload_module("./lua/snippets")
-  for _, ft_path in ipairs(vim.api.nvim_get_runtime_file("lua/snippets/*.lua", true)) do
-    local ft = vim.fn.fnamemodify(ft_path, ":t:r")
-    print("filetype: " .. ft)
-    package.loaded["snippets." .. ft] = nil
-    ls.snippets[ft] = require("snippets." .. ft)
-    -- require("luasnip.loaders.from_snipmate").load({ include = { ft } })
-  end
-
-  -- if printMessage then
-  print("Snippets Reloaded! 🧟")
-  -- end
-  -- end
-
-  require("luasnip.loaders.from_snipmate").load()
-  -- require("luasnip.loaders.from_snipmate").lazy_load()
-  -- _G.snippets_clear(false)
-
-  -- vim.cmd([[
-  -- augroup snippets_clear
-  -- au!
-  -- au BufWritePost ~/.config/nvim/snippets/*.snippets lua _G.snippets_clear(true)
-  -- au BufWritePost ~/.config/nvim/lua/snippets/*.lua lua _G.snippets_clear(true)
-  -- augroup END
-  -- ]])
-end
-
 function M.setup()
-  -- setup_snippets()
+  vim.api.nvim_create_user_command("LuaSnipEdit", edit_ft, { force = true })
+  require("luasnip.loaders.from_snipmate").lazy_load()
+  require('luasnip.loaders.from_lua').lazy_load({ paths = './luasnippets' })
 end
 
 return M

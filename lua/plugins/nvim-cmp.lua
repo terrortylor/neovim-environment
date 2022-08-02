@@ -73,7 +73,8 @@ function M.setup()
       end, { "i", "s" }),
     },
     sources = cmp.config.sources({
-      {name = "luasnip"},
+      { name = "luasnip" },
+      { name = "path" },
     }),
   })
 
@@ -96,18 +97,31 @@ function M.setup()
     'go',
     'typescript',
     'javascript',
-    'lua',
   }, {
     sources = {
-      {name = 'nvim_lsp'},
+      { name = 'nvim_lsp' },
+      { name = "luasnip" },
+      { name = "path" },
     }
   })
+
+  cmp.setup.filetype('lua',
+    {
+      sources = {
+        { name = 'nvim_lsp' },
+        { name = 'nvim_lua' },
+        { name = "luasnip" },
+        { name = "path" },
+      }
+    })
 
   cmp.setup.filetype({
     'markdown',
   }, {
     sources = {
-      {name = 'spell'},
+      { name = 'spell' },
+      { name = "luasnip" },
+      { name = "path" },
     }
   })
 
@@ -115,8 +129,10 @@ function M.setup()
     'org',
   }, {
     sources = {
-      {name = 'spell'},
-      {name = 'neorg'},
+      { name = 'spell' },
+      { name = 'neorg' },
+      { name = "luasnip" },
+      { name = "path" },
     }
   })
 
@@ -124,7 +140,9 @@ function M.setup()
     'tmux',
   }, {
     sources = {
-      {name = 'tmux'},
+      { name = 'tmux' },
+      { name = "luasnip" },
+      { name = "path" },
     },
   })
 
@@ -133,6 +151,8 @@ function M.setup()
       { name = 'nvim_lsp' },
       { name = 'buffer' },
       { name = 'spell' },
+      { name = "luasnip" },
+      { name = "path" },
     }
   })
 
