@@ -112,7 +112,7 @@ function M.setup()
   })
 
   sources = default_sources()
-  table.insert(sources, { name = 'norg' })
+  table.insert(sources, { name = 'neorg' })
   cmp.setup.filetype('norg', {
     sources = sources
   })
