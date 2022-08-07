@@ -32,7 +32,7 @@ function M.setup()
   end
 
   local cmp = require("cmp")
-  local luasnip = prequire("luasnip")
+  local luasnip = require("luasnip")
   cmp.setup({
     -- THIS IS THE FUCKING KEY!
     preselect = cmp.PreselectMode.None,
