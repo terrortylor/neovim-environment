@@ -1,5 +1,14 @@
 local set = vim.keymap.set
 
+set("n", "viq", 'vi"', {desc = "visual in quote alias"})
+set("n", "vaq", 'va"', {desc = "visual around quote alias"})
+set("n", "ciq", 'ci"', {desc = "clear in quote alias"})
+set("n", "caq", 'ca"', {desc = "clear around quote alias"})
+set("n", "viQ", "vi'", {desc = "visual in single quote alias"})
+set("n", "vaQ", "va'", {desc = "visual around single quote alias"})
+set("n", "ciQ", "ci'", {desc = "clear in single quote alias"})
+set("n", "caQ", "ca'", {desc = "clear around single quote alias"})
+
 set("n", "<space>fd", "<cmd>wall<cr>", {desc = "save all, this is overwritten in lsp's to format doc also"})
 set("n", "<leader>rw", [[:%s/\C\<<c-r><c-w>\>//<left>]], {desc = "Refactoring"})
 
