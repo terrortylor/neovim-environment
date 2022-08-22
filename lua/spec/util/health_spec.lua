@@ -28,7 +28,7 @@ describe("util.health", function()
 
   describe("get_health_table", function()
     it("should contain missing binary and descriptions", function()
-      local health = require("health")
+      local health = vim.health
       stub(health, "report_start").on_call_with("my-config-health")
       stub(health, "report_info").on_call_with("Missing binary: notexists : required for something")
       stub(health, "report_info").on_call_with("Missing binary: notexists : LOUD NOISES")

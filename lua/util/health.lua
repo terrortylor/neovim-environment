@@ -29,7 +29,7 @@ function M.register_required_binary(bin, description)
 end
 
 function M.check()
-  local health = require("health")
+  local health = vim.health
   health.report_start("my-config-health")
   for key, value in pairs(M.required_bins) do
     if vim.fn.executable(key) == 0 then
