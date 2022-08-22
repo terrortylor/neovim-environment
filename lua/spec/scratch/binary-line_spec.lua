@@ -12,10 +12,6 @@ local function assertCurPos(pos)
   assert.are.equal(pos, newPos[3])
 end
 
-local function setCurPos(pos)
-  vim.fn.setpos(".", { 0, 0, pos, 0 })
-end
-
 describe("scratch.binary-line", function()
   before_each(function()
     testModule = require("scratch.binary-line")

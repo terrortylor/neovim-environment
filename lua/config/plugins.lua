@@ -73,7 +73,8 @@ return require("packer").startup(function(use)
 
   -- toggle comments
   use({
-    "terrortylor/nvim-comment",
+    -- "terrortylor/nvim-comment",
+    "~/personal-workspace/nvim-plugins/nvim-comment",
     config = function()
       require("nvim_comment").setup({
         comment_empty = false,
@@ -146,7 +147,7 @@ return require("packer").startup(function(use)
   use({
     "rmagatti/auto-session",
     config = function()
-      require("auto-session").setup({auto_restore_enabled = false})
+      require("auto-session").setup({ auto_restore_enabled = false })
     end,
   })
 
@@ -411,7 +412,7 @@ return require("packer").startup(function(use)
       config = function()
         require("plugins.nvimdap")
       end,
-      requires ={
+      requires = {
         "rcarriga/nvim-dap-ui",
         "theHamsta/nvim-dap-virtual-text",
         "nvim-treesitter/nvim-treesitter",
@@ -453,6 +454,7 @@ return require("packer").startup(function(use)
       "L3MON4D3/LuaSnip",
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-nvim-lsp-document-symbol",
       "hrsh7th/cmp-path",
       "saadparwaiz1/cmp_luasnip",
       -- "andersevenrud/cmp-tmux",

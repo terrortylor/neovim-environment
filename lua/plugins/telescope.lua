@@ -2,13 +2,6 @@ local M = {}
 
 require("util.health").register_required_binary("rg", "Used by telescope")
 
-local thin_border_chars = {
-  { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
-  prompt = { "─", "│", " ", "│", "┌", "┐", "│", "│" },
-  results = { "─", "│", "─", "│", "├", "┤", "┘", "└" },
-  preview = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
-}
-
 -- TODO get lsp doucment symbols, filter out methods
 function M.lsp_document_methods(opts)
   local pickers = require("telescope.pickers")

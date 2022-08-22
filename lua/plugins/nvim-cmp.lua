@@ -1,14 +1,5 @@
 local M = {}
 
--- could be moved to utils
-local function prequire(...)
-  local status, lib = pcall(require, ...)
-  if status then
-    return lib
-  end
-  return nil
-end
-
 function M.setup()
   local has_words_before = function()
     local line, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -19,6 +10,7 @@ function M.setup()
     return {
       { name = "luasnip" },
       { name = 'nvim_lsp' },
+      { name = 'nvim_lsp_document_symbol' },
       { name = "path" },
       {
         name = 'tmux',
@@ -52,8 +44,8 @@ function M.setup()
       end,
     },
     mapping = {
-      ["<C-k>"] = cmp.mapping.select_prev_item(),
-      ["<C-j>"] = cmp.mapping.select_next_item(),
+      -- ["<C-k>"] = cmp.mapping.select_prev_item(),
+      -- ["<C-j>"] = cmp.mapping.select_next_item(),
       ["<C-p>"] = cmp.mapping.select_prev_item(),
       ["<C-n>"] = cmp.mapping.select_next_item(),
       ["<C-e>"] = cmp.mapping.abort(),
