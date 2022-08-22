@@ -15,7 +15,7 @@ describe("markdown.tasks", function()
     -- stub neorg current workspace to TMPDIR
     testModule.getNeorgCurrentWorkspaceDir = function()
       return vim.env.TMPDIR
-      end
+    end
   end)
 
   describe("neorgtools", function()
@@ -25,7 +25,7 @@ describe("markdown.tasks", function()
       os.execute("cp " .. fixture .. " " .. tmpfile)
       testModule.update_links_to_file({
         old_name = "/lua/spec/neorgtools/golden/fakefile.norg",
-        new_name = "/not-a-path/file"
+        new_name = "/not-a-path/file",
       })
       assertGoldenAndTemp("lua/spec/neorgtools/golden/filelink.norg", tmpfile)
     end)

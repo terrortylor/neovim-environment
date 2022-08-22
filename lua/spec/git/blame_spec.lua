@@ -113,20 +113,12 @@ describe("git.blame", function()
       -- buffer created with expected lines
       assert.stub(api.nvim_buf_set_lines).was_called_with(101, 0, -1, true, lines)
       -- mappings created to close window with
-      assert.stub(api.nvim_buf_set_keymap).was_called_with(
-        101,
-        "n",
-        "<ESC>",
-        "<CMD>lua require('git.blame').close_window()<CR>",
-        { noremap = true }
-      )
-      assert.stub(api.nvim_buf_set_keymap).was_called_with(
-        101,
-        "n",
-        "<CR>",
-        "<CMD>lua require('git.blame').close_window()<CR>",
-        { noremap = true }
-      )
+      assert
+        .stub(api.nvim_buf_set_keymap)
+        .was_called_with(101, "n", "<ESC>", "<CMD>lua require('git.blame').close_window()<CR>", { noremap = true })
+      assert
+        .stub(api.nvim_buf_set_keymap)
+        .was_called_with(101, "n", "<CR>", "<CMD>lua require('git.blame').close_window()<CR>", { noremap = true })
 
       local opts = {
         style = "minimal",

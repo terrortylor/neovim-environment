@@ -142,17 +142,16 @@ end
 -- TODO add test
 function M.setup()
   local set = vim.keymap.set
-  set("n", "<leader>a", require('alternate').alternate_or_buf_next)
-  set("n", "<leader>ga", require('alternate').get_alternate_file)
+  set("n", "<leader>a", require("alternate").alternate_or_buf_next)
+  set("n", "<leader>ga", require("alternate").get_alternate_file)
   set("n", "<leader>gsa", function()
-    vim.cmd "vsplit"
-    require('alternate').get_alternate_file()
+    vim.cmd("vsplit")
+    require("alternate").get_alternate_file()
   end)
   set("n", "<leader>gha", function()
-    vim.cmd "split"
-    require('alternate').get_alternate_file()
-  end
-  )
+    vim.cmd("split")
+    require("alternate").get_alternate_file()
+  end)
 end
 
 return M

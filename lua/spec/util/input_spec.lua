@@ -32,17 +32,16 @@ describe("util.input", function()
     it("Should prompt with expected message and default value", function()
       stub(vim, "cmd")
       -- luacheck: ignore
-      api.nvim_call_function.on_call_with("input", { { prompt = "How many goats? ", default = "quite a lot" } }).returns(
-        "loads"
-      )
+      api.nvim_call_function
+        .on_call_with("input", { { prompt = "How many goats? ", default = "quite a lot" } })
+        .returns("loads")
 
       local result = testModule.get_user_input("How many goats? ", "quite a lot")
 
       assert.stub(api.nvim_call_function).was_called_with("inputsave", {})
-      assert.stub(api.nvim_call_function).was_called_with(
-        "input",
-        { { prompt = "How many goats? ", default = "quite a lot" } }
-      )
+      assert
+        .stub(api.nvim_call_function)
+        .was_called_with("input", { { prompt = "How many goats? ", default = "quite a lot" } })
       assert.stub(api.nvim_call_function).was_called_with("inputrestore", {})
       assert.stub(vim.cmd).was_called_with("normal :<ESC>")
       assert.are.equal("loads", result)

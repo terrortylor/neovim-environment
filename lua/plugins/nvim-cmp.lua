@@ -9,17 +9,17 @@ function M.setup()
   local default_sources = function()
     return {
       { name = "luasnip" },
-      { name = 'nvim_lsp' },
-      { name = 'nvim_lsp_document_symbol' },
+      { name = "nvim_lsp" },
+      { name = "nvim_lsp_document_symbol" },
       { name = "path" },
       {
-        name = 'tmux',
+        name = "tmux",
         keyword_length = 4,
         option = {
-          keyword_pattern = [[\w\w\w\w\+]]
-        }
+          keyword_pattern = [[\w\w\w\w\+]],
+        },
       },
-      { name = 'spell' },
+      { name = "spell" },
     }
   end
 
@@ -98,22 +98,21 @@ function M.setup()
   })
 
   local sources = default_sources()
-  table.insert(sources, { name = 'buffer' })
-  cmp.setup.filetype('terraform', {
-    sources = sources
+  table.insert(sources, { name = "buffer" })
+  cmp.setup.filetype("terraform", {
+    sources = sources,
   })
 
   sources = default_sources()
-  table.insert(sources, { name = 'neorg' })
-  cmp.setup.filetype('norg', {
-    sources = sources
+  table.insert(sources, { name = "neorg" })
+  cmp.setup.filetype("norg", {
+    sources = sources,
   })
 
   sources = default_sources()
-  cmp.setup.filetype('lua', {
-    sources = sources
+  cmp.setup.filetype("lua", {
+    sources = sources,
   })
-
 end
 
 return M

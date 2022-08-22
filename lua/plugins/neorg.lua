@@ -1,6 +1,7 @@
 require("neorg").setup({
   load = {
     ["core.defaults"] = {}, -- Load all the default modules
+    ["core.norg.qol.toc"] = {}, -- table of contents module
     ["core.keybinds"] = { -- Configure core.keybinds
       config = {
         neorg_leader = "<Leader>o", -- This is the default if unspecified
@@ -15,11 +16,11 @@ require("neorg").setup({
         -- end,
       },
     },
-    ["core.export"] = {config = {extensions = "all"}},
+    ["core.export"] = { config = { extensions = "all" } },
     ["core.norg.concealer"] = {
       config = {
         icons = {
-          marker ={
+          marker = {
             icon = "|",
           },
           todo = {
@@ -59,16 +60,16 @@ require("neorg").setup({
 local neorg_callbacks = require("neorg.callbacks")
 
 neorg_callbacks.on_event("core.keybinds.events.enable_keybinds", function(_, keybinds)
-    -- Map all the below keybinds only when the "norg" mode is active
-    keybinds.map_event_to_mode("norg", {
-      i = {
-        { "<C-l>", "core.integrations.telescope.insert_link" },
-        { "<C-f>", "core.integrations.telescope.insert_file_link" },
-      },
-    }, {
-        silent = true,
-        noremap = true,
-    })
+  -- Map all the below keybinds only when the "norg" mode is active
+  keybinds.map_event_to_mode("norg", {
+    i = {
+      { "<C-l>", "core.integrations.telescope.insert_link" },
+      { "<C-f>", "core.integrations.telescope.insert_file_link" },
+    },
+  }, {
+    silent = true,
+    noremap = true,
+  })
 end)
 
 vim.api.nvim_create_user_command("GtdCapture", function(_)

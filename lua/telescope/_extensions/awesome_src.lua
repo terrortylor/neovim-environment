@@ -11,7 +11,7 @@ local function live_grep_awesome_src(_)
   return require("telescope/builtin/__files").live_grep({
     shorten_path = false,
     cwd = "/usr/share/awesome/lib",
-    search_dirs = {"/usr/share/awesome/lib"},
+    search_dirs = { "/usr/share/awesome/lib" },
     prompt = "Awesome lib live grep",
     hidden = false,
   })

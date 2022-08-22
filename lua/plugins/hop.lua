@@ -5,16 +5,12 @@ local set = vim.keymap.set
 local hint_char1_and_then = function(and_then_func)
   return function()
     local opts = hop.opts
-    local c = hop.get_input_pattern('Hop 1 char: ', 1)
+    local c = hop.get_input_pattern("Hop 1 char: ", 1)
     local generator = jump_target.jump_targets_by_scanning_lines
-    hop.hint_with_callback(
-      generator(jump_target.regex_by_case_searching(c, true, opts)),
-      opts,
-      function(jt)
-        hop.move_cursor_to(jt.window, jt.line + 1, jt.column - 1, opts.hint_offset)
-        and_then_func()
-      end
-    )
+    hop.hint_with_callback(generator(jump_target.regex_by_case_searching(c, true, opts)), opts, function(jt)
+      hop.move_cursor_to(jt.window, jt.line + 1, jt.column - 1, opts.hint_offset)
+      and_then_func()
+    end)
   end
 end
 
@@ -39,12 +35,16 @@ set("n", "<leader>/", "<CMD>HopPattern<CR>", { noremap = true, silent = true })
 
 set("n", "<leader>jd", hint_char1_and_then(file_type_definition), { noremap = true, silent = true })
 set("n", "<leader>jD", hint_char1_and_then(vim.lsp.buf.declaration), { noremap = true, silent = true })
-set("n", "<leader>ji", hint_char1_and_then(
-  require("telescope.builtin").lsp_implementations),
+set(
+  "n",
+  "<leader>ji",
+  hint_char1_and_then(require("telescope.builtin").lsp_implementations),
   { noremap = true, silent = true }
 )
-set("n", "<leader>jr", hint_char1_and_then(
-  require("telescope.builtin").lsp_references),
+set(
+  "n",
+  "<leader>jr",
+  hint_char1_and_then(require("telescope.builtin").lsp_references),
   { noremap = true, silent = true }
 )
 set("n", "<leader>jk", hint_char1_and_then(vim.lsp.buf.type_definition), { noremap = true })

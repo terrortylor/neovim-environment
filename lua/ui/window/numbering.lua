@@ -8,7 +8,7 @@ function M.setup()
   local ag = vim.api.nvim_create_augroup("line_numbers", { clear = true })
   vim.api.nvim_create_autocmd("WinEnter", {
     pattern = "*",
-    callback = function ()
+    callback = function()
       if ignore_filetype() then
         return
       end
@@ -22,7 +22,7 @@ function M.setup()
 
   vim.api.nvim_create_autocmd("WinLeave", {
     pattern = "*",
-    callback = function ()
+    callback = function()
       if ignore_filetype() then
         return
       end
@@ -33,7 +33,7 @@ function M.setup()
 
   vim.api.nvim_create_autocmd("CmdLineEnter", {
     pattern = "*",
-    callback = function ()
+    callback = function()
       vim.o.relativenumber = false
       vim.cmd("redraw")
     end,
@@ -42,7 +42,7 @@ function M.setup()
 
   vim.api.nvim_create_autocmd("CmdLineLeave", {
     pattern = "*",
-    callback = function ()
+    callback = function()
       if ignore_filetype() then
         return
       end

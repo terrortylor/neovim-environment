@@ -47,18 +47,20 @@ function M.lsp_document_methods(opts)
   --     -- sorter    = sorters.get_norcalli_sorter(),
   --   }):find()
   opts.ignore_filename = opts.ignore_filename or true
-  pickers.new(opts, {
-    prompt_title = "LSP Document Symbols",
-    finder = finders.new_table({
-      results = locations,
-      entry_maker = opts.entry_maker or make_entry.gen_from_lsp_symbols(opts),
-    }),
-    previewer = conf.qflist_previewer(opts),
-    sorter = conf.prefilter_sorter({
-      tag = "symbol_type",
-      sorter = conf.generic_sorter(opts),
-    }),
-  }):find()
+  pickers
+    .new(opts, {
+      prompt_title = "LSP Document Symbols",
+      finder = finders.new_table({
+        results = locations,
+        entry_maker = opts.entry_maker or make_entry.gen_from_lsp_symbols(opts),
+      }),
+      previewer = conf.qflist_previewer(opts),
+      sorter = conf.prefilter_sorter({
+        tag = "symbol_type",
+        sorter = conf.generic_sorter(opts),
+      }),
+    })
+    :find()
 end
 
 function M.todo_picker()
@@ -79,12 +81,14 @@ function M.todo_picker()
   table.insert(args, ".")
 
   local opts = { entry_maker = make_entry.gen_from_vimgrep({}) }
-  pickers.new(opts, {
-    prompt_title = "TODOs",
-    finder = finders.new_oneshot_job(args, opts),
-    previewer = conf.grep_previewer(opts),
-    sorter = conf.generic_sorter(opts),
-  }):find()
+  pickers
+    .new(opts, {
+      prompt_title = "TODOs",
+      finder = finders.new_oneshot_job(args, opts),
+      previewer = conf.grep_previewer(opts),
+      sorter = conf.generic_sorter(opts),
+    })
+    :find()
 end
 
 -- luacheck: ignore
@@ -99,16 +103,28 @@ end
 
 function M.setup()
   local set = vim.keymap.set
-  set("n", "<leader>fr", "<cmd>Telescope current_buffer_fuzzy_find<CR>", {desc = "telescope find in current buffer"})
+  set("n", "<leader>fr", "<cmd>Telescope current_buffer_fuzzy_find<CR>", { desc = "telescope find in current buffer" })
   -- Nice to have as a command to easily call from CLI
-  set("n", "<c-p>", function() require('plugins.telescope').project_files() end, {desc = "telescope open file, either git_files or fallback to CWD"})
-  set("n", "<leader>fg", function() require('telescope.builtin').live_grep() end, {desc = "telescope grep project/CWD"})
-  set("n", "<leader><space>", function() require('telescope.builtin').buffers() end, {desc = "telescope switch to an open buffer"})
-  set("n", "<leader>fh", function() require('telescope.builtin').help_tags() end, {desc = "telescope search tags"})
-  set("n", "<leader>ft", function() require('plugins.telescope').todo_picker() end, {desc = "telescope search todo's in CWD"})
-  set("n", "<leader>fs", function() require('telescope.builtin.lsp').dynamic_workspace_symbols() end, {desc = "telescope LSP symbols"})
+  set("n", "<c-p>", function()
+    require("plugins.telescope").project_files()
+  end, { desc = "telescope open file, either git_files or fallback to CWD" })
+  set("n", "<leader>fg", function()
+    require("telescope.builtin").live_grep()
+  end, { desc = "telescope grep project/CWD" })
+  set("n", "<leader><space>", function()
+    require("telescope.builtin").buffers()
+  end, { desc = "telescope switch to an open buffer" })
+  set("n", "<leader>fh", function()
+    require("telescope.builtin").help_tags()
+  end, { desc = "telescope search tags" })
+  set("n", "<leader>ft", function()
+    require("plugins.telescope").todo_picker()
+  end, { desc = "telescope search todo's in CWD" })
+  set("n", "<leader>fs", function()
+    require("telescope.builtin.lsp").dynamic_workspace_symbols()
+  end, { desc = "telescope LSP symbols" })
   -- todo nice to filter this only to errors
-  set("n", "<leader>fe", "<cmd>Telescope diagnostics<CR>", {desc = "telescope LSP diagnostics"})
+  set("n", "<leader>fe", "<cmd>Telescope diagnostics<CR>", { desc = "telescope LSP diagnostics" })
 
   local actions = require("telescope.actions")
   require("telescope").setup({
@@ -122,7 +138,7 @@ function M.setup()
       },
       extensions = {
         ["ui-select"] = {
-          require("telescope.themes").get_dropdown({})
+          require("telescope.themes").get_dropdown({}),
         },
       },
     },

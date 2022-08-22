@@ -12,26 +12,26 @@ function M.update_links_to_file(data)
 
   local getFileContainingString = function(filePath, path)
     local results = {}
-    local grepJob = job:new {
+    local grepJob = job:new({
       command = "grep",
-      args = {"-rl", ":$" .. filePath .. ":", path},
+      args = { "-rl", ":$" .. filePath .. ":", path },
       on_stdout = function(_, line)
         table.insert(results, line)
       end,
-    }
+    })
     grepJob:sync()
     return results
   end
 
   local update_with_sed = function(results, old, new)
-    for _,f in pairs(results) do
+    for _, f in pairs(results) do
       -- print("F: " .. f)
       local sub = "s#:$" .. old .. ":#:$" .. new .. ":#g"
       -- print("sub: " .. sub)
-      local sedJob = job:new {
+      local sedJob = job:new({
         command = "sed",
-        args = {"-i", sub, f},
-      }
+        args = { "-i", sub, f },
+      })
       sedJob:sync()
     end
   end
@@ -62,11 +62,11 @@ end
 -- add hook to nvim-tree rename event
 -- should only be added once
 function M.nvimTreeRenameEventHook()
-local events = require('nvim-tree.events')
-if vim.g.neorg_rename_event == nil then
-  events.on_node_renamed(M.update_links_to_file)
-  vim.g.neorg_rename_event = 1
-end
+  local events = require("nvim-tree.events")
+  if vim.g.neorg_rename_event == nil then
+    events.on_node_renamed(M.update_links_to_file)
+    vim.g.neorg_rename_event = 1
+  end
 end
 -- update_links_to_file({old_name = "/tech/azure/static-web-app", new_name = "goat"})
 

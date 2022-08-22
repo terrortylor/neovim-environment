@@ -35,7 +35,13 @@ end
 function M.setup()
   vim.api.nvim_create_user_command("LuaSnipEdit", edit_ft, { force = true })
   require("luasnip.loaders.from_snipmate").lazy_load()
-  require('luasnip.loaders.from_lua').lazy_load({ paths = './luasnippets' })
+  require("luasnip.loaders.from_lua").lazy_load({ paths = "./luasnippets" })
+  vim.keymap.set("i", "<c-j>", function()
+    require("luasnip").jump(1)
+  end, { desc = "luasnip next" })
+  vim.keymap.set("i", "<c-k>", function()
+    require("luasnip").jump(-1)
+  end, { desc = "luasnip previous" })
 end
 
 return M

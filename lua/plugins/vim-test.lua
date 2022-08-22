@@ -26,11 +26,11 @@ function M.setup()
   vim.g["test#strategy"] = "PopupTerm"
 
   local set = vim.keymap.set
-  set("n", "gtf", "<cmd>TestFile<CR>", {desc = "test current file"})
-  set("n", "gts", "<cmd>TestSuite<CR>", {desc = "test suit"})
-  set("n", "gtl", "<cmd>TestLast<CR>", {desc = "test what ever you tested last"})
-  set("n", "gtt", "<cmd>TestLast<CR>", {desc = "test what ever you tested last, quick fire"})
-  set("n", "gtn", "<cmd>TestNearest<CR>", {desc = "test nearest test"})
+  set("n", "gtf", "<cmd>TestFile<CR>", { desc = "test current file" })
+  set("n", "gts", "<cmd>TestSuite<CR>", { desc = "test suit" })
+  set("n", "gtl", "<cmd>TestLast<CR>", { desc = "test what ever you tested last" })
+  set("n", "gtt", "<cmd>TestLast<CR>", { desc = "test what ever you tested last, quick fire" })
+  set("n", "gtn", "<cmd>TestNearest<CR>", { desc = "test nearest test" })
 
   vim.api.nvim_create_user_command("TestStrategySelect", select_strategy, { force = true })
 end

@@ -84,7 +84,7 @@ return require("packer").startup(function(use)
 
   -- optimisation
   use({
-    "lewis6991/impatient.nvim"
+    "lewis6991/impatient.nvim",
   })
 
   -- navigation
@@ -191,7 +191,7 @@ return require("packer").startup(function(use)
       "kylechui/nvim-surround",
       config = function()
         require("plugins.nvim-surround")
-      end
+      end,
     },
     {
       -- make search replace varients better
@@ -416,12 +416,12 @@ return require("packer").startup(function(use)
         "rcarriga/nvim-dap-ui",
         "theHamsta/nvim-dap-virtual-text",
         "nvim-treesitter/nvim-treesitter",
-      }
+      },
     },
     {
       "nvim-telescope/telescope-dap.nvim",
       config = function()
-        require('telescope').load_extension('dap')
+        require("telescope").load_extension("dap")
       end,
       requires = {
         "nvim-neorg/neorg-telescope",
@@ -434,13 +434,13 @@ return require("packer").startup(function(use)
     {
       "leoluz/nvim-dap-go",
       config = function()
-        require('dap-go').setup()
-      end
+        require("dap-go").setup()
+      end,
     },
     -- lua (nvim)
     {
-      "folke/lua-dev.nvim"
-    }
+      "folke/lua-dev.nvim",
+    },
   })
 
   -- completion
@@ -479,7 +479,7 @@ return require("packer").startup(function(use)
   -- Language Specific
   use({
     "aliou/bats.vim",
-    ft = { "bats" }
+    ft = { "bats" },
   })
   -- GO
   use({

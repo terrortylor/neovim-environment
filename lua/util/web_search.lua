@@ -15,15 +15,15 @@ function M.search()
     vim.cmd([[execute "normal! \<esc>"]])
     local starting = vim.api.nvim_buf_get_mark(0, "<")
     local ending = vim.api.nvim_buf_get_mark(0, ">")
-    text = vim.api.nvim_buf_get_text(0, starting[1]-1, starting[2], ending[1]-1, ending[2]+1, {})[1]
+    text = vim.api.nvim_buf_get_text(0, starting[1] - 1, starting[2], ending[1] - 1, ending[2] + 1, {})[1]
   elseif motion == "n" then
     text = vim.fn.expand("<cWORD>")
   else
     return
   end
 
-  text = text:gsub("^['\"]", ""):gsub("[\"]$", "")
-  vim.fn.jobstart({"xdg-open", "https://www.google.com/search?btnL=Search&q=" .. text})
+  text = text:gsub("^['\"]", ""):gsub('["]$', "")
+  vim.fn.jobstart({ "xdg-open", "https://www.google.com/search?btnL=Search&q=" .. text })
 end
 
 return M

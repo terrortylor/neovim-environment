@@ -68,42 +68,44 @@ local function search(opts)
     })
   end
 
-  pickers.new(opts, {
-    prompt_title = "key mappings",
-    sorter = conf.generic_sorter(opts),
-    finder = finders.new_table({
-      results = get_all_available_keymaps(mode),
-      entry_maker = function(mapping)
-        -- ordinal should be description if present
-        local ordinal
-        if not mapping.desc then
-          ordinal = mapping.rhs
-        else
-          ordinal = mapping.desc
-        end
+  pickers
+    .new(opts, {
+      prompt_title = "key mappings",
+      sorter = conf.generic_sorter(opts),
+      finder = finders.new_table({
+        results = get_all_available_keymaps(mode),
+        entry_maker = function(mapping)
+          -- ordinal should be description if present
+          local ordinal
+          if not mapping.desc then
+            ordinal = mapping.rhs
+          else
+            ordinal = mapping.desc
+          end
 
-        return {
-          value = mapping,
-          ordinal = ordinal,
-          display = make_display,
-        }
+          return {
+            value = mapping,
+            ordinal = ordinal,
+            display = make_display,
+          }
+        end,
+      }),
+      attach_mappings = function(prompt_bufnr, _)
+        actions.select_default:replace(function()
+          actions.close(prompt_bufnr)
+          local selection = action_state.get_selected_entry()
+          local keys = vim.api.nvim_replace_termcodes(selection.value.lhs, true, false, true)
+          -- TODO support other modes!
+          if mode == "i" then
+            vim.api.nvim_feedkeys("i" .. keys, "m", true)
+          else
+            vim.api.nvim_feedkeys(keys, "m", true)
+          end
+        end)
+        return true
       end,
-    }),
-    attach_mappings = function(prompt_bufnr, _)
-      actions.select_default:replace(function()
-        actions.close(prompt_bufnr)
-        local selection = action_state.get_selected_entry()
-        local keys = vim.api.nvim_replace_termcodes(selection.value.lhs, true, false, true)
-        -- TODO support other modes!
-        if mode == "i" then
-          vim.api.nvim_feedkeys("i" .. keys, "m", true)
-        else
-          vim.api.nvim_feedkeys(keys, "m", true)
-        end
-      end)
-      return true
-    end,
-  }):find()
+    })
+    :find()
 end
 
 return require("telescope").register_extension({

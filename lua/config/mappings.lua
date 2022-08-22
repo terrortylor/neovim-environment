@@ -56,30 +56,36 @@ set("n", "<leader>nt", "mt:tabnew % <BAR> tabmove <CR>`t")
 -- Buffer List
 set("n", "[b", ":bprevious<CR>", { desc = "go to previous buffer" })
 set("n", "]b", ":bnext<CR>", { desc = "go to next buffer" })
-set("n", "<leader>bd", ":lua require'ui.window'.delete_buffer_keep_window()<cr>",
-  { desc = "delete buffer but keep window layout" })
+set(
+  "n",
+  "<leader>bd",
+  ":lua require'ui.window'.delete_buffer_keep_window()<cr>",
+  { desc = "delete buffer but keep window layout" }
+)
 
 -- Arg List
 set("n", "[a", ":previous<CR>", { desc = "go to previous buffer in arg list" })
 set("n", "]a", ":next<CR>", { desc = "go to next buffer in arg list" })
 
 -- Quickfix
-set("n", "<leader>cl", function() require('ui.quickfix').open_list() end,
-  { desc = "Opens first non empty list, location list is local to window" }
-)
+set("n", "<leader>cl", function()
+  require("ui.quickfix").open_list()
+end, { desc = "Opens first non empty list, location list is local to window" })
 
-set("n", "<leader>cc", function() require('ui.quickfix').close_all() end,
-  { desc = "Close all quicklist windows" }
-)
+set("n", "<leader>cc", function()
+  require("ui.quickfix").close_all()
+end, { desc = "Close all quicklist windows" })
 set("n", "[c", ":cprevious<CR>", { desc = "go to previous item in quickfix list" })
 set("n", "]c", ":cnext<CR>", { desc = "go to next item in quickfix list" })
 
 set("n", "<leader>lg", ":Lazygit<CR>", { desc = "Lazygit throw away terminal" })
 
-set("n", "<leader>OO", function() require 'ui.buffer'.new_line_no_comment(true) end,
-  { desc = "Insert new line above without a comment" })
-set("n", "<leader>oo", function() require 'ui.buffer'.new_line_no_comment(false) end,
-  { desc = "Insert new line bellow without a comment" })
+set("n", "<leader>OO", function()
+  require("ui.buffer").new_line_no_comment(true)
+end, { desc = "Insert new line above without a comment" })
+set("n", "<leader>oo", function()
+  require("ui.buffer").new_line_no_comment(false)
+end, { desc = "Insert new line bellow without a comment" })
 
 -- TODO can this take a count?
 set("n", "<leader>q", "@q", { desc = "run the macro in q register" })
@@ -117,7 +123,6 @@ set("v", ">", ">gv", { desc = "Indent right and reselect" })
 set("n", "<", "<s-v><<ESC>", { desc = "Indent Line left" })
 set("n", ">", "<s-v>><ESC>", { desc = "Indent line right" })
 
-
 -- FIXME the double quote in the rhs breaks formatiing
 set("v", "<leader>rw", [[:%s/\C<c-r>"//<left>]], { desc = "replace default register contents with XXX in selection" })
 set("v", "gy", '"+y', { desc = "yank to system clipboard" })
@@ -140,6 +145,8 @@ set("i", "(", "(<c-g>u")
 set("i", "[", "[<c-g>u")
 set("i", "{", "{<c-g>u")
 
-set("x", "<leader>pro", function() require 'ui.buffer'.prototype() end)
+set("x", "<leader>pro", function()
+  require("ui.buffer").prototype()
+end)
 set("t", "<leader><ESC>", "<C-\\><C-n>", { desc = "escape insert mode in terminal" })
 set("t", "<leader>jj", "<C-\\><C-n>", { desc = "escape insert mode in terminal" })
