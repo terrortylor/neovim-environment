@@ -4,7 +4,7 @@ local M = {}
 
 -- define things to toggle here, a better list will be created
 -- in setup that allows toggleing back and forth
-M.swapperoos = {
+M.swap_map = vim.tbl_add_reverse_lookup({
   ["true"] = "false",
   ["start"] = "stop",
   ["install"] = "uninstall",
@@ -12,10 +12,7 @@ M.swapperoos = {
   ["on"] = "off",
   ["=="] = "!=",
   ["&&"] = "||",
-}
-
--- set with helper func in setup
-M.swap_map = {}
+})
 
 function M.do_switcheroo()
   -- can't use vim.fn.expand here as cword may != which come out as expression
@@ -38,19 +35,7 @@ function M.do_switcheroo()
   vim.cmd("normal! ciw" .. replace)
 end
 
-function M.create_switch_map(map)
-  local switches = {}
-
-  for k, v in pairs(map) do
-    switches[k] = v
-    switches[v] = k
-  end
-
-  return switches
-end
-
 function M.setup()
-  M.swap_map = M.create_switch_map(M.swapperoos)
   vim.api.nvim_set_keymap(
     "n",
     "<leader>tw",
