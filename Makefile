@@ -13,6 +13,7 @@ lint:
 
 unit:
 	@echo "Run unit tests..."
+	# hanging tests, see issue: https://github.com/nvim-lua/plenary.nvim/issues/319
 	nvim --headless --noplugin -c 'packadd plenary.nvim' -c "PlenaryBustedDirectory lua/spec"
 	@echo
 
