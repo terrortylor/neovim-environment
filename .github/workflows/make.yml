@@ -1,3 +1,4 @@
+---
 name: Linting and style checking
 
 on: [push, pull_request]
