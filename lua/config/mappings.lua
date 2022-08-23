@@ -9,7 +9,7 @@ set("n", "vaQ", "va'", { desc = "visual around single quote alias" })
 set("n", "ciQ", "ci'", { desc = "clear in single quote alias" })
 set("n", "caQ", "ca'", { desc = "clear around single quote alias" })
 
-set("n", "<space>fd", "<cmd>wall<cr>", { desc = "save all, this is overwritten in lsp's to format doc also" })
+set("n", "<space>fd", "<cmd>silent! wall<cr>", { desc = "save all, this is overwritten in lsp's to format doc also" })
 set("n", "<leader>rw", [[:%s/\C\<<c-r><c-w>\>//<left>]], { desc = "Refactoring" })
 
 -- Toggles
@@ -145,8 +145,12 @@ set("i", "(", "(<c-g>u")
 set("i", "[", "[<c-g>u")
 set("i", "{", "{<c-g>u")
 
+-- prototypeing
 set("x", "<leader>pro", function()
   require("ui.buffer").prototype()
 end)
+-- TODO filetype specifc, lua, go, bash etc
+set("n", "<leader>nm", ":message clear| source %<cr>", { desc = "Run lua file" })
+
 set("t", "<leader><ESC>", "<C-\\><C-n>", { desc = "escape insert mode in terminal" })
 set("t", "<leader>jj", "<C-\\><C-n>", { desc = "escape insert mode in terminal" })

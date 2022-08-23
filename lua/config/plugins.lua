@@ -46,7 +46,7 @@ return require("packer").startup(function(use)
             0,
             "n",
             "<leader>nn",
-            "<cmd>wall<cr> | <cmd>luafile %<cr> | <cmd>PackerSync<cr>",
+            "<cmd>silent! wall<cr> | <cmd>luafile %<cr> | <cmd>PackerSync<cr>",
             {}
           )
         end,

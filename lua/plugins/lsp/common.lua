@@ -38,7 +38,7 @@ local function set_mappings(client)
   )
   set("n", "gI", "<cmd>Telescope lsp_implementations<CR>", { buffer = true })
   set("n", "<space>gss", "<cmd>Telescope lsp_document_symbols<CR>", { buffer = true })
-  set("n", "gk", vim.lsp.buf.signature_help, { buffer = true })
+  set("n", "K", vim.lsp.buf.signature_help, { buffer = true })
   set("n", "<space>D", vim.lsp.buf.type_definition, { buffer = true })
   set("n", "<space>vD", "<cmd>vsplit <BAR> lua vim.lsp.buf.type_definition()<CR>", { buffer = true })
   set("n", "<space>hD", "<cmd>split <BAR> lua vim.lsp.buf.type_definition()<CR>", { buffer = true })
@@ -57,13 +57,13 @@ local function set_mappings(client)
     -- Tried to do filetype mapping but isn't picked up for some reason when vim starts, only when explicitly settings
     -- the filetype to go in the command line... user that is a bug though
     if vim.bo.filetype == "go" then
-      set("n", "<space>fd", "<cmd>wall<cr><cmd>GoImport<CR>", { buffer = true })
+      set("n", "<space>fd", "<cmd>silent! wall<cr><cmd>GoImport<CR>", { buffer = true })
     else
       -- luacheck: ignore
       set(
         "n",
         "<space>fd",
-        "<cmd>wall<cr><cmd>lua require('lsp.format').efm_priority_document_format()<CR>",
+        "<cmd>silent! wall<cr><cmd>lua require('lsp.format').efm_priority_document_format()<CR>",
         { buffer = true }
       )
     end

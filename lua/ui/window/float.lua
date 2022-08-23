@@ -56,7 +56,7 @@ function M.open_float(buf, buf_opts, callback)
   M.callbacks[win] = callback
 
   if vim.opt.autowrite:get() or vim.opt.autowriteall:get() then
-    vim.cmd("wall")
+    vim.cmd("silent! wall")
   end
 
   -- TODO pass in extra mapping, such as <sec> or <c-c>,this is an example as per git blame

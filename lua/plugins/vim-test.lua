@@ -39,7 +39,7 @@ end
 local lua_last_file = ""
 function M.lua_test_file()
   lua_last_file = vim.fn.expand("%:p")
-  vim.cmd("wall")
+  vim.cmd("silent! wall")
   require("plenary.test_harness").test_directory(lua_last_file)
 end
 
@@ -48,7 +48,7 @@ function M.lua_test_last()
     print("No file tested yet!")
     return
   end
-  vim.cmd("wall")
+  vim.cmd("silent! wall")
   require("plenary.test_harness").test_directory(lua_last_file)
 end
 
