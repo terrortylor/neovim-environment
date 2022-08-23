@@ -27,6 +27,11 @@ jobs:
           make lint
           echo "exit code $?"
 
+      - uses: JohnnyMorganz/stylua-action@1.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          args: --check .
+
       - name: Run Unit Tests
         run: |
           export PATH="${PWD}/build/:${PATH}"

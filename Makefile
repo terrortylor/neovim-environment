@@ -1,4 +1,4 @@
-all: lint test
+all: lint fmt test
 
 install_dependencies:
 	luarocks install luacheck --local
@@ -7,6 +7,8 @@ install_dependencies:
 lint:
 	@echo "Linting ..."
 	luacheck --no-color .
+
+fmt:
 	@echo "Formatting ..."
 	stylua -c lua
 	@echo
