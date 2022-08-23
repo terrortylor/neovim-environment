@@ -7,7 +7,7 @@ local M = {}
 -- @param escape boolean: if tmux's normal mode should be escapes, defaults to true
 function M.execute(pane, command, escape)
   if vim.opt.autowrite:get() or vim.opt.autowriteall:get() then
-    vim.cmd("wall")
+    vim.cmd("silent! wall")
   end
 
   if escape == nil then
@@ -19,7 +19,7 @@ function M.execute(pane, command, escape)
     os.execute('tmux if-shell -F -t "' .. pane .. '" "#{pane_in_mode}" "send-keys Escape" ""')
   end
   -- run command
-  os.execute('tmux send-keys -t "' .. pane .. '" C-z "' .. command .. '" Enter')
+  os.execute('tmux send-keys -t "' .. pane .. '" C-z ' .. string.format("%q", command) .. ' Enter')
 end
 
 -- Used to scroll a pane up/down

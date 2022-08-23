@@ -6,17 +6,19 @@ local log = require("util.log")
 
 local command_prompt = "Command: "
 
--- Initialise some local varirables
-local instance_pane = {}
-
 local M = {}
+
+M.LAST_COMMAND = "^P"
+
+-- Initialise some local varirables
+M.instance_pane = {}
 
 -- This is a helper func to be called when starting vim only, for seeding
 function M.seed_instance_pane(instance, pane)
   if not instance or not pane then
     return
   end
-  instance_pane[instance] = pane
+  M.instance_pane[instance] = pane
 end
 
 function M.seed_instance_command(instance, ...)
@@ -29,7 +31,7 @@ function M.get_instance_pane(instance, clear_first)
     clear_first = false
   end
 
-  local pane = instance_pane[instance]
+  local pane = M.instance_pane[instance]
 
   if clear_first or not pane then
     pane = input.get_pane()
@@ -38,7 +40,7 @@ function M.get_instance_pane(instance, clear_first)
     --      log.error("Pane entered is not a valid number")
     --      return
     --    end
-    instance_pane[instance] = pane
+    M.instance_pane[instance] = pane
   end
 
   return pane
@@ -71,7 +73,7 @@ function M.send_command_to_pane(instance)
     -- so readline mapping dependant
     if not command then
       -- TODO move to M.default_command
-      command = "^P"
+      command = M.LAST_COMMAND
     end
 
     return command
