@@ -6,6 +6,11 @@ local luadev = require("lua-dev").setup({
     on_attach = common.on_attach,
     capabilities = common.buildCapabilities(),
   },
+  Lua = {
+    completion = {
+      callSnippet = "Replace"
+    }
+  }
 })
 
 local lspconfig = require("lspconfig")
