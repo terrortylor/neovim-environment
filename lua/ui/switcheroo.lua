@@ -7,6 +7,7 @@ local M = {}
 M.swap_map = vim.tbl_add_reverse_lookup({
   ["true"] = "false",
   ["start"] = "stop",
+  ["good"] = "bad",
   ["install"] = "uninstall",
   ["enable"] = "disable",
   ["on"] = "off",
