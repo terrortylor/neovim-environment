@@ -9,10 +9,10 @@ set("n", "<leader>ff", ":Telescope neorg find_linkable<CR>", { buffer = true })
 
 -- TODO cheap indentation, could be much better with context awareness
 set("n", ">", function()
-  require("util.macros").run_macro([[0i*]])
+  require("neorgtools.indent").indent()
 end, { desc = "Indent Line Right" })
 set("n", "<", function()
-  require("util.macros").run_macro([[0x]])
+  require("neorgtools.indent").dedent()
 end, { desc = "Indent Line Left" })
 
 -- TODO be nice to have a script that in a given file, looks for `Terminology`
