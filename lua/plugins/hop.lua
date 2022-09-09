@@ -29,6 +29,7 @@ local file_type_definition = function()
   end
 end
 
+set("n", "s", "<CMD>HopChar1<CR>", { noremap = true, silent = true })
 set("n", "<leader>jj", "<CMD>HopChar1<CR>", { noremap = true, silent = true })
 set("x", "<leader>jj", "<CMD>HopChar1<CR>", { noremap = true, silent = true })
 set("n", "<leader>/", "<CMD>HopPattern<CR>", { noremap = true, silent = true })
