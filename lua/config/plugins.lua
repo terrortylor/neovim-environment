@@ -441,6 +441,20 @@ return require("packer").startup(function(use)
     {
       "folke/lua-dev.nvim",
     },
+    -- markdown
+    {
+      "iamcco/markdown-preview.nvim",
+      run = "cd app && npm install",
+      setup = function()
+        vim.g.mkdp_filetypes = { "markdown", "plantuml"}
+        vim.g.mkdp_auto_close = 1
+      end,
+      ft = { "markdown", "plantuml" },
+    },
+    -- plantumlplantumk
+    {
+      "aklt/plantuml-syntax",
+    },
   })
 
   -- completion
