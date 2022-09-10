@@ -79,6 +79,15 @@ M.rules = {
       },
     },
   },
+  ["typescriptreact"] = {
+    {
+      condition = ".tsx$",
+      direction = ".test.tsx",
+      transformers = {
+        { ".tsx", ".test.tsx" },
+      },
+    },
+  },
 }
 
 function M.transform_path(path, transformers, to_alternate)
