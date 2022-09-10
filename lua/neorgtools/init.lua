@@ -62,12 +62,9 @@ end
 -- add hook to nvim-tree rename event
 -- should only be added once
 function M.nvimTreeRenameEventHook()
-  local events = require("nvim-tree.events")
-  if vim.g.neorg_rename_event == nil then
-    events.on_node_renamed(M.update_links_to_file)
-    vim.g.neorg_rename_event = 1
-  end
+  local Event = require('nvim-tree.api').events.Event
+  local api = require('nvim-tree.api')
+  api.events.subscribe(Event.NodeRenamed, M.update_links_to_file)
 end
--- update_links_to_file({old_name = "/tech/azure/static-web-app", new_name = "goat"})
 
 return M
