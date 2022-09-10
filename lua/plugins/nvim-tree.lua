@@ -2,6 +2,7 @@ local M = {}
 
 function M.setup()
   require("nvim-tree").setup({
+    create_in_closed_folder = true,
     actions = {
       open_file = {
         quit_on_open = true,
@@ -64,6 +65,13 @@ function M.setup()
   })
 
   vim.keymap.set("n", "<c-n>", "<cmd>NvimTreeFindFileToggle<CR>", { noremap = true })
+
+  -- open file after creating
+  local Event = require('nvim-tree.api').events.Event
+  local api = require('nvim-tree.api')
+  api.events.subscribe(Event.FileCreated, function(data)
+    vim.cmd(":edit " .. data.fname)
+  end)
 end
 
 return M
