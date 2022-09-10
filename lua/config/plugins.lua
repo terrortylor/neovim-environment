@@ -515,7 +515,7 @@ return require("packer").startup(function(use)
   -- testing
   use({
     "vim-test/vim-test",
-    ft = { "javascript", "typescript", "go" },
+    ft = { "javascript", "typescript", "typescriptreact", "go" },
     config = function()
       require("plugins.vim-test").setup()
     end,
