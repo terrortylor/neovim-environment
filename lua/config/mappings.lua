@@ -98,6 +98,8 @@ set("n", "<leader>ws", ":w <bar> source %<CR>", { desc = "write and source the c
 -- Fix last incorrect word in insert mode: https://stackoverflow.com/a/16481737
 set("i", "<c-f>", "<c-g>u<Esc>[s1z=`]a<c-g>u") -- fix last incorrect work
 set("n", "<leader>zz", "1z=", { desc = "Auto select first entry" })
+set("n", "[zz", "[s1z=", { desc = "Auto select first entry" })
+set("n", "]zz", "]s1z=", { desc = "Auto select first entry" })
 
 set("n", "gp", "`[v`]", { desc = "Reselect last put" })
 
