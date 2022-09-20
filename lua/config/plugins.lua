@@ -355,26 +355,6 @@ return require("packer").startup(function(use)
     },
   })
 
-  use({
-    "github/copilot.vim",
-    cmd = { "Copilot" },
-    config = function()
-      vim.g.copilot_no_tab_map = true
-      vim.g.copilot_assume_mapped = true
-      vim.g.copilot_tab_fallback = ""
-
-      function _G.copilot_keymap()
-        local copilot_keys = vim.fn["copilot#Accept"]()
-        if copilot_keys ~= "" and type(copilot_keys) == "string" then
-          vim.api.nvim_feedkeys(copilot_keys, "i", true)
-        end
-      end
-
-      -- terrible mapping choice, TODO change this
-      vim.api.nvim_set_keymap("i", "<C-a>", "<cmd>lua _G.copilot_keymap()<cr>", { noremap = true, silent = true })
-    end,
-  })
-
   -- language server
   use({
     {
