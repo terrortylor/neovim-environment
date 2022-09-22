@@ -22,7 +22,7 @@ function M.execute(pane, command, escape)
   os.execute('tmux send-keys -t "' .. pane .. '" C-z ' .. string.format("%q", command) .. ' Enter')
 end
 
--- Used to scroll a pane up/down
+--- Used to scroll a pane up/down
 -- @param pane string: pane to control
 -- @param up boolean: should scroll up if true, down if false
 function M.scroll(pane, up)
@@ -36,4 +36,32 @@ function M.scroll(pane, up)
   os.execute('tmux send-keys -t "' .. pane .. '" -X ' .. direction)
 end
 
+--- Run tmux list-panes
+function M.tmux_list_panes()
+  local result = vim.fn.system("tmux list-panes")
+  local lines = {}
+  for s in result:gmatch("[^\r\n]+") do
+    table.insert(lines, s)
+  end
+  return lines
+end
+
+
+--- Gets the number of tmux panes open in current window
+function M.get_number_tmux_panes()
+  return #M.tmux_list_panes()
+end
+
+--- Gets the number of the active tmux panes open in current window
+function M.get_active_tmux_panes()
+  local lines = M.tmux_list_panes()
+  for i,v in pairs(lines) do
+    if v:find("%(active%)$") then
+      return i
+    end
+  end
+  return 0
+end
+
 return M
+

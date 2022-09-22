@@ -12,6 +12,7 @@ local EMPTY_PANE_COMMAND_MESSAGE = "Not Set, defaults to last command run"
 -- TODO show instance command history
 -- TODO edit command has completeion from history
 -- TODO ability to prompt for pane
+-- TODO create new instance: Prompt for key -> prompt for pane -> add command
 
 local set_popup_exit_keymaps = function(bufnr)
   vim.keymap.set("n", "q", ":bd!<CR>", { buffer = bufnr })

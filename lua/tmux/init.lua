@@ -27,33 +27,100 @@
 -- TODO Some extension ideas:
 -- Sanity check there is more than one pane to send too, if only two select other automatically?
 -- change instance pane command
+-- select fenced code block and send somewhere... perhaps even a pane from another window, like a one off shot
 
+  local commands = require("tmux.commands")
+  local dispatch = require("tmux.dispatch")
 local M = {}
-
-local commands = {
-  TmuxSendCommand = "send_command_to_pane",
-  TmuxSetCommand = "set_instance_command",
-  TmuxSendCommandOneShot = "send_one_off_command",
-  TmuxEditCommand = "edit_last_command",
-}
 
 -- Define settings
 M.mappings = {
-  ["<C-PAGEUP>"] = ":lua require('tmux.commands').scroll(true)<CR>",
-  ["<C-PAGEDOWN>"] = ":lua require('tmux.commands').scroll(false)<CR>",
-  ["<leader>nn"] = ":TmuxSendCommand<CR>",
+  ["<C-PAGEUP>"] = ":lua require('tmux').scroll(true, 'default')<CR>",
+  ["<C-PAGEDOWN>"] = ":lua require('tmux').scroll(false, 'default')<CR>",
+  ["<leader>nn"] = ":TmuxDefault<CR>",
 }
+
+function M.scroll(up, instance)
+  instance = instance or "default"
+
+  local pane, _ = commands.get_pane_and_command(instance)
+  if not pane then
+    vim.notify("Pane not set", vim.log.levels.ERROR)
+    return
+  end
+
+  dispatch.scroll(pane, up)
+end
+
+function M.do_default()
+  local last_command = "^P"
+  local identifier = "default"
+  local pane, _ = commands.get_pane_and_command(identifier)
+  if not pane then
+    local panes = dispatch.get_number_tmux_panes()
+    if panes < 2 then
+      vim.notify("Only single pane found, can't send command anywhere", vim.log.levels.ERROR)
+      return
+    end
+    local pane
+    if panes > 2 then
+      pane = require("tmux.input").get_pane()
+    else
+      local cur_pane = dispatch.get_active_tmux_panes()
+      if cur_pane == 1 then
+        pane = 2
+      else
+        pane = 1
+      end
+    end
+    commands.add_complete_command(identifier, pane, last_command)
+  end
+  M.send_command(identifier)
+end
+
+function M.seed_command(identifier, pane, command)
+  if not identifier then
+    vim.notify("Identifier is required", vim.log.levels.ERROR)
+    return
+  end
+  if not pane then
+    vim.notify("Pane is required", vim.log.levels.ERROR)
+    return
+  end
+  if not command then
+    vim.notify("Command is required", vim.log.levels.ERROR)
+    return
+  end
+
+  command.add_complete_command(identifier, pane, command)
+end
+
+function M.send_command(identifier)
+  local pane, command = commands.get_pane_and_command(identifier)
+  print("pane", pane, "command", command)
+  if not pane then
+    vim.notify("No pane/command found for identifier: " .. identifier, vim.log.levels.ERROR)
+    return
+  end
+
+
+  -- check pane exists to throw command somewhere
+  local panes = dispatch.get_number_tmux_panes()
+  if panes < 2 then
+    vim.notify("Only single pane found, can't send command anywhere", vim.log.levels.ERROR)
+    return
+  end
+
+  if pane > panes then
+    vim.notify("Looks like pane doesn't exists anymore", vim.log.levels.ERROR)
+    return
+  end
+
+  dispatch.execute(pane, command)
+end
 
 -- Create commands and setup mappings
 function M.setup()
-  local cmd = vim.api.nvim_create_user_command
-  for k, v in pairs(commands) do
-    cmd(k, "lua require('tmux.commands')." .. v .. "(<f-args>)", { nargs = "?" })
-  end
-
-  cmd("TmuxSeedCommand", "lua require('tmux.commands').seed_instance_command(<f-args>)", { nargs = "+", force = true })
-  cmd("TmuxSeedPane", "lua require('tmux.commands').seed_instance_pane(<f-args>)", { nargs = "+", force = true })
-
   local opts = { noremap = true, silent = true }
   local function keymap(...)
     vim.api.nvim_set_keymap(...)
@@ -63,6 +130,18 @@ function M.setup()
   for k, v in pairs(M.mappings) do
     keymap("n", k, v, opts)
   end
+
+  local cmd = vim.api.nvim_create_user_command
+  cmd("TmuxSendCommand", function(params)
+    local identifier = params.fargs[1]
+    M.send_command(identifier)
+  end, { nargs = 1 })
+  cmd("TmuxSeedCommand", function(params)
+    M.seed_command(params.fargs[1], params.fargs[2], params.fargs[3])
+  end, { nargs = "+" })
+  cmd("TmuxDefault", function(_)
+    M.do_default()
+  end, {})
 end
 
 return M
