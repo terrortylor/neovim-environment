@@ -92,7 +92,7 @@ function M.seed_command(identifier, pane, command)
     return
   end
 
-  command.add_complete_command(identifier, pane, command)
+  commands.add_complete_command(identifier, pane, command)
 end
 
 function M.send_command(identifier)
@@ -137,7 +137,20 @@ function M.setup()
     M.send_command(identifier)
   end, { nargs = 1 })
   cmd("TmuxSeedCommand", function(params)
-    M.seed_command(params.fargs[1], params.fargs[2], params.fargs[3])
+    local identifier = params.fargs[1]
+    local pane = params.fargs[2]
+    local str_com = ""
+    for key, value in pairs(params.fargs) do
+      -- skip first two args
+      if key > 2 then
+        if key == 3 then
+          str_com = value
+        else
+          str_com = str_com .. " " .. value
+        end
+      end
+    end
+    M.seed_command(identifier, pane, str_com)
   end, { nargs = "+" })
   cmd("TmuxDefault", function(_)
     M.do_default()
