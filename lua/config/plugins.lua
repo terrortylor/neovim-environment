@@ -87,6 +87,16 @@ return require("packer").startup(function(use)
     "lewis6991/impatient.nvim",
   })
 
+  -- quickfix
+  use({
+    "gabrielpoca/replacer.nvim",
+    config = function()
+      vim.keymap.set('n', '<Leader>h', function()
+        require("replacer").run()
+      end, { silent = true })
+    end
+  })
+
   -- navigation
   use({
     {
