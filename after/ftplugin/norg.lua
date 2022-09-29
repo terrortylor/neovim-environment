@@ -7,6 +7,13 @@ local set = vim.keymap.set
 set("i", "<C-b>", "*", { buffer = true })
 set("n", "<leader>ff", ":Telescope neorg find_linkable<CR>", { buffer = true })
 
+set("n", "[g", function()
+  require("ui.buffer.nav").find_next("?", [[^\\s\\+-\\+\\s\[.\\]\\s]])
+end, { desc = "Go to previous gtd task"})
+set("n", "]g", function()
+  require("ui.buffer.nav").find_next("/", [[^\\s\\+-\\+\\s\[.\\]\\s]])
+end, { desc = "Go to next gtd task"})
+
 -- TODO cheap indentation, could be much better with context awareness
 set("n", ">", function()
   require("neorgtools.indent").indent()
