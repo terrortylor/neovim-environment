@@ -4,7 +4,6 @@ local set_highlight = highlights.set_highlight
 local fg = highlights.guifg
 local bg = highlights.guibg
 local lsp_funcs = require("lsp.diagnostics")
-local get_user_input = require("util.input").get_user_input
 local ignore_filetype = require("util.buffer").ignore_filetype
 
 local left_tabline = {}
@@ -211,7 +210,12 @@ function M.setup()
 end
 
 function M.set_tab_name()
-  local name = get_user_input("Tabname: ", "")
+  local name = nil
+  vim.ui.input({ prompt = "Tab name: "},
+  function(input)
+    name =  input
+  end
+  )
   tab_names[vim.fn.tabpagenr()] = name
   vim.cmd("redrawtabline")
 end
