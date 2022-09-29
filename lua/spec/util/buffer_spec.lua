@@ -21,4 +21,37 @@ describe("util.buffer", function()
       assert.stub(api.nvim_buf_get_lines(100, 0, 5, false))
     end)
   end)
+
+  describe("ignore_filetype", function()
+    it("should not ignore file type", function()
+      api.nvim_buf_get_option.on_call_with(0, "filetype").returns("not_matched")
+
+      local result = testModule.ignore_filetype()
+
+      assert.equal(false, result)
+    end)
+    it("should ignore file type", function()
+      api.nvim_buf_get_option.on_call_with(0, "filetype").returns("packer")
+
+      local result = testModule.ignore_filetype()
+
+      assert.equal(true, result)
+    end)
+    it("should not ignore filetype, if has buffers and not matched", function()
+      api.nvim_buf_get_option.on_call_with(0, "filetype").returns("norg")
+      api.nvim_buf_get_name.on_call_with(0).returns("not_matched")
+
+      local result = testModule.ignore_filetype()
+
+      assert.equal(false, result)
+    end)
+    it("should ignore filetype, if has buffers and matched", function()
+      api.nvim_buf_get_option.on_call_with(0, "filetype").returns("norg")
+      api.nvim_buf_get_name.on_call_with(0).returns("neorg://Quick Actions")
+
+      local result = testModule.ignore_filetype()
+
+      assert.equal(true, result)
+    end)
+  end)
 end)

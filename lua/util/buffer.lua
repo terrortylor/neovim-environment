@@ -19,14 +19,17 @@ function M.run_and_back_to_mark(command)
 end
 
 local ignore_filetypes = {
-  "qf",
-  "help",
-  "TelescopePrompt",
-  "NvimTree",
-  "lspinfo",
-  "packer",
-  "splash",
-  "neorg",
+  qf = {},
+  help = {},
+  TelescopePrompt = {},
+  NvimTree = {},
+  lspinfo = {},
+  packer = {},
+  splash = {},
+  neorg = {},
+  norg = {
+    "neorg://Quick Actions"
+  },
 }
 
 function M.ignore_filetype(ft_list)
@@ -36,9 +39,17 @@ function M.ignore_filetype(ft_list)
     return
   end
 
-  for _, ft in pairs(ftlist) do
-    if ft == filetype then
+  local match = ftlist[filetype]
+  if match then
+    if #match == 0 then
       return true
+    else
+      local filename = vim.api.nvim_buf_get_name(0)
+      for _, fn in pairs(match) do
+        if fn == filename then
+          return true
+        end
+      end
     end
   end
 
