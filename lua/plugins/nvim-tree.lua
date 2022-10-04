@@ -70,6 +70,7 @@ function M.setup()
   local Event = require('nvim-tree.api').events.Event
   local api = require('nvim-tree.api')
   api.events.subscribe(Event.FileCreated, function(data)
+    require("nvim-tree.view").close()
     vim.cmd(":edit " .. data.fname)
   end)
 end
