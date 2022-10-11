@@ -49,7 +49,7 @@ local function set_mappings(client)
   set("n", "[d", vim.diagnostic.goto_prev, { buffer = true })
   set("n", "]d", vim.diagnostic.goto_next, { buffer = true })
   set("n", "<space>th", require("lsp.diagnostics").diagnostic_toggle_virtual_text, { buffer = true })
-  set({ "n", "x" }, "<leader>ca", vim.lsp.buf.range_code_action, { buffer = true })
+  set({ "n", "x" }, "<leader>ca", vim.lsp.buf.code_action, { buffer = true })
 
   -- Set some keybinds conditional on server capabilities
   if client.server_capabilities.document_formatting or client.server_capabilities.document_range_formatting then
