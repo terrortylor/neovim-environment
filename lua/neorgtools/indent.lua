@@ -3,9 +3,8 @@ local M = {}
 local getCapture = function()
   local line_nr = vim.api.nvim_win_get_cursor(0)[1]
   local line = vim.api.nvim_get_current_line()
-  -- TODO find first no-whitespace charecter pos, and use that in capture call
-  -- TODO should this be get_node_at_cursor?
-  local captures = vim.treesitter.get_captures_at_position(0, line_nr - 1, 0)
+  local cur_pos, _ = line:find("%p") -- first punctuation charecter
+  local captures = vim.treesitter.get_captures_at_pos(0, line_nr - 1, cur_pos)
   if vim.tbl_isempty(captures) then
     return ""
   end
