@@ -1,6 +1,8 @@
 local common = require("plugins.lsp.common")
+require("neodev")
 
-local luadev = require("lua-dev").setup({
+local lspconfig = require("lspconfig")
+lspconfig.sumneko_lua.setup({
   -- add any options here, or leave empty to use the default settings
   lspconfig = {
     on_attach = common.on_attach,
@@ -12,6 +14,3 @@ local luadev = require("lua-dev").setup({
     }
   }
 })
-
-local lspconfig = require("lspconfig")
-lspconfig.sumneko_lua.setup(luadev)

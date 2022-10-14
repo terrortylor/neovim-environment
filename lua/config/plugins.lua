@@ -421,7 +421,7 @@ return require("packer").startup(function(use)
     },
     -- lua (nvim)
     {
-      "folke/lua-dev.nvim",
+      "folke/neodev.nvim",
     },
     -- markdown
     {
