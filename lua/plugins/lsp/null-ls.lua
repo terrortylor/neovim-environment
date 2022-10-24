@@ -24,6 +24,8 @@ null_ls.setup({
 
     -- yaml lint
     null_ls.builtins.diagnostics.yamllint,
+    -- javascript/typescriupt
+    null_ls.builtins.diagnostics.eslint_d,
     -- cloudformation
     null_ls.builtins.diagnostics.cfn_lint,
 
@@ -32,9 +34,6 @@ null_ls.setup({
 
     -- git
     null_ls.builtins.code_actions.gitsigns,
-
-    -- TODO setup eslint here and get rid of efm
-    -- null_ls.builtins.diagnostics.eslint,
 
     -- github actions
     null_ls.builtins.diagnostics.actionlint.with({

@@ -51,22 +51,13 @@ local function set_mappings(client)
   set("n", "<space>th", require("lsp.diagnostics").diagnostic_toggle_virtual_text, { buffer = true })
   set({ "n", "x" }, "<leader>ca", vim.lsp.buf.code_action, { buffer = true })
 
-  -- Set some keybinds conditional on server capabilities
-  if client.server_capabilities.document_formatting or client.server_capabilities.document_range_formatting then
-    -- TODO this is fucking gross, but quickfix
-    -- Tried to do filetype mapping but isn't picked up for some reason when vim starts, only when explicitly settings
-    -- the filetype to go in the command line... user that is a bug though
-    if vim.bo.filetype == "go" then
-      set("n", "<space>fd", "<cmd>silent! wall<cr><cmd>GoImport<CR>", { buffer = true })
-    else
-      -- luacheck: ignore
-      set(
-        "n",
-        "<space>fd",
-        "<cmd>silent! wall<cr><cmd>lua require('lsp.format').efm_priority_document_format()<CR>",
-        { buffer = true }
-      )
-    end
+  -- TODO this is fucking gross, but quickfix
+  -- Tried to do filetype mapping but isn't picked up for some reason when vim starts, only when explicitly settings
+  -- the filetype to go in the command line... user that is a bug though
+  if vim.bo.filetype == "go" then
+    set("n", "<space>fd", "<cmd>silent! wall<cr><cmd>GoImport<CR>", { buffer = true })
+  else
+    set('n', '<space>fd', function() vim.lsp.buf.format { async = true } end, bufopts)
   end
 end
 
@@ -100,7 +91,7 @@ end
 function M.buildCapabilities()
   local capabilities = vim.lsp.protocol.make_client_capabilities()
   -- be nice to have this wrapped but the plugin isn't loaded at this point...
-  capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
+  capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
   return capabilities
 end
 
