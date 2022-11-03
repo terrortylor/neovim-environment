@@ -55,3 +55,28 @@ set("n", "<leader>je", hint_char1_and_then(vim.diagnostic.open_float), { noremap
 -- Playing with f/F replacement
 -- TODO come back to this, HopChar1 is basically all I need along wiht hint_char1_and_then
 set("n", "<leader>jf", "<cmd>lua require'hop'.hint_char1({ current_line_only = true })<cr>", {})
+
+
+-- remote change/delete text objects
+local default_text_objects = {
+  'w', 'W', 's', 'p', '[', ']', '(', ')', 'b',
+  '>', '<', 't', '{', '}', 'B', '"', '\'', '`'
+}
+
+for _,v in ipairs(default_text_objects) do
+  set("n", "cir" .. v, hint_char1_and_then(function()
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('ci'..v, true, false, true), "n", true)
+  end), { noremap = true })
+
+  set("n", "dir" .. v, hint_char1_and_then(function()
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('di'..v, true, false, true), "n", true)
+  end), { noremap = true })
+end
+
+set("n", "cirq", hint_char1_and_then(function()
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('ci"', true, false, true), "n", true)
+end), { noremap = true })
+
+set("n", "dir" .. v, hint_char1_and_then(function()
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('di"', true, false, true), "n", true)
+end), { noremap = true })
