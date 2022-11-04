@@ -77,6 +77,6 @@ set("n", "cirq", hint_char1_and_then(function()
   vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('ci"', true, false, true), "n", true)
 end), { noremap = true })
 
-set("n", "dir" .. v, hint_char1_and_then(function()
+set("n", "dirq", hint_char1_and_then(function()
   vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('di"', true, false, true), "n", true)
 end), { noremap = true })
