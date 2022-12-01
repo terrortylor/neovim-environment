@@ -367,7 +367,6 @@ return require("packer").startup(function(use)
         require("plugins.lsp.terraform")
         -- not required when using ray-s/go.nvim
         require("plugins.lsp.gopls")
-        require("plugins.lsp.efm")
         require("plugins.lsp.null-ls")
       end,
       requires = {
