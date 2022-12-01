@@ -136,6 +136,7 @@ function M.setup()
     local identifier = params.fargs[1]
     M.send_command(identifier)
   end, { nargs = 1 })
+
   cmd("TmuxSeedCommand", function(params)
     local identifier = params.fargs[1]
     local pane = params.fargs[2]
