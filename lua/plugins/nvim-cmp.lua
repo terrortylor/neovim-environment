@@ -14,7 +14,7 @@ function M.setup()
       { name = "path" },
       {
         name = "tmux",
-        keyword_length = 4,
+        keyword_length = 6,
         option = {
           keyword_pattern = [[\w\w\w\w\+]],
         },
