@@ -14,14 +14,6 @@ set("n", "]g", function()
   require("ui.buffer.nav").find_next("/", [[^\\s\\+-\\+\\s\[.\\]\\s]])
 end, { desc = "Go to next gtd task"})
 
--- TODO cheap indentation, could be much better with context awareness
-set("n", ">", function()
-  require("neorgtools.indent").indent()
-end, { desc = "Indent Line Right" })
-set("n", "<", function()
-  require("neorgtools.indent").dedent()
-end, { desc = "Indent Line Left" })
-
 -- TODO be nice to have a script that in a given file, looks for `Terminology`
 -- heading and then updates all references to be links, see `tech/iso27001.norg`
 

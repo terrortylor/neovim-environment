@@ -15,10 +15,21 @@ require("neorg").setup({
             "<c-l>",
             "core.integrations.telescope.insert_link"
           )
+          keybinds.unmap( "norg", "n", "<,")
+          keybinds.unmap( "norg", "n", ">.")
+          keybinds.remap_event( "norg", "n",
+            ">",
+            "core.promo.promote"
+          )
+          keybinds.remap_event( "norg", "n",
+            "<",
+            "core.promo.demote"
+          )
         end,
       },
     },
     ["core.export"] = { config = { extensions = "all" } },
+    ["core.promo"] = {},
     ["core.norg.concealer"] = {
       config = {
         icons = {
