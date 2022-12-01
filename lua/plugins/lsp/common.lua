@@ -35,7 +35,7 @@ local function set_mappings(client)
     "<leader>cF",
     '<Cmd>lua vim.diagnostic.goto_prev()<CR><Cmd>lua require("lsp.codeactions").fix_first_code_action()<CR>',
     { buffer = true }
-  )
+    )
   set("n", "gI", "<cmd>Telescope lsp_implementations<CR>", { buffer = true })
   set("n", "<space>gss", "<cmd>Telescope lsp_document_symbols<CR>", { buffer = true })
   set("n", "K", vim.lsp.buf.signature_help, { buffer = true })
