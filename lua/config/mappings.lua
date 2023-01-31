@@ -48,6 +48,11 @@ set("n", "<leader>7", ":7tabnext<CR>", { desc = "go to tab 7" })
 set("n", "<leader>8", ":8tabnext<CR>", { desc = "go to tab 8" })
 set("n", "<leader>9", ":9tabnext<CR>", { desc = "go to tab 9" })
 set("n", "<leader>ct", ":tabclose<CR>", { desc = "close tab" })
+set("n", "<leader>ta", function()
+  if vim.g.Lasttab then
+    vim.cmd("tabn " .. vim.g.Lasttab)
+  end
+end, { desc = "go to last active tab" })
 
 -- TODO save and restore mark so as not to override `m`
 -- TODO check if nvim tree window and move to a buffer window, then run

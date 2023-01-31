@@ -5,6 +5,31 @@ vim.api.nvim_create_autocmd("VimLeave", {
   group = ag,
 })
 
+ag = vim.api.nvim_create_augroup("switch_tab", { clear = true })
+vim.api.nvim_create_autocmd("TabLeave", {
+  pattern = "*",
+  callback = function()
+    if not vim.g.Lasttab then
+      vim.g.Lasttab = 1
+      vim.g.Lasttab_backup =  1
+    end
+    vim.g.Lasttab_backup = vim.g.Lasttab
+    vim.g.Lasttab = vim.fn.tabpagenr()
+  end,
+  group = ag,
+})
+vim.api.nvim_create_autocmd("TabClosed", {
+  pattern = "*",
+  callback = function()
+    if not vim.g.Lasttab then
+      vim.g.Lasttab = 1
+      vim.g.Lasttab_backup =  1
+    end
+    vim.g.Lasttab = vim.g.Lasttab_backup
+  end,
+  group = ag,
+})
+
 ag = vim.api.nvim_create_augroup("cursor_line_group", { clear = true })
 vim.api.nvim_create_autocmd("WinEnter", {
   pattern = "*",
