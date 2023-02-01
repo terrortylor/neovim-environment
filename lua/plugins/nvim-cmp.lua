@@ -18,6 +18,8 @@ function M.setup()
         option = {
           keyword_pattern = [[\w\w\w\w\+]],
         },
+        max_item_count = 5,
+        priorty = 1000,
       },
       { name = "spell" },
     }
