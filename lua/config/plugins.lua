@@ -362,7 +362,7 @@ return require("packer").startup(function(use)
     {
       "neovim/nvim-lspconfig",
       config = function()
-        require("plugins.lsp.sumneko")
+        require("plugins.lsp.lua_ls")
         require("plugins.lsp.tsserver")
         require("plugins.lsp.terraform")
         -- not required when using ray-s/go.nvim
