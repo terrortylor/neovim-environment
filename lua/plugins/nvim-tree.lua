@@ -2,7 +2,6 @@ local M = {}
 
 function M.setup()
   require("nvim-tree").setup({
-    create_in_closed_folder = true,
     actions = {
       open_file = {
         quit_on_open = true,
