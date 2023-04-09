@@ -16,14 +16,9 @@ require("config.mappings")
 require("config.commands")
 require("config.abbreviations")
 
-require("config.plugins")
+-- require("config.plugins")
+require("config.lazyplugins")
 
--- require('packer').init({config = {
---   profile = {
---     enable = false,
---     threshold = 1 -- the amount in ms that a plugins load time must be over for it to be included in the profile
---   }
--- }})
 
 -- Custom Plugins
 local plugins = {

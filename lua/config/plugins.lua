@@ -1,59 +1,60 @@
-local fn = vim.fn
-local install_path = fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
-local packer_bootstrap = false
-if fn.empty(fn.glob(install_path)) > 0 then
-  print("Init packer.nvim")
-  packer_bootstrap = true
-  fn.system({ "git", "clone", "--depth", "1", "https://github.com/wbthomason/packer.nvim", install_path })
+-- local fn = vim.fn
+-- local install_path = fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
+-- local packer_bootstrap = false
+-- if fn.empty(fn.glob(install_path)) > 0 then
+--   print("Init packer.nvim")
+--   packer_bootstrap = true
+--   fn.system({ "git", "clone", "--depth", "1", "https://github.com/wbthomason/packer.nvim", install_path })
 
-  vim.api.nvim_command("packadd packer.nvim")
-end
+--   vim.api.nvim_command("packadd packer.nvim")
+-- end
 
-local disabled_built_ins = {
-  "netrw",
-  "netrwPlugin",
-  "netrwSettings",
-  "netrwFileHandlers",
-  "gzip",
-  "zip",
-  "zipPlugin",
-  "tar",
-  "tarPlugin",
-  "getscript",
-  "getscriptPlugin",
-  "vimball",
-  "vimballPlugin",
-  "2html_plugin",
-  "logipat",
-  "rrhelper",
-  "spellfile_plugin",
-  "matchit",
-}
+-- local disabled_built_ins = {
+--   "netrw",
+--   "netrwPlugin",
+--   "netrwSettings",
+--   "netrwFileHandlers",
+--   "gzip",
+--   "zip",
+--   "zipPlugin",
+--   "tar",
+--   "tarPlugin",
+--   "getscript",
+--   "getscriptPlugin",
+--   "vimball",
+--   "vimballPlugin",
+--   "2html_plugin",
+--   "logipat",
+--   "rrhelper",
+--   "spellfile_plugin",
+--   "matchit",
+-- }
 
-for _, plugin in pairs(disabled_built_ins) do
-  vim.g["loaded_" .. plugin] = 1
-end
+-- for _, plugin in pairs(disabled_built_ins) do
+--   vim.g["loaded_" .. plugin] = 1
+-- end
 
 return require("packer").startup(function(use)
-  use({
-    "wbthomason/packer.nvim",
-    config = function()
-      vim.api.nvim_create_autocmd("bufenter", {
-        pattern = "lua/config/plugins.lua",
-        callback = function()
-          -- luacheck: ignore
-          vim.api.nvim_buf_set_keymap(
-            0,
-            "n",
-            "<leader>nn",
-            "<cmd>silent! wall<cr> | <cmd>luafile %<cr> | <cmd>PackerSync<cr>",
-            {}
-          )
-        end,
-        group = vim.api.nvim_create_augroup("packer-config-mapping", { clear = true }),
-      })
-    end,
-  })
+
+  -- use({
+  --   "wbthomason/packer.nvim",
+  --   config = function()
+  --     vim.api.nvim_create_autocmd("bufenter", {
+  --       pattern = "lua/config/plugins.lua",
+  --       callback = function()
+  --         -- luacheck: ignore
+  --         vim.api.nvim_buf_set_keymap(
+  --           0,
+  --           "n",
+  --           "<leader>nn",
+  --           "<cmd>silent! wall<cr> | <cmd>luafile %<cr> | <cmd>PackerSync<cr>",
+  --           {}
+  --         )
+  --       end,
+  --       group = vim.api.nvim_create_augroup("packer-config-mapping", { clear = true }),
+  --     })
+  --   end,
+  -- })
 
   -- use({
   --   "~/personal-workspace/nvim-plugins/nvim-httpclient",
@@ -62,88 +63,88 @@ return require("packer").startup(function(use)
   --   end,
   -- })
 
-  -- colour scheme
-  -- Setting the colourscheme here prevents the info screen showing when opened without a file
-  use({
-    "folke/tokyonight.nvim",
-    config = function()
-      vim.cmd("colorscheme tokyonight")
-    end,
-  })
+  -- -- colour scheme
+  -- -- Setting the colourscheme here prevents the info screen showing when opened without a file
+  -- use({
+  --   "folke/tokyonight.nvim",
+  --   config = function()
+  --     vim.cmd("colorscheme tokyonight")
+  --   end,
+  -- })
 
-  -- toggle comments
-  use({
-    -- "terrortylor/nvim-comment",
-    "~/personal-workspace/nvim-plugins/nvim-comment",
-    config = function()
-      require("nvim_comment").setup({
-        comment_empty = false,
-      })
-    end,
-  })
+  -- -- toggle comments
+  -- use({
+  --   -- "terrortylor/nvim-comment",
+  --   "~/personal-workspace/nvim-plugins/nvim-comment",
+  --   config = function()
+  --     require("nvim_comment").setup({
+  --       comment_empty = false,
+  --     })
+  --   end,
+  -- })
 
   -- optimisation
   use({
     "lewis6991/impatient.nvim",
   })
 
-  -- quickfix
-  use({
-    "gabrielpoca/replacer.nvim",
-    config = function()
-      vim.keymap.set('n', '<Leader>h', function()
-        require("replacer").run()
-      end, { silent = true })
-    end
-  })
+  -- -- quickfix
+  -- use({
+  --   "gabrielpoca/replacer.nvim",
+  --   config = function()
+  --     vim.keymap.set('n', '<Leader>h', function()
+  --       require("replacer").run()
+  --     end, { silent = true })
+  --   end
+  -- })
 
-  -- navigation
-  use({
-    {
-      -- tmux/vim magic!
-      "christoomey/vim-tmux-navigator",
-      config = function()
-        -- vim.g.tmux_navigator_no_mappings = 1
-        vim.g.tmux_navigator_disable_when_zoomed = 1
-        vim.g.tmux_navigator_save_on_switch = 2
-      end,
-    },
-    -- quickly jump to locations in the visible buffer
-    {
-      "phaazon/hop.nvim",
-      config = function()
-        require("plugins.hop")
-      end,
-    },
-    {
-      "kyazdani42/nvim-tree.lua",
-      -- norg rename file for updating links
-      -- ft = { "norg" },
-      -- cmd = {
-      --   "nvimtreefindfile",
-      --   "NvimTreeFindFileToggle",
-      --   "NvimTreeFocus",
-      --   "NvimTreeOpen",
-      --   "NvimTreeToggle",
-      -- },
-      -- keys = { "<c-n>" },
-      config = function()
-        require("plugins.nvim-tree").setup()
-      end,
-    },
-    -- {
-    -- 	"takac/vim-hardtime",
-    -- 	config = function()
-    -- 		vim.g.hardtime_default_on = 1
-    -- 		vim.g.hardtime_showmsg = 1
-    -- 		vim.g.hardtime_maxcount = 3
-    -- 		vim.g.hardtime_ignore_quickfix = 1
-    -- 		vim.g.hardtime_allow_different_key = 1
-    -- 		vim.g.hardtime_ignore_buffer_patterns = { "org", "markdown" }
-    -- 		vim.g.list_of_normal_keys = { "h", "j", "k", "l", "-", "+", "<LEFT>", "<RIGHT>" }
-    -- 	end,
-    -- },
-  })
+  -- -- navigation
+  -- use({
+  --   {
+  --     -- tmux/vim magic!
+  --     "christoomey/vim-tmux-navigator",
+  --     config = function()
+  --       -- vim.g.tmux_navigator_no_mappings = 1
+  --       vim.g.tmux_navigator_disable_when_zoomed = 1
+  --       vim.g.tmux_navigator_save_on_switch = 2
+  --     end,
+  --   },
+  --   -- quickly jump to locations in the visible buffer
+  --   {
+  --     "phaazon/hop.nvim",
+  --     config = function()
+  --       require("plugins.hop")
+  --     end,
+  --   },
+  --   {
+  --     "kyazdani42/nvim-tree.lua",
+  --     -- norg rename file for updating links
+  --     -- ft = { "norg" },
+  --     -- cmd = {
+  --     --   "nvimtreefindfile",
+  --     --   "NvimTreeFindFileToggle",
+  --     --   "NvimTreeFocus",
+  --     --   "NvimTreeOpen",
+  --     --   "NvimTreeToggle",
+  --     -- },
+  --     -- keys = { "<c-n>" },
+  --     config = function()
+  --       require("plugins.nvim-tree").setup()
+  --     end,
+  --   },
+  --   -- {
+  --   -- 	"takac/vim-hardtime",
+  --   -- 	config = function()
+  --   -- 		vim.g.hardtime_default_on = 1
+  --   -- 		vim.g.hardtime_showmsg = 1
+  --   -- 		vim.g.hardtime_maxcount = 3
+  --   -- 		vim.g.hardtime_ignore_quickfix = 1
+  --   -- 		vim.g.hardtime_allow_different_key = 1
+  --   -- 		vim.g.hardtime_ignore_buffer_patterns = { "org", "markdown" }
+  --   -- 		vim.g.list_of_normal_keys = { "h", "j", "k", "l", "-", "+", "<LEFT>", "<RIGHT>" }
+  --   -- 	end,
+  --   -- },
+  -- })
 
   -- session management
   use({
@@ -164,14 +165,14 @@ return require("packer").startup(function(use)
     end,
   })
 
-  use({
-    "nvim-neorg/neorg",
-    config = function()
-      require("plugins.neorg")
-    end,
-    -- requires = {"nvim-lua/plenary.nvim", "nvim-neorg/neorg-telescope"}
-    requires = { "nvim-lua/plenary.nvim", "~/personal-workspace/nvim-plugins/neorg-telescope" },
-  })
+  -- use({
+  --   "nvim-neorg/neorg",
+  --   config = function()
+  --     require("plugins.neorg")
+  --   end,
+  --   -- requires = {"nvim-lua/plenary.nvim", "nvim-neorg/neorg-telescope"}
+  --   requires = { "nvim-lua/plenary.nvim", "~/personal-workspace/nvim-plugins/neorg-telescope" },
+  -- })
 
   -- general editing
   use({
@@ -204,39 +205,39 @@ return require("packer").startup(function(use)
     },
   })
 
-  -- telescope
-  use({
-    {
-      "nvim-lua/plenary.nvim",
-    },
-    {
-      "nvim-telescope/telescope.nvim",
-      requires = {
-        "nvim-lua/popup.nvim",
-        "nvim-lua/plenary.nvim",
-      },
-      config = function()
-        require("plugins.telescope").setup()
-      end,
-    },
-    {
-      "nvim-telescope/telescope-ui-select.nvim",
-      requires = {
-        "nvim-telescope/telescope.nvim",
-      },
-    },
-    {
-      -- adds github pull integration into telescope
-      "nvim-telescope/telescope-github.nvim",
-      config = function()
-        require("telescope").load_extension("gh")
-      end,
-      requires = {
-        "nvim-lua/plenary.nvim",
-        "nvim-telescope/telescope.nvim",
-      },
-    },
-  })
+  -- -- telescope
+  -- use({
+  --   {
+  --     "nvim-lua/plenary.nvim",
+  --   },
+  --   {
+  --     "nvim-telescope/telescope.nvim",
+  --     requires = {
+  --       "nvim-lua/popup.nvim",
+  --       "nvim-lua/plenary.nvim",
+  --     },
+  --     config = function()
+  --       require("plugins.telescope").setup()
+  --     end,
+  --   },
+  --   {
+  --     "nvim-telescope/telescope-ui-select.nvim",
+  --     requires = {
+  --       "nvim-telescope/telescope.nvim",
+  --     },
+  --   },
+  --   {
+  --     -- adds github pull integration into telescope
+  --     "nvim-telescope/telescope-github.nvim",
+  --     config = function()
+  --       require("telescope").load_extension("gh")
+  --     end,
+  --     requires = {
+  --       "nvim-lua/plenary.nvim",
+  --       "nvim-telescope/telescope.nvim",
+  --     },
+  --   },
+  -- })
 
   -- treesitter
   -- TODO tryout: https://github.com/mizlan/iswap.nvim
@@ -418,54 +419,7 @@ return require("packer").startup(function(use)
         require("dap-go").setup()
       end,
     },
-    -- lua (nvim)
-    {
-      "folke/neodev.nvim",
-    },
-    -- markdown
-    {
-      "iamcco/markdown-preview.nvim",
-      run = "cd app && npm install",
-      setup = function()
-        vim.g.mkdp_filetypes = { "markdown", "plantuml"}
-        vim.g.mkdp_auto_close = 1
-      end,
-      ft = { "markdown", "plantuml" },
-    },
-    -- plantumlplantumk
-    {
-      "aklt/plantuml-syntax",
-    },
-  })
 
-  -- completion
-  use({
-    "hrsh7th/nvim-cmp",
-    config = function()
-      require("plugins.nvim-cmp").setup()
-    end,
-
-    requires = {
-      "L3MON4D3/LuaSnip",
-      "hrsh7th/cmp-buffer",
-      "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-nvim-lsp-document-symbol",
-      "hrsh7th/cmp-path",
-      "saadparwaiz1/cmp_luasnip",
-      -- "andersevenrud/cmp-tmux",
-      "~/personal-workspace/nvim-plugins/cmp-tmux",
-      "f3fora/cmp-spell",
-      "hrsh7th/cmp-nvim-lua",
-      -- "hrsh7th/cmp-nvim-lsp-signature-help"
-    },
-  })
-
-  use({
-    "ThePrimeagen/refactoring.nvim",
-    config = function()
-      require("plugins.refactor").setup()
-    end,
-    requires = {
       { "nvim-lua/plenary.nvim" },
       { "nvim-treesitter/nvim-treesitter" },
     },

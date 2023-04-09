@@ -61,14 +61,6 @@ local function set_mappings(client)
   end
 end
 
--- only sets omnifunc if cmp not loaded
-local function set_omnifunc(bufnr)
-  if not vim.g.loaded_cmp then
-    print("Setting built in LSP omnifunc")
-    vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
-  end
-end
-
 local function set_highlights(client)
   -- TODO not sure I like this feature, unless updatetime is set to like 500~
   -- have to check other CursorHold autocommands
@@ -99,7 +91,6 @@ function M.on_attach(client, bufnr)
   require("plugins.lsp.lsp_signature").attach(bufnr)
   require("plugins.lsp.lightbulb")
 
-  set_omnifunc(bufnr)
   set_mappings(client)
   set_highlights(client)
 

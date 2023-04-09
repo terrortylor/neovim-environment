@@ -131,7 +131,7 @@ function M.tabline()
   show_tab_markers()
 
   -- right
-  current_signature(80)
+  -- current_signature(80)
   recording()
   show_auto_update()
   show_filetype()
