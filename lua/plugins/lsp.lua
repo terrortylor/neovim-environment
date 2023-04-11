@@ -42,26 +42,26 @@ return {
   {
     "williamboman/mason-lspconfig.nvim",
     -- config = true,
-    opts = {
-      ensure_installed = {
-        "bashls",
-        "dockerls",
-        "tsserver",
-        "jdtls",
-      },
-    },
-  },
-
-  -- {
-  --   "mfussenegger/nvim-jdtls",
-  -- },
-
-  -- lsp servers
-  {
-    "neovim/nvim-lspconfig",
-    dependencies = { "mfussenegger/nvim-jdtls" },
-    lazy = false,
+    -- opts = {
+    --   ensure_installed = {
+    --     "bashls",
+    --     "dockerls",
+    --     "tsserver",
+    --     "jdtls",
+    --   },
+    -- },
     config = function()
+      require("mason-lspconfig").setup({
+        ensure_installed = {
+          "bashls",
+          "jsonls",
+          "yamlls",
+          "dockerls",
+          "tsserver",
+          "jdtls",
+        },
+      })
+
       local buildCapabilities = function()
         local capabilities = vim.lsp.protocol.make_client_capabilities()
         -- be nice to have this wrapped but the plugin isn't loaded at this point...
@@ -69,74 +69,55 @@ return {
         return capabilities
       end
 
-      local lspconfig = require("lspconfig")
-      lspconfig.bashls.setup({
-        capabilities = buildCapabilities(),
-      })
-      lspconfig.dockerls.setup({
-        capabilities = buildCapabilities(),
-      })
-      lspconfig.tsserver.setup({
-        capabilities = buildCapabilities(),
-        -- lspconfig.gopls = {}
-        -- lspconfig.marksman = {}
-        -- lspconfig.yamlls = {
-        --   settings = {
-        --     yaml = {
-        --       keyOrdering = false,
-        --     },
-        --   },
-      })
-      -- lua_ls = {
-      --   single_file_support = true,
-      --   settings = {
-      --     Lua = {
-      --       workspace = {
-      --         checkThirdParty = false,
-      --       },
-      --       completion = {
-      --         workspaceWord = true,
-      --         callSnippet = "Both",
-      --       },
-      --       misc = {
-      --         parameters = {
-      --           "--log-level=trace",
-      --         },
-      --       },
-      --       diagnostics = {
-      --         -- enable = false,
-      --         groupSeverity = {
-      --           strong = "Warning",
-      --           strict = "Warning",
-      --         },
-      --         groupFileStatus = {
-      --           ["ambiguity"] = "Opened",
-      --           ["await"] = "Opened",
-      --           ["codestyle"] = "None",
-      --           ["duplicate"] = "Opened",
-      --           ["global"] = "Opened",
-      --           ["luadoc"] = "Opened",
-      --           ["redefined"] = "Opened",
-      --           ["strict"] = "Opened",
-      --           ["strong"] = "Opened",
-      --           ["type-check"] = "Opened",
-      --           ["unbalanced"] = "Opened",
-      --           ["unused"] = "Opened",
-      --         },
-      --         unusedLocalExclude = { "_*" },
-      --       },
-      --       format = {
-      --         enable = false,
-      --         defaultConfig = {
-      --           indent_style = "space",
-      --           indent_size = "2",
-      --           continuation_indent_size = "2",
-      --         },
-      --       },
-      --     },
-      --   },
-      -- },
+      require("mason-lspconfig").setup_handlers({
 
+        -- The first entry (without a key) will be the default handler
+        -- and will be called for each installed server that doesn't have
+        -- a dedicated handler.
+        function(server_name) -- default handler (optional)
+          require("lspconfig")[server_name].setup({
+            capabilities = buildCapabilities(),
+          })
+        end,
+        ["jsonls"] = function()
+          require("lspconfig").jsonls.setup({
+            capabilities = buildCapabilities(),
+            settings = {
+              json = {
+                schemas = require("schemastore").json.schemas(),
+                validate = { enable = true },
+              },
+            },
+          })
+        end,
+        ["yamlls"] = function()
+          require("lspconfig").yamlls.setup({
+            capabilities = buildCapabilities(),
+            settings = {
+              json = {
+                schemas = require("schemastore").json.schemas(),
+                validate = { enable = true },
+              },
+            },
+          })
+        end,
+      })
+    end,
+
+    dependencies = {
+      "neovim/nvim-lspconfig",
+      "mfussenegger/nvim-jdtls",
+      "b0o/SchemaStore.nvim",
+    },
+  },
+
+
+  -- lsp servers
+  {
+    "neovim/nvim-lspconfig",
+    dependencies = { "mfussenegger/nvim-jdtls" },
+    lazy = false,
+    config = function()
       vim.api.nvim_create_autocmd("LspAttach", {
         group = vim.api.nvim_create_augroup("UserLspConfig", {}),
         callback = function(ev)
