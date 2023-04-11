@@ -15,7 +15,7 @@ return {
     opts = {
       -- component_separators = { left = '|', right = '|'},
       -- section_separators = { left = '|', right = '|'},
-      theme = 'tokyonight'
+      theme = "tokyonight",
     },
   },
 
@@ -53,6 +53,40 @@ return {
     config = function()
       vim.g.abolish_no_mappings = true
     end,
+  },
+
+  {
+    "ThePrimeagen/refactoring.nvim",
+    keys = {
+      {
+        "<leader>rr",
+        function()
+          require("refactoring").select_refactor()
+        end,
+        mode = "v",
+        npremap = true,
+        sipent = true,
+        expr = false,
+      },
+      { "<leader>rp", ":lua require('refactoring').debug.printf({below = false})<CR>" },
+      -- Print var: this remap should be made in visual mode
+      { "<leader>rpv", ":lua require('refactoring').debug.print_var({})<CR>", node = "v" },
+
+      -- Cleanup function: this remap should be made in normal mode
+      { "<leader>rpc", ":lua require('refactoring').debug.cleanup({})<CR>" },
+    },
+    opts = {
+      -- prompt for return type
+      prompt_func_return_type = {
+        go = true,
+        java = true,
+      },
+      -- prompt for function parameters
+      prompt_func_param_type = {
+        go = true,
+        java = true,
+      },
+    },
   },
 
   {
@@ -135,8 +169,7 @@ return {
   {
     "eandrju/cellular-automaton.nvim",
     keys = {
-      { "<leader>fml", "<cmd>CellularAutomaton make_it_rain<CR>", desc = "Make it rain" }
+      { "<leader>fml", "<cmd>CellularAutomaton make_it_rain<CR>", desc = "Make it rain" },
     },
   },
 }
-
