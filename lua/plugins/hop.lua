@@ -37,7 +37,7 @@ for _, v in ipairs(default_text_objects) do
 end
 
 table.foreach({
-  { "s", "<CMD>HopChar1<CR>", desc = "Jump to visible buffer location" },
+  -- { "s", "<CMD>HopChar1<CR>", desc = "Jump to visible buffer location" },
   { "<leader>jj", "<CMD>HopChar1<CR>", desc = "Jump to visible buffer location" },
   { "<leader>jj", "<CMD>HopChar1<CR>", desc = "In visual mode, jump to visible buffer location" },
   { "<leader>/", "<CMD>HopPattern<CR>", desc = "Search for patter and jump to instance" },
