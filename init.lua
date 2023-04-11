@@ -7,38 +7,42 @@ vim.bo.undofile = true
 
 vim.g.mapleader = " "
 
-require("util.globals")
-
--- Configurations
-require("config.options")
-require("config.autogroups")
-require("config.mappings")
-require("config.commands")
-require("config.abbreviations")
-
 -- require("config.plugins")
 require("config.lazyplugins")
 
+vim.api.nvim_create_autocmd("User", {
+  pattern = "VeryLazy",
+  callback = function()
+    require("util.globals")
 
--- Custom Plugins
-local plugins = {
-  "git.blame",
-  "git.lazygit",
-  "ui.arglist",
-  -- "ui.tabline",
-  -- "ui.statusline",
-  "ui.buffer.trailing_whitespace",
-  "ui.window.numbering",
-  -- "ui.search",
-  -- "ui.splash",
-  "tmux",
-  "alternate",
-  "ui.switcheroo",
-  "pa",
-  "snake",
-  "util.auto_update",
-}
+    -- Configurations
+    require("config.options")
+    require("config.autogroups")
+    require("config.mappings")
+    require("config.commands")
+    require("config.abbreviations")
 
-for _,p in pairs(plugins) do
-  require(p).setup()
-end
+    -- Custom Plugins
+    local plugins = {
+      "git.blame",
+      "git.lazygit",
+      "ui.arglist",
+      -- "ui.tabline",
+      -- "ui.statusline",
+      "ui.buffer.trailing_whitespace",
+      "ui.window.numbering",
+      -- "ui.search",
+      -- "ui.splash",
+      "tmux",
+      "alternate",
+      "ui.switcheroo",
+      "pa",
+      "snake",
+      "util.auto_update",
+    }
+
+    for _, p in pairs(plugins) do
+      require(p).setup()
+    end
+  end,
+})
