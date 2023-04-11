@@ -10,14 +10,14 @@ return {
     end,
   },
 
-  -- {
-  --   "nvim-lualine/lualine.nvim",
-  --   opts = {
-  --     component_separators = { left = '|', right = '|'},
-  --     section_separators = { left = '|', right = '|'},
-  --     theme = 'tokyonight'
-  --   },
-  -- },
+  {
+    "nvim-lualine/lualine.nvim",
+    opts = {
+      -- component_separators = { left = '|', right = '|'},
+      -- section_separators = { left = '|', right = '|'},
+      theme = 'tokyonight'
+    },
+  },
 
   -- toggle comments
   {
