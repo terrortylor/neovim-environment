@@ -5,12 +5,6 @@ return {
     ft = "bats",
   },
 
-  -- Terraform
-  {
-    "hashivim/vim-terraform",
-    ft = "terraform",
-  },
-
   -- Helm
   {
     "towolf/vim-helm"
