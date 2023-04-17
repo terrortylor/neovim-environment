@@ -55,10 +55,13 @@ return {
         ensure_installed = {
           "bashls",
           "jsonls",
+          "helm_ls",
           "yamlls",
+          "groovyls",
           "dockerls",
           "tsserver",
           "jdtls",
+          "terraformls",
         },
       })
 
@@ -101,6 +104,15 @@ return {
             },
           })
         end,
+        ["groovyls"] = function()
+          local home = vim.fn.getenv("HOME")
+          local lib_dir =
+            "/.local/share/nvim/mason/packages/groovy-language-server/build/libs/groovy-language-server-all.jar"
+          require("lspconfig").groovyls.setup({
+            capabilities = buildCapabilities(),
+            cmd = { "java", "-jar", home .. lib_dir },
+          })
+        end,
       })
     end,
 
@@ -110,7 +122,6 @@ return {
       "b0o/SchemaStore.nvim",
     },
   },
-
 
   -- lsp servers
   {
