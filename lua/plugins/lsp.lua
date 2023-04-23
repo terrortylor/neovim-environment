@@ -243,6 +243,9 @@ return {
 
           -- yaml lint
           nls.builtins.diagnostics.yamllint,
+          -- See: $XDG_CONFIG_HOME/yamllint/config
+          -- for yamllinkt config overrides 
+          
           -- javascript/typescript
           nls.builtins.diagnostics.eslint_d,
           -- cloudformation
