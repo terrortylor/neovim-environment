@@ -87,7 +87,7 @@ return {
         sources = default_sources(),
       })
 
-      cmp.setup.cmdline({"/", "?"}, {
+      cmp.setup.cmdline({ "/", "?" }, {
         mapping = cmp.mapping.preset.cmdline(),
         sources = {
           { name = "buffer" },
@@ -142,5 +142,5 @@ return {
       "hrsh7th/cmp-nvim-lua",
       -- "hrsh7th/cmp-nvim-lsp-signature-help"
     },
-  }
+  },
 }
