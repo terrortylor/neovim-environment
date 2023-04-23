@@ -22,7 +22,7 @@ return {
           if not ok then
             require("telescope.builtin").find_files(opts)
           end
-       end,
+        end,
         desc = "telescope open file, either git_files or fallback to CWD",
       },
       {
@@ -57,7 +57,6 @@ return {
         defaults = {
           mappings = {
             i = {
-              ["<esc>"] = actions.close, -- TODO this isn't working
               ["<c-j>"] = actions.move_selection_next,
               ["<c-k>"] = actions.move_selection_previous,
             },
@@ -69,21 +68,33 @@ return {
           },
         },
       })
-      require("telescope").load_extension("ui-select")
-      require("telescope").load_extension("gh")
-
-      -- my extensions
-      require("telescope").load_extension("mapdesc")
-      require("telescope").load_extension("bashrc")
-      require("telescope").load_extension("go_src")
-      require("telescope").load_extension("awesome_src")
-      require("telescope").load_extension("plugin_files")
-      require("telescope").load_extension("notes")
     end,
     dependencies = {
-      "nvim-telescope/telescope-ui-select.nvim",
+      {
+        "nvim-telescope/telescope-ui-select.nvim",
+        config = function()
+          require("telescope").load_extension("ui-select")
+        end,
+      },
       -- adds github pull integration into telescope
-      "nvim-telescope/telescope-github.nvim",
+      {
+        "nvim-telescope/telescope-github.nvim",
+        config = function()
+          require("telescope").load_extension("gh")
+        end,
+      },
+      -- this is to lazy load my extensions
+      {
+        dir = "telescope/_extensions",
+        config = function()
+          require("telescope").load_extension("mapdesc")
+          require("telescope").load_extension("bashrc")
+          require("telescope").load_extension("go_src")
+          require("telescope").load_extension("awesome_src")
+          require("telescope").load_extension("plugin_files")
+          require("telescope").load_extension("notes")
+        end,
+      },
       "nvim-lua/plenary.nvim",
     },
   },
