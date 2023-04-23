@@ -6,9 +6,10 @@ return {
     opts = {
       load = {
         ["core.defaults"] = {}, -- Load all the default modules
-        ["core.norg.qol.toc"] = {}, -- table of contents module
+        ["core.qol.toc"] = {}, -- table of contents module
         ["core.keybinds"] = { -- Configure core.keybinds
           config = {
+            default_keybinds = true,
             neorg_leader = "<Leader>o", -- This is the default if unspecified
             hook = function(keybinds)
               -- luacheck: ignore
@@ -21,9 +22,9 @@ return {
             end,
           },
         },
-        ["core.export"] = { config = { extensions = "all" } },
-        ["core.promo"] = {},
-        ["core.norg.concealer"] = {
+        ["core.export"] = {},
+        -- ["core.export"] = { config = { extensions = "all" } },
+        ["core.concealer"] = {
           config = {
             icons = {
               marker = {
@@ -39,23 +40,29 @@ return {
             },
           },
         }, -- Allows for use of icons
-        ["core.norg.dirman"] = { -- Manage your directories with Neorg
+        ["core.dirman"] = { -- Manage your directories with Neorg
           config = {
             workspaces = {
               my_workspace = "~/personal-workspace/notes",
             },
           },
         },
-        ["core.norg.completion"] = {
+        ["core.completion"] = {
           config = {
             engine = "nvim-cmp",
+            name = "[Norg]",
           },
         },
+        ["core.syntax"] = {},
+        ["core.integrations.treesitter"] = {},
         ["core.integrations.telescope"] = {},
         ["core.integrations.nvim-cmp"] = {},
       },
     },
-    depencencies = { "nvim-neorg/neorg-telescope" },
+    depencencies = {
+      "nvim-neorg/neorg-telescope",
+      "nvim-treesitter/nvim-treesitter-textobjects",
+    },
     -- depencencies = { "~/personal-workspace/nvim-plugins/neorg-telescope" },
   },
   { "nvim-neorg/neorg-telescope" },
