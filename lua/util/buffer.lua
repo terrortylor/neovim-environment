@@ -36,7 +36,7 @@ function M.ignore_filetype(ft_list)
   local ftlist = ft_list or ignore_filetypes
   local filetype = vim.api.nvim_buf_get_option(0, "filetype")
   if filetype == "" then
-    return
+    return true
   end
 
   local match = ftlist[filetype]
