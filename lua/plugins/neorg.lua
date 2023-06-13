@@ -5,6 +5,7 @@ return {
     depencencies = {
       "nvim-neorg/neorg-telescope",
       "nvim-treesitter/nvim-treesitter-textobjects",
+      { "pysan3/neorg-templates", dependencies = { "L3MON4D3/LuaSnip" } },
     },
     keys = {
       { "<c-g>nw", "<cmd>Neorg workspace<cr>", desc = "Neorg Workspace" },
@@ -40,6 +41,7 @@ return {
           },
         },
         ["core.export"] = {},
+        ["core.journal"] = {},
         ["core.keybinds"] = {
           config = {
             default_keybinds = true,
@@ -62,8 +64,14 @@ return {
         ["core.integrations.telescope"] = {},
         ["core.integrations.treesitter"] = {},
         ["core.integrations.nvim-cmp"] = {},
+        ["external.templates"] = {
+          config = {
+            templates_dir = vim.fn.stdpath("config") .. "/templates/neorg",
+          },
+        },
       },
     },
   },
   { "nvim-neorg/neorg-telescope" },
+  { "pysan3/neorg-templates" },
 }
