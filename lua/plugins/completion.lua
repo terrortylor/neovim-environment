@@ -1,30 +1,60 @@
 return {
   {
+    "L3MON4D3/LuaSnip",
+    -- install jsregexp (optional!).
+    build = "make install_jsregexp",
+    config = function()
+      local function edit_ft()
+        -- returns table like {"lua", "all"}
+        local fts = require("luasnip.util.util").get_snippet_filetypes()
+
+        -- add mapping for either ft in snipmate format or ft in luasnip (lua) file
+        local non_all = {}
+        for _, v in ipairs(fts) do
+          if v ~= "all" then
+            table.insert(non_all, v .. " | snipmate")
+            table.insert(non_all, v .. " | luasnip")
+          end
+        end
+        table.insert(non_all, "all | snipmate")
+        table.insert(non_all, "all | luasnip")
+
+        vim.ui.select(non_all, {
+          prompt = "Select which filetype to edit:",
+        }, function(item, idx)
+          -- selection aborted -> idx == nil
+          if idx then
+            local ft, style = item:match("(.*) | (.*)")
+            if style == "snipmate" then
+              vim.cmd("edit ~/.config/nvim/snippets/" .. ft .. ".snippets")
+            else
+              vim.cmd("edit ~/.config/nvim/luasnippets/" .. ft .. ".lua")
+            end
+            -- TODO on buffer change/close then re-run the setup() below to reload
+          end
+        end)
+      end
+
+      vim.api.nvim_create_user_command("LuaSnipEdit", edit_ft, { force = true })
+      require("luasnip.loaders.from_snipmate").lazy_load()
+      -- require("luasnip.loaders.from_lua").lazy_load({ paths = "./luasnippets" })
+      -- vim.keymap.set("i", "<c-j>", function()
+      --   require("luasnip").jump(1)
+      -- end, { desc = "luasnip next" })
+      -- vim.keymap.set("i", "<c-k>", function()
+      --   require("luasnip").jump(-1)
+      -- end, { desc = "luasnip previous" })
+    end,
+  },
+
+  {
     "hrsh7th/nvim-cmp",
     event = "InsertEnter",
     config = function()
       local has_words_before = function()
+        unpack = unpack or table.unpack
         local line, col = unpack(vim.api.nvim_win_get_cursor(0))
         return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
-      end
-
-      local default_sources = function()
-        return {
-          { name = "luasnip" },
-          { name = "nvim_lsp" },
-          { name = "nvim_lsp_document_symbol" },
-          { name = "path" },
-          {
-            name = "tmux",
-            keyword_length = 6,
-            option = {
-              keyword_pattern = [[\w\w\w\w\+]],
-            },
-            max_item_count = 5,
-            priorty = 1000,
-          },
-          { name = "spell" },
-        }
       end
 
       local cmp = require("cmp")
@@ -84,7 +114,24 @@ return {
             end
           end, { "i", "s" }),
         },
-        sources = default_sources(),
+        sources = cmp.config.sources({
+          { name = "luasnip" },
+          { name = "nvim_lsp" },
+          { name = "nvim_lsp_document_symbol" },
+          { name = "path" },
+          {
+            name = "tmux",
+            keyword_length = 6,
+            option = {
+              keyword_pattern = [[\w\w\w\w\+]],
+            },
+            max_item_count = 5,
+            priorty = 1000,
+          },
+          { name = "spell" },
+          { name = "neorg" },
+          { name = "buffer" },
+        }),
       })
 
       cmp.setup.cmdline({ "/", "?" }, {
@@ -94,44 +141,19 @@ return {
         },
       })
 
-      -- cmp.setup.cmdline(':', {
-      --   mapping = cmp.mapping.preset.cmdline(),
-      --   sources = cmp.config.sources({
-      --     { name = 'path' }
-      --   }, {
-      --     { name = 'cmdline' }
-      --   })
-      -- })
-
-      -- cmp.setup.cmdline(":", {
-      --   mapping = cmp.mapping.preset.cmdline(),
-      --   sources = cmp.config.sources({
-      --     { name = "path" },
-      --     { name = "cmdline" },
-      --   }),
-      -- })
-
-      local sources = default_sources()
-      table.insert(sources, { name = "buffer" })
-      cmp.setup.filetype("terraform", {
-        sources = sources,
-      })
-
-      sources = default_sources()
-      table.insert(sources, { name = "neorg" })
-      cmp.setup.filetype("norg", {
-        sources = sources,
-      })
-
-      sources = default_sources()
-      cmp.setup.filetype("lua", {
-        sources = sources,
+      cmp.setup.cmdline(":", {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = cmp.config.sources({
+          { name = "path" },
+          { name = "cmdline" },
+        }),
       })
     end,
 
     dependencies = {
       "L3MON4D3/LuaSnip",
       "hrsh7th/cmp-buffer",
+      "hrsh7th/cmp-cmdline",
       "hrsh7th/cmp-nvim-lsp",
       "hrsh7th/cmp-nvim-lsp-document-symbol",
       "hrsh7th/cmp-path",
