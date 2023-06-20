@@ -95,7 +95,13 @@ return {
       "nvim-tree/nvim-web-devicons",
     },
     keys = {
-      { "<c-n>", "<cmd>NvimTreeFindFileToggle<CR>", desc = "Togggle File Tree" },
+      {
+        "<c-n>",
+        function()
+          require("nvim-tree.api").tree.open({ find_file = true })
+        end,
+        desc = "Togggle File Tree",
+      },
     },
     config = function()
       local function on_attach(bufnr)
@@ -120,6 +126,21 @@ return {
 
       require("nvim-tree").setup({
         on_attach = on_attach,
+        select_prompts = true,
+        update_focused_file = {
+          enable = true,
+        },
+        view = {
+          adaptive_size = {},
+        },
+        actions = {
+          open_file = {
+            quit_on_open = true,
+            window_picker = {
+              enable = false,
+            },
+          },
+        },
       })
     end,
   },
