@@ -127,11 +127,15 @@ return {
       require("nvim-tree").setup({
         on_attach = on_attach,
         select_prompts = true,
+        git = {
+          ignore = false,
+        },
         update_focused_file = {
           enable = true,
         },
         view = {
           adaptive_size = {},
+          dotfiles = true,
         },
         actions = {
           open_file = {
