@@ -78,6 +78,9 @@ return {
         -- and will be called for each installed server that doesn't have
         -- a dedicated handler.
         function(server_name) -- default handler (optional)
+          -- JDTLS is managed differently via the mfussenegger/nvim-jdtls plugin
+          if server_name == "jdtls" then return end
+
           require("lspconfig")[server_name].setup({
             capabilities = buildCapabilities(),
           })
@@ -123,10 +126,11 @@ return {
     },
   },
 
+  { "mfussenegger/nvim-jdtls" },
+
   -- lsp servers
   {
     "neovim/nvim-lspconfig",
-    dependencies = { "mfussenegger/nvim-jdtls" },
     lazy = false,
     config = function()
       vim.api.nvim_create_autocmd("LspAttach", {
