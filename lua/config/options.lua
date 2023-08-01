@@ -1,5 +1,7 @@
 local o = vim.opt
 
+vim.loader.enable() -- replaces lewis6991/impatient.nvim
+
 o.diffopt = "internal,filler,algorithm:patience,indent-heuristic" -- better diffing
 
 -- wildignore
