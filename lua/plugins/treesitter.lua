@@ -32,11 +32,13 @@ return {
       },
     },
   },
+
   {
     "nvim-treesitter/playground",
     cmd = { "TSPlaygroundToggle" },
     dependencies = { "nvim-treesitter/nvim-treesitter" },
   },
+
   {
     "RRethy/nvim-treesitter-textsubjects",
     requires = { "nvim-treesitter/nvim-treesitter" },
@@ -51,5 +53,13 @@ return {
         },
       })
     end,
+  },
+
+  {
+    "cshuaimin/ssr.nvim",
+    keys = {
+      { "<leader>sr", function() require("ssr").open() end, mode = "n", },
+      { "<leader>sr", function() require("ssr").open() end, mode = "x", },
+    },
   },
 }
