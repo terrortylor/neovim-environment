@@ -17,7 +17,14 @@ return {
       {
         "<c-p>",
         function()
-          local opts = {} -- define here if you want to define something
+          local opts = require("telescope.themes").get_dropdown({
+            winblend = 10,
+            width = 0.8,
+            prompt = " ",
+            results_height = 15,
+            previewer = false,
+          })
+
           local ok = pcall(require("telescope.builtin").git_files, opts)
           if not ok then
             require("telescope.builtin").find_files(opts)
