@@ -1,49 +1,23 @@
 return {
   {
     "L3MON4D3/LuaSnip",
-    -- install jsregexp (optional!).
     build = "make install_jsregexp",
     config = function()
-      local function edit_ft()
-        -- returns table like {"lua", "all"}
-        local fts = require("luasnip.util.util").get_snippet_filetypes()
+      local luasnip = require("luasnip")
+      luasnip.config.set_config({
+        history = true,
+        updateevents = "TextChanged,TextChangedI",
+        enable_autosnippets = true,
+        store_selection_keys = "<Tab>",
+      })
 
-        -- add mapping for either ft in snipmate format or ft in luasnip (lua) file
-        local non_all = {}
-        for _, v in ipairs(fts) do
-          if v ~= "all" then
-            table.insert(non_all, v .. " | snipmate")
-            table.insert(non_all, v .. " | luasnip")
-          end
-        end
-        table.insert(non_all, "all | snipmate")
-        table.insert(non_all, "all | luasnip")
-
-        vim.ui.select(non_all, {
-          prompt = "Select which filetype to edit:",
-        }, function(item, idx)
-          -- selection aborted -> idx == nil
-          if idx then
-            local ft, style = item:match("(.*) | (.*)")
-            if style == "snipmate" then
-              vim.cmd("edit ~/.config/nvim/snippets/" .. ft .. ".snippets")
-            else
-              vim.cmd("edit ~/.config/nvim/luasnippets/" .. ft .. ".lua")
-            end
-            -- TODO on buffer change/close then re-run the setup() below to reload
-          end
-        end)
-      end
-
-      vim.api.nvim_create_user_command("LuaSnipEdit", edit_ft, { force = true })
-      require("luasnip.loaders.from_snipmate").lazy_load()
-      -- require("luasnip.loaders.from_lua").lazy_load({ paths = "./luasnippets" })
-      -- vim.keymap.set("i", "<c-j>", function()
-      --   require("luasnip").jump(1)
-      -- end, { desc = "luasnip next" })
-      -- vim.keymap.set("i", "<c-k>", function()
-      --   require("luasnip").jump(-1)
-      -- end, { desc = "luasnip previous" })
+      require("luasnip.loaders.from_lua").lazy_load({ paths = "./luasnippets" })
+      require("luasnip.loaders.from_snipmate").lazy_load({ paths = "./snippets" })
+      vim.api.nvim_create_user_command(
+        "LuaSnipUpdate",
+        'lua require("luasnip.loaders.from_lua").load({paths = "~/.config/nvim/LuaSnip/"})',
+        { force = true }
+      )
     end,
   },
 
