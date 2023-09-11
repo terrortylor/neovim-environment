@@ -1,3 +1,4 @@
+vim.opt.conceallevel = 3
 vim.opt.spell = true
 vim.opt.spelllang = { "en_gb" }
 -- vim.o.conceallevel = 2
