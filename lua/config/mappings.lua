@@ -1,5 +1,10 @@
 local set = vim.keymap.set
 
+if vim.fn.has('mac') then
+  set('n', '∆', '<A-j>', { desc = "Enable alt j on mac", remap = true})
+  set('n', '˚', '<A-k>', { desc = "Enable alt j on mac", remap = true})
+end
+
 set("n", "viq", 'vi"', { desc = "visual in quote alias" })
 set("n", "vaq", 'va"', { desc = "visual around quote alias" })
 set("n", "ciq", 'ci"', { desc = "clear in quote alias" })
@@ -105,6 +110,8 @@ set("i", "<c-f>", "<c-g>u<Esc>[s1z=`]a<c-g>u") -- fix last incorrect work
 set("n", "<leader>zz", "1z=", { desc = "Auto select first entry" })
 set("n", "[zz", "[s1z=", { desc = "Auto select first entry" })
 set("n", "]zz", "]s1z=", { desc = "Auto select first entry" })
+set("n", "[s", "[s:Telescope spell_suggest<CR>", { desc = "Got to previous spelling and prompt" })
+set("n", "]s", "]s:Telescope spell_suggest<CR>", { desc = "Go to next bad spelling and prompt" })
 
 set("n", "gp", "`[v`]", { desc = "Reselect last put" })
 
