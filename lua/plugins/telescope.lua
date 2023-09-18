@@ -83,12 +83,9 @@ return {
       {
         dir = "telescope/_extensions",
         config = function()
-          require("telescope").load_extension("mapdesc")
           require("telescope").load_extension("bashrc")
           require("telescope").load_extension("go_src")
-          require("telescope").load_extension("awesome_src")
           require("telescope").load_extension("plugin_files")
-          require("telescope").load_extension("notes")
         end,
       },
       "nvim-lua/plenary.nvim",
