@@ -68,21 +68,10 @@ return {
               ["<c-k>"] = actions.move_selection_previous,
             },
           },
-          extensions = {
-            ["ui-select"] = {
-              require("telescope.themes").get_dropdown({}),
-            },
-          },
         },
       })
     end,
     dependencies = {
-      {
-        "nvim-telescope/telescope-ui-select.nvim",
-        config = function()
-          require("telescope").load_extension("ui-select")
-        end,
-      },
       -- adds github pull integration into telescope
       {
         "nvim-telescope/telescope-github.nvim",
