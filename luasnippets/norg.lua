@@ -36,6 +36,14 @@ local function get_timestamp()
   return os.date("%Y-%m-%dT%H:%M:%S") .. string.format("%+.4d", h * 100 + m * 60)
 end
 
+local function get_human_timestamp()
+  -- generate a ISO-8601 timestamp
+  -- example: 2023-09-05T09:09:11-0500
+  local tz_offset = get_timezone_offset()
+  local h, m = math.modf(tz_offset / 3600)
+  return os.date("%d %B %Y")
+end
+
 local function neorg_meta_version()
   return require("neorg.core").config.norg_version
 end
@@ -116,7 +124,8 @@ return {
 
       * Planner
 
-        - ( ) 0900 - 
+        - ( ) 0900 - Emails, review tasks, plan day
+        -- ( ) 0930 - Standup
         - ( ) 1000 - 
         - ( ) 1100 - 
         - ( ) 1200 - 
@@ -130,7 +139,7 @@ return {
       * Notes
     ]],
       {
-        i(1, "Title"),
+        f(get_human_timestamp, {}),
         f(get_timestamp, {}),
         f(get_timestamp, {}),
         f(neorg_meta_version, {}),
