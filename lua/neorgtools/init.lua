@@ -2,7 +2,7 @@ local M = {}
 
 -- this is soley for abstracting neorg dependency in testing
 function M.getNeorgCurrentWorkspaceDir()
-  return require("neorg/modules/core/norg/dirman/module").public.get_current_workspace()[2]
+  return require("neorg.modules.core.dirman.module").public.get_current_workspace()[2]
 end
 
 -- Dirty but works, hooks into nvim-tree rename so when a file is renamed in NORG
@@ -62,8 +62,8 @@ end
 -- add hook to nvim-tree rename event
 -- should only be added once
 function M.nvimTreeRenameEventHook()
-  local Event = require('nvim-tree.api').events.Event
-  local api = require('nvim-tree.api')
+  local Event = require("nvim-tree.api").events.Event
+  local api = require("nvim-tree.api")
   api.events.subscribe(Event.NodeRenamed, M.update_links_to_file)
 end
 
