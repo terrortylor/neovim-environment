@@ -4,3 +4,4 @@ vim.bo.shiftwidth = 2
 vim.bo.expandtab = true
 vim.o.foldmethod = 'expr'
 vim.o.foldexpr = 'nvim_treesitter#foldexpr()'
+vim.bo.commentstring = '# %s'
