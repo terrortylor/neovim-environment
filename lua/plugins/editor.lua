@@ -135,7 +135,10 @@ return {
         },
         view = {
           adaptive_size = {},
+        },
+        filters = {
           dotfiles = true,
+          git_ignored = true,
         },
         actions = {
           open_file = {
@@ -170,7 +173,7 @@ return {
         -- require('hover.providers.gh_user')
         -- require('hover.providers.jira')
         -- require('hover.providers.man')
-        require('hover.providers.dictionary')
+        require("hover.providers.dictionary")
       end,
       preview_opts = {
         border = nil,
