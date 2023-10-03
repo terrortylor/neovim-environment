@@ -4,9 +4,4 @@ return {
     "aliou/bats.vim",
     ft = "bats",
   },
-
-  -- Helm
-  {
-    "towolf/vim-helm"
-  },
 }
