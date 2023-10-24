@@ -73,7 +73,7 @@ function M.update_buffer()
         -- vim.cmd("doautocmd BufWritePre")
         -- vim.cmd(":write")
         -- TODO add option to write all buffers?
-        vim.cmd(":update")
+        vim.cmd(":update!")
         -- vim.cmd("doautocmd BufWritePost")
       end
     end
