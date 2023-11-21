@@ -120,21 +120,12 @@ return {
       @end
 
       * Tasks
+        - ( ) Review tasks
+        - ( ) Emails
+        - ( ) ISO
+        -- ( ) Review some policies
+        -- ( ) Choose a task for the day
       {}
-
-      * Planner
-
-        - ( ) 0900 - Emails, review tasks, plan day
-        -- ( ) 0930 - Standup
-        - ( ) 1000 - 
-        - ( ) 1100 - 
-        - ( ) 1200 - 
-        - ( ) 1300 - 
-        - ( ) 1400 - 
-        - ( ) 1500 - 
-        - ( ) 1600 - 
-        - ( ) 1700 - 
-        - ( ) 1800 - 
 
       * Notes
     ]],
