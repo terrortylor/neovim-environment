@@ -1,8 +1,18 @@
+local function snippet_expand(snippet)
+  local snips = require("luasnip").get_snippets()[vim.bo.ft]
+  for _, snip in ipairs(snips) do
+    if snip["name"] == snippet then
+      require("luasnip").snip_expand(snip)
+    end
+  end
+end
+
 return {
   {
     "nvim-neorg/neorg",
     build = ":Neorg sync-parsers",
     depencencies = {
+      "nvim-lua/plenary.nvim",
       "nvim-neorg/neorg-telescope",
       "nvim-treesitter/nvim-treesitter-textobjects",
       -- { "pysan3/neorg-templates", dependencies = { "L3MON4D3/LuaSnip" } },
@@ -12,16 +22,19 @@ return {
     },
     keys = {
       { "<c-g>nw", "<cmd>Neorg workspace<cr>", desc = "Neorg Workspace" },
-      { "<c-g>nn", function() -- create a new slipbox note
-        -- TODO popup to offer adding link also to where ever I am?
-        require("neorg.modules.core.dirman.module").public.create_file("slipbox/" .. os.date("%Y%m%d%H%M%S"), "notes", {no_open = false, force = false})
-        local snips = require("luasnip").get_snippets()[vim.bo.ft]
-        for _, snip in ipairs(snips) do
-          if snip["name"] == "templateslipbox" then
-            require("luasnip").snip_expand(snip)
-          end
-        end
-      end, desc = "Neorg New Slip Note" },
+      {
+        "<c-g>nn",
+        function() -- create a new slipbox note
+          -- TODO popup to offer adding link also to where ever I am?
+          require("neorg.modules.core.dirman.module").public.create_file(
+            "slipbox/" .. os.date("%Y%m%d%H%M%S"),
+            "notes",
+            { no_open = false, force = false }
+          )
+          snippet_expand("templateslipbox")
+        end,
+        desc = "Neorg New Slip Note",
+      },
       { "<c-g>nr", "<cmd>Neorg return<cr>", desc = "Neorg Close & return" },
       {
         "<c-g>nd",
@@ -30,14 +43,17 @@ return {
           Neorg journal yesterday
           topleft vsplit
           Neorg journal today
-          Neorg templates fload journal
           ]])
+          snippet_expand("templatejournal")
         end,
         desc = "Neorg ",
       },
     },
     -- depencencies = { "~/personal-workspace/nvim-plugins/neorg-telescope" },
-    event = "BufReadPre,BufNew *.norg",
+    event = {
+      "BufReadPre *.norg",
+      "BufNew *.norg"
+    },
     opts = {
       load = {
         ["core.completion"] = {
@@ -81,6 +97,7 @@ return {
             end,
           },
         },
+        ["core.manoeuvre"] = {},
         ["core.promo"] = {},
         ["core.qol.toc"] = {
           config = {
