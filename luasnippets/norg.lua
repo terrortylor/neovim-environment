@@ -78,7 +78,7 @@ return {
   ),
 
   s(
-    { trig = "^[%s]*;cc", descr = "Norg code block", regTrig = true, wordTrig = false, snippetType = "autosnippet" },
+    { trig = ";cc", descr = "Norg code block", wordTrig = false, snippetType = "autosnippet" },
     fmt(
       [[
       @code {}
@@ -120,6 +120,7 @@ return {
       @end
 
       * Tasks
+      ** Daily
         - ( ) Review tasks
         - ( ) Emails
         - ( ) ISO
