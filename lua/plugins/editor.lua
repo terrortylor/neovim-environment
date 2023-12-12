@@ -50,8 +50,25 @@ return {
     -- make search replace varients better
     "tpope/vim-abolish",
     cmd = { "Subvert", "S" },
+    keys = {
+      { "cr", "<Plug>(abolish-coerce-word)", noremap = true, silent = true },
+    },
     config = function()
-      vim.g.abolish_no_mappings = true
+      require("which-key").register({
+        cr = {
+          name = "+coercion",
+          c = { desc = "camelCase" },
+          m = { desc = "MixedCase" },
+          _ = { desc = "snake_case" },
+          s = { desc = "snake_case" },
+          u = { desc = "UPPER_CASE" },
+          U = { desc = "UPPER_CASE" },
+          k = { desc = "dash-case" },
+          ["-"] = { desc = "dash-case (not reversible)" },
+          ["."] = { desc = "dot.case (not reversible)" },
+          ["<space>"] = { desc = "Space Case (not reversible)" },
+        },
+      })
     end,
   },
 
