@@ -33,3 +33,11 @@ user_command("Mkdir", "lua require('util.filesystem').mkdir(<args>)", {
 })
 user_command("SetCWDToBuffer", "cd %:p:h")
 user_command("IntelliJ", "lua require('config.intellij-mappings')")
+
+
+-- some fat finger helpers
+user_command("Wa", "wa", {bang = true})
+user_command("WA", "wa", {bang = true})
+user_command("Q", "q", {bang = true})
+user_command("Qa", "qa", {bang = true})
+user_command("QA", "qa", {bang = true})
