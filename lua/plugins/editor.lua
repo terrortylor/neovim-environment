@@ -13,9 +13,30 @@ return {
   {
     "nvim-lualine/lualine.nvim",
     opts = {
-      -- component_separators = { left = '|', right = '|'},
-      -- section_separators = { left = '|', right = '|'},
-      theme = "tokyonight",
+      options = {
+        component_separators = { left = "", right = "" },
+        section_separators = { left = "", right = "" },
+        -- theme = "tokyonight",
+        globalstatus = true,
+      },
+      tabline = {
+        lualine_a = { "tabs" },
+      },
+      sections = {
+        lualine_a = { "mode" },
+        lualine_b = { "branch", "diff", "diagnostics" },
+        lualine_c = {},
+        -- lualine_c = { "filename" },
+        lualine_x = { "filetype" },
+        lualine_y = { "progress" },
+        lualine_z = { "location" },
+      },
+      winbar = {
+        lualine_a = { "filename" },
+      },
+      inactive_winbar = {
+        lualine_a = { "filename" },
+      },
     },
   },
 
