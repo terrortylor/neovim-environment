@@ -1,9 +1,10 @@
 local set = vim.keymap.set
 
-if vim.fn.has('mac') then
-  set('n', '∆', '<A-j>', { desc = "Enable alt j on mac", remap = true})
-  set('n', '˚', '<A-k>', { desc = "Enable alt j on mac", remap = true})
-end
+-- if vim.fn.has('mac') then
+--   set('n', '∆', '<A-j>', { desc = "Enable alt j on mac", remap = true})
+--   set('n', '˚', '<A-k>', { desc = "Enable alt j on mac", remap = true})
+--   set('i', '∂', '<A-d>', { desc = "Enable alt d on mac", remap = true})
+-- end
 
 set("n", "viq", 'vi"', { desc = "visual in quote alias" })
 set("n", "vaq", 'va"', { desc = "visual around quote alias" })
