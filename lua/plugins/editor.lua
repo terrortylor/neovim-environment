@@ -21,6 +21,7 @@ return {
       },
       tabline = {
         lualine_a = { "tabs" },
+        lualine_z = { "diagnostics" },
       },
       sections = {
         lualine_a = { "mode" },
@@ -97,6 +98,7 @@ return {
 
   {
     "ThePrimeagen/refactoring.nvim",
+    -- lazy = false,
     keys = {
       {
         "<leader>rr",
@@ -104,16 +106,16 @@ return {
           require("refactoring").select_refactor()
         end,
         mode = "v",
-        npremap = true,
-        sipent = true,
+        noremap = true,
+        silent = true,
         expr = false,
       },
-      { "<leader>rp", ":lua require('refactoring').debug.printf({below = false})<CR>" },
+      { "<leader>rp", ":lua require('refactoring').debug.printf()<CR>" },
       -- Print var: this remap should be made in visual mode
-      { "<leader>rpv", ":lua require('refactoring').debug.print_var({})<CR>", node = "v" },
+      -- { "<leader>rpv", ":lua require('refactoring').debug.print_var({})<CR>", node = "v" },
 
       -- Cleanup function: this remap should be made in normal mode
-      { "<leader>rpc", ":lua require('refactoring').debug.cleanup({})<CR>" },
+      { "<leader>rcp", ":lua require('refactoring').debug.cleanup({})<CR>" },
     },
     opts = {
       -- prompt for return type
