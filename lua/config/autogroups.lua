@@ -42,6 +42,13 @@ vim.api.nvim_create_autocmd("WinLeave", {
   group = ag,
 })
 
+ag = vim.api.nvim_create_augroup("close_netrw_buf", { clear = true })
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "netrw",
+  command = "setlocal bufhidden=wipe",
+  group = ag,
+})
+
 vim.api.nvim_create_autocmd("BufReadPost", {
   pattern = "*",
   callback = function()
