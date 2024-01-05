@@ -121,11 +121,11 @@ return {
 
       * Tasks
       ** Daily
-        - ( ) Review tasks
-        - ( ) Emails
-        - ( ) ISO
-        -- ( ) Review some policies
-        -- ( ) Choose a task for the day
+         - ( ) Review tasks
+         - ( ) Emails
+         - ( ) ISO
+         -- ( ) Review some policies
+         -- ( ) Choose a task for the day
       {}
 
       * Notes
