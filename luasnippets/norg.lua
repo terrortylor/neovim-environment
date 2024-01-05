@@ -44,6 +44,10 @@ local function get_human_timestamp()
   return os.date("%d %B %Y")
 end
 
+local function get_heading_date()
+  return os.date("%A %B %Y (%d-%m-%Y) %H:%M")
+end
+
 local function neorg_meta_version()
   return require("neorg.core").config.norg_version
 end
@@ -103,6 +107,33 @@ return {
       d(1, get_visual),
       rep(1),
     }, { delimiters = "<>" })
+  ),
+
+  s(
+    {
+      trig = "^[%s]*(;+)d([hlo])",
+      descr = "Date prefixed heading, with smart level",
+      regTrig = true,
+      wordTrig = false,
+      snippetType = "autosnippet",
+    },
+    fmt("{} {} : {}", {
+      f(function(_, snip)
+        local len = snip.captures[1]:len()
+        local itemType = snip.captures[2]
+        local itemSymbol = {
+          -- heading
+          ["h"] = "*",
+          -- list
+          ["l"] = "-",
+          -- ordered list
+          ["o"] = "~",
+        }
+        return string.rep(itemSymbol[itemType], len)
+      end),
+      f(get_heading_date, {}),
+      i(2, ""),
+    })
   ),
 
   s(
