@@ -143,10 +143,6 @@ set("v", "<leader>rw", [[:%s/\C<c-r>"//<left>]], { desc = "replace default regis
 set("v", "gy", '"+y', { desc = "yank to system clipboard" })
 set("n", "gy", 'gv"+y', { desc = "select last selection and yank to system clipboard" })
 
-set("i", "jj", "<ESC>", { desc = "Exit insert mode" })
-set("i", "JJ", "<ESC>", { desc = "Exit insert mode" })
-set("i", "kk", "<ESC>", { desc = "Exit insert mode" })
-
 set("i", "<PageUp>", "", { desc = "Disbale pagedown in insert mode, keep hitting by mistake" })
 set("i", "<PageDown>", "", { desc = "Disbale pageup in insert mode, keep hitting by mistake" })
 
