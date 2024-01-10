@@ -102,7 +102,7 @@ return {
   ),
 
   s(
-    { trig = "ivaas" },
+    { trig = ";ivaas" },
     fmt("{https://orc-id.atlassian.net/browse/IVAAS-<>}[IVAAS-<>] ", {
       d(1, get_visual),
       rep(1),
