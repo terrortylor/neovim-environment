@@ -21,6 +21,8 @@ return {
       "Neorg",
     },
     keys = {
+      { "<c-g>nt", "<cmd>Neorg journal today<cr>", desc = "Neorg journal today" },
+      { "<c-g>nj", "<cmd>Neorg journal yesterday<cr>", desc = "Neorg journal yesterday" },
       { "<c-g>nw", "<cmd>Neorg workspace<cr>", desc = "Neorg Workspace" },
       {
         "<c-g>nn",
