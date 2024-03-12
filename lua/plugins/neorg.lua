@@ -54,7 +54,7 @@ return {
     -- depencencies = { "~/personal-workspace/nvim-plugins/neorg-telescope" },
     event = {
       "BufReadPre *.norg",
-      "BufNew *.norg"
+      "BufNew *.norg",
     },
     opts = {
       load = {
@@ -96,10 +96,27 @@ return {
               keybinds.remap("norg", "n", "<space>ohl", "<cmd>Neorg toc qflist<CR>") -- toc / header list
               keybinds.remap_event("norg", "n", "<c-g><c-g>", "core.qol.todo_items.todo.task_cycle") -- toc / header list
               keybinds.unmap("norg", "n", "<c-g>nn")
+              -- https://github.com/nvim-neorg/neorg/pull/1272
+              keybinds.map("norg", "n", "u", function()
+                require("neorg.modules.core.esupports.metagen.module").public.skip_next_update()
+                local k = vim.api.nvim_replace_termcodes("u<c-o>", true, false, true)
+                vim.api.nvim_feedkeys(k, "n", false)
+              end)
+              keybinds.map("norg", "n", "<c-r>", function()
+                require("neorg.modules.core.esupports.metagen.module").public.skip_next_update()
+                local k = vim.api.nvim_replace_termcodes("<c-r><c-o>", true, false, true)
+                vim.api.nvim_feedkeys(k, "n", false)
+              end)
             end,
           },
         },
         ["core.manoeuvre"] = {},
+        -- https://github.com/nvim-neorg/neorg/pull/1272
+        ["core.esupports.metagen"] = {
+          config = {
+            undojoin_updates = true,
+          },
+        },
         ["core.promo"] = {},
         ["core.qol.toc"] = {
           config = {
@@ -107,7 +124,6 @@ return {
           },
         },
         ["core.syntax"] = {},
-        ["core.upgrade"] = {},
         ["core.integrations.telescope"] = {},
         ["core.integrations.treesitter"] = {},
         ["core.integrations.nvim-cmp"] = {},
