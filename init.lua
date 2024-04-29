@@ -25,6 +25,7 @@ vim.api.nvim_create_autocmd("User", {
     -- Custom Plugins
     local plugins = {
       "git.blame",
+      "git.lazygit",
       "ui.arglist",
       -- "ui.tabline",
       -- "ui.statusline",

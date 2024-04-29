@@ -89,6 +89,8 @@ end, { desc = "Close all quicklist windows" })
 set("n", "[c", ":cprevious<CR>", { desc = "go to previous item in quickfix list" })
 set("n", "]c", ":cnext<CR>", { desc = "go to next item in quickfix list" })
 
+set("n", "<leader>lg", ":Lazygit<CR>", { desc = "Lazygit throw away terminal" })
+
 set("n", "<leader>OO", function()
   require("ui.buffer").new_line_no_comment(true)
 end, { desc = "Insert new line above without a comment" })
