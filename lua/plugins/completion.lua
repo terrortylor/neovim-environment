@@ -105,8 +105,13 @@ return {
             priorty = 1000,
           },
           { name = "spell" },
-          { name = "neorg" },
-          { name = "buffer" },
+          -- { name = "neorg" },
+          {
+            name = "buffer",
+            keyword_length = 4,
+            max_item_count = 5,
+            priorty = 1000,
+          },
         }),
       })
 
