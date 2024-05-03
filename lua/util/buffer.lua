@@ -19,6 +19,7 @@ function M.run_and_back_to_mark(command)
 end
 
 local ignore_filetypes = {
+  trouble = {},
   qf = {},
   help = {},
   TelescopePrompt = {},

@@ -86,8 +86,8 @@ end, { desc = "Opens first non empty list, location list is local to window" })
 set("n", "<leader>cc", function()
   require("ui.quickfix").close_all()
 end, { desc = "Close all quicklist windows" })
-set("n", "[c", ":cprevious<CR>", { desc = "go to previous item in quickfix list" })
-set("n", "]c", ":cnext<CR>", { desc = "go to next item in quickfix list" })
+-- set("n", "[c", ":cprevious<CR>", { desc = "go to previous item in quickfix list" })
+-- set("n", "]c", ":cnext<CR>", { desc = "go to next item in quickfix list" })
 
 set("n", "<leader>lg", ":Lazygit<CR>", { desc = "Lazygit throw away terminal" })
 
