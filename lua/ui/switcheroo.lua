@@ -4,16 +4,25 @@ local M = {}
 
 -- define things to toggle here, a better list will be created
 -- in setup that allows toggleing back and forth
-M.swap_map = vim.tbl_add_reverse_lookup({
+M.swap_map = {
   ["true"] = "false",
+  ["false"] = "true",
   ["start"] = "stop",
+  ["stop"] = "start",
   ["good"] = "bad",
+  ["bad"] = "good",
   ["install"] = "uninstall",
+  ["uninstall"] = "install",
   ["enable"] = "disable",
+  ["disable"] = "enable",
   ["on"] = "off",
+  ["off"] = "on",
   ["=="] = "!=",
+  ["!="] = "==",
   ["&&"] = "||",
-})
+  ["||"] = "&&",
+}
+
 
 function M.do_switcheroo()
   -- can't use vim.fn.expand here as cword may != which come out as expression
