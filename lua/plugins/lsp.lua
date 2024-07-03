@@ -79,12 +79,15 @@ return {
         -- a dedicated handler.
         function(server_name) -- default handler (optional)
           -- JDTLS is managed differently via the mfussenegger/nvim-jdtls plugin
-          if server_name == "jdtls" then return end
+          if server_name == "jdtls" then
+            return
+          end
 
           require("lspconfig")[server_name].setup({
             capabilities = buildCapabilities(),
           })
         end,
+
         ["jsonls"] = function()
           require("lspconfig").jsonls.setup({
             capabilities = buildCapabilities(),
@@ -194,7 +197,12 @@ return {
             set("n", "<space>fd", "<cmd>silent! wall<cr><cmd>GoImport<CR>", opts)
           else
             set("n", "<space>fd", function()
-              vim.lsp.buf.format({ async = true })
+              vim.lsp.buf.format({
+                filter = function(client)
+                  return client.name == "null-ls"
+                end,
+                async = true,
+              })
             end, bufopts)
           end
           -- -- Enable completion triggered by <c-x><c-o>
@@ -227,7 +235,10 @@ return {
 
   -- null-ls
   {
-    "jose-elias-alvarez/null-ls.nvim",
+    "nvimtools/none-ls.nvim",
+    dependencies = {
+      "nvimtools/none-ls-extras.nvim",
+    },
     config = function()
       local nls = require("null-ls")
       nls.setup({
@@ -241,17 +252,13 @@ return {
           -- }),
 
           -- bash/shell
-          nls.builtins.code_actions.shellcheck,
-          nls.builtins.diagnostics.shellcheck,
+          -- nls.builtins.code_actions.shellcheck,
+          -- nls.builtins.diagnostics.shellcheck,
+          nls.builtins.formatting.prettier,
           nls.builtins.formatting.shfmt,
 
-          -- yaml lint
-          nls.builtins.diagnostics.yamllint,
-          -- See: $XDG_CONFIG_HOME/yamllint/config
-          -- for yamllinkt config overrides 
-          
           -- javascript/typescript
-          nls.builtins.diagnostics.eslint_d,
+          -- nls.builtins.diagnostics.eslint_d,
           -- cloudformation
           nls.builtins.diagnostics.cfn_lint,
 
@@ -266,7 +273,7 @@ return {
             filetypes = { "yaml.github" },
           }),
 
-          nls.builtins.diagnostics.markdownlint,
+          -- nls.builtins.diagnostics.markdownlint,
         },
       })
     end,
