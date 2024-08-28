@@ -69,3 +69,9 @@ vim.cmd("syn sync minlines=20")
 if vim.fn.executable("rg") > 0 then
   vim.o.grepprg = "rg --vimgrep --no-heading --smart-case"
 end
+
+vim.diagnostic.config {
+  virtual_text = false,
+  signs = true,
+  underline = false,
+}
