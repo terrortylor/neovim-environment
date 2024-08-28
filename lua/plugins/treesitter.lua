@@ -35,11 +35,6 @@ return {
     },
   },
 
-  {
-    "nvim-treesitter/playground",
-    cmd = { "TSPlaygroundToggle" },
-    dependencies = { "nvim-treesitter/nvim-treesitter" },
-  },
 
   {
     "RRethy/nvim-treesitter-textsubjects",
