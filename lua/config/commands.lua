@@ -25,6 +25,11 @@ user_command("ShowHighlightGroup", function()
   end
 end)
 
+user_command("RemoveTMUXShit", function()
+  vim.cmd([[%s/\s*│//]])
+  vim.cmd("checktime")
+end)
+
 user_command("SetProjectCWD", require("util.path").set_cwd_to_project_root)
 -- some filesystem helpers
 user_command("Mkdir", "lua require('util.filesystem').mkdir(<args>)", {
