@@ -3,12 +3,14 @@ return {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
     opts = {
+      -- This seems to cause slow start up
       ensure_installed = {
         "bash",
         "gitcommit",
         "gitconfig",
         "gitignore",
         "go",
+        "helm",
         "html",
         "java",
         "javascript",
