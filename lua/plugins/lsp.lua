@@ -1,4 +1,4 @@
-lazyFileTypes = { "markdown", "yaml", "bash", "dockerfile", "terraform", "lua" }
+lazyFileTypes = { "markdown", "yaml", "bash", "dockerfile", "terraform", "lua", "typescript", "javascript" }
 
 return {
   -- neodev
