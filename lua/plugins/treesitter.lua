@@ -2,6 +2,7 @@ return {
   {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
+    cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
     opts = {
       -- This seems to cause slow start up
       ensure_installed = {
@@ -21,6 +22,7 @@ return {
         "ruby",
         "terraform",
         "typescript",
+        "tsx",
         "vimdoc",
         "yaml",
       },
