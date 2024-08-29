@@ -97,6 +97,7 @@ return {
   },
   {
     "axkirillov/easypick.nvim",
+    cmd = "Easypick",
     config = function()
       local easypick = require("easypick")
       easypick.setup({
