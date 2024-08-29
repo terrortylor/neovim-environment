@@ -1,7 +1,10 @@
+lazyFileTypes = { "markdown", "yaml", "bash", "dockerfile", "terraform", "lua" }
+
 return {
   -- neodev
   {
     "folke/neodev.nvim",
+    lazy = true,
     opts = {
       -- library = {
       --   runtime = "~/projects/neovim/runtime/",
@@ -52,6 +55,7 @@ return {
     --   },
     -- },
     ft = { "markdown", "yaml", "bash", "dockerfile", "terraform" },
+    ft = lazyFileTypes,
     config = function()
       require("mason-lspconfig").setup({
         ensure_installed = {
@@ -127,18 +131,20 @@ return {
     end,
 
     dependencies = {
+      "williamboman/mason.nvim",
       "neovim/nvim-lspconfig",
-      "mfussenegger/nvim-jdtls",
+      { "mfussenegger/nvim-jdtls", ft = "java" },
       "b0o/SchemaStore.nvim",
     },
   },
 
-  { "mfussenegger/nvim-jdtls" },
+
+  { "mfussenegger/nvim-jdtls", ft = "java" },
 
   -- lsp servers
   {
     "neovim/nvim-lspconfig",
-    lazy = false,
+    ft = lazyFileTypes,
     config = function()
       vim.api.nvim_create_autocmd("LspAttach", {
         group = vim.api.nvim_create_augroup("UserLspConfig", {}),
@@ -243,6 +249,7 @@ return {
     dependencies = {
       "nvimtools/none-ls-extras.nvim",
     },
+    ft = lazyFileTypes,
     config = function()
       local nls = require("null-ls")
       nls.setup({

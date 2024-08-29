@@ -35,6 +35,6 @@ return {
       set("n", "gtn", "<cmd>TestNearest<CR>", { desc = "test nearest test" })
 
       vim.api.nvim_create_user_command("TestStrategySelect", select_strategy, { force = true })
-    end
+    end,
   },
 }
