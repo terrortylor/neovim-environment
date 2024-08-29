@@ -1,7 +1,7 @@
 return {
   {
     "nvim-telescope/telescope.nvim",
-    dependencies = { "nvim-lua/plenary.nvim" },
+    dependencies = { "nvim-lua/plenary.nvim", "folke/trouble.nvim" },
     cmd = "Telescope",
     keys = {
       {
@@ -60,13 +60,16 @@ return {
     },
     config = function()
       local actions = require("telescope.actions")
+      local trouble = require("trouble.sources.telescope")
       require("telescope").setup({
         defaults = {
           mappings = {
             i = {
               ["<c-j>"] = actions.move_selection_next,
               ["<c-k>"] = actions.move_selection_previous,
+              ["<c-q>"] = trouble.open,
             },
+            n = { ["<c-q>"] = trouble.open },
           },
         },
       })
@@ -91,10 +94,12 @@ return {
       "nvim-lua/plenary.nvim",
     },
   },
+
   {
     "stevearc/dressing.nvim",
     opts = {},
   },
+
   {
     "axkirillov/easypick.nvim",
     cmd = "Easypick",
