@@ -18,9 +18,6 @@ return {
     cmd = "Mason",
     build = ":MasonUpdate",
     config = true,
-    -- config = function()
-
-    -- end,
   },
 
   {
@@ -45,16 +42,6 @@ return {
 
   {
     "williamboman/mason-lspconfig.nvim",
-    -- config = true,
-    -- opts = {
-    --   ensure_installed = {
-    --     "bashls",
-    --     "dockerls",
-    --     "tsserver",
-    --     "jdtls",
-    --   },
-    -- },
-    ft = { "markdown", "yaml", "bash", "dockerfile", "terraform" },
     ft = lazyFileTypes,
     config = function()
       require("mason-lspconfig").setup({
@@ -67,6 +54,7 @@ return {
           "dockerls",
           "tsserver",
           "jdtls",
+          "prettierd",
           "terraformls",
           "helm_ls",
           "markdown_oxide",
@@ -265,11 +253,14 @@ return {
           -- bash/shell
           -- nls.builtins.code_actions.shellcheck,
           -- nls.builtins.diagnostics.shellcheck,
-          nls.builtins.formatting.prettier,
+          nls.builtins.formatting.prettierd,
           nls.builtins.formatting.shfmt,
 
           -- javascript/typescript
           -- nls.builtins.diagnostics.eslint_d,
+          require("none-ls.diagnostics.eslint_d"), --from none-ls-extras.nvim
+          require("none-ls.formatting.eslint_d"), --from none-ls-extras.nvim
+          require("none-ls.code_actions.eslint_d"), --from none-ls-extras.nvim
           -- cloudformation
           nls.builtins.diagnostics.cfn_lint,
 
