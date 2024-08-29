@@ -12,6 +12,7 @@ return {
   -- tools
   {
     "williamboman/mason.nvim",
+    cmd = "Mason",
     build = ":MasonUpdate",
     config = true,
     -- config = function()
@@ -50,6 +51,7 @@ return {
     --     "jdtls",
     --   },
     -- },
+    ft = { "markdown", "yaml", "bash", "dockerfile", "terraform" },
     config = function()
       require("mason-lspconfig").setup({
         ensure_installed = {
@@ -62,6 +64,8 @@ return {
           "tsserver",
           "jdtls",
           "terraformls",
+          "helm_ls",
+          "markdown_oxide",
         },
       })
 
