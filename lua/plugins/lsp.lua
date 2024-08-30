@@ -255,6 +255,7 @@ return {
           -- nls.builtins.diagnostics.shellcheck,
           nls.builtins.formatting.prettierd,
           nls.builtins.formatting.shfmt,
+          nls.builtins.formatting.terraform_fmt,
 
           -- javascript/typescript
           -- nls.builtins.diagnostics.eslint_d,
