@@ -241,6 +241,7 @@ return {
     config = function()
       local nls = require("null-ls")
       nls.setup({
+        debounce = 1000,
         sources = {
           -- lua
           nls.builtins.formatting.stylua,
