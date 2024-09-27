@@ -11,7 +11,7 @@ vim.api.nvim_create_autocmd("TabLeave", {
   callback = function()
     if not vim.g.Lasttab then
       vim.g.Lasttab = 1
-      vim.g.Lasttab_backup =  1
+      vim.g.Lasttab_backup = 1
     end
     vim.g.Lasttab_backup = vim.g.Lasttab
     vim.g.Lasttab = vim.fn.tabpagenr()
@@ -23,7 +23,7 @@ vim.api.nvim_create_autocmd("TabClosed", {
   callback = function()
     if not vim.g.Lasttab then
       vim.g.Lasttab = 1
-      vim.g.Lasttab_backup =  1
+      vim.g.Lasttab_backup = 1
     end
     vim.g.Lasttab = vim.g.Lasttab_backup
   end,
