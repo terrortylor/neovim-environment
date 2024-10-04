@@ -51,8 +51,7 @@ return {
           end)
         else
           tasks[1]:restart()
-          -- print("running: ".. vim.inspect(tasks[1]))
-          -- overseer.open({ enter = false, direction = "bottom" })
+          overseer.open({ enter = false, direction = "bottom" })
         end
       end, {})
 
