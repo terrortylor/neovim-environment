@@ -46,6 +46,7 @@ return {
         if vim.tbl_isempty(tasks) then
           overseer.run_template({}, function(task)
             if task then
+              task:add_component({ "mycomponents/checktime_on_complete"})
               overseer.open({ enter = false, direction = "bottom" })
             end
           end)
