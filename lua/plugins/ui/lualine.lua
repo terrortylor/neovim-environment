@@ -5,11 +5,12 @@ return {
       options = {
         component_separators = { left = "", right = "" },
         section_separators = { left = "", right = "" },
-        -- theme = "tokyonight",
+        theme = "material",
         globalstatus = true,
       },
       tabline = {
         lualine_a = { "tabs" },
+        lualine_z = {  "overseer" },
         -- lualine_z = { "diagnostics" },
       },
       sections = {
