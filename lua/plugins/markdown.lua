@@ -3,21 +3,31 @@ return {
   {
     "OXY2DEV/markview.nvim",
     ft = "markdown",
-
     dependencies = {
       "nvim-treesitter/nvim-treesitter",
       "nvim-tree/nvim-web-devicons",
     },
-
     config = function()
       local markview = require("markview")
       local presets = require("markview.presets")
-
       markview.setup({
         headings = presets.headings.glow_labels,
+        list_items = {
+          marker_minus = {
+            add_padding = false,
+          },
+          marker_plus = {
+            add_padding = false,
+          },
+          marker_star = {
+            add_padding = false,
+          },
+          marker_dot = {
+            add_padding = false,
+          },
+        },
         checkboxes = {
           enable = true,
-
           checked = {
             text = "[✔]",
             hl = "MarkviewCheckboxChecked",
@@ -32,7 +42,6 @@ return {
           },
         },
       })
-
       -- vim.cmd("Markview enableAll")
     end,
   },
