@@ -43,33 +43,23 @@ return {
         desc = "telescope switch to an open buffer",
       },
       {
-        "<leader>fh",
-        ':lua require("telescope.builtin").help_tags()<cr>',
-        desc = "telescope search tags",
-      },
-      {
-        "<leader>ft",
-        ':lua require("plugins.telescope").todo_picker()<cr>',
-        desc = "telescope search todo's in CWD",
-      },
-      {
         "<leader>fs",
-        ':lua require("telescope.builtin.lsp").dynamic_workspace_symbols()<cr>',
+        '<cmd>Telescope lsp_workspace_symbols<cr>',
         desc = "telescope LSP symbols",
       },
     },
     config = function()
       local actions = require("telescope.actions")
-      local trouble = require("trouble.sources.telescope")
+      -- local trouble = require("trouble.sources.telescope")
       require("telescope").setup({
         defaults = {
           mappings = {
             i = {
               ["<c-j>"] = actions.move_selection_next,
               ["<c-k>"] = actions.move_selection_previous,
-              ["<c-q>"] = trouble.open,
+              -- ["<c-q>"] = trouble.open,
             },
-            n = { ["<c-q>"] = trouble.open },
+            -- n = { ["<c-q>"] = trouble.open },
           },
         },
       })
