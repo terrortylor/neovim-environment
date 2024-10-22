@@ -20,6 +20,7 @@ end
 
 local ignore_filetypes = {
   trouble = {},
+  dashboard = {},
   qf = {},
   help = {},
   TelescopePrompt = {},
