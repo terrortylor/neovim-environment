@@ -93,58 +93,63 @@ return {
         },
         sources = cmp.config.sources({
           { name = "luasnip" },
-          { name = "nvim_lsp" },
-          { name = "nvim_lsp_document_symbol" },
-          { name = "path" },
-          {
-            name = "tmux",
-            keyword_length = 6,
-            option = {
-              keyword_pattern = [[\w\w\w\w\+]],
-            },
-            max_item_count = 5,
-            priorty = 1000,
+          { name = "nvim_lsp",
+          option = {
+            markdown_oxide = {
+              keyword_length = 2,
+              keyword_pattern = [[\(\k\| \|\/\|#\)\+]],
+              keyword_pattern = [[#\w\+]]
+            }
           },
-          { name = "spell" },
-          -- { name = "neorg" },
-          {
-            name = "buffer",
-            keyword_length = 4,
-            max_item_count = 5,
-            priorty = 1000,
-          },
-        }),
-      })
-
-      cmp.setup.cmdline({ "/", "?" }, {
-        mapping = cmp.mapping.preset.cmdline(),
-        sources = {
-          { name = "buffer" },
         },
-      })
+        { name = "nvim_lsp_document_symbol" },
+        { name = "path" },
+        {
+          name = "tmux",
+          keyword_length = 6,
+          option = {
+            keyword_pattern = [[\w\w\w\w\+]],
+          },
+          max_item_count = 5,
+          priorty = 1000,
+        },
+        { name = "spell", keyword_length = 5, max_item_count = 3 },
+        {
+          name = "buffer",
+          keyword_length = 4,
+          max_item_count = 5,
+          priorty = 1000,
+        },
+      }),
+    })
 
-      cmp.setup.cmdline(":", {
-        mapping = cmp.mapping.preset.cmdline(),
-        sources = cmp.config.sources({
-          { name = "path" },
-          { name = "cmdline" },
-        }),
-      })
-    end,
+    cmp.setup.cmdline({ "/", "?" }, {
+      mapping = cmp.mapping.preset.cmdline(),
+      sources = {
+        { name = "buffer" },
+      },
+    })
 
-    dependencies = {
-      "L3MON4D3/LuaSnip",
-      "hrsh7th/cmp-buffer",
-      "hrsh7th/cmp-cmdline",
-      "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-nvim-lsp-document-symbol",
-      "hrsh7th/cmp-path",
-      "saadparwaiz1/cmp_luasnip",
-      "andersevenrud/cmp-tmux",
-      -- "~/personal-workspace/nvim-plugins/cmp-tmux",
-      "f3fora/cmp-spell",
-      "hrsh7th/cmp-nvim-lua",
-      -- "hrsh7th/cmp-nvim-lsp-signature-help"
-    },
+    cmp.setup.cmdline(":", {
+      mapping = cmp.mapping.preset.cmdline(),
+      sources = cmp.config.sources({
+        { name = "path" },
+        { name = "cmdline" },
+      }),
+    })
+  end,
+
+  dependencies = {
+    "L3MON4D3/LuaSnip",
+    "hrsh7th/cmp-buffer",
+    "hrsh7th/cmp-cmdline",
+    "hrsh7th/cmp-nvim-lsp",
+    "hrsh7th/cmp-nvim-lsp-document-symbol",
+    "hrsh7th/cmp-path",
+    "saadparwaiz1/cmp_luasnip",
+    "andersevenrud/cmp-tmux",
+    "f3fora/cmp-spell",
+    "hrsh7th/cmp-nvim-lua",
   },
+},
 }
