@@ -20,6 +20,7 @@ end
 
 local ignore_filetypes = {
   trouble = {},
+  oil = {},
   dashboard = {},
   qf = {},
   help = {},
@@ -29,6 +30,7 @@ local ignore_filetypes = {
   packer = {},
   splash = {},
   neorg = {},
+  Avante = {},
   norg = {
     "neorg://Quick Actions"
   },
