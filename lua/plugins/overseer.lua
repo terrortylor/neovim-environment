@@ -4,6 +4,11 @@ return {
 
     keys = {
       {
+        "<leader>or",
+        "<cmd>OverseerRun<cr>",
+        desc = "OverseerRun - Opend the Overseer Run picker",
+      },
+      {
         "<leader>rr",
         "<cmd>OverseerRestartLast<cr>",
         desc = "OverseerRestartLast - Repeats last command, or prompts for selection of task",

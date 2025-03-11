@@ -1,10 +1,10 @@
 return {
 
-  {
-    'mistweaverco/kulala.nvim',
-    dependencies = { 'nvim-treesitter/nvim-treesitter' },
-  opts = {}
-},
+--   {
+--     'mistweaverco/kulala.nvim',
+--     dependencies = { 'nvim-treesitter/nvim-treesitter' },
+--   opts = {}
+-- },
 
   {
     "rest-nvim/rest.nvim",

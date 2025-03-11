@@ -8,6 +8,9 @@ return {
           ["<C-c>"] = false,
           ["q"] = "actions.close",
         },
+        view_options = {
+          show_hidden = true,
+        },
     },
     -- Optional dependencies
     dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if prefer nvim-web-devicons

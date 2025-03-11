@@ -1,4 +1,5 @@
-lazyFileTypes = { "markdown", "yaml", "bash", "dockerfile", "terraform", "terraform-vars", "lua", "typescript", "javascript" }
+lazyFileTypes =
+  { "markdown", "yaml", "bash", "dockerfile", "terraform", "terraform-vars", "lua", "typescript", "javascript", "go" }
 
 return {
   -- neodev
@@ -20,44 +21,54 @@ return {
     config = true,
   },
 
-  {
-    "WhoIsSethDaniel/mason-tool-installer.nvim",
-    opts = {
-      -- Note: this is the mason name value here: https://github.com/williamboman/mason-lspconfig.nvim/blob/main/doc/mason-lspconfig-mapping.txt
-      ensure_installed = {
-        "actionlint",
-        "cfn-lint",
-        "eslint_d",
-        -- "luacheck",
-        "markdownlint",
-        "stylua",
-        "shellcheck",
-        "shfmt",
-        -- TODO replace with yamlls?
-        -- https://gist.github.com/agentzhao/3e26b980175be65478cc2da577858ae0
-        "yamllint",
-      },
-    },
-  },
+  -- {
+  --   "WhoIsSethDaniel/mason-tool-installer.nvim",
+  --   opts = {
+  --     -- Note: this is the mason name value here: https://github.com/williamboman/mason-lspconfig.nvim/blob/main/doc/mason-lspconfig-mapping.txt
+  --     ensure_installed = {
+  --       "actionlint",
+  --       "cfn-lint",
+  --       "eslint_d",
+  --       -- "luacheck",
+  --       "stylua",
+  --       "kotlin-language-server",
+  --       "shellcheck",
+  --       "cucumber-language-server",
+  --       "shfmt",
+  --       -- "marksman",
+  --       "markdownlint",
+  --       -- TODO replace with yamlls?
+  --       -- https://gist.github.com/agentzhao/3e26b980175be65478cc2da577858ae0
+  --       "yamllint",
+  --     },
+  --   },
+  -- },
 
   {
     "williamboman/mason-lspconfig.nvim",
     ft = lazyFileTypes,
+    cmd = "LspStart",
     config = function()
       require("mason-lspconfig").setup({
         ensure_installed = {
           "bashls",
+          "gopls",
           "jsonls",
           "helm_ls",
           "yamlls",
           "groovyls",
           "dockerls",
-          "tsserver",
+          -- "tsserver",
           "jdtls",
-          "prettierd",
           "terraformls",
           "helm_ls",
           "markdown_oxide",
+          -- The following don't install automatically,
+          -- they were installed via "WhoIsSethDaniel/mason-tool-installer.nvim"
+          -- but this was causing a big slow down
+          -- "actionlint",
+          -- "cfn-lint",
+          -- "eslint_d",
         },
       })
 
@@ -84,37 +95,68 @@ return {
           })
         end,
 
-        ["jsonls"] = function()
-          require("lspconfig").jsonls.setup({
+        -- ["jsonls"] = function()
+        --   require("lspconfig").jsonls.setup({
+        --     capabilities = buildCapabilities(),
+        --     settings = {
+        --       json = {
+        --         schemas = require("schemastore").json.schemas(),
+        --         validate = { enable = true },
+        --       },
+        --     },
+        --   })
+        -- end,
+
+        ["helm_ls"] = function()
+          require("lspconfig").helm_ls.setup({
             capabilities = buildCapabilities(),
             settings = {
-              json = {
-                schemas = require("schemastore").json.schemas(),
-                validate = { enable = true },
+              ["helm-ls"] = {
+                yamlls = {
+                  path = "yaml-language-server",
+                },
               },
             },
           })
         end,
-        ["yamlls"] = function()
-          require("lspconfig").yamlls.setup({
-            capabilities = buildCapabilities(),
-            settings = {
-              json = {
-                schemas = require("schemastore").json.schemas(),
-                validate = { enable = true },
-              },
-            },
-          })
-        end,
-        ["groovyls"] = function()
-          local home = vim.fn.getenv("HOME")
-          local lib_dir =
-            "/.local/share/nvim/mason/packages/groovy-language-server/build/libs/groovy-language-server-all.jar"
-          require("lspconfig").groovyls.setup({
-            capabilities = buildCapabilities(),
-            cmd = { "java", "-jar", home .. lib_dir },
-          })
-        end,
+
+        -- ["yamlls"] = function()
+        --   local schemas = require("schemastore").yaml.schemas()
+        --   -- vim.print(schemas)
+        --   -- schemas["https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.25.8-standalone/all.json"] =
+        --   -- schemas.kubernetes = "*.yaml"
+        --   -- schemas["https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master-standalone/all.json"] =
+        --     -- { "**/chart/*/templates/*.yaml"  }
+
+        --   require("lspconfig").yamlls.setup({
+        --     capabilities = buildCapabilities(),
+        --     settings = {
+        --       yaml = {
+        --         format = {
+        --           enabled = true,
+        --         },
+        --         -- schemaStore = {
+        --         --   enable = true,
+        --         --   url = "https://www.schemastore.org/json",
+        --         -- },
+        --         -- schemas = require("schemastore").yaml.schemas(),
+        --         schemas = schemas,
+        --         validate = { enable = true },
+        --       },
+        --     },
+        --   })
+        -- end,
+
+        -- ["groovyls"] = function()
+        --   local home = vim.fn.getenv("HOME")
+        --   local lib_dir =
+        --     "/.local/share/nvim/mason/packages/groovy-language-server/build/libs/groovy-language-server-all.jar"
+        --   require("lspconfig").groovyls.setup({
+        --     capabilities = buildCapabilities(),
+        --     cmd = { "java", "-jar", home .. lib_dir },
+        --   })
+        -- end,
+
       })
     end,
 
@@ -122,10 +164,76 @@ return {
       "williamboman/mason.nvim",
       "neovim/nvim-lspconfig",
       { "mfussenegger/nvim-jdtls", ft = "java" },
-      "b0o/SchemaStore.nvim",
+      -- "b0o/SchemaStore.nvim",
     },
   },
 
+  -- {
+  --   "someone-stole-my-name/yaml-companion.nvim",
+  --   dependencies = {
+  --     "neovim/nvim-lspconfig",
+  --     "nvim-telescope/telescope.nvim",
+  --   },
+  --   keys = {
+  --     { "<leader>yp", "<cmd>Telescope yaml_schema<CR>", desc = "YAML Schema" },
+  --   },
+  --   config = function(_, _)
+  --     require("telescope").load_extension("yaml_schema")
+  --     -- require("yaml-companion").setup()
+  --
+  --     local cfg = require("yaml-companion").setup({
+  --       -- detect k8s schemas based on file content
+  --       builtin_matchers = {
+  --         kubernetes = { enabled = true },
+  --       },
+  --
+  --       -- schemas available in Telescope picker
+  --       schemas = {
+  --         -- not loaded automatically, manually select with
+  --         -- :Telescope yaml_schema
+  --         {
+  --           name = "Argo CD Application",
+  --           uri = "https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/argoproj.io/application_v1alpha1.json",
+  --         },
+  --         {
+  --           name = "SealedSecret",
+  --           uri = "https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/bitnami.com/sealedsecret_v1alpha1.json",
+  --         },
+  --         -- schemas below are automatically loaded, but added
+  --         -- them here so that they show up in the statusline
+  --         {
+  --           name = "Kustomization",
+  --           uri = "https://json.schemastore.org/kustomization.json",
+  --         },
+  --         {
+  --           name = "GitHub Workflow",
+  --           uri = "https://json.schemastore.org/github-workflow.json",
+  --         },
+  --       },
+  --
+  --       lspconfig = {
+  --         settings = {
+  --           yaml = {
+  --             validate = true,
+  --             schemaStore = {
+  --               enable = false,
+  --               url = "",
+  --             },
+  --
+  --             -- schemas from store, matched by filename
+  --             -- loaded automatically
+  --             schemas = require("schemastore").yaml.schemas({
+  --               select = {
+  --                 "kustomization.yaml",
+  --                 "GitHub Workflow",
+  --               },
+  --             }),
+  --           },
+  --         },
+  --       },
+  --     })
+  --   end,
+  -- },
 
   { "mfussenegger/nvim-jdtls", ft = "java" },
 
@@ -191,18 +299,22 @@ return {
           -- TODO this is fucking gross, but quickfix
           -- Tried to do filetype mapping but isn't picked up for some reason when vim starts, only when explicitly settings
           -- the filetype to go in the command line... user that is a bug though
-          if vim.bo.filetype == "go" then
-            set("n", "<space>fd", "<cmd>silent! wall<cr><cmd>GoImport<CR>", opts)
-          else
-            set("n", "<space>fd", function()
-              vim.lsp.buf.format({
-                filter = function(client)
-                  return client.name == "null-ls"
-                end,
-                async = true,
-              })
-            end, bufopts)
-          end
+          -- if vim.bo.filetype == "go" then
+          --   set("n", "<space>fd", "<cmd>silent! wall<cr><cmd>GoImport<CR>", opts)
+          -- else
+          --   set("n", "<space>fd", function()
+          --     print("alex1")
+          --     require("conform").format({ lsp_format = "fallback" })
+          --     -- vim.lsp.buf.format({
+          --     --   filter = function(client)
+          --     --     print("alex")
+          --     --     print(client)
+          --     --     return client.name == "null-ls"
+          --     --   end,
+          --     --   async = true,
+          --     -- })
+          --   end, bufopts)
+          -- end
           -- -- Enable completion triggered by <c-x><c-o>
           -- vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
 
@@ -231,58 +343,94 @@ return {
     end,
   },
 
-  -- null-ls
   {
-    "nvimtools/none-ls.nvim",
-    dependencies = {
-      "nvimtools/none-ls-extras.nvim",
-    },
-    ft = lazyFileTypes,
+    "stevearc/conform.nvim",
+    dependencies = { "mason.nvim" },
+    -- lazy = true,
     config = function()
-      local nls = require("null-ls")
-      nls.setup({
-        debounce = 1000,
-        sources = {
-          -- lua
-          nls.builtins.formatting.stylua,
-          -- nls.builtins.diagnostics.luacheck.with({
-          --   condition = function(utils)
-          --     return utils.root_has_file({ ".luacheckrc" })
-          --   end,
-          -- }),
+      require("conform").setup({
+        formatters_by_ft = {
+          lua = { "stylua" },
 
-          -- bash/shell
-          -- nls.builtins.code_actions.shellcheck,
-          -- nls.builtins.diagnostics.shellcheck,
-          nls.builtins.formatting.prettierd,
-          nls.builtins.formatting.shfmt,
-          nls.builtins.formatting.terraform_fmt,
-
-          -- javascript/typescript
-          -- nls.builtins.diagnostics.eslint_d,
-          require("none-ls.diagnostics.eslint_d"), --from none-ls-extras.nvim
-          require("none-ls.formatting.eslint_d"), --from none-ls-extras.nvim
-          require("none-ls.code_actions.eslint_d"), --from none-ls-extras.nvim
-          -- cloudformation
-          nls.builtins.diagnostics.cfn_lint,
-
-          -- refactoring
-          nls.builtins.code_actions.refactoring,
-
-          -- git
-          nls.builtins.code_actions.gitsigns,
-
-          -- github actions
-          nls.builtins.diagnostics.actionlint.with({
-            filetypes = { "yaml.github" },
-          }),
-
-          -- nls.builtins.diagnostics.markdownlint,
+          -- You can customize some of the format options for the filetype (:help conform.format)
+          markdown = { "markdownlint-cli2", lsp_format = "fallback" },
+          -- Conform will run the first available formatter
+          javascript = { "prettierd", "prettier", stop_after_first = true },
         },
+        -- format_on_save = {
+        --   -- These options will be passed to conform.format()
+        --   timeout_ms = 500,
+        --   lsp_format = "fallback",
+        -- },
       })
     end,
+    -- cmd = "ConformInfo",
+    keys = {
+      {
+        -- This is overwritten by the LSP mapping, but falls back to this if not set
+        "<leader>fd",
+        function()
+          print("alex1")
+          require("conform").format()
+        end,
+        -- mode = { "n", "v" },
+        desc = "Format Injected Langs",
+      },
+    },
   },
 
+  -- -- null-ls
+  -- {
+  --   "nvimtools/none-ls.nvim",
+  --   dependencies = {
+  --     "nvimtools/none-ls-extras.nvim",
+  --   },
+  --   ft = lazyFileTypes,
+  --   config = function()
+  --     local nls = require("null-ls")
+  --     nls.setup({
+  --       debounce = 1000,
+  --       sources = {
+  --         -- lua
+  --         nls.builtins.formatting.stylua,
+  --         -- nls.builtins.diagnostics.luacheck.with({
+  --         --   condition = function(utils)
+  --         --     return utils.root_has_file({ ".luacheckrc" })
+  --         --   end,
+  --         -- }),
+  --
+  --         -- bash/shell
+  --         -- nls.builtins.code_actions.shellcheck,
+  --         -- nls.builtins.diagnostics.shellcheck,
+  --         nls.builtins.formatting.prettierd,
+  --         nls.builtins.formatting.shfmt,
+  --         nls.builtins.formatting.terraform_fmt,
+  --
+  --         -- javascript/typescript
+  --         -- nls.builtins.diagnostics.eslint_d,
+  --         require("none-ls.diagnostics.eslint_d"), --from none-ls-extras.nvim
+  --         require("none-ls.formatting.eslint_d"), --from none-ls-extras.nvim
+  --         require("none-ls.code_actions.eslint_d"), --from none-ls-extras.nvim
+  --         -- cloudformation
+  --         nls.builtins.diagnostics.cfn_lint,
+  --
+  --         -- refactoring
+  --         nls.builtins.code_actions.refactoring,
+  --
+  --         -- git
+  --         nls.builtins.code_actions.gitsigns,
+  --
+  --         -- github actions
+  --         nls.builtins.diagnostics.actionlint.with({
+  --           filetypes = { "yaml.github" },
+  --         }),
+  --
+  --         -- nls.builtins.diagnostics.markdownlint,
+  --       },
+  --     })
+  --   end,
+  -- },
+  --
   -- -- inlay hints
   -- {
   --   "lvimuser/lsp-inlayhints.nvim",

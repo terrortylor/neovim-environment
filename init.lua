@@ -10,9 +10,9 @@ vim.g.mapleader = " "
 -- require("config.plugins")
 require("config.lazyplugins")
 
-vim.api.nvim_create_autocmd("User", {
-  pattern = "VeryLazy",
-  callback = function()
+-- vim.api.nvim_create_autocmd("User", {
+--   pattern = "VeryLazy",
+--   callback = function()
     require("util.globals")
 
     -- Configurations
@@ -25,23 +25,24 @@ vim.api.nvim_create_autocmd("User", {
     -- Custom Plugins
     local plugins = {
       "git.blame",
+      "git.lazygit",
       "ui.arglist",
       -- "ui.tabline",
       -- "ui.statusline",
-      "ui.buffer.trailing_whitespace",
-      "ui.window.numbering",
+      -- "ui.buffer.trailing_whitespace",
+      -- "ui.window.numbering",
       -- "ui.search",
       -- "ui.splash",
       "tmux",
       "alternate",
       "ui.switcheroo",
-      "pa",
-      "snake",
+      -- "pa",
+      -- "snake",
       "util.auto_update",
     }
 
     for _, p in pairs(plugins) do
       require(p).setup()
     end
-  end,
-})
+  -- end,
+-- })

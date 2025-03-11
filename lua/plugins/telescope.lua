@@ -72,15 +72,15 @@ return {
           require("telescope").load_extension("gh")
         end,
       },
-      -- this is to lazy load my extensions
-      {
-        dir = "telescope/_extensions",
-        config = function()
-          require("telescope").load_extension("bashrc")
-          require("telescope").load_extension("go_src")
-          require("telescope").load_extension("plugin_files")
-        end,
-      },
+      -- -- this is to lazy load my extensions
+      -- {
+      --   dir = "telescope/_extensions",
+      --   config = function()
+      --     require("telescope").load_extension("bashrc")
+      --     require("telescope").load_extension("go_src")
+      --     require("telescope").load_extension("plugin_files")
+      --   end,
+      -- },
       "nvim-lua/plenary.nvim",
     },
   },

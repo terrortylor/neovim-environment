@@ -30,17 +30,28 @@ vim.api.nvim_create_autocmd("TabClosed", {
   group = ag,
 })
 
-ag = vim.api.nvim_create_augroup("cursor_line_group", { clear = true })
-vim.api.nvim_create_autocmd("WinEnter", {
-  pattern = "*",
-  command = "setlocal cursorline",
+vim.api.nvim_create_autocmd("Filetype", {
+  pattern = "dashboard",
+  callback = function()
+    vim.wo.statuscolumn = ""
+    vim.opt_local.number = false
+    vim.opt_local.relativenumber = false
+    print("in auto")
+  end,
   group = ag,
 })
-vim.api.nvim_create_autocmd("WinLeave", {
-  pattern = "*",
-  command = "setlocal nocursorline",
-  group = ag,
-})
+
+-- ag = vim.api.nvim_create_augroup("cursor_line_group", { clear = true })
+-- vim.api.nvim_create_autocmd("WinEnter", {
+--   pattern = "*",
+--   command = "setlocal cursorline",
+--   group = ag,
+-- })
+-- vim.api.nvim_create_autocmd("WinLeave", {
+--   pattern = "*",
+--   command = "setlocal nocursorline",
+--   group = ag,
+-- })
 
 ag = vim.api.nvim_create_augroup("close_netrw_buf", { clear = true })
 vim.api.nvim_create_autocmd("FileType", {

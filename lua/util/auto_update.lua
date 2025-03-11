@@ -14,7 +14,7 @@ function M.toggle_auto_update()
     vim.opt.shortmess:append({ F = false })
   end
   -- TODO this should be a post hook
-  vim.cmd("redrawtabline")
+  -- vim.cmd("redrawtabline")
 end
 
 local queued_event = false

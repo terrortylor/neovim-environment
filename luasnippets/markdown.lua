@@ -54,10 +54,64 @@ end
 
 return {
   s(
+    { trig = ";retronote", descr = "Tag Metadata"},
+    fmt("#Retro/Raise/todo {}",
+      { d(1, get_visual) }
+    )
+  ),
+
+  s(
+    { trig = ";metatags", descr = "Tag Metadata"},
+    fmt(
+      [[
+    ---
+    tags:
+    {}
+    ---
+ 
+    ]],
+      { d(1, get_visual) }
+    )
+  ),
+
+  s(
+    { trig = ";q", descr = "Task / TODO list item", snippetType = "autosnippet"},
+    fmt(
+      [[
+    - [{}] {}
+    ]],
+      {
+        c(1, {
+          i(1, " "),
+          i(2, "x"),
+        }),
+        i(2, "text"),
+      }
+    )
+  ),
+
+  s(
     { trig = ";bqq", descr = "Markdown block quote", regTrig = true, wordTrig = false, snippetType = "autosnippet" },
     fmt("> {}", {
       d(1, get_visual),
     })
+  ),
+
+  s(
+    {
+      trig = ";bqi",
+      descr = "Markdown block quote important",
+      regTrig = true,
+      wordTrig = false,
+      snippetType = "autosnippet",
+    },
+    fmt(
+      [[
+      >[!Important]
+      > {}
+    ]],
+      { d(1, get_visual) }
+    )
   ),
 
   s(
@@ -71,6 +125,40 @@ return {
     fmt(
       [[
       >[!Warning]
+      > {}
+    ]],
+      { d(1, get_visual) }
+    )
+  ),
+
+  s(
+    {
+      trig = ";bqt",
+      descr = "Markdown block quote tip",
+      regTrig = true,
+      wordTrig = false,
+      snippetType = "autosnippet",
+    },
+    fmt(
+      [[
+      >[!Tip]
+      > {}
+    ]],
+      { d(1, get_visual) }
+    )
+  ),
+
+  s(
+    {
+      trig = ";bqn",
+      descr = "Markdown block quote note",
+      regTrig = true,
+      wordTrig = false,
+      snippetType = "autosnippet",
+    },
+    fmt(
+      [[
+      >[!Note]
       > {}
     ]],
       { d(1, get_visual) }
@@ -97,7 +185,7 @@ return {
   ),
 
   s(
-    { trig = ";ll", descr = "Markdown link", regTrig = true, wordTrig = false, snippetType = "autosnippet" },
+    { trig = ";ll", descr = "Markdown link", snippetType = "autosnippet" },
     fmt("[<>](<>)", {
       d(1, get_visual),
       i(2, "description"),

@@ -5,7 +5,7 @@ return {
       options = {
         component_separators = { left = "", right = "" },
         section_separators = { left = "", right = "" },
-        theme = "material",
+        theme = "catppuccin-mocha",
         globalstatus = true,
       },
       tabline = {

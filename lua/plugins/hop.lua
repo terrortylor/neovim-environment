@@ -1,23 +1,23 @@
 -- remote change/delete text objects
-local default_text_objects =
-  { "w", "W", "s", "p", "[", "]", "(", ")", "b", ">", "<", "t", "{", "}", "B", '"', "'", "`" }
+-- local default_text_objects =
+  -- { "w", "W", "s", "p", "[", "]", "(", ")", "b", ">", "<", "t", "{", "}", "B", '"', "'", "`" }
 
 local generated_keys = {}
 
-for _, v in ipairs(default_text_objects) do
-  table.insert(generated_keys, {
-    "cir" .. v,
-    ":lua require('plugins.lazy_wrappers.lazy_hop').feedkeys_at_remote('ci" .. v .. "', 'n')<cr>",
-    desc = "jump to and change in: " .. v,
-  })
-
-  table.insert(generated_keys, {
-    "dir" .. v,
-    "dir" .. v,
-    ":lua require('plugins.lazy_wrappers.lazy_hop').feedkeys_at_remote('di" .. v .. "', 'n')<cr>",
-    desc = "jump to and delete in: " .. v,
-  })
-end
+-- for _, v in ipairs(default_text_objects) do
+--   table.insert(generated_keys, {
+--     "cir" .. v,
+--     ":lua require('plugins.lazy_wrappers.lazy_hop').feedkeys_at_remote('ci" .. v .. "', 'n')<cr>",
+--     desc = "jump to and change in: " .. v,
+--   })
+--
+--   table.insert(generated_keys, {
+--     "dir" .. v,
+--     "dir" .. v,
+--     ":lua require('plugins.lazy_wrappers.lazy_hop').feedkeys_at_remote('di" .. v .. "', 'n')<cr>",
+--     desc = "jump to and delete in: " .. v,
+--   })
+-- end
 
 table.foreach({
   -- { "s", "<CMD>HopChar1<CR>", desc = "Jump to visible buffer location" },

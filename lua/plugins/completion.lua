@@ -117,19 +117,20 @@ return {
             keyword_pattern = [[\w\w\w\w\+]],
           },
           max_item_count = 5,
-          priorty = 1000,
+          priorty = 1600,
         },
+      {
+        name = "buffer",
+        keyword_length = 3,
+        max_item_count = 5,
+        priorty = 2000,
+      },
         { name = "spell", keyword_length = 4, max_item_count = 5,
         option = {
           keep_all_entries = false,
           preselect_correct_word = true,
         },
-      },
-      {
-        name = "buffer",
-        keyword_length = 4,
-        max_item_count = 5,
-        priorty = 1000,
+          priorty = 1500,
       },
     }),
   })

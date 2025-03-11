@@ -4,7 +4,6 @@ return {
     build = ":TSUpdate",
     cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
     opts = {
-      -- This seems to cause slow start up
       ensure_installed = {
         "bash",
         "gitcommit",
@@ -19,12 +18,13 @@ return {
         "kotlin",
         "lua",
         "markdown",
+        "markdown_inline",
         "ruby",
         "terraform",
         "typescript",
         "tsx",
         "vimdoc",
-        "yaml",
+        -- "yaml",
       },
       highlight = {
         enable = true,
@@ -37,7 +37,6 @@ return {
     },
   },
 
-
   {
     "RRethy/nvim-treesitter-textsubjects",
     requires = { "nvim-treesitter/nvim-treesitter" },
@@ -45,20 +44,14 @@ return {
       require("nvim-treesitter.configs").setup({
         textsubjects = {
           enable = true,
+          prev_selection = ',', -- (Optional) keymap to select the previous selection
           keymaps = {
-            ["."] = "textsubjects-smart",
-            [";"] = "textsubjects-container-outer",
+            ['.'] = 'textsubjects-smart',
+            [';'] = 'textsubjects-container-outer',
+            ['i;'] = { 'textsubjects-container-inner', desc = "Select inside containers (classes, functions, etc.)" },
           },
-        },
-      })
-    end,
-  },
-
-  {
-    "cshuaimin/ssr.nvim",
-    keys = {
-      { "<leader>sr", function() require("ssr").open() end, mode = "n", },
-      { "<leader>sr", function() require("ssr").open() end, mode = "x", },
+          },
+        })
+      end,
     },
-  },
-}
+  }

@@ -1,5 +1,15 @@
 local o = vim.opt
 
+vim.keymap.set("n", "<leader>s", function()
+  vim.cmd("norm! ]s")
+  vim.cmd("Telescope spell_suggest")
+end)
+
+vim.keymap.set("n", "<leader>S", function()
+  vim.cmd("norm! [s")
+  vim.cmd("Telescope spell_suggest")
+end)
+
 vim.loader.enable() -- replaces lewis6991/impatient.nvim
 
 o.diffopt = "internal,filler,algorithm:patience,indent-heuristic" -- better diffing
@@ -53,8 +63,8 @@ o.gdefault = true -- uses g flag on substitute by default
 
 o.tags = "./.git/tags;/" -- location to look for tag files
 
-o.spell = false -- turn of spell checking
-o.spelllang = "en_gb" -- default spelling locale
+-- o.spell = false -- turn of spell checking
+-- o.spelllang = "en_gb" -- default spelling locale
 
 o.tabstop = 2 -- number of spaces a tab is worth
 o.softtabstop = 0
@@ -70,8 +80,8 @@ if vim.fn.executable("rg") > 0 then
   vim.o.grepprg = "rg --vimgrep --no-heading --smart-case"
 end
 
-vim.diagnostic.config {
+vim.diagnostic.config({
   virtual_text = false,
   signs = true,
   underline = false,
-}
+})
