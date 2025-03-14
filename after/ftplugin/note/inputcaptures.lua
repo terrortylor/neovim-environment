@@ -47,18 +47,14 @@ end
 -- Function to add a tag under the "tags" header
 local function add_tag_under_header(header_prefix, header_text, add_to_top)
   -- Prompt the user for a tag value
-  vim.ui.input({ prompt = "Enter tag: " }, function(input)
-    print("input:"..input)
-    if not input or input == "" then
-      print("1 1")
+  vim.ui.input({ prompt = "Enter ".. header_text..":" }, function(input)
+    if not input or input == nil or input == "" then
       return
     end
 
-    print("1 2")
     -- Find or create the "tags" header and position cursor below it
     find_or_insert_header(header_prefix, header_text, add_to_top)
 
-    print("1 3")
     local bufnr = vim.api.nvim_get_current_buf()
     local cursor_pos = vim.api.nvim_win_get_cursor(0)
     local current_line_num = cursor_pos[1] - 1  -- Convert to 0-indexed
