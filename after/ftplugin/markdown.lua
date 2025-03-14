@@ -4,7 +4,7 @@ vim.opt.spelllang = { "en_gb" }
 
 -- vim.opt.formatoptions:remove("o")
 -- vim.opt.formatoptions = "jtcqlno"
-vim.opt.textwidth = 100
+-- vim.opt.textwidth = 100
 -- From: http://germaniumhq.com/2020/04/08/2020-04-08-Vim-Auto-Formatting-for-Asciidoc-and-Markdown/
 -- Interesting take, and works quite well but not for long links
 -- vim.opt.formatoptions = "want"
