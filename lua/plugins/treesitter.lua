@@ -10,7 +10,6 @@ return {
         ensure_installed = {
           "bash",
           "gitcommit",
-          "gitconfig",
           "gitignore",
           "go",
           "helm",
