@@ -120,7 +120,7 @@ return {
 {
   'MeanderingProgrammer/render-markdown.nvim',
   opts = {
-    file_types = { "markdown"},
+    file_types = { "markdown", "Avante"},
     link = {
       enabled = true,
       image = '',
@@ -141,7 +141,7 @@ return {
       --   icons = {},
       -- },
     },
-    ft = { "markdown" },
+    ft = { "markdown", "Avante" },
     dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
   },
 

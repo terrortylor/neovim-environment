@@ -37,4 +37,5 @@ local function find_or_insert_header()
   end
 end
 
+
 vim.api.nvim_create_user_command("TodayGoToOrInsert", find_or_insert_header, {})
