@@ -102,6 +102,8 @@ local function project_contents(title)
   return {
     "# Project: " .. title .. "\n\n",
     "",
+    "# Action Items\n\n\n",
+    "",
     "# Tags\n\n\n"
   }
 end

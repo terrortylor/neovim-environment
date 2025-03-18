@@ -45,7 +45,7 @@ end
 
 
 -- Function to add a tag under the "tags" header
-local function add_tag_under_header(header_prefix, header_text, add_to_top)
+local function add_tag_under_header(header_prefix, header_text, prefix, add_to_top)
   -- Prompt the user for a tag value
   vim.ui.input({ prompt = "Enter ".. header_text..":" }, function(input)
     if not input or input == nil or input == "" then
@@ -62,7 +62,7 @@ local function add_tag_under_header(header_prefix, header_text, add_to_top)
     -- Get the current line
     local current_line = vim.api.nvim_buf_get_lines(bufnr, current_line_num, current_line_num + 1, false)[1]
 
-    input = "- #"..input
+    input = prefix..input
     -- If the current line is not empty, move to the next line
     if current_line ~= "" then
       -- Insert a new line after the current position
@@ -75,15 +75,34 @@ local function add_tag_under_header(header_prefix, header_text, add_to_top)
       -- Keep cursor at the same line
       vim.api.nvim_win_set_cursor(0, {current_line_num + 1, 0})
     end
+    
+    -- Put the user in insert mode
+    vim.cmd("startinsert!")
   end)
 end
 
 local function insert_attendee()
-  add_tag_under_header("#", "Attendees", false)
+  add_tag_under_header("#", "Attendees", "- #", false)
 end
 vim.api.nvim_create_user_command("AddAttendee", insert_attendee, {})
 
 local function insert_attendee()
-  add_tag_under_header("#", "Tags", false)
+  add_tag_under_header("#", "Tags",  "- #", false)
 end
 vim.api.nvim_create_user_command("AddTag", insert_attendee, {})
+
+local function insert_attendee()
+  add_tag_under_header("#", "Action Items",  "- [ ] ", false)
+end
+vim.api.nvim_create_user_command("AddActionItem", insert_attendee, {})
+
+
+local function insert_attendee()
+  add_tag_under_header("#", "Agenda",  "- ", false)
+end
+vim.api.nvim_create_user_command("AddAgendaItem", insert_attendee, {})
+
+local function insert_attendee()
+  add_tag_under_header("#", "Note", "- ", false)
+end
+vim.api.nvim_create_user_command("AddNote", insert_attendee, {})
