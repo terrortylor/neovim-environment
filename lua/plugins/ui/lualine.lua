@@ -7,6 +7,10 @@ return {
         section_separators = { left = "", right = "" },
         theme = "catppuccin-mocha",
         globalstatus = true,
+        disabled_filetypes = {     -- Filetypes to disable lualine for.
+          statusline = {},       -- only ignores the ft for statusline.
+          winbar = {"rest_nvim_result"},           -- only ignores the ft for winbar.
+        },
       },
       tabline = {
         lualine_a = { "tabs" },
