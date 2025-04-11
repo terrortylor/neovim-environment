@@ -1,5 +1,5 @@
 lazyFileTypes =
-  { "markdown", "yaml", "bash", "dockerfile", "terraform", "terraform-vars", "lua", "typescript", "javascript", "go" }
+  { "markdown", "bash", "dockerfile", "terraform", "terraform-vars", "lua", "typescript", "javascript", "go" }
 
 return {
   -- neodev
