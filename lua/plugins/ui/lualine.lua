@@ -9,7 +9,7 @@ return {
         globalstatus = true,
         disabled_filetypes = {     -- Filetypes to disable lualine for.
           statusline = {},       -- only ignores the ft for statusline.
-          winbar = {"rest_nvim_result"},           -- only ignores the ft for winbar.
+          winbar = {"rest_nvim_result", "AvanteInput", "AvanteSelectedFiles", "Avante"},           -- only ignores the ft for winbar.
         },
       },
       tabline = {
