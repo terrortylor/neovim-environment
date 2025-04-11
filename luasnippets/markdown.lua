@@ -75,6 +75,22 @@ return {
   ),
 
   s(
+    { trig = "- --", descr = "Task / TODO list item", snippetType = "autosnippet"},
+    fmt(
+      [[
+    - [{}] {}
+    ]],
+      {
+        c(1, {
+          i(1, " "),
+          i(2, "x"),
+        }),
+        i(2, "text"),
+      }
+    )
+  ),
+
+  s(
     { trig = ";q", descr = "Task / TODO list item", snippetType = "autosnippet"},
     fmt(
       [[
