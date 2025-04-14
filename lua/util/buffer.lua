@@ -27,6 +27,7 @@ local ignore_filetypes = {
   TelescopePrompt = {},
   NvimTree = {},
   lspinfo = {},
+  gitcommit = {},
   packer = {},
   splash = {},
   neorg = {},

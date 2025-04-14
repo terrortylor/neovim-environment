@@ -38,7 +38,6 @@ require("config.lazyplugins")
       "ui.switcheroo",
       -- "pa",
       -- "snake",
-      "util.auto_update",
     }
 
     for _, p in pairs(plugins) do
