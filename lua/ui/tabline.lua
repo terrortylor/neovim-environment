@@ -82,7 +82,7 @@ local function show_auto_update()
 end
 
 local function show_diagnostics()
-  if #vim.lsp.buf_get_clients(0) > 0 then
+  if #vim.lsp.get_clients({buffer=0}) > 0 then
     local total_diagnostics = lsp_funcs.get_all_diagnostic_count()
     add_right("TabLineDiagError", " E: ")
     add_right("TabLine", total_diagnostics.errors)

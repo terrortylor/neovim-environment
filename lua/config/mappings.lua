@@ -15,7 +15,7 @@ set("n", "vaQ", "va'", { desc = "visual around single quote alias" })
 set("n", "ciQ", "ci'", { desc = "clear in single quote alias" })
 set("n", "caQ", "ca'", { desc = "clear around single quote alias" })
 
-set("n", "<space>fd", "<cmd>silent! wall<cr>", { desc = "save all, this is overwritten in lsp's to format doc also" })
+-- set("n", "<space>fd", "<cmd>silent! wall<cr>", { desc = "save all, this is overwritten in lsp's to format doc also" })
 set("n", "<leader>rw", [[:%s/\C\<<c-r><c-w>\>//<left>]], { desc = "Refactoring" })
 
 -- Toggles

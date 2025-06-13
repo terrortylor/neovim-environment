@@ -26,7 +26,7 @@ function M.hint_lsp_definition()
     if bf then
       bf()
     else
-      if #vim.lsp.buf_get_clients(0) > 0 then
+      if #vim.lsp.get_clients({buffer=0}) > 0 then
         require("telescope.builtin").lsp_definitions()
       end
     end

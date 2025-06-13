@@ -37,7 +37,7 @@ vim.diagnostic.config({
 })
 
 local function check_codelens_support()
-  local clients = vim.lsp.buf_get_clients(0)
+  local clients = vim.lsp.get_clients({buffer=0})
   for _, c in ipairs(clients) do
     if c.server_capabilities.codeLensProvider then
       return true
@@ -60,22 +60,6 @@ vim.api.nvim_create_autocmd({ "TextChanged", "InsertLeave", "CursorHold", "LspAt
 -- trigger codelens refresh
 vim.api.nvim_exec_autocmds("User", { pattern = "LspAttached" })
 
-vim.api.nvim_create_autocmd("LspAttach", {
-  group = vim.api.nvim_create_augroup("MarkdownOxideDailyCommand", {}),
-  callback = function(ev)
-    local clients = vim.lsp.buf_get_clients(0)
-    for _, c in ipairs(clients) do
-      if c.name == "markdown_oxide" then
-        vim.api.nvim_create_user_command("Daily", function(args)
-          local input = args.args
-
-          vim.lsp.buf.execute_command({ command = "jump", arguments = { input } })
-        end, { desc = "Open daily note", nargs = "*" })
-        return
-      end
-    end
-  end,
-})
 --- END Markdown Oxide specifc stuff ---
 
 -- "" Note that o is required by todo list plugin stuff
