@@ -1,7 +1,6 @@
 local ts = vim.treesitter
 
 local function find_or_insert_header(header_prefix, header_text, add_to_top)
-  print("1")
   local bufnr = vim.api.nvim_get_current_buf()
   local parser = ts.get_parser(bufnr, "markdown")
   local tree = parser:parse()[1]
@@ -19,7 +18,6 @@ local function find_or_insert_header(header_prefix, header_text, add_to_top)
     if lines[1] == line_header_text then
       vim.api.nvim_win_set_cursor(0, {start_row + 1, 0}) -- Move cursor to found header
       found = true
-  print("2")
     end
 
 -- Create a user command to add a tag
@@ -33,7 +31,6 @@ local function find_or_insert_header(header_prefix, header_text, add_to_top)
       vim.api.nvim_buf_set_lines(bufnr, 0, 0, false, {line_header_text, ""})
       vim.api.nvim_win_set_cursor(0, {1, 0})
     else
-  print("3")
       local line_count = vim.api.nvim_buf_line_count(bufnr)
       vim.api.nvim_buf_set_lines(bufnr, line_count, line_count, false, {line_header_text, ""})
       vim.api.nvim_win_set_cursor(0, {line_count + 1, 0})

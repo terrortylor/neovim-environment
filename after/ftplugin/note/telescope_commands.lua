@@ -24,7 +24,8 @@ local function get_note_commands()
     { name = "AddAction", description = "Add a action to the current note" },
     { name = "AddAgenda", description = "Add a agenda to the current note" },
     { name = "AddNote", description = "Add a note to the current note" },
-    { name = "TodayGoToOrInsert", description = "Go to or insert today's date header" },
+    { name = "GoToToday", description = "Go to today's date header" },
+    { name = "InsertTodayHeader", description = "Insert today's date header" },
     { name = "ConvertToTodoItem", description = "Convert a list item to a todo item" },
     { name = "MarkTodoTagComplete", description = "Mark a todo tag as complete" },
   }
