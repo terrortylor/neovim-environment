@@ -1,5 +1,5 @@
 -- Function to create a new note file with customizable parameters
-local function create_note_file(filetype, folder, contentsfunc, includeYearSubDir)
+local function create_note_file(filetype, folder, contentsfunc, includeYearSubDir, insert_link)
   -- Default values if not provided
   filetype = filetype or "note"
   folder = folder or "notes"
@@ -10,6 +10,7 @@ local function create_note_file(filetype, folder, contentsfunc, includeYearSubDi
       "# Tags\n\n\n"
     }
   end
+  insert_link = insert_link or false
   
   -- Use vim.ui.input to get the note title
   vim.ui.input({
@@ -69,10 +70,27 @@ local function create_note_file(filetype, folder, contentsfunc, includeYearSubDi
       end
     end
     
+    -- Insert link in current buffer at cursor position if requested
+    if insert_link then
+      local link_text = "[[" .. filename:gsub("%.md$", "") .. "]]"
+      local cursor_pos = vim.api.nvim_win_get_cursor(0)
+      local line = vim.api.nvim_get_current_line()
+      local col = cursor_pos[2]
+      
+      -- Insert the link at cursor position
+      local new_line = line:sub(1, col) .. link_text .. line:sub(col + 1)
+      vim.api.nvim_set_current_line(new_line)
+      
+      -- Move cursor after the inserted link
+      vim.api.nvim_win_set_cursor(0, {cursor_pos[1] + 1, col + #link_text})
+    end
+    
     -- Open the file for editing
     vim.cmd("edit " .. filepath)
   end)
 end
+
+
 
 -- Define meeting note content function
 local function meeting_note_contents(title)
@@ -92,12 +110,17 @@ local function meeting_note_contents(title)
   }
 end
 
--- Function to create a meeting note (wrapper for backward compatibility)
+-- Function to create a meeting note with link (default behavior)
 local function create_meeting_note()
-  create_note_file("Meeting", "meetings", meeting_note_contents, true)
+  create_note_file("Meeting", "meetings", meeting_note_contents, true, true)
 end
 
--- Define meeting note content function
+-- Function to create a meeting note without link
+local function create_meeting_note_without_link()
+  create_note_file("Meeting", "meetings", meeting_note_contents, true, false)
+end
+
+-- Define project note content function
 local function project_contents(title)
   return {
     "# Project: " .. title .. "\n\n",
@@ -108,11 +131,17 @@ local function project_contents(title)
   }
 end
 
-
-vim.api.nvim_create_user_command("NewMeeting", create_meeting_note, {})
-
+-- Function to create a project note with link (default behavior)
 local function create_new_project()
-  create_note_file("Project", "projects", project_contents, false)
+  create_note_file("Project", "projects", project_contents, false, true)
 end
 
+-- Function to create a project note without link
+local function create_new_project_without_link()
+  create_note_file("Project", "projects", project_contents, false, false)
+end
+
+vim.api.nvim_create_user_command("NewMeeting", create_meeting_note, {})
+vim.api.nvim_create_user_command("NewMeetingWithoutLink", create_meeting_note_without_link, {})
 vim.api.nvim_create_user_command("NewProject", create_new_project, {})
+vim.api.nvim_create_user_command("NewProjectWithoutLink", create_new_project_without_link, {})

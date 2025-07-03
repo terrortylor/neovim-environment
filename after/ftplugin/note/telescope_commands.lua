@@ -16,8 +16,10 @@ local function get_note_commands()
   -- List of commands we've created in our note plugins
   local note_command_list = {
     { name = "NewProject", description = "Creates a new project file"},
+    { name = "NewProjectWithoutLink", description = "Creates a new project file without a link" },
     { name = "ListProjects", description = "List and open project files" },
     { name = "NewMeeting", description = "Create a new meeting note file" },
+    { name = "NewMeetingWithoutLink", description = "Create a new meeting note file without a link" },
     { name = "ListMeetings", description = "List and open meetings files" },
     { name = "AddAttendee", description = "Add an attendee to the current note" },
     { name = "AddTag", description = "Add a tag to the current note" },
