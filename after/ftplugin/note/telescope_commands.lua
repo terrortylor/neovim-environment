@@ -1,4 +1,7 @@
-local telescope = require('telescope')
+local ok, telescope = pcall(require, 'telescope')
+if not ok then
+  return
+end
 local pickers = require('telescope.pickers')
 local finders = require('telescope.finders')
 local conf = require('telescope.config').values
@@ -21,6 +24,8 @@ local function get_note_commands()
     { name = "NewMeeting", description = "Create a new meeting note file" },
     { name = "NewMeetingWithoutLink", description = "Create a new meeting note file without a link" },
     { name = "ListMeetings", description = "List and open meetings files" },
+    { name = "CreateSlipbox", description = "Create a slipbox file from selected text" },
+    { name = "ListSlipbox", description = "List and open slipbox files" },
     { name = "AddAttendee", description = "Add an attendee to the current note" },
     { name = "AddTag", description = "Add a tag to the current note" },
     { name = "AddAction", description = "Add a action to the current note" },
@@ -154,19 +159,30 @@ local function list_meeting_files()
 list_directory_files('meetings')
 end
 
+local function list_slipbox_files()
+list_directory_files('slipbox')
+end
+
 -- Create a user command to list project files
 vim.api.nvim_create_user_command("ListProjects", list_project_files, {})
 
 -- Create a user command to list project files
 vim.api.nvim_create_user_command("ListMeetings", list_meeting_files, {})
 
+-- Create a user command to list slipbox files
+vim.api.nvim_create_user_command("ListSlipbox", list_slipbox_files, {})
+
 
 -- Register the picker with Telescope (so it can be accessed via :Telescope note_commands)
-telescope.register_extension({
-  exports = {
-    note_commands = note_commands_picker,
-    project_files = list_project_files,
-    meeting_files = list_meeting_files,
-  }
-})
+local ok, telescope = pcall(require, 'telescope')
+if ok then
+  telescope.register_extension({
+    exports = {
+      note_commands = note_commands_picker,
+      project_files = list_project_files,
+      meeting_files = list_meeting_files,
+      slipbox_files = list_slipbox_files,
+    }
+  })
+end
 
