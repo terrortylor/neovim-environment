@@ -10,6 +10,94 @@ local actions = require('telescope.actions')
 local action_state = require('telescope.actions.state')
 local scan = require('plenary.scandir')
 
+-- Constants
+local TODO_PATTERNS = {
+  regex = "^%s*[-*+]%s*%[([^xDo])%]%s*(.+)",
+  excluded_statuses = { "x", "D", "o" }
+}
+
+local PRIORITY_ICONS = {
+  urgent = "🚨",
+  high = "🔴",
+  medium = "🟡", 
+  low = "🟢"
+}
+
+local DUE_DATE_ICONS = {
+  soon = "⏰",
+  other = "📅"
+}
+
+local STATUS_ICONS = {
+  in_progress = "🔄"
+}
+
+local MATCH_PATTERNS = {
+  priority = "#pri/(%w+)",
+  due_date = "#due/(%d%d%d%d%-%d%d%-%d%d)",
+  created_date = "^(%d%d%d%d%-%d%d%-%d%d)%s",
+  date_components = "(%d%d%d%d)%-(%d%d)%-(%d%d)"
+}
+
+local CONTENT_CLEANUP_PATTERNS = {
+  priority = "#pri/%w+",
+  due_date = "#due/%d%d%d%d%-%d%d%-%d%d",
+  created_date = "^%d%d%d%d%-%d%d%-%d%d%s*%-%s*",
+  leading_spaces = "^%s+",
+  multiple_spaces = "%s+",
+  empty_after_cleanup = "^%s*$"
+}
+
+-- Common function to parse a single todo line
+local function parse_todo_line(line, line_num, file_path)
+  local status, content = line:match(TODO_PATTERNS.regex)
+  if not status or not content then
+    return nil
+  end
+  
+  -- Check if status is excluded
+  for _, excluded in ipairs(TODO_PATTERNS.excluded_statuses) do
+    if status == excluded then
+      return nil
+    end
+  end
+  
+  local todo = {
+    line_number = line_num,
+    content = content,
+    status = status,
+    priority = nil,
+    due_date = nil,
+    created_date = nil,
+    original_line = line
+  }
+  
+  if file_path then
+    todo.file_path = file_path
+    todo.filename = vim.fn.fnamemodify(file_path, ":t")
+  end
+  
+  -- Extract priority (#pri/high, #pri/medium, #pri/low, #pri/urgent)
+  local priority_match = content:match(MATCH_PATTERNS.priority)
+  if priority_match then
+    todo.priority = priority_match
+  end
+  
+  -- Extract due date (#due/YYYY-MM-DD)
+  local due_match = content:match(MATCH_PATTERNS.due_date)
+  if due_match then
+    todo.due_date = due_match
+  end
+  
+  -- Extract created date (YYYY-MM-DD at start of line after spaces)
+  local created_match = content:match(MATCH_PATTERNS.created_date)
+  if created_match then
+    todo.created_date = created_match
+  end
+  
+  return todo
+end
+
 -- Function to parse todo items from the current buffer
 local function parse_todos_from_buffer()
   local bufnr = vim.api.nvim_get_current_buf()
@@ -17,41 +105,9 @@ local function parse_todos_from_buffer()
   local todos = {}
   
   for line_num, line in ipairs(lines) do
-    -- Match todo patterns: - [ ], - [-], - [x] (but we only want incomplete ones)
-    local status, content = line:match("^%s*[-*+]%s*%[([^xDo])%]%s*(.+)")
-    if status and content then
-      -- Only process incomplete todos (not 'x' for completed, 'D' for deleted, or 'o' for obsolete)
-      if status ~= 'x' and status ~= 'D' and status ~= 'o' then
-        local todo = {
-          line_number = line_num,
-          content = content,
-          status = status,
-          priority = nil,
-          due_date = nil,
-          created_date = nil,
-          original_line = line
-        }
-        
-        -- Extract priority (#pri/high, #pri/medium, #pri/low, #pri/urgent)
-        local priority_match = content:match("#pri/(%w+)")
-        if priority_match then
-          todo.priority = priority_match
-        end
-        
-        -- Extract due date (#due/YYYY-MM-DD)
-        local due_match = content:match("#due/(%d%d%d%d%-%d%d%-%d%d)")
-        if due_match then
-          todo.due_date = due_match
-        end
-        
-        -- Extract created date (YYYY-MM-DD at start of line after spaces)
-        local created_match = content:match("^(%d%d%d%d%-%d%d%-%d%d)%s")
-        if created_match then
-          todo.created_date = created_match
-        end
-        
-        table.insert(todos, todo)
-      end
+    local todo = parse_todo_line(line, line_num)
+    if todo then
+      table.insert(todos, todo)
     end
   end
   
@@ -73,7 +129,7 @@ end
 local function is_within_next_week(date_str)
   if not date_str then return false end
   
-  local year, month, day = date_str:match("(%d%d%d%d)%-(%d%d)%-(%d%d)")
+  local year, month, day = date_str:match(MATCH_PATTERNS.date_components)
   if not year or not month or not day then return false end
   
   local todo_date = os.time({
@@ -142,33 +198,32 @@ end
 local function format_todo_display(todo)
   local parts = {}
   
+  -- Add status indicator (in-progress)
+  if todo.status == "-" then
+    table.insert(parts, STATUS_ICONS.in_progress)
+  end
+  
   -- Add priority indicator
   if todo.priority then
-    local priority_icons = {
-      urgent = "🚨",
-      high = "🔴",
-      medium = "🟡", 
-      low = "🟢"
-    }
-    local icon = priority_icons[todo.priority] or "⚪"
+    local icon = PRIORITY_ICONS[todo.priority] or "⚪"
     table.insert(parts, icon)
   end
   
   -- Add due date indicator
   if todo.due_date then
-    local due_icon = is_within_next_week(todo.due_date) and "⏰" or "📅"
+    local due_icon = is_within_next_week(todo.due_date) and DUE_DATE_ICONS.soon or DUE_DATE_ICONS.other
     table.insert(parts, due_icon .. " " .. todo.due_date)
   end
   
   -- Add the main todo content (clean up the content by removing tags)
   local content = todo.content or "No content"
   -- Remove priority, due date, and created date tags from display
-  content = content:gsub("#pri/%w+", "")
-  content = content:gsub("#due/%d%d%d%d%-%d%d%-%d%d", "")
-  content = content:gsub("^%d%d%d%d%-%d%d%-%d%d%s*%-%s*", "") -- Remove created date at start and following " - "
-  content = content:gsub("^%s+", "") -- Remove leading spaces
-  content = content:gsub("%s+", " ") -- Collapse multiple spaces to single space
-  content = content:gsub("^%s*$", "") -- Remove if empty after cleanup
+  content = content:gsub(CONTENT_CLEANUP_PATTERNS.priority, "")
+  content = content:gsub(CONTENT_CLEANUP_PATTERNS.due_date, "")
+  content = content:gsub(CONTENT_CLEANUP_PATTERNS.created_date, "") -- Remove created date at start and following " - "
+  content = content:gsub(CONTENT_CLEANUP_PATTERNS.leading_spaces, "") -- Remove leading spaces
+  content = content:gsub(CONTENT_CLEANUP_PATTERNS.multiple_spaces, " ") -- Collapse multiple spaces to single space
+  content = content:gsub(CONTENT_CLEANUP_PATTERNS.empty_after_cleanup, "") -- Remove if empty after cleanup
   
   if content and content ~= "" then
     table.insert(parts, content)
@@ -197,43 +252,9 @@ local function parse_todos_from_file(file_path)
   file:close()
   
   for line_num, line in ipairs(lines) do
-    -- Match todo patterns: - [ ], - [-], - [x] (but we only want incomplete ones)
-    local status, content = line:match("^%s*[-*+]%s*%[([^xDo])%]%s*(.+)")
-    if status and content then
-      -- Only process incomplete todos (not 'x' for completed, 'D' for deleted, or 'o' for obsolete)
-      if status ~= 'x' and status ~= 'D' and status ~= 'o' then
-        local todo = {
-          line_number = line_num,
-          content = content,
-          status = status,
-          priority = nil,
-          due_date = nil,
-          created_date = nil,
-          original_line = line,
-          file_path = file_path,
-          filename = vim.fn.fnamemodify(file_path, ":t")
-        }
-        
-        -- Extract priority (#pri/high, #pri/medium, #pri/low, #pri/urgent)
-        local priority_match = content:match("#pri/(%w+)")
-        if priority_match then
-          todo.priority = priority_match
-        end
-        
-        -- Extract due date (#due/YYYY-MM-DD)
-        local due_match = content:match("#due/(%d%d%d%d%-%d%d%-%d%d)")
-        if due_match then
-          todo.due_date = due_match
-        end
-        
-        -- Extract created date (YYYY-MM-DD at start of line after spaces)
-        local created_match = content:match("^(%d%d%d%d%-%d%d%-%d%d)%s")
-        if created_match then
-          todo.created_date = created_match
-        end
-        
-        table.insert(todos, todo)
-      end
+    local todo = parse_todo_line(line, line_num, file_path)
+    if todo then
+      table.insert(todos, todo)
     end
   end
   
@@ -245,138 +266,28 @@ local function scan_project_for_todos()
   local cwd = vim.fn.getcwd()
   local all_todos = {}
   
-  -- Scan for common note/markdown files
-  local file_patterns = {
-    "**/*.md",
-    "**/*.norg", 
-    "**/*.txt",
-    "**/notes/**/*",
-    "**/projects/**/*",
-    "**/meetings/**/*",
-    "**/slipbox/**/*"
-  }
+  -- Scan for .md files in the current working directory and subdirectories
+  local success, files = pcall(scan.scan_dir, cwd, {
+    search_pattern = "**/*.md",
+    depth = 10,
+    add_dirs = false,
+  })
   
-  for _, pattern in ipairs(file_patterns) do
-    local success, files = pcall(scan.scan_dir, cwd, {
-      search_pattern = pattern,
-      depth = 10,
-      add_dirs = false,
-    })
-    
-    if success and files then
-      for _, file_path in ipairs(files) do
-        -- Ensure file_path is a string
-        if type(file_path) == "string" then
-          local file_todos = parse_todos_from_file(file_path)
-          for _, todo in ipairs(file_todos) do
-            -- Ensure file_path is properly set
-            todo.file_path = file_path
-            table.insert(all_todos, todo)
-          end
+  if success and files then
+    for _, file_path in ipairs(files) do
+      -- Ensure file_path is a string
+      if type(file_path) == "string" then
+        local file_todos = parse_todos_from_file(file_path)
+        for _, todo in ipairs(file_todos) do
+          -- Ensure file_path is properly set
+          todo.file_path = file_path
+          table.insert(all_todos, todo)
         end
       end
     end
   end
   
   return all_todos
-end
-
--- Function to create the telescope picker for todos
-local function todo_whats_next_picker()
-  local todos = parse_todos_from_buffer()
-  
-  if #todos == 0 then
-    vim.notify("No incomplete todos found in current buffer", vim.log.levels.INFO)
-    return
-  end
-  
-  -- Sort todos according to criteria
-  sort_todos(todos)
-  
-  pickers.new({}, {
-    prompt_title = "What's Next - Incomplete Todos",
-    finder = finders.new_table({
-      results = todos,
-      entry_maker = function(entry)
-        return {
-          value = entry,
-          display = format_todo_display(entry),
-          ordinal = entry.content,
-        }
-      end,
-    }),
-    sorter = conf.generic_sorter({}),
-    attach_mappings = function(prompt_bufnr, map)
-      actions.select_default:replace(function()
-        local selection = action_state.get_selected_entry()
-        actions.close(prompt_bufnr)
-        
-        -- Jump to the selected todo line
-        vim.api.nvim_win_set_cursor(0, {selection.value.line_number, 0})
-      end)
-      
-      -- Add keymap for quick jump without closing picker
-      map('i', '<C-j>', function()
-        local selection = action_state.get_selected_entry()
-        vim.api.nvim_win_set_cursor(0, {selection.value.line_number, 0})
-      end)
-      
-      return true
-    end,
-  }):find()
-end
-
--- Function to create the telescope picker for project-wide todos
-local function todo_project_picker()
-  local todos = scan_project_for_todos()
-  
-  if #todos == 0 then
-    vim.notify("No incomplete todos found in project", vim.log.levels.INFO)
-    return
-  end
-  
-  -- Sort todos according to criteria
-  sort_todos(todos)
-  
-  pickers.new({}, {
-    prompt_title = "Project Todos - Incomplete Todos",
-    finder = finders.new_table({
-      results = todos,
-      entry_maker = function(entry)
-        local display = format_todo_display(entry)
-        -- Add filename to display
-        display = display .. " | " .. entry.filename
-        return {
-          value = entry,
-          display = display,
-          ordinal = entry.content,
-          path = entry.file_path,
-          filename = entry.filename,
-        }
-      end,
-    }),
-    sorter = conf.generic_sorter({}),
-    previewer = conf.file_previewer({}),
-    attach_mappings = function(prompt_bufnr, map)
-      actions.select_default:replace(function()
-        local selection = action_state.get_selected_entry()
-        actions.close(prompt_bufnr)
-        
-        -- Open the file and jump to the selected todo line
-        vim.cmd("edit " .. selection.value.file_path)
-        vim.api.nvim_win_set_cursor(0, {selection.value.line_number, 0})
-      end)
-      
-      -- Add keymap for quick jump without closing picker
-      map('i', '<C-j>', function()
-        local selection = action_state.get_selected_entry()
-        vim.cmd("edit " .. selection.value.file_path)
-        vim.api.nvim_win_set_cursor(0, {selection.value.line_number, 0})
-      end)
-      
-      return true
-    end,
-  }):find()
 end
 
 -- Function to filter todos to only in-progress ones
@@ -390,13 +301,10 @@ local function filter_in_progress_todos(todos)
   return in_progress_todos
 end
 
--- Function to create the telescope picker for in-progress todos in current buffer
-local function todo_in_progress_picker()
-  local all_todos = parse_todos_from_buffer()
-  local todos = filter_in_progress_todos(all_todos)
-  
+-- Common telescope picker creation function
+local function create_todo_picker(todos, title, show_filename)
   if #todos == 0 then
-    vim.notify("No in-progress todos found in current buffer", vim.log.levels.INFO)
+    vim.notify("No todos found", vim.log.levels.INFO)
     return
   end
   
@@ -404,30 +312,43 @@ local function todo_in_progress_picker()
   sort_todos(todos)
   
   pickers.new({}, {
-    prompt_title = "In-Progress Todos - Current Buffer",
+    prompt_title = title,
     finder = finders.new_table({
       results = todos,
       entry_maker = function(entry)
+        local display = format_todo_display(entry)
+        if show_filename and entry.filename then
+          display = display .. " | " .. entry.filename
+        end
         return {
           value = entry,
-          display = format_todo_display(entry),
+          display = display,
           ordinal = entry.content,
+          path = entry.file_path,
+          filename = entry.filename,
         }
       end,
     }),
     sorter = conf.generic_sorter({}),
+    previewer = show_filename and conf.file_previewer({}) or nil,
     attach_mappings = function(prompt_bufnr, map)
       actions.select_default:replace(function()
         local selection = action_state.get_selected_entry()
         actions.close(prompt_bufnr)
         
-        -- Jump to the selected todo line
+        if show_filename and selection.value.file_path then
+          -- Open the file and jump to the selected todo line
+          vim.cmd("edit " .. selection.value.file_path)
+        end
         vim.api.nvim_win_set_cursor(0, {selection.value.line_number, 0})
       end)
       
       -- Add keymap for quick jump without closing picker
       map('i', '<C-j>', function()
         local selection = action_state.get_selected_entry()
+        if show_filename and selection.value.file_path then
+          vim.cmd("edit " .. selection.value.file_path)
+        end
         vim.api.nvim_win_set_cursor(0, {selection.value.line_number, 0})
       end)
       
@@ -436,31 +357,109 @@ local function todo_in_progress_picker()
   }):find()
 end
 
+-- Function to create the telescope picker for todos
+local function todo_whats_next_picker()
+  local todos = parse_todos_from_buffer()
+  create_todo_picker(todos, "What's Next - Incomplete Todos", false)
+end
+
+-- Function to create the telescope picker for project-wide todos
+local function todo_project_picker()
+  local todos = scan_project_for_todos()
+  create_todo_picker(todos, "Project Todos - Incomplete Todos", true)
+end
+
+-- Function to create the telescope picker for in-progress todos in current buffer
+local function todo_in_progress_picker()
+  local all_todos = parse_todos_from_buffer()
+  local todos = filter_in_progress_todos(all_todos)
+  create_todo_picker(todos, "In-Progress Todos - Current Buffer", false)
+end
+
 -- Function to create the telescope picker for in-progress todos across project
 local function todo_project_in_progress_picker()
   local all_todos = scan_project_for_todos()
   local todos = filter_in_progress_todos(all_todos)
+  create_todo_picker(todos, "In-Progress Todos - Project", true)
+end
+
+-- Function to get files with todos and their counts
+local function get_files_with_todos()
+  local cwd = vim.fn.getcwd()
+  local file_counts = {}
   
-  if #todos == 0 then
-    vim.notify("No in-progress todos found in project", vim.log.levels.INFO)
+  -- Scan for .md files in the current working directory and subdirectories
+  local success, files = pcall(scan.scan_dir, cwd, {
+    search_pattern = "**/*.md",
+    depth = 10,
+    add_dirs = false,
+  })
+  
+  if success and files then
+    for _, file_path in ipairs(files) do
+      if type(file_path) == "string" then
+        local file_todos = parse_todos_from_file(file_path)
+        if #file_todos > 0 then
+          local filename = vim.fn.fnamemodify(file_path, ":t")
+          local relative_path = vim.fn.fnamemodify(file_path, ":.")
+          file_counts[file_path] = {
+            filename = filename,
+            relative_path = relative_path,
+            todo_count = #file_todos,
+            in_progress_count = 0
+          }
+          
+          -- Count in-progress todos
+          for _, todo in ipairs(file_todos) do
+            if todo.status == "-" then
+              file_counts[file_path].in_progress_count = file_counts[file_path].in_progress_count + 1
+            end
+          end
+        end
+      end
+    end
+  end
+  
+  return file_counts
+end
+
+-- Function to create the telescope picker for files with in-progress todos
+local function todo_in_progress_files_picker()
+  local file_counts = get_files_with_todos()
+  local files_with_in_progress = {}
+  
+  for file_path, info in pairs(file_counts) do
+    if info.in_progress_count > 0 then
+      table.insert(files_with_in_progress, {
+        file_path = file_path,
+        filename = info.filename,
+        relative_path = info.relative_path,
+        in_progress_count = info.in_progress_count,
+        total_count = info.todo_count
+      })
+    end
+  end
+  
+  if #files_with_in_progress == 0 then
+    vim.notify("No files with in-progress todos found", vim.log.levels.INFO)
     return
   end
   
-  -- Sort todos according to criteria
-  sort_todos(todos)
+  -- Sort by in-progress count (descending)
+  table.sort(files_with_in_progress, function(a, b)
+    return a.in_progress_count > b.in_progress_count
+  end)
   
   pickers.new({}, {
-    prompt_title = "In-Progress Todos - Project",
+    prompt_title = "Files with In-Progress Todos",
     finder = finders.new_table({
-      results = todos,
+      results = files_with_in_progress,
       entry_maker = function(entry)
-        local display = format_todo_display(entry)
-        -- Add filename to display
-        display = display .. " | " .. entry.filename
+        local display = entry.filename .. " (" .. entry.in_progress_count .. " in-progress, " .. entry.total_count .. " total)"
         return {
           value = entry,
           display = display,
-          ordinal = entry.content,
+          ordinal = entry.filename,
           path = entry.file_path,
           filename = entry.filename,
         }
@@ -472,17 +471,75 @@ local function todo_project_in_progress_picker()
       actions.select_default:replace(function()
         local selection = action_state.get_selected_entry()
         actions.close(prompt_bufnr)
-        
-        -- Open the file and jump to the selected todo line
         vim.cmd("edit " .. selection.value.file_path)
-        vim.api.nvim_win_set_cursor(0, {selection.value.line_number, 0})
       end)
       
-      -- Add keymap for quick jump without closing picker
       map('i', '<C-j>', function()
         local selection = action_state.get_selected_entry()
         vim.cmd("edit " .. selection.value.file_path)
-        vim.api.nvim_win_set_cursor(0, {selection.value.line_number, 0})
+      end)
+      
+      return true
+    end,
+  }):find()
+end
+
+-- Function to create the telescope picker for all files with todos
+local function todo_project_files_picker()
+  local file_counts = get_files_with_todos()
+  local files_with_todos = {}
+  
+  for file_path, info in pairs(file_counts) do
+    table.insert(files_with_todos, {
+      file_path = file_path,
+      filename = info.filename,
+      relative_path = info.relative_path,
+      in_progress_count = info.in_progress_count,
+      total_count = info.todo_count
+    })
+  end
+  
+  if #files_with_todos == 0 then
+    vim.notify("No files with todos found", vim.log.levels.INFO)
+    return
+  end
+  
+  -- Sort by total todo count (descending)
+  table.sort(files_with_todos, function(a, b)
+    return a.total_count > b.total_count
+  end)
+  
+  pickers.new({}, {
+    prompt_title = "Files with Todos",
+    finder = finders.new_table({
+      results = files_with_todos,
+      entry_maker = function(entry)
+        local display = entry.filename .. " (" .. entry.total_count .. " todos"
+        if entry.in_progress_count > 0 then
+          display = display .. ", " .. entry.in_progress_count .. " in-progress"
+        end
+        display = display .. ")"
+        return {
+          value = entry,
+          display = display,
+          ordinal = entry.filename,
+          path = entry.file_path,
+          filename = entry.filename,
+        }
+      end,
+    }),
+    sorter = conf.generic_sorter({}),
+    previewer = conf.file_previewer({}),
+    attach_mappings = function(prompt_bufnr, map)
+      actions.select_default:replace(function()
+        local selection = action_state.get_selected_entry()
+        actions.close(prompt_bufnr)
+        vim.cmd("edit " .. selection.value.file_path)
+      end)
+      
+      map('i', '<C-j>', function()
+        local selection = action_state.get_selected_entry()
+        vim.cmd("edit " .. selection.value.file_path)
       end)
       
       return true
@@ -507,8 +564,18 @@ vim.api.nvim_create_user_command("TodoProjectInProgress", todo_project_in_progre
   desc = "List all in-progress todos in project ordered by priority and due date"
 })
 
+vim.api.nvim_create_user_command("TodoInProgressFiles", todo_in_progress_files_picker, {
+  desc = "List files containing in-progress todos"
+})
+
+vim.api.nvim_create_user_command("TodoProjectFiles", todo_project_files_picker, {
+  desc = "List all files containing todos"
+})
+
 -- Optional: Add key mappings for quick access
 vim.api.nvim_set_keymap('n', '<leader>tn', ':TodoWhatsNext<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>tp', ':TodoProject<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>ti', ':TodoInProgress<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>tpi', ':TodoProjectInProgress<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>tif', ':TodoInProgressFiles<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>tpf', ':TodoProjectFiles<CR>', { noremap = true, silent = true })

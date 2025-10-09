@@ -39,6 +39,8 @@ local function get_note_commands()
     { name = "TodoProject", description = "List all incomplete todos in project ordered by priority and due date" },
     { name = "TodoInProgress", description = "List in-progress todos in current buffer ordered by priority and due date" },
     { name = "TodoProjectInProgress", description = "List all in-progress todos in project ordered by priority and due date" },
+    { name = "TodoInProgressFiles", description = "List files containing in-progress todos" },
+    { name = "TodoProjectFiles", description = "List all files containing todos" },
   }
   
   for _, cmd in ipairs(note_command_list) do
