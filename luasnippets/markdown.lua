@@ -223,4 +223,14 @@ return {
       rep(1),
     }, { delimiters = "<>" })
   ),
+
+  s(
+    { trig = ";date", descr = "Insert current date in yyyy-mm-dd format" },
+    t(os.date("%Y-%m-%d"))
+  ),
+
+  s(
+    { trig = ";dtime", descr = "Insert current date and time in yyyy-mm-dd hh:mm:ss format" },
+    t(os.date("%Y-%m-%d %H:%M:%S"))
+  ),
 }

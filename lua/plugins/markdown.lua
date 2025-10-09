@@ -136,6 +136,38 @@ return {
       width = "block",
       right_pad = 1,
     },
+    checkbox = {
+      enabled = true,
+      render_modes = false,
+      bullet = false,
+      left_pad = 0,
+      right_pad = 1,
+      unchecked = {
+        icon = '󰄱 ',
+        highlight = 'RenderMarkdownUnchecked',
+        scope_highlight = nil,
+      },
+      checked = {
+        icon = '󰱒 ',
+        highlight = 'RenderMarkdownChecked',
+        scope_highlight = nil,
+      },
+      custom = {
+        in_progress = { 
+          raw = '[-]', 
+          rendered = '󰥔 ', 
+          highlight = 'RenderMarkdownInProgress', 
+          scope_highlight = nil 
+        },
+        deleted = { 
+          raw = '[D]', 
+          rendered = '󰆴 ', 
+          highlight = 'RenderMarkdownDeleted', 
+          scope_highlight = nil 
+        },
+      },
+      scope_priority = nil,
+    },
     -- heading = {
       --   sign = false,
       --   icons = {},

@@ -35,6 +35,10 @@ local function get_note_commands()
     { name = "InsertTodayHeader", description = "Insert today's date header" },
     { name = "ConvertToTodoItem", description = "Convert a list item to a todo item" },
     { name = "MarkTodoTagComplete", description = "Mark a todo tag as complete" },
+    { name = "TodoWhatsNext", description = "List incomplete todos in current buffer ordered by priority and due date" },
+    { name = "TodoProject", description = "List all incomplete todos in project ordered by priority and due date" },
+    { name = "TodoInProgress", description = "List in-progress todos in current buffer ordered by priority and due date" },
+    { name = "TodoProjectInProgress", description = "List all in-progress todos in project ordered by priority and due date" },
   }
   
   for _, cmd in ipairs(note_command_list) do
