@@ -168,64 +168,124 @@ local function is_within_next_week(date_str)
   return todo_date >= now and todo_date <= week_from_now
 end
 
+-- Individual comparison functions for each priority rule
+local function compare_in_progress(a, b)
+  local a_in_progress = a.status == "-"
+  local b_in_progress = b.status == "-"
+  
+  if a_in_progress and not b_in_progress then return true end
+  if b_in_progress and not a_in_progress then return false end
+  return nil -- No difference, continue to next rule
+end
+
+local function compare_overdue(a, b)
+  local a_overdue = is_overdue(a.due_date)
+  local b_overdue = is_overdue(b.due_date)
+  
+  if a_overdue and not b_overdue then return true end
+  if b_overdue and not a_overdue then return false end
+  
+  if a_overdue and b_overdue then
+    return a.due_date < b.due_date -- Sort overdue by date (oldest first)
+  end
+  
+  return nil -- No difference, continue to next rule
+end
+
+local function compare_urgent_priority(a, b)
+  local a_urgent = a.priority == "urgent"
+  local b_urgent = b.priority == "urgent"
+  
+  if a_urgent and not b_urgent then return true end
+  if b_urgent and not a_urgent then return false end
+  return nil -- No difference, continue to next rule
+end
+
+local function compare_due_soon(a, b)
+  local a_due_soon = is_within_next_week(a.due_date)
+  local b_due_soon = is_within_next_week(b.due_date)
+  
+  if a_due_soon and not b_due_soon then return true end
+  if b_due_soon and not a_due_soon then return false end
+  
+  if a_due_soon and b_due_soon then
+    return a.due_date < b.due_date
+  end
+  
+  return nil -- No difference, continue to next rule
+end
+
+local function compare_high_priority(a, b)
+  local a_high = a.priority == "high"
+  local b_high = b.priority == "high"
+  
+  if a_high and not b_high then return true end
+  if b_high and not a_high then return false end
+  return nil -- No difference, continue to next rule
+end
+
+local function compare_other_due_dates(a, b)
+  local a_has_due = a.due_date and not is_within_next_week(a.due_date) and not is_overdue(a.due_date)
+  local b_has_due = b.due_date and not is_within_next_week(b.due_date) and not is_overdue(b.due_date)
+  
+  if a_has_due and not b_has_due then return true end
+  if b_has_due and not a_has_due then return false end
+  
+  if a_has_due and b_has_due then
+    return a.due_date < b.due_date
+  end
+  
+  return nil -- No difference, continue to next rule
+end
+
+local function compare_medium_priority(a, b)
+  local a_medium = a.priority == "medium"
+  local b_medium = b.priority == "medium"
+  
+  if a_medium and not b_medium then return true end
+  if b_medium and not a_medium then return false end
+  return nil -- No difference, continue to next rule
+end
+
+local function compare_low_priority(a, b)
+  local a_low = a.priority == "low"
+  local b_low = b.priority == "low"
+  
+  if a_low and not b_low then return true end
+  if b_low and not a_low then return false end
+  return nil -- No difference, continue to next rule
+end
+
+local function compare_line_number(a, b)
+  return a.line_number < b.line_number
+end
+
 -- Function to sort todos according to the specified criteria
 local function sort_todos(todos)
+  -- Define the order of comparison rules (highest to lowest priority)
+  local comparison_rules = {
+    compare_in_progress,      -- 1. In-progress todos come before regular todos
+    compare_overdue,          -- 2. Overdue todos first (highest priority)
+    compare_urgent_priority,  -- 3. Urgent priority
+    compare_due_soon,         -- 4. Due dates within next week
+    compare_high_priority,    -- 5. High priority
+    compare_other_due_dates,  -- 6. Other due dates
+    compare_medium_priority,  -- 7. Medium priority
+    compare_low_priority,     -- 8. Low priority
+    compare_line_number       -- 9. Line number (fallback)
+  }
+  
   table.sort(todos, function(a, b)
-    -- 0. In-progress todos come before regular todos
-    local a_in_progress = a.status == "-"
-    local b_in_progress = b.status == "-"
-    
-    if a_in_progress and not b_in_progress then return true end
-    if b_in_progress and not a_in_progress then return false end
-    
-    -- 1. Overdue todos first (highest priority)
-    local a_overdue = is_overdue(a.due_date)
-    local b_overdue = is_overdue(b.due_date)
-    
-    if a_overdue and not b_overdue then return true end
-    if b_overdue and not a_overdue then return false end
-    
-    if a_overdue and b_overdue then
-      return a.due_date < b.due_date -- Sort overdue by date (oldest first)
+    -- Try each comparison rule in order
+    for _, compare_func in ipairs(comparison_rules) do
+      local result = compare_func(a, b)
+      if result ~= nil then
+        return result
+      end
     end
     
-    -- 2. Urgent priority
-    if a.priority == "urgent" and b.priority ~= "urgent" and not b_overdue then return true end
-    if b.priority == "urgent" and a.priority ~= "urgent" and not a_overdue then return false end
-    
-    -- 2. Due dates within next week (by due date)
-    local a_due_soon = is_within_next_week(a.due_date)
-    local b_due_soon = is_within_next_week(b.due_date)
-    
-    if a_due_soon and not b_due_soon then return true end
-    if b_due_soon and not a_due_soon then return false end
-    
-    if a_due_soon and b_due_soon then
-      return a.due_date < b.due_date
-    end
-    
-    -- 3. High priority
-    if a.priority == "high" and b.priority ~= "high" and not b_due_soon then return true end
-    if b.priority == "high" and a.priority ~= "high" and not a_due_soon then return false end
-    
-    -- 4. Other due dates (by date)
-    if a.due_date and not b.due_date and not b_due_soon then return true end
-    if b.due_date and not a.due_date and not a_due_soon then return false end
-    
-    if a.due_date and b.due_date then
-      return a.due_date < b.due_date
-    end
-    
-    -- 5. Medium priority
-    if a.priority == "medium" and b.priority ~= "medium" and not b.due_date and not b_due_soon then return true end
-    if b.priority == "medium" and a.priority ~= "medium" and not a.due_date and not a_due_soon then return false end
-    
-    -- 6. Low priority
-    if a.priority == "low" and b.priority ~= "low" and not b.due_date and not b_due_soon then return true end
-    if b.priority == "low" and a.priority ~= "low" and not a.due_date and not a_due_soon then return false end
-    
-    -- 7. Other open todos (by line number for consistency)
-    return a.line_number < b.line_number
+    -- This should never be reached due to the line_number fallback
+    return false
   end)
 end
 
