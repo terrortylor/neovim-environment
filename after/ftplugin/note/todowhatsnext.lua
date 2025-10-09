@@ -17,6 +17,7 @@ local TODO_PATTERNS = {
 }
 
 local PRIORITY_ICONS = {
+  overdue = "💀",
   urgent = "🚨",
   high = "🔴",
   medium = "🟡", 
@@ -34,15 +35,15 @@ local STATUS_ICONS = {
 
 local MATCH_PATTERNS = {
   priority = "#pri/(%w+)",
-  due_date = "#due/(%d%d%d%d%-%d%d%-%d%d)",
-  created_date = "^(%d%d%d%d%-%d%d%-%d%d)%s",
-  date_components = "(%d%d%d%d)%-(%d%d)%-(%d%d)"
+  due_date = "#due/(%d%d%d%d%-%d?%d%-%d?%d)",
+  created_date = "^(%d%d%d%d%-%d?%d%-%d?%d)%s",
+  date_components = "(%d%d%d%d)%-(%d?%d)%-(%d?%d)"
 }
 
 local CONTENT_CLEANUP_PATTERNS = {
   priority = "#pri/%w+",
-  due_date = "#due/%d%d%d%d%-%d%d%-%d%d",
-  created_date = "^%d%d%d%d%-%d%d%-%d%d%s*%-%s*",
+  due_date = "#due/%d%d%d%d%-%d?%d%-%d?%d",
+  created_date = "^%d%d%d%d%-%d?%d%-%d?%d%s*%-%s*",
   leading_spaces = "^%s+",
   multiple_spaces = "%s+",
   empty_after_cleanup = "^%s*$"
@@ -125,6 +126,29 @@ local function get_priority_weight(priority)
   return weights[priority] or 6 -- Default weight for no priority
 end
 
+-- Function to check if a date is overdue
+local function is_overdue(date_str)
+  if not date_str then return false end
+  
+  local year, month, day = date_str:match(MATCH_PATTERNS.date_components)
+  if not year or not month or not day then return false end
+  
+  local todo_date = os.time({
+    year = tonumber(year),
+    month = tonumber(month),
+    day = tonumber(day)
+  })
+  
+  local now = os.time()
+  local today = os.time({
+    year = tonumber(os.date("%Y")),
+    month = tonumber(os.date("%m")),
+    day = tonumber(os.date("%d"))
+  })
+  
+  return todo_date < today
+end
+
 -- Function to check if a date is within the next week
 local function is_within_next_week(date_str)
   if not date_str then return false end
@@ -154,9 +178,20 @@ local function sort_todos(todos)
     if a_in_progress and not b_in_progress then return true end
     if b_in_progress and not a_in_progress then return false end
     
-    -- 1. Urgent priority first
-    if a.priority == "urgent" and b.priority ~= "urgent" then return true end
-    if b.priority == "urgent" and a.priority ~= "urgent" then return false end
+    -- 1. Overdue todos first (highest priority)
+    local a_overdue = is_overdue(a.due_date)
+    local b_overdue = is_overdue(b.due_date)
+    
+    if a_overdue and not b_overdue then return true end
+    if b_overdue and not a_overdue then return false end
+    
+    if a_overdue and b_overdue then
+      return a.due_date < b.due_date -- Sort overdue by date (oldest first)
+    end
+    
+    -- 2. Urgent priority
+    if a.priority == "urgent" and b.priority ~= "urgent" and not b_overdue then return true end
+    if b.priority == "urgent" and a.priority ~= "urgent" and not a_overdue then return false end
     
     -- 2. Due dates within next week (by due date)
     local a_due_soon = is_within_next_week(a.due_date)
@@ -203,15 +238,17 @@ local function format_todo_display(todo)
     table.insert(parts, STATUS_ICONS.in_progress)
   end
   
-  -- Add priority indicator
-  if todo.priority then
+  -- Add priority indicator (overdue takes precedence over manual priority)
+  if is_overdue(todo.due_date) then
+    table.insert(parts, PRIORITY_ICONS.overdue)
+  elseif todo.priority then
     local icon = PRIORITY_ICONS[todo.priority] or "⚪"
     table.insert(parts, icon)
   end
   
   -- Add due date indicator
   if todo.due_date then
-    local due_icon = is_within_next_week(todo.due_date) and DUE_DATE_ICONS.soon or DUE_DATE_ICONS.other
+    local due_icon = is_overdue(todo.due_date) and "💀" or (is_within_next_week(todo.due_date) and DUE_DATE_ICONS.soon or DUE_DATE_ICONS.other)
     table.insert(parts, due_icon .. " " .. todo.due_date)
   end
   
