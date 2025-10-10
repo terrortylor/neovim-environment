@@ -48,6 +48,10 @@ local function get_heading_date()
   return os.date("%A %B %Y (%d-%m-%Y) %H:%M")
 end
 
+local function get_today_date()
+  return os.date("%Y-%m-%d")
+end
+
 local function neorg_meta_version()
   return require("neorg.core").config.norg_version
 end
@@ -102,6 +106,31 @@ return {
           i(2, "x"),
         }),
         i(2, "text"),
+      }
+    )
+  ),
+
+  s(
+    { trig = ";todo", descr = "Todo with date and priority cycling"},
+    fmt(
+      [[
+    - [{}] {} -{} {}
+    ]],
+      {
+        c(1, {
+          i(1, " "),
+          i(2, "-"),
+          i(3, "x"),
+        }),
+        f(get_today_date),
+        c(2, {
+          i(1, " #pri/urgent"),
+          i(2, " #pri/high"),
+          i(3, " #pri/medium"),
+          i(4, " #pri/low"),
+          i(4, ""),
+        }),
+        i(3, "todo description"),
       }
     )
   ),
