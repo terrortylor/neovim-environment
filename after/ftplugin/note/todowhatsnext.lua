@@ -183,6 +183,25 @@ local function is_within_next_week(date_str)
   return todo_date >= now and todo_date <= week_from_now
 end
 
+-- Helper function to compare by size (small > medium > large > none)
+local function get_size_weight(size)
+  local weights = {
+    small = 1,
+    medium = 2,
+    large = 3
+  }
+  return weights[size] or 4 -- Default weight for no size
+end
+
+local function compare_by_size(a, b)
+  local a_weight = get_size_weight(a.size)
+  local b_weight = get_size_weight(b.size)
+  
+  if a_weight < b_weight then return true end
+  if a_weight > b_weight then return false end
+  return nil -- Same size, continue to next rule
+end
+
 -- Individual comparison functions for each priority rule
 local function compare_in_progress(a, b)
   local a_in_progress = a.status == "-"
@@ -190,6 +209,13 @@ local function compare_in_progress(a, b)
   
   if a_in_progress and not b_in_progress then return true end
   if b_in_progress and not a_in_progress then return false end
+  
+  -- Both in progress, sort by size
+  if a_in_progress and b_in_progress then
+    local size_result = compare_by_size(a, b)
+    if size_result ~= nil then return size_result end
+  end
+  
   return nil -- No difference, continue to next rule
 end
 
@@ -201,7 +227,13 @@ local function compare_overdue(a, b)
   if b_overdue and not a_overdue then return false end
   
   if a_overdue and b_overdue then
-    return a.due_date < b.due_date -- Sort overdue by date (oldest first)
+    -- Sort by date first (oldest first)
+    if a.due_date ~= b.due_date then
+      return a.due_date < b.due_date
+    end
+    -- If same date, sort by size
+    local size_result = compare_by_size(a, b)
+    if size_result ~= nil then return size_result end
   end
   
   return nil -- No difference, continue to next rule
@@ -213,15 +245,13 @@ local function compare_urgent_priority(a, b)
   
   if a_urgent and not b_urgent then return true end
   if b_urgent and not a_urgent then return false end
-  return nil -- No difference, continue to next rule
-end
-
-local function compare_size_small(a, b)
-  local a_small = a.size == "small"
-  local b_small = b.size == "small"
   
-  if a_small and not b_small then return true end
-  if b_small and not a_small then return false end
+  -- Both urgent, sort by size
+  if a_urgent and b_urgent then
+    local size_result = compare_by_size(a, b)
+    if size_result ~= nil then return size_result end
+  end
+  
   return nil -- No difference, continue to next rule
 end
 
@@ -233,7 +263,13 @@ local function compare_due_soon(a, b)
   if b_due_soon and not a_due_soon then return false end
   
   if a_due_soon and b_due_soon then
-    return a.due_date < b.due_date
+    -- Sort by date first (earliest first)
+    if a.due_date ~= b.due_date then
+      return a.due_date < b.due_date
+    end
+    -- If same date, sort by size
+    local size_result = compare_by_size(a, b)
+    if size_result ~= nil then return size_result end
   end
   
   return nil -- No difference, continue to next rule
@@ -245,15 +281,13 @@ local function compare_high_priority(a, b)
   
   if a_high and not b_high then return true end
   if b_high and not a_high then return false end
-  return nil -- No difference, continue to next rule
-end
-
-local function compare_size_medium(a, b)
-  local a_medium = a.size == "medium"
-  local b_medium = b.size == "medium"
   
-  if a_medium and not b_medium then return true end
-  if b_medium and not a_medium then return false end
+  -- Both high priority, sort by size
+  if a_high and b_high then
+    local size_result = compare_by_size(a, b)
+    if size_result ~= nil then return size_result end
+  end
+  
   return nil -- No difference, continue to next rule
 end
 
@@ -265,7 +299,13 @@ local function compare_other_due_dates(a, b)
   if b_has_due and not a_has_due then return false end
   
   if a_has_due and b_has_due then
-    return a.due_date < b.due_date
+    -- Sort by date first (earliest first)
+    if a.due_date ~= b.due_date then
+      return a.due_date < b.due_date
+    end
+    -- If same date, sort by size
+    local size_result = compare_by_size(a, b)
+    if size_result ~= nil then return size_result end
   end
   
   return nil -- No difference, continue to next rule
@@ -277,6 +317,13 @@ local function compare_medium_priority(a, b)
   
   if a_medium and not b_medium then return true end
   if b_medium and not a_medium then return false end
+  
+  -- Both medium priority, sort by size
+  if a_medium and b_medium then
+    local size_result = compare_by_size(a, b)
+    if size_result ~= nil then return size_result end
+  end
+  
   return nil -- No difference, continue to next rule
 end
 
@@ -286,15 +333,13 @@ local function compare_low_priority(a, b)
   
   if a_low and not b_low then return true end
   if b_low and not a_low then return false end
-  return nil -- No difference, continue to next rule
-end
-
-local function compare_size_large(a, b)
-  local a_large = a.size == "large"
-  local b_large = b.size == "large"
   
-  if a_large and not b_large then return true end
-  if b_large and not a_large then return false end
+  -- Both low priority, sort by size
+  if a_low and b_low then
+    local size_result = compare_by_size(a, b)
+    if size_result ~= nil then return size_result end
+  end
+  
   return nil -- No difference, continue to next rule
 end
 
@@ -306,18 +351,16 @@ end
 local function sort_todos(todos)
   -- Define the order of comparison rules (highest to lowest priority)
   local comparison_rules = {
-    compare_in_progress,      -- 1. In-progress todos come before regular todos
-    compare_overdue,          -- 2. Overdue todos first (highest priority)
-    compare_urgent_priority,  -- 3. Urgent priority
-    compare_size_small,       -- 4. Size small (top size priority)
-    compare_due_soon,         -- 5. Due dates within next week
-    compare_high_priority,    -- 6. High priority
-    -- compare_size_medium,      -- 7. Size medium
-    compare_other_due_dates,  -- 8. Other due dates
-    compare_medium_priority,  -- 9. Medium priority
-    -- compare_size_large,       -- 10. Size large
-    compare_low_priority,     -- 11. Low priority
-    compare_line_number       -- 12. Line number (fallback)
+    compare_in_progress,      -- 1. In-progress todos come before regular todos (sorted by size within)
+    compare_overdue,          -- 2. Overdue todos first (sorted by date, then size)
+    compare_urgent_priority,  -- 3. Urgent priority (sorted by size within)
+    compare_due_soon,         -- 4. Due dates within next week (sorted by date, then size)
+    compare_high_priority,    -- 5. High priority (sorted by size within)
+    compare_other_due_dates,  -- 6. Other due dates (sorted by date, then size)
+    compare_medium_priority,  -- 7. Medium priority (sorted by size within)
+    compare_low_priority,     -- 8. Low priority (sorted by size within)
+    compare_by_size,          -- 9. Items without priority/dates, sorted by size
+    compare_line_number       -- 10. Line number (fallback)
   }
   
   table.sort(todos, function(a, b)
