@@ -24,6 +24,12 @@ local PRIORITY_ICONS = {
   low = "🟢"
 }
 
+local SIZE_ICONS = {
+  small = "🇸",
+  medium = "🇲",
+  large = "🇱"
+}
+
 local DUE_DATE_ICONS = {
   soon = "⏰",
   other = "📅"
@@ -35,6 +41,7 @@ local STATUS_ICONS = {
 
 local MATCH_PATTERNS = {
   priority = "#pri/(%w+)",
+  size = "#size/(%w+)",
   due_date = "#due/(%d%d%d%d%-%d?%d%-%d?%d)",
   created_date = "^(%d%d%d%d%-%d?%d%-%d?%d)%s",
   date_components = "(%d%d%d%d)%-(%d?%d)%-(%d?%d)"
@@ -42,6 +49,7 @@ local MATCH_PATTERNS = {
 
 local CONTENT_CLEANUP_PATTERNS = {
   priority = "#pri/%w+",
+  size = "#size/%w+",
   due_date = "#due/%d%d%d%d%-%d?%d%-%d?%d",
   created_date = "^%d%d%d%d%-%d?%d%-%d?%d%s*%-%s*",
   leading_spaces = "^%s+",
@@ -68,6 +76,7 @@ local function parse_todo_line(line, line_num, file_path)
     content = content,
     status = status,
     priority = nil,
+    size = nil,
     due_date = nil,
     created_date = nil,
     original_line = line
@@ -82,6 +91,12 @@ local function parse_todo_line(line, line_num, file_path)
   local priority_match = content:match(MATCH_PATTERNS.priority)
   if priority_match then
     todo.priority = priority_match
+  end
+  
+  -- Extract size (#size/small, #size/medium, #size/large)
+  local size_match = content:match(MATCH_PATTERNS.size)
+  if size_match then
+    todo.size = size_match
   end
   
   -- Extract due date (#due/YYYY-MM-DD)
@@ -201,6 +216,15 @@ local function compare_urgent_priority(a, b)
   return nil -- No difference, continue to next rule
 end
 
+local function compare_size_small(a, b)
+  local a_small = a.size == "small"
+  local b_small = b.size == "small"
+  
+  if a_small and not b_small then return true end
+  if b_small and not a_small then return false end
+  return nil -- No difference, continue to next rule
+end
+
 local function compare_due_soon(a, b)
   local a_due_soon = is_within_next_week(a.due_date)
   local b_due_soon = is_within_next_week(b.due_date)
@@ -221,6 +245,15 @@ local function compare_high_priority(a, b)
   
   if a_high and not b_high then return true end
   if b_high and not a_high then return false end
+  return nil -- No difference, continue to next rule
+end
+
+local function compare_size_medium(a, b)
+  local a_medium = a.size == "medium"
+  local b_medium = b.size == "medium"
+  
+  if a_medium and not b_medium then return true end
+  if b_medium and not a_medium then return false end
   return nil -- No difference, continue to next rule
 end
 
@@ -256,6 +289,15 @@ local function compare_low_priority(a, b)
   return nil -- No difference, continue to next rule
 end
 
+local function compare_size_large(a, b)
+  local a_large = a.size == "large"
+  local b_large = b.size == "large"
+  
+  if a_large and not b_large then return true end
+  if b_large and not a_large then return false end
+  return nil -- No difference, continue to next rule
+end
+
 local function compare_line_number(a, b)
   return a.line_number < b.line_number
 end
@@ -267,12 +309,15 @@ local function sort_todos(todos)
     compare_in_progress,      -- 1. In-progress todos come before regular todos
     compare_overdue,          -- 2. Overdue todos first (highest priority)
     compare_urgent_priority,  -- 3. Urgent priority
-    compare_due_soon,         -- 4. Due dates within next week
-    compare_high_priority,    -- 5. High priority
-    compare_other_due_dates,  -- 6. Other due dates
-    compare_medium_priority,  -- 7. Medium priority
-    compare_low_priority,     -- 8. Low priority
-    compare_line_number       -- 9. Line number (fallback)
+    compare_size_small,       -- 4. Size small (top size priority)
+    compare_due_soon,         -- 5. Due dates within next week
+    compare_high_priority,    -- 6. High priority
+    -- compare_size_medium,      -- 7. Size medium
+    compare_other_due_dates,  -- 8. Other due dates
+    compare_medium_priority,  -- 9. Medium priority
+    -- compare_size_large,       -- 10. Size large
+    compare_low_priority,     -- 11. Low priority
+    compare_line_number       -- 12. Line number (fallback)
   }
   
   table.sort(todos, function(a, b)
@@ -306,6 +351,12 @@ local function format_todo_display(todo)
     table.insert(parts, icon)
   end
   
+  -- Add size indicator
+  if todo.size then
+    local size_icon = SIZE_ICONS[todo.size] or "⚪"
+    table.insert(parts, size_icon)
+  end
+  
   -- Add due date indicator
   if todo.due_date then
     local due_icon = is_overdue(todo.due_date) and "💀" or (is_within_next_week(todo.due_date) and DUE_DATE_ICONS.soon or DUE_DATE_ICONS.other)
@@ -314,8 +365,9 @@ local function format_todo_display(todo)
   
   -- Add the main todo content (clean up the content by removing tags)
   local content = todo.content or "No content"
-  -- Remove priority, due date, and created date tags from display
+  -- Remove priority, size, due date, and created date tags from display
   content = content:gsub(CONTENT_CLEANUP_PATTERNS.priority, "")
+  content = content:gsub(CONTENT_CLEANUP_PATTERNS.size, "")
   content = content:gsub(CONTENT_CLEANUP_PATTERNS.due_date, "")
   content = content:gsub(CONTENT_CLEANUP_PATTERNS.created_date, "") -- Remove created date at start and following " - "
   content = content:gsub(CONTENT_CLEANUP_PATTERNS.leading_spaces, "") -- Remove leading spaces
