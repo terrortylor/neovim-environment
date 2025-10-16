@@ -41,6 +41,7 @@ local function get_note_commands()
     { name = "TodoProjectInProgress", description = "List all in-progress todos in project ordered by priority and due date" },
     { name = "TodoInProgressFiles", description = "List files containing in-progress todos" },
     { name = "TodoProjectFiles", description = "List all files containing todos" },
+    { name = "TodoStripTags", description = "Strip #pri/xx, #size/xx, and #due/xx tags from the current todo line" },
   }
   
   for _, cmd in ipairs(note_command_list) do

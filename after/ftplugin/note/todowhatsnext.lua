@@ -764,6 +764,35 @@ vim.api.nvim_create_user_command("TodoProjectFiles", todo_project_files_picker, 
   desc = "List all files containing todos"
 })
 
+-- Function to strip tags from the current todo line and mark as complete
+local function strip_todo_tags()
+  local line_num = vim.api.nvim_win_get_cursor(0)[1]
+  local line = vim.api.nvim_get_current_line()
+  
+  -- Strip priority, size, and due date tags
+  local cleaned_line = line
+  cleaned_line = cleaned_line:gsub(CONTENT_CLEANUP_PATTERNS.priority, "")
+  cleaned_line = cleaned_line:gsub(CONTENT_CLEANUP_PATTERNS.size, "")
+  cleaned_line = cleaned_line:gsub(CONTENT_CLEANUP_PATTERNS.due_date, "")
+  
+  -- Mark as complete by changing [ ] to [x]
+  cleaned_line = cleaned_line:gsub("%[%s*[^%]xX]%s*%]", "[x]")
+  
+  -- Clean up extra spaces
+  cleaned_line = cleaned_line:gsub("%s+", " ")  -- Collapse multiple spaces
+  cleaned_line = cleaned_line:gsub("%s+$", "")  -- Trim trailing spaces
+  
+  -- Update the line
+  vim.api.nvim_buf_set_lines(0, line_num - 1, line_num, false, {cleaned_line})
+  
+  vim.notify("Stripped tags and marked todo as complete", vim.log.levels.INFO)
+end
+
+-- Create user command to strip tags
+vim.api.nvim_create_user_command("TodoStripTags", strip_todo_tags, {
+  desc = "Strip #pri/xx, #size/xx, and #due/xx tags from the current todo line"
+})
+
 -- Optional: Add key mappings for quick access
 vim.api.nvim_set_keymap('n', '<leader>tn', ':TodoWhatsNext<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>tp', ':TodoProject<CR>', { noremap = true, silent = true })
@@ -771,3 +800,4 @@ vim.api.nvim_set_keymap('n', '<leader>ti', ':TodoInProgress<CR>', { noremap = tr
 vim.api.nvim_set_keymap('n', '<leader>tpi', ':TodoProjectInProgress<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>tif', ':TodoInProgressFiles<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>tpf', ':TodoProjectFiles<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>ts', ':TodoStripTags<CR>', { noremap = true, silent = true })
