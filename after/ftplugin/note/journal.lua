@@ -6,10 +6,72 @@ local function get_current_date_header()
   return os.date("%A %d %B %Y")
 end
 
+local function get_week_start_date()
+  -- Get current time
+  local current_time = os.time()
+  
+  -- Get current day of week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+  local wday = tonumber(os.date("%w", current_time))
+  
+  -- Calculate days to subtract to get to Monday (1)
+  -- If Sunday (0), go back 6 days; if Monday (1), go back 0 days, etc.
+  local days_to_monday = (wday == 0) and 6 or (wday - 1)
+  
+  -- Calculate Monday's timestamp
+  local monday_time = current_time - (days_to_monday * 24 * 60 * 60)
+  
+  return monday_time
+end
+
+local function get_week_filename()
+  -- Get the Monday of the current week
+  local monday_time = get_week_start_date()
+  
+  -- Get week number based on Monday's date (ISO 8601 week number)
+  local week_number = tonumber(os.date("%V", monday_time))
+  
+  -- Use 0-based indexing (subtract 1 from the week number)
+  week_number = week_number - 1
+  
+  -- Get year and month from Monday's date (not today's date!)
+  local year = os.date("%Y", monday_time)
+  local month = os.date("%B", monday_time)
+  
+  -- Return filename in format: weeknumber-year-month.md
+  return string.format("%02d-%s-%s.md", week_number, year, month)
+end
+
+-- Custom function to open or create the weekly journal file.
+-- Note: We don't use the LSP's LspToday command because it doesn't format the filename
+-- correctly according to my requirements. Specifically:
+--   - The LSP uses the current date's month, not the week start date's month
+--   - This causes issues when a week spans two months (e.g., week starts Oct 28, today is Nov 1)
+--   - The LSP would create "42-2025-November.md" instead of "41-2025-October.md"
+local function open_or_create_week_file()
+  local filename = get_week_filename()
+  local cwd = vim.fn.getcwd()
+  
+  -- Get the year from the week start date
+  local monday_time = get_week_start_date()
+  local year = os.date("%Y", monday_time)
+  
+  -- Create the journal/YYYY directory structure
+  local journal_dir = cwd .. "/journal/" .. year
+  if vim.fn.isdirectory(journal_dir) == 0 then
+    vim.fn.mkdir(journal_dir, "p")
+  end
+  
+  -- Full path to the file
+  local filepath = journal_dir .. "/" .. filename
+  
+  -- Open or create the file
+  vim.cmd("edit " .. vim.fn.fnameescape(filepath))
+end
+
 local function find_or_insert_header(go_to_today)
-  -- Call LspToday and defer the rest of the operations
+  -- Open or create the week file if requested
   if go_to_today then
-    vim.cmd("LspToday")
+    open_or_create_week_file()
   end
   
   vim.defer_fn(function()
